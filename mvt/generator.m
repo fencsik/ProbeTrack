@@ -4,7 +4,7 @@ function pathsFile = stGenerator (sInitial)
 % generates a set of trajectories for use with ShiftTrack experiments
 % Authors: David Fencsik (based on file by Todd Horowitz)
 %
-% $Id: generator.m,v 1.14 2004/02/02 23:03:48 fencsik Exp $
+% $Id: generator.m,v 1.15 2004/02/03 20:02:49 fencsik Exp $
 
 % Modified by David Fencsik
 % started  9/29/2003
@@ -19,19 +19,19 @@ starttime = clock;
 %                  % 0 = between-block design, each prefix gets R
 %                  % repetitions of one trial type
 
-subjects = 1:12; % e.g, 1:10 [ 2 7 11] 
+subjects = 1; % e.g, 1:10 [ 2 7 11] 
 %trialDuration = 4;
 % Possible trial durations, in seconds
 minTrialDuration = 5;
 maxTrialDuration = 6;
 nDisks = 10;
-nTargets = 2;
+nTargets = 5;
 
 % block-level variables
 prefix = {'mvt_'; 'pracA_'; 'pracB_'; 'pracC_'; 'pracD_'; 'exp_'};
 prefix = {'test'}; % for testing
 practrials = [10 1];
-exptrials = [1 1];
+exptrials = [2 1];
 mvttrials = [30 1];
 trialTypes = {%repmat(1, mvttrials);
               %repmat(1, practrials);
@@ -74,6 +74,7 @@ end;
 
 bufferZone = 50;
 preBlankRect = [0 0 1024-200 768-100];
+preBlankBorder = 100;
 
 clear screen;
 
@@ -88,6 +89,10 @@ slackDuration = maxTrialDuration - minTrialDuration;
 slackFrames = ceil(slackDuration*1000/predictedMovieFrameDuration);
 blankWindow(1) = round(2000/predictedMovieFrameDuration);
 blankWindow(2) = minMovieFrames - round(1000/predictedMovieFrameDuration);
+if blankWindow(1) >= blankWindow(2)
+   'ERROR: Negative blank window requested.'
+   return;
+end;
 
 
 % size/distance variables
@@ -102,7 +107,7 @@ screenRect = [0 0 screenX screenY];
 edgeZone = imageY;
 
 % center pre-gap rectangle within screenRect
-preBlankRect = CenterRect(preBlankRect, screenRect)
+preBlankRect = CenterRect(preBlankRect, screenRect);
 
 
 
@@ -137,16 +142,17 @@ for sub = subjects
    for block = 1:nBlocks
       
       filename = [prefix{block} num2str(sub)];
-      [conditions index] = Shuffle(trialTypes{block});
+      [trialType index] = Shuffle(trialTypes{block});
       movementRate = movementRates{block}(index);
       blankDuration = blankDurations{block}(index);
-      nTrials = size(conditions, 1);
+      nTrials = size(trialType, 1);
 
-      blankStart = zeros(nTrails);
+      blankStart = zeros(nTrials, 1);
+      blankEnd = zeros(nTrials, 1);
 
-      shiftFactor = ttypes;
+      shiftFactor = ones(size(trialType));
       shiftAmount = ceil((shiftFactor-1.0) .* blankDuration);
-      movieFrames = ones(1, nTrials) * maxMovieFrames;
+      movieFrames = ones(nTrials, 1) * maxMovieFrames;
       % blankStart should be picked randomly for each trial:
       %blankStart = movieFrames - blankDuration;
       targetMagnitude = (movementRate*30)*(predictedMovieFrameDuration)/1000;
@@ -186,23 +192,24 @@ for sub = subjects
          % least 2 seconds after the start of tracking but no later than 1 second 
          % before the end of tracking:
          blankStart(trial) = Randi(blankWindow(2) - blankWindow(1)) + blankWindow(1);
+         blankEnd(trial) = blankStart(trial) + blankDuration(trial);
 
-         % compute trajectories
          trajectory = zeros(nDisks, 2, movieFrames(trial));
+
          % set up vectors of individual signal and noise magnitudes
-         magnitude = ones(nDisks, 1) * targetMagnitude; 
-         noiseMagnitude = zeros(nDisks, 1); 
+         magnitude = ones(nDisks, 1) * targetMagnitude(trial); 
+         % noisy movement is not being used here:
+         % noiseMagnitude = zeros(nDisks, 1); 
 
          restarts = 0;
          badPath = 1;
 
-         % compute trajectories
          deathFlag = 999;
-
          while deathFlag > 0
             % quit if we've been going for too long:
-            if sum(kills(1:(size(kills,2)-1))) > (20*nTrials)
+            if sum(kills(1:(size(kills,2)-1))) > (100*nTrials)
                kills
+               'Too many kills.'
                return;
             end;
 
@@ -240,9 +247,9 @@ for sub = subjects
                   i = size(kills,2);
                   kills(i) = kills(i) + replacements;
                end;
-            end;
+            end; % for d = 1:nDisks
 
-            if badPlacement
+            if deathFlag > 0
                continue;
             end;
 
@@ -256,10 +263,11 @@ for sub = subjects
             magnitude = ones(nDisks, 1) * targetMagnitude(trial);
             noiseMagnitude = zeros(nDisks, 1);
 
-            for f = 2:movieFrames(trial)
+            f = 2;
+            while f <= movieFrames(trial)
+            %for f = 2:movieFrames(trial)
                % move one frame:
-               %function [x y d error] = MoveOneStep (coordinates, direction, magnitude, edgeRect, edgeZone, fullCircle)
-               [x y direction err] = MoveOneStep (oldCoordinates, direction, magnitude, screenRect, edgeZone, fullCircle);
+               [x y direction err bounce] = MoveOneStep (oldCoordinates, direction, magnitude, screenRect, edgeZone, fullCircle);
 
                % note any errors:
                if any(err > 0)
@@ -270,65 +278,96 @@ for sub = subjects
                
                newCoordinates = [x y];
 
+
                % make sure disks are a mindistance apart on last visible pre-gap frame
-               if blankDuration(trial) > 0 && f == blankStart(trial) - 1
+               if blankDuration(trial) > 0 & f == blankStart(trial) - 1
                   if any(InterDiskDistances(newCoordinates) < bufferZone)
                      deathFlag = 3;
                      kills(deathFlag) = kills(deathFlag) + 1;
                      break;
-                  end;
-               end;
-               
-               % make sure disks are within a limited rectangle on the last visible pre-gap frame
-               if (blankDuration(trial) > 0 && f == blankStart(trial) - 1
-                  if any(OutOfBoundsBits(newCoordinates, screenRect, preGapBorder) > 0)
+                  elseif any(OutOfBoundsBits(newCoordinates, screenRect, preBlankBorder) > 0)
                      deathFlag = 4;
                      kills(deathFlag) = kills(deathFlag) + 1;
                      break;
                   end;
                end;
 
-               % make sure the disks are a mindistance from all of the targets in the first visible
-               % post-gap frame
-               ADD CODE HERE
 
-               % if condition = 2, then set the first distractor so it reappears at the same location
-               % as as the first target
-               ADD CODE HERE
+               % make sure that all disks reappear at a mindistance from where the TARGETS disappeared.
+               if blankDuration(trial) > 0 & f == blankEnd(trial) 
+                  pre = trajectory(1:nTargets, :, blankStart(trial) - 1); 
+                  post = newCoordinates; 
+                  for d = 1:nTargets
+                     post(1, :) = []; % get rid of the comparison disk
+                     if any(sqrt((pre(d,1) - post(:,1)).^2 + (pre(d,2) - post(:,2)).^2) < bufferZone)
+                        % one or more disks reappear too close to a pre-blank target location
+                        deathFlag = 5;
+                        kills(deathFlag) = kills(deathFlag) + 1;
+                        break;
+                     end;
+                  end;
+                  if deathFlag > 0
+                     break;
+                  end;
+               end;
 
-               % now prevent balls from occluding one another on final frame
-               if f == movieFrames(trial)
-                  if any(InterDiskDistances(newCoordinates) < bufferZone)
-                     deathFlag = 5;
+
+               % if trialType(trial) = 2, then set the first distractor so it reappears at the same
+               % location as the first target, and check to make sure it's start position
+               % is far enough from all the other disks. And make sure it doesn't bounce
+               %%% ADD CODE HERE
+               % Reverse code:
+               % reverse = mod(preBlankDirections + halfCircle - 1, fullCircle) + 1;
+
+               trajectory(:, :, f) = newCoordinates;
+               % if f is between minMovieFrames and maxMovieFrames, then start checking to
+               % see if the disks are far enough apart. As soon as they are, pick that as our
+               % last frame
+               if f >= minMovieFrames & f <= maxMovieFrames
+                  if all(InterDiskDistances(newCoordinates) >= bufferZone)
+                     % set movie frames
+                     movieFrames(trial) = f;
+                     trajectory = trajectory(:, :, 1:f);
+                     break;
+                  elseif f == maxMovieFrames
+                     % we're at the end and still haven't found a good end-point
+                     deathFlag = 6;
                      kills(deathFlag) = kills(deathFlag) + 1;
                      break;
                   end;
                end;
-               
-               trajectory(:, :, f) = newCoordinates;
+
                %set the old coordinates (for the next frame) equal to the coordinates used for the current frame 
                oldCoordinates = newCoordinates;
-            end; % for f = 1:movieFrames(trial)
+               f = f + 1;
+            end; % while f <= movieFrames(trial)
          end; % while deathFlag > 0
-      
+         
+         if blankDuration(trial) > 0
+            trajectory(:, :, (blankStart(trial)):(blankEnd(trial)-1)) = -50;
+         end;
+         
+         paths{trial} = trajectory;
+         starts{trial} = startCoordinates;
+         clear trajectory;
       end; % for trial = 1:nTrials
-
       kills
-
-      if badPath
-         ['ERROR: Too many restarted paths on trial ' num2str(trial)]
-         break;
-      else
-         save (filename, 'nTrials', 'paths', 'starts', 'movementRate', 'movieFrames', 'blankDuration', 'trialType', 'nDisks', 'nTargets', 'predictedMovieFrameDuration');
-         fprintf(1, 'Finished %s.\n', filename);
-      end;
-      if badPath
-         break;
-      end;
+      save (filename, 'paths', 'starts', 'blankStart', 'movementRate', 'blankDuration', 'nTrials', 'nDisks', 'nTargets', 'predictedMovieFrameDuration', 'movieFrames', 'shiftFactor', 'shiftAmount');
+      fprintf(1, 'Finished %s.\n', filename);
+      % if badPath
+      %    ['ERROR: Too many restarted paths on trial ' num2str(trial)]
+      %    break;
+      % else
+      %    save (filename, 'nTrials', 'paths', 'starts', 'movementRate', 'movieFrames', 'blankDuration', 'trialType', 'nDisks', 'nTargets', 'predictedMovieFrameDuration');
+      %    fprintf(1, 'Finished %s.\n', filename);
+      % end;
+      % if badPath
+      %    break;
+      % end;
    end; % for block = 1:nBlocks
-   if badPath
-      break;
-   end;
+   % if badPath
+   %    break;
+   % end;
 end; % for sub = subjects
 
 etime(clock, starttime)
@@ -407,7 +446,7 @@ function out = OutOfBounds (coordinates, edgeRect, border)
 %%% END OF OutOfBounds %%%
 
 
-function [x y d error] = MoveOneStep (coordinates, direction, magnitude, edgeRect, edgeZone, fullCircle)
+function [x, y, d, error, bounce] = MoveOneStep (coordinates, direction, magnitude, edgeRect, edgeZone, fullCircle)
 % Moves all objects one step
    
    [nrow ncol] = size(coordinates);
@@ -417,6 +456,7 @@ function [x y d error] = MoveOneStep (coordinates, direction, magnitude, edgeRec
    end;
    
    error = zeros(nrow, 1);
+   bounce = zeros(nrow, 1);
    halfCircle = fullCircle / 2;
 
    [finalTheta, finalMagnitude] = addNoiseVector(direction, magnitude, 0, 0);
@@ -425,6 +465,7 @@ function [x y d error] = MoveOneStep (coordinates, direction, magnitude, edgeRec
    % try to bounce out-of-bounds disks off a wall:
    status = OutOfBoundsBits(newCoordinates, edgeRect, edgeZone);
    if any(status ~= 0)
+      bounce = (status ~= 0);
       direction = BounceOffWall(direction, status, fullCircle);
    end;
 
@@ -436,7 +477,7 @@ function [x y d error] = MoveOneStep (coordinates, direction, magnitude, edgeRec
    error = OutOfBoundsBits(newCoordinates, edgeRect, edgeZone);
 
    x = newCoordinates(:,1); 
-   y = newCoordinates; 
+   y = newCoordinates(:,2); 
    d = direction;
 
 %%% END OF MoveOneStep %%%
