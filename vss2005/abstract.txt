@@ -1,0 +1,18 @@
+Abstract for VSS 2005
+
+Observers can successfully track a subset of randomly moving identical
+objects in a multi-element visual tracking (MVT) task, even if all of
+the objects disappear for a 300-500 ms gap.  By studying how observers
+reacquire targets following such a gap, we might reveal what kinds of
+information they maintain for moving objects.  With identical objects,
+there are only two types of information available: each object's
+present location and its path of motion.  We report two sets of
+experiments intended to reveal how observers use this type of
+information in MVT.  In one set, all objects reappeared either at the
+same position they had occupied prior to the gap (the position
+expected if observers only remembered the targets' pre-gap locations),
+the position expected if each had continued moving at a constant
+velocity during the gap (the position expected if observers
+anticipated reappearance position based on pre-gap trajectories), or 
+
+Supported by NIH grant MH065576 to TSH.
