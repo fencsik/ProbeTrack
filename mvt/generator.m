@@ -9,21 +9,19 @@ function pathsFile = generator (sInitial)
 debug = 0;
 stopAfterNKills = 0;
 
-experiment = 'ShiftTrack7';
+experiment = 'ShiftTrack9';
 subjects = 1:10;
 %trialDuration = 4;
 % Possible trial durations, in seconds
 minTrialDuration = 5;
-maxTrialDuration = 8;
-movementRate = 9;
+maxTrialDuration = 10;
+movementSpeed = 9;
 blankDuration = 23;
 nDisks = 8;
 nTargets = 4;
 asynchronous = 0; % 1 = asynchronous, 0 = synchronous
 staticReappearance = 1; % 1 = static, 0 = moving; effectively is 0 if asynchronous == 1
-responseMode = 3; % 1 = full report, 2 = cue two/pick target, 3 = cue one
-normShift = 1;
-oddShift = 0;
+responseMode = 1; % 1 = full report, 2 = cue two/pick target, 3 = cue one
 
 %%%%% Define blocks %%%%%
 % Session 1
@@ -38,38 +36,17 @@ numTrialsList = {[8, 64]; [8, 64]; [8, 64]; [8, 64]; };
 % prefix = {'train'};
 % numTrialsList = {[30, 0]};
 
+% testing design
+subjects = 1;
+prefix = {'a', 'b'};
+numTrialsList = {[5, 45]; [5, 45]};
+staticReappearance = 0;
+asynchronous = 1;
+
 %%%%% Define IVs %%%%%
-minListLength = 64; % 8 x 8 design
+minListLength = 3; % 3 levels of reappearance position
 numBlocks = length(prefix);
 for b = 1:numBlocks
-   numTrials = numTrialsList{b};
-   if length(numTrials) > 1
-      numTrials = numTrials(2);
-   end
-   numReps = ceil(numTrials / minListLength);
-   listLength = minListLength * numReps;
-   if listLength > numTrials
-      fprintf(2, 'WARNING: Unbalanced trials in block %d\n\n', b);
-   end
-   
-   % construct a list that balances oddDisk and probeDisk
-   odd = repmat((1:8)', [8, 1]);
-   probe = [];
-   for p = 1:8
-      probe = [probe; repmat(p, [8, 1])];
-   end;
-   
-   % extend the lists as needed
-   if numReps > 1
-      odd   = repmat(odd,   [numReps, 1]);
-      probe = repmat(probe, [numReps, 1]);
-   end;
-   
-   [probe, order] = Shuffle(probe);
-   odd = odd(order);
-   
-   probeDiskList{b} = probe;
-   oddDiskList{b}   = odd;
 end;
 
 fprintf(2, 'Ready to generate %d block(s) for %d subject(s).\n', numBlocks, length(subjects));
@@ -85,57 +62,21 @@ end;
 starttime = clock;
 
 
-bufferZone = 50;
-preBlankRect = [0 0 1024-200 768-100];
-preBlankBorder = 50;
-
-clear screen;
-
-
-% major variables
+bufferZone = 200;
 
 % timing variables
-predictedMovieFrameDuration = 13.33;
-maxMovieFrames = ceil(maxTrialDuration*1000/predictedMovieFrameDuration);
-minMovieFrames = ceil(minTrialDuration*1000/predictedMovieFrameDuration);
+predictedFrameDuration = 13.33;
+maxFrames = ceil(maxTrialDuration*1000/predictedFrameDuration);
+minFrames = ceil(minTrialDuration*1000/predictedFrameDuration);
 
 % size/distance variables
 %MainWindow = screen(0, 'OpenWindow', [], [], 8);
-imageX=35;
-imageY=35;
-imageRect = [0 0 imageX imageY];
 screenX = 1024;
 screenY = 768;
-screenRect = [0 0 screenX screenY];
-%hz = round(screen(MainWindow, 'FrameRate'));
-edgeZone = imageY;
+diskDiameter = 40;
+rectScreen = [0 0 screenX screenY];
+rectDisplay = CenterRect([0, 0, screenX - diskDiameter, screenY - diskDiameter], rectScreen);
 
-% center pre-gap rectangle within screenRect
-preBlankRect = CenterRect(preBlankRect, screenRect);
-
-
-
-% movement variables
-global fullCircle halfCircle;
-fullCircle = 24;
-halfCircle = 12;
-% increment = (rate*30)*(frameDuration);
-degreesPerDirection = 360/24;
-
-maxReplacements = 100; % how many times we can replace a single disk
-maxRestarts = 1000; % how many times we can restart placement of all disks
-tau = clock;
-rand('state',sum(100*tau));
-state=rand('state');
-
-
-% startCoordinates = zeros(nBalls, 2);
-xdim = 5; ydim = 6;% a 5 by 6 grid of positions
-windowX = 100;windowY = 100;% each cell is 125 by 125 pixels
-%%cxy = newGrids(xdim, ydim, windowX, windowY, screenRect);
-
-
-badPath = 1;
 for sub = subjects
    %	initTime = GetSecs;
    restarts = 0;
@@ -143,69 +84,73 @@ for sub = subjects
    for block = 1:numBlocks
       filename = [prefix{block} num2str(sub)];
       numTrials = numTrialsList{block};
-      probeDisk = probeDiskList{block};
-      oddDisk = oddDiskList{block};
-      
       pracTrials = 0;
       if length(numTrials) > 1
          pracTrials = numTrials(1);
-         numTrials = numTrials(1) + numTrials(2);
-         pracProbeDisk = Shuffle(probeDisk);
-         probeDisk = [pracProbeDisk(1:pracTrials); probeDisk];
-         pracOddDisk = Shuffle(oddDisk);
-         oddDisk = [pracOddDisk(1:pracTrials); oddDisk];
+         numTrials = numTrials(2);
+      end
+      numReps = ceil(numTrials / minListLength);
+      listLength = minListLength * numReps;
+      if listLength > numTrials
+         fprintf(2, 'WARNING: Unbalanced trials in block %d\n\n', b);
+      end
+      
+      % construct a list that balances reappearance position
+      shift = [-1; 0; 1];
+      % extend the lists as needed
+      if numReps > 1
+         shift = repmat(shift, [numReps, 1]);
+      end
+      shift = Shuffle(shift);
+      % generate practice trial types (random)
+      if pracTrials > 0
+         pracShift = shift(Randi(length(shift), [pracTrials, 1]));
+         shift = [pracShift; shift];
       end
 
+      numTrials = numTrials + pracTrials;
+      
       % determine trial length (in frames)
-      movieFrames = minMovieFrames + Randi(maxMovieFrames - (minMovieFrames-1), [numTrials,1]) - 1;
+      numFrames = minFrames + Randi(maxFrames - (minFrames-1), [numTrials,1]) - 1;
 
       % movement vector length
-      targetMagnitude = (movementRate*30)*(predictedMovieFrameDuration)/1000;
+      velocity = (movementSpeed*30)*(predictedFrameDuration)/1000;
 
       % use kills to keep track of where problems are occuring
-      kills = zeros(1,10);
-      badTurns = 0;
+      kills = zeros(1,2);
 
+      startPositions = zeros(nDisks, 2, numTrials);
+      startDirections = zeros(nDisks, numTrials);
+      blankStarts = zeros(nDisks, numTrials);
+      
       for trial = 1:numTrials
-         blankWindowStart = round(2000/predictedMovieFrameDuration);
-         blankWindowEnd   = movieFrames(trial) - round(1000/predictedMovieFrameDuration);
+         blankWindowStart = round(2000/predictedFrameDuration);
+         blankWindowEnd   = numFrames(trial) - round(1000/predictedFrameDuration);
          if asynchronous == 1
             % Pick random blank intervals for each disk
-            blankStart = Randi(blankWindowEnd - blankWindowStart + 1, [nDisks, 1]) + ...
-                blankWindowStart - 1;
+            frames = Shuffle(blankWindowStart:blankWindowEnd);
+            blankStarts(:, trial) = frames(1:nDisks)';
          else
             if staticReappearance == 1
                % The blank interval occurs blankDuration frames before the
                % last frame
-               blankStart = repmat(movieFrames(trial) - blankDuration, [nDisks, 1]);
+               blankStarts(:, trial) = repmat(numFrames(trial) - blankDuration, [nDisks, 1]);
             else
                % Pick one random blank interval for all disks
-               blankStart = repmat(Randi(blankWindowEnd - blankWindowStart + 1, 1) + blankWindowStart - 1, ...
-                                   [nDisks, 1]);
+               blankStarts(:, trial) = repmat(Randi(blankWindowEnd - blankWindowStart + 1, 1) + blankWindowStart - 1, ...
+                                              [nDisks, 1]);
             end;
          end;
-         blankEnd = blankStart + blankDuration;
-         
-         if debug
-            [movieFrames(trial),  blankStart, blankEnd]
-         end;
-         
-         trajectory = zeros(nDisks, 2, movieFrames(trial));
-
-         % set up vectors of individual signal and noise magnitudes
-         magnitude = ones(nDisks, 1) * targetMagnitude; 
-         % noisy movement is not being used here:
-         % noiseMagnitude = zeros(nDisks, 1); 
+         blankEnd = blankStarts(:, trial) + blankDuration;
 
          restarts = 0;
-         badPath = 1;
          
          redoLocationsCounter = 0;
 
          deathFlag = 999;
          while deathFlag > 0
             % quit if we've been going for too long:
-            if stopAfterNKills > 0 & sum(kills(1:(size(kills,2)-1))) > (stopAfterNKills*numTrials)
+            if stopAfterNKills > 0 & sum(kills) > stopAfterNKills * numTrials
                kills = [1:(size(kills, 2)); kills]
                fprintf(1, 'Too many kills.\n');
                fprintf(1, 'Last kill = %d\n', deathFlag);
@@ -215,366 +160,111 @@ for sub = subjects
             % while loop waits until a viable trajectory is generated
             deathFlag = 0;
 
+            % starting positions
             if redoLocationsCounter > 0
                % keep the same locations and pick new directions
                redoLocationsCounter = redoLocationsCounter - 1;
             else
-               % find starting coordinates by brute force: repeatedly select random points
-               % for each disk until it is far enough from all the others:
-               startCoordinates = zeros(nDisks, 2);
-               for d = 1:nDisks
-                  replacements = 0;
-                  badPlacement = 1;
-
-                  while badPlacement
-                     startCoordinates(d, 1) = Randi(screenX - (2 * edgeZone)) + edgeZone;
-                     startCoordinates(d, 2) = Randi(screenY - (2 * edgeZone)) + edgeZone;
-                     if d > 1
-                        if all(InterDiskDistances(startCoordinates(1:d,:)) >= bufferZone)
-                           badPlacement = 0;
-                        else
-                           replacements = replacements + 1;
-                           if replacements > 1000
-                              break;
-                           end;
-                        end;
-                     else
-                        badPlacement = 0;
-                     end;
-                  end;
-                  if badPlacement
-                     deathFlag = 1;
-                     kills(deathFlag) = kills(deathFlag) + 1;
-                     break;
-                  else
-                     i = size(kills,2);
-                     kills(i) = kills(i) + replacements;
-                  end;
-               end; % for d = 1:nDisks
-               if ~badPlacement
-                  if debug
-                     fprintf(1, 'Picked new locations. ');
-                  end;
-                  redoLocationsCounter = 0;
-               end;
-            end;
-
-            if deathFlag > 0
-               continue;
-            end;
+               nStarts = [5 5]; % ncol, nrow
+               delta = [RectWidth(rectDisplay) / (nStarts(1) + 1), RectHeight(rectDisplay) / (nStarts(2) + 1)];
+               pos = [repmat((1:nStarts(1))', nStarts(2), 1), ...
+                      reshape(repmat(1:nStarts(2), nStarts(1), 1), prod(nStarts), 1)];
+               [tmp, index] = sort(rand(size(pos, 1), 1)); 
+               pos = pos(index(1:nDisks), :) .* repmat(delta, nDisks, 1);
+               startPositions(:, :, trial) = pos;
+            end
 
             % finished finding a good set of starting points
 
-            trajectory = zeros(nDisks, 2, movieFrames(trial));
-            trajectory(:, :, 1) = startCoordinates;
-            oldCoordinates = startCoordinates;
+            theta = rand(nDisks, 1) * 2 * pi;
+            startDirections(:, trial) = theta;
+            delta = [velocity .* cos(theta), -1 .* velocity .* sin(theta)];
 
-            direction = Randi(fullCircle, [nDisks 1]); % initial random directions in 24 degree increments
-            magnitude = ones(nDisks, 1) * targetMagnitude;
-            noiseMagnitude = zeros(nDisks, 1);
+            reappearancePositions = zeros(nDisks, 2);
 
-            f = 2;
-            while f <= movieFrames(trial)
-               % move one frame:
-               [x y direction err bounce] = MoveOneStep (oldCoordinates, direction, magnitude, screenRect, edgeZone, fullCircle);
-
-               % note any errors:
-               if any(err > 0)
-                  deathFlag = 2;
-                  kills(deathFlag) = kills(deathFlag) + 1;
-                  if debug
-                     fprintf(1, 'failed at step %d, frame %d\n', deathFlag, f);
-                  end;
-                  break;
-               end;
+            f = 1;
+            while f <= numFrames(trial)
+               noBouncing = zeros(nDisks, 1);
                
-               newCoordinates = [x y];
-               trajectory(:, :, f) = newCoordinates;
-
-
-               % make sure disks don't bounce anywhere between the -1 and 1 positions
-               % (but only check those in their blank interval
-               if blankDuration > 0 & any(f > blankStart - blankDuration & f <= blankEnd)
-                  disks = (f > blankStart - blankDuration & f <= blankEnd);
-                  if any(bounce(disks) > 0)
-                     deathFlag = 3;
-                     kills(deathFlag) = kills(deathFlag) + 1;
-                     if debug
-                        fprintf(1, 'failed at step %d, frame %d\n', deathFlag, f);
-                     end;
-                     break;
-                  end;
+               % mark disks that shouldn't bounce
+               index = f > blankStarts(:, trial) - blankDuration - 1 & f <= blankEnd;
+               if blankDuration > 0 & any(index)
+                  noBouncing(index) = 1;
                end;
 
+               nextX = pos(:, 1) + delta(:, 1);
+               nextY = pos(:, 2) + delta(:, 2);
+               bounceX = nextX < rectDisplay(RectLeft) | nextX > rectDisplay(RectRight);
+               bounceY = nextY < rectDisplay(RectTop) | nextY > rectDisplay(RectBottom);
+               % make sure the noBouncing disks don't bounce
+               if any(bounceX | bounceY) & any(noBouncing(bounceX | bounceY))
+                  % at least one bouncing disk cannot be bouncing on this frame
+                  deathFlag = 1;
+                  kills(deathFlag) = kills(deathFlag) + 1;
+                  if debug, fprintf('failed at step %d, frame %d\n', deathFlag, f); end
+                  break;
+               end
+               if any(bounceX)
+                  delta(bounceX, 1) = -1 * delta(bounceX, 1);
+               end
+               if any(bounceY)
+                  delta(bounceY, 2) = -1 * delta(bounceY, 2);
+               end
 
-               % make sure disks are a mindistance apart on last visible pre-gap frame
-               if blankDuration > 0 & f == blankStart - 1
-                  if any(InterDiskDistances(newCoordinates) < bufferZone)
-                     deathFlag = 4;
-                     kills(deathFlag) = kills(deathFlag) + 1;
-                     if debug
-                        fprintf(1, 'failed at step %d, frame %d\n', deathFlag, f);
-                     end;
-                     break;
-                  end;
-               end;
+               pos = pos + delta;
 
+               if blankDuration > 0
+                  index = 0;
+                  % mark positions of any disks that are in their post-gap reappearance positions
+                  switch shift(trial)
+                   case -1
+                     index = f == blankStarts(:, trial) - blankDuration - 1;
+                   case 0
+                     index = f == blankStarts(:, trial) - 1;
+                   case 1
+                     index = f == blankEnd;
+                   otherwise
+                     error(['unknown shift ', num2str(shift), ' requested.']);
+                  end
+                  if any(index)
+                     reappearancePositions(index, :) = pos(index, :);
+                  end
 
-               %% % set preBlankCoordinates
-               %% if blankDuration > 0 & f == blankStart(disk) - 1
-               %%    preBlankCoordinates = newCoordinates;
-               %%    preBlankDirections = direction;
-               %% end;
-
-
-               % At the end of each disk's blank interval, adjust its reappearance
-               % position according to the current trialType
-               if blankDuration > 0 & any(f == blankEnd)
-                  disks = (f == blankEnd);
-                  for d = disks
-                     if d == oddDisk(trial)
-                        shift = oddShift;
-                     else
-                        shift = normShift;
-                     end;
-
-                     if shift == -1
-                        % move to position -1
-                        trajectory(d, :, f) = trajectory(d, :, f - (2 * blankDuration) - 1);
-                     elseif shift == 0
-                        % move to position 0
-                        trajectory(d, :, f) = trajectory(d, :, f - blankDuration - 1);
-                     elseif shift == 1
-                        % move to position 1
-                        % nothing to do
-                     else
-                        ['ERROR: unknown shift ', num2str(shift), ' requested.']
-                        return;
-                     end;
-                  end;
-               end;
-
+                  % At the end of each disk's blank interval, adjust its reappearance
+                  % position according to the current trialType
+                  index = f == blankEnd;
+                  if any(index)
+                     pos(index, :) = reappearancePositions(index, :);
+                  end
+               end
 
                % if f is the final frame, then check that everything is far enough apart
-               if f == movieFrames(trial)
-                  if any(InterDiskDistances(trajectory(:, :, f)) < bufferZone)
+               if f == numFrames(trial)
+                  D = sqrt((repmat(pos(:, 1), [1, nDisks]) - repmat(pos(:, 1)', [nDisks, 1])) .^ 2 + ...
+                           (repmat(pos(:, 2), [1, nDisks]) - repmat(pos(:, 2)', [nDisks, 1])) .^ 2);
+                  if any(D > 0 & D < bufferZone)
                      % end point is no good
-                     deathFlag = 5;
+                     deathFlag = 2;
                      kills(deathFlag) = kills(deathFlag) + 1;
-                     if debug
-                        fprintf(1, 'failed at step %d, frame %d\n', deathFlag, f);
-                     end;
+                     if debug, fprintf(1, 'failed at step %d, frame %d\n', deathFlag, f); end
                      break;
-                  end;
-               end;
-               
-
-               %set the old coordinates (for the next frame) equal to the coordinates used for the current frame 
-               oldCoordinates = trajectory(:, :, f);
+                  end
+               end
                f = f + 1;
-            end; % while f <= movieFrames(trial)
-         end; % while deathFlag > 0
-         
-         if blankDuration > 0
-            for d = 1:nDisks
-               trajectory(d, :, (blankStart(d)):(blankEnd(d)-1)) = -100;
-            end;
-         end;
-         
-         paths{trial} = trajectory;
-         clear trajectory;
-      end; % for trial = 1:numTrials
+            end % while f <= numFrames(trial)
+         end % while deathFlag > 0
+      end % for trial = 1:numTrials
 
-      save (filename, 'experiment', 'paths', 'movementRate', 'blankDuration', ...
-            'pracTrials', 'nTargets', 'probeDisk', 'oddDisk', 'normShift', 'oddShift', ...
-            'asynchronous', 'responseMode', 'predictedMovieFrameDuration');
+      save (filename, 'experiment', 'numFrames', 'startPositions', 'startDirections', ...
+            'shift', 'blankStarts', 'velocity', 'rectScreen', 'rectDisplay', 'diskDiameter', ...
+            'movementSpeed', 'blankDuration', 'pracTrials', 'nTargets', ...
+            'asynchronous', 'responseMode', 'predictedFrameDuration');
 
-      fprintf(2, '***** Finished %s *****\nKills by category:\n', filename);
+      fprintf('***** Finished %s *****\nKills by category:\n', filename);
       disp([1:(size(kills,2)); kills]);
    end; % for block = 1:numBlocks
 end; % for sub = subjects
 
-fprintf(2, '\nElapsed time = %1.2f sec\n\n', etime(clock, starttime));
+fprintf('\nElapsed time = %1.2f sec\n\n', etime(clock, starttime));
 
 
-function newCoordinates = computeCoordinates(oldCoordinates, theta, magnitude)
-
-% global increment
-
-%calculate the next position
-   newCoordinates(:, 1) = magnitude.*sin(theta) + oldCoordinates(:, 1); %x coordinate of the next point
-   newCoordinates(:, 2) = magnitude.*cos(theta) + oldCoordinates(:, 2); %y coordinate of the next point
-
-%%% END OF computeCoordinates %%%
-
-
-function [finalTheta, finalMagnitude] = addNoiseVector(direction, magnitude, noiseDirection, noiseMagnitude)
-
-   degreesPerDirection = 360/24;
-
-   direction = mod(direction - 1, 24) + 1; % eliminate negative directions
-   theta = (direction*degreesPerDirection)*(pi/180); % direction to radians
-   noiseTheta = (noiseDirection*degreesPerDirection)*(pi/180); % noise direction in radians
-
-   %now convert to cartesian coordinates and add
-   [signalX, signalY] = pol2cart(theta, magnitude);
-   [noiseX, noiseY] = pol2cart(noiseTheta, noiseMagnitude);
-   finalX = signalX + noiseX;
-   finalY = signalY + noiseY;
-   [finalTheta, finalMagnitude] = cart2pol(finalX, finalY);
-
-%%% END OF addNoiseVector %%%
-
-
-function [distances] = InterDiskDistances (coordinates)
-   [nrow ncol] = size(coordinates);
-   if ncol ~= 2
-      'ERROR: InterDiskDistances given non-coordinate input matrix'
-      return;
-   elseif nrow == 1
-      'ERROR: InterDiskDistances given only one pair of coordinates'
-      return;
-   else
-      distances = [];
-      for d = 1:nrow
-         x = coordinates(1, 1); y = coordinates(1, 2);
-         coordinates(1, :) = [];
-         distances = [distances; ...
-                      sqrt((x - coordinates(:, 1)).^2 + (y - coordinates(:, 2)).^2)];
-      end;
-   end;
-
-%%% END OF InterDiskDistances %%%
-
-
-function [distances] = DistancesFromDisk (disk, coordinates)
-   [nrow ncol] = size(coordinates);
-   if ncol ~= 2 | size(disk, 2) ~= 2
-      'ERROR: DistancesFromDisk given non-coordinate input matrix'
-      return;
-   elseif size(disk, 1) > 1
-      'ERROR: first argument to DistancesFromDisk must be coordinates of a single disk'
-      return;
-   else
-      distances = sqrt((disk(1) - coordinates(:, 1)).^2 + (disk(2) - coordinates(:, 2)).^2);
-   end;
-
-%%% END OF DistancesFromDisk %%%
-
-
-function out = OutOfBounds (coordinates, edgeRect, border)
-% Returns 1 if any coordinates are outside of the edgeRect
-% minus the border, 0 otherwise.
-   [nrow ncol] = size(coordinates);
-   out = 0;
-   if ncol == 2
-      if any(coordinates(:,1) < (edgeRect(1) + border)) | ...
-               any(coordinates(:,2) < (edgeRect(2) + border)) | ...
-               any(coordinates(:,1) > (edgeRect(3) - border)) | ...
-               any(coordinates(:,2) > (edgeRect(4) - border))
-         out = 1;
-      end;
-   elseif ncol < 2
-      'ERROR: OutOfBounds given input with less than two columns'
-      return;
-   else
-      'ERROR: OutOfBounds given input with more than two columns'
-      return;
-   end;
-
-%%% END OF OutOfBounds %%%
-
-
-function [x, y, d, error, bounce] = MoveOneStep (coordinates, direction, magnitude, edgeRect, edgeZone, fullCircle)
-% Moves all objects one step
-   
-   [nrow ncol] = size(coordinates);
-   if nrow ~= size(direction,1) | nrow ~= size(magnitude, 1) | ncol ~= 2
-      'ERROR: bad arguments passed to MoveOneStep'
-      coordinates
-      direction
-      magnitude
-      return;
-   end;
-   
-   error = zeros(nrow, 1);
-   bounce = zeros(nrow, 1);
-   halfCircle = fullCircle / 2;
-
-   [finalTheta, finalMagnitude] = addNoiseVector(direction, magnitude, 0, 0);
-   newCoordinates = computeCoordinates(coordinates, finalTheta, finalMagnitude); % recompute coordinates
-
-   % try to bounce out-of-bounds disks off a wall:
-   status = OutOfBoundsBits(newCoordinates, edgeRect, edgeZone);
-   if any(status ~= 0)
-      bounce = (status ~= 0);
-      direction = BounceOffWall(direction, status, fullCircle);
-   end;
-
-   % now recomputed movement with bounce:
-   [finalTheta, finalMagnitude] = addNoiseVector(direction, magnitude, 0, 0);
-   newCoordinates = computeCoordinates(coordinates, finalTheta, finalMagnitude); % recompute coordinates
-
-   % if any are still out of bounds, then a bounce was ineffective
-   error = OutOfBoundsBits(newCoordinates, edgeRect, edgeZone);
-
-   x = newCoordinates(:,1); 
-   y = newCoordinates(:,2); 
-   d = direction;
-
-%%% END OF MoveOneStep %%%
-
-
-
-function out = OutOfBoundsBits (coordinates, edgeRect, border)
-% Sets bits of out array, such that 
-%    bit 1 (1): approaching left edge
-%    bit 2 (2): approaching ceiling
-%    bit 3 (4): approaching right edge
-%    bit 4 (8): approaching floor
-%           0 : otherwise
-   [nrow ncol] = size(coordinates);
-   out = zeros(nrow, 1);
-   if ncol == 2
-      left    = (coordinates(:,1) < (edgeRect(1) + border)); % approaching left edge
-      ceiling = (coordinates(:,2) < (edgeRect(2) + border)); % approaching ceiling
-      right   = (coordinates(:,1) > (edgeRect(3) - border)); % approaching right edge
-      floor   = (coordinates(:,2) > (edgeRect(4) - border)); % approaching floor
-
-      out(left)    = out(left) + 1;
-      out(ceiling) = out(ceiling) + 2;
-      out(right)   = out(right) + 4;
-      out(floor)   = out(floor) + 8;
-   elseif ncol < 2
-      'ERROR: OutOfBoundsBits given input with less than two columns'
-      return;
-   else
-      'ERROR: OutOfBoundsBits given input with more than two columns'
-      return;
-   end;
-
-%%% END OF OutOfBoundsBits %%%
-   
-
-function newdir = BounceOffWall (olddir, wall, fullCircle)
-% Bounce a disk off a wall. Direction is in the range 1:fullCircle,
-% and wall is the output of the OutOfBoundsBits function above.
-   halfCircle = fullCircle/2;
-
-   if size(olddir,1) == size(wall,1)
-      newdir  = olddir;
-      left    = (bitand(wall,1) > 0);
-      ceiling = (bitand(wall,2) > 0);
-      right   = (bitand(wall,4) > 0);
-      floor   = (bitand(wall,8) > 0);
-
-      newdir(left)    = fullCircle - newdir(left);
-      newdir(ceiling) = halfCircle - newdir(ceiling);
-      newdir(right)   = fullCircle - newdir(right);
-      newdir(floor)   = halfCircle - newdir(floor);
-   else
-      'ERROR: BounceOfWall given mismatched input'
-      return;
-   end;
-
-%%% END OF BounceOffWall %%%
