@@ -269,3 +269,18 @@ shouldn't depend on the presence or difficulty (?) of an intervening
 task.
 
 More to come...
+
+
+November 1, 2004
+
+Findings since VSS:
+
+Turns out that the weird equivalence between reappearance positions -1
+and 0 is artifactual: ShiftTrack4 showed that -1 and 1 are equivalent
+and below 0 when the stimuli stop moving immediately after the gap.
+
+The accuracy pattern seems to change under asynchronous disappearance
+conditions (ShiftTrack5).
+
+Planned study: top-down influences on reacquisition strategies
+
