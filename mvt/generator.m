@@ -4,7 +4,7 @@ function pathsFile = generator (sInitial)
 %%% generates a set of trajectories for use with Multiple Object Tracking experiments
 %%% Authors: David Fencsik (based on file by Todd Horowitz)
 %%%
-%%% Version: $Revision: 1.30 $ $Date: 2004/08/13 19:25:10 $ (UTC)
+%%% Version: $Revision: 1.31 $ $Date: 2004/08/13 20:02:24 $ (UTC)
 
 starttime = clock;
 debug = 0;
@@ -148,7 +148,7 @@ for sub = subjects
       nTrials = size(trialType, 1);
 
       % determine trial length (in frames)
-      movieFrames = minMovieFrames + Randi(maxMovieFrames - (minMovieFrames-1), [nTrials,1]) - 1
+      movieFrames = minMovieFrames + Randi(maxMovieFrames - (minMovieFrames-1), [nTrials,1]) - 1;
       %% blank interval is picked separately for each disk in ShiftTrack5
       % blankStart = movieFrames - blankDuration;
       % blankEnd = movieFrames;
@@ -356,13 +356,15 @@ for sub = subjects
                
 
                %set the old coordinates (for the next frame) equal to the coordinates used for the current frame 
-               oldCoordinates = newCoordinates;
+               oldCoordinates = trajectory(:, :, f);
                f = f + 1;
             end; % while f <= movieFrames(trial)
          end; % while deathFlag > 0
          
          if blankDuration(trial) > 0
-            trajectory(:, :, (blankStart(trial)):(blankEnd(trial)-1)) = -100;
+            for d = 1:nDisks
+               trajectory(d, :, (blankStart(d)):(blankEnd(d)-1)) = -100;
+            end;
          end;
          
          paths{trial} = trajectory;
