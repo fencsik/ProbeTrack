@@ -13,3 +13,11 @@ $LastChangedDate$
 * shifttrack5: shifttrack3 with asynchronous disappearance
 * shifttrack6: shifttrack4 with a within-block design
 * shifttrack8: shifttrack6 with 1 vs. 4 targets
+
+* stoptrack1: compare performance on moving and static trials with 1
+  or 4 targets
+* stoptrack2: stoptrack1 with 1, 2, 3, or 4 targets
+* stoptrack3: stoptrack1 with random trial durations and 2 or 4
+  targets
+* stoptrack4: replicates stoptrack3 with a new set of naive subjects
+
