@@ -4,7 +4,7 @@ function pathsFile = generator (sInitial)
 %%% generates a set of trajectories for use with Multiple Object Tracking experiments
 %%% Authors: David Fencsik (based on file by Todd Horowitz)
 %%%
-%%% Version: $Revision: 1.31 $ $Date: 2004/08/13 20:02:24 $ (UTC)
+%%% Version: $Revision: 1.32 $ $Date: 2004/08/16 15:49:28 $ (UTC)
 
 starttime = clock;
 debug = 0;
@@ -26,9 +26,9 @@ prefix = {%'trainA';
           'prac4m'; 'exp4m';
           'trainB';
          };
-prefix = {'test'}; % for testing
-practrials = [10 1];
-exptrials = [40 1];
+prefix = {'pracA'; 'pracB'; 'pracC'; 'expA'; 'expB'; 'expC';}; % for testing
+practrials = [2 1];
+exptrials = [10 1];
 mvttrials = [30 1];
 testtrials = [1 1];
 trialTypes = {%repmat(1, mvttrials);
@@ -52,9 +52,12 @@ blankDurations = {%repmat(0, mvttrials);
                   repmat(23, practrials); repmat(23, exptrials);
                   repmat(23, mvttrials);
                  }; % 23 = 307 ms, 30 = 400 ms, 38 = 507 ms, 45 = 600 ms
-trialTypes = {repmat([-1; 0; 1], testtrials)};
-movementRates = {repmat([9; 9; 9], testtrials)};
-blankDurations = {repmat([23; 23; 23], testtrials)}; % 23 = 307 ms, 30 = 400 ms, 38 = 507 ms, 45 = 600 ms
+trialTypes = {repmat(-1, practrials); repmat(0, practrials); repmat(1, practrials); 
+              repmat(-1, exptrials); repmat(0, exptrials); repmat(1, exptrials);};
+movementRates = {repmat(9, practrials); repmat(9, practrials); repmat(9, practrials); 
+                 repmat(9, exptrials); repmat(9, exptrials); repmat(9, exptrials);};
+blankDurations = {repmat(23, practrials); repmat(23, practrials); repmat(23, practrials); 
+                 repmat(23, exptrials); repmat(23, exptrials); repmat(23, exptrials);}; % 23 = 307 ms, 30 = 400 ms, 38 = 507 ms, 45 = 600 ms
 
 switchedDisk = 0;
 nBlocks = size(trialTypes,1);
@@ -327,10 +330,10 @@ for sub = subjects
                   disks = (f == blankEnd);
                   if trialType(trial) == -1
                      % move to position -1
-                     trajectory(disks, :, f) = trajectory(disks, :, f - (2 * blankDuration(trial)));
+                     trajectory(disks, :, f) = trajectory(disks, :, f - (2 * blankDuration(trial)) - 1);
                   elseif trialType(trial) == 0
                      % move to position 0
-                     trajectory(disks, :, f) = trajectory(disks, :, f - blankDuration(trial));
+                     trajectory(disks, :, f) = trajectory(disks, :, f - blankDuration(trial) - 1);
                   elseif trialType(trial) == 1
                      % move to position 1
                      % nothing to do
