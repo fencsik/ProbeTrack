@@ -26,11 +26,17 @@ normShift = 1;
 oddShift = 0;
 
 %%%%% Define blocks %%%%%
+% Session 1
 prefix = {'a', 'b', 'c', 'd'};
+% Session 2
+prefix = {'w', 'x', 'y', 'z'};
+
 numTrialsList = {[8, 64]; [8, 64]; [8, 64]; [8, 64]; };
 
-%prefix = {'test'};
-%numTrialsList = {[1, 2]};
+% % Training blocks 
+% blankDuration = 0;
+% prefix = {'train'};
+% numTrialsList = {[30, 0]};
 
 %%%%% Define IVs %%%%%
 minListLength = 64; % 8 x 8 design
@@ -379,7 +385,7 @@ for sub = subjects
          clear trajectory;
       end; % for trial = 1:numTrials
 
-      save (filename, 'experiment', 'paths', 'movementRate', 'blankStart', 'blankDuration', ...
+      save (filename, 'experiment', 'paths', 'movementRate', 'blankDuration', ...
             'pracTrials', 'nTargets', 'probeDisk', 'oddDisk', 'normShift', 'oddShift', ...
             'asynchronous', 'responseMode', 'predictedMovieFrameDuration');
 
