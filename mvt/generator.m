@@ -4,74 +4,62 @@ function pathsFile = generator (sInitial)
 %%% generates a set of trajectories for use with Multiple Object Tracking experiments
 %%% Authors: David Fencsik (based on file by Todd Horowitz)
 %%%
-%%% Version: $Revision: 1.35 $ $Date: 2004/08/19 20:00:02 $ (UTC)
+%%% Version: $Revision: 1.36 $ $Date: 2004/09/30 19:22:33 $ (UTC)
 
 debug = 0;
 stopAfterNKills = 0;
 
-subjects = 1:12; % e.g, 1:10 [ 2 7 11] 
+experiment = 'ShiftTrack7';
+subjects = 1; %:12; % e.g, 1:10 [ 2 7 11] 
 %trialDuration = 4;
 % Possible trial durations, in seconds
-minTrialDuration = 3;
-maxTrialDuration = 6;
-nDisks = 10;
+minTrialDuration = 5;
+maxTrialDuration = 8;
+movementRate = 9;
+blankDuration = 23;
+nDisks = 8;
+nTargets = 4;
 asynchronous = 0; % 1 = asynchronous, 0 = synchronous
 staticReappearance = 1; % 1 = static, 0 = moving; effectively is 0 if asynchronous == 1
 %nTargets = 2;
 
-% block-level variables
-prefix = {'train'; 
-          'prac2A'; 'exp2A'; 
-          'prac2B'; 'exp2B'; 
-          'prac5A'; 'exp5A'; 
-          'prac5B'; 'exp5B'; 
-         };
-% prefix = {'pracA'; 'pracB'; 'pracC'; 'expA'; 'expB'; 'expC';}; % for testing
-practrials = [3 1];
-exptrials = [20 1];
-mvttrials = [30 1];
-testtrials = [1 1];
-trialTypes = {repmat(1, mvttrials);
-              repmat([-1; 0; 1], practrials); repmat([-1; 0; 1], exptrials);
-              repmat([-1; 0; 1], practrials); repmat([-1; 0; 1], exptrials);
-              repmat([-1; 0; 1], practrials); repmat([-1; 0; 1], exptrials);
-              repmat([-1; 0; 1], practrials); repmat([-1; 0; 1], exptrials);
-             };
-movementRates = {repmat(9, mvttrials);
-                 repmat([9; 9; 9], practrials); repmat([9; 9; 9], exptrials);
-                 repmat([9; 9; 9], practrials); repmat([9; 9; 9], exptrials);
-                 repmat([9; 9; 9], practrials); repmat([9; 9; 9], exptrials);
-                 repmat([9; 9; 9], practrials); repmat([9; 9; 9], exptrials);
-                };
-blankDurations = {repmat(0, mvttrials);
-                  repmat([23; 23; 23], practrials); repmat([23; 23; 23], exptrials);
-                  repmat([23; 23; 23], practrials); repmat([23; 23; 23], exptrials);
-                  repmat([23; 23; 23], practrials); repmat([23; 23; 23], exptrials);
-                  repmat([23; 23; 23], practrials); repmat([23; 23; 23], exptrials);
-                 }; % 23 = 307 ms, 30 = 400 ms, 38 = 507 ms, 45 = 600 ms
+%%%%% Define blocks and independent variables %%%%%
+prefix = {'train'; 'prac2A'; 'exp2A'; 'prac2B'; 'exp2B'; 'prac5A'; 'exp5A'; 'prac5B'; 'exp5B'};
+numTrials = {30; 9; 60; 9; 60; 9; 60; 9; 60};
 
-%%% subjects = 1;
-%%% prefix = {'test'};
-%%% trialTypes = {repmat([-1; 0; 1], testtrials)};
-%%% movementRates = {repmat([9; 9; 9], testtrials)};
-%%% blankDurations = {repmat([23; 23; 23], testtrials)};
+prefix = {'test'};
+numTrials = {2};
 
-switchedDisk = 0;
-nBlocks = size(trialTypes,1);
-if nBlocks ~= size(movementRates,1) | nBlocks ~= size(blankDurations,1)
-   'ERROR: block variables are not the same size'
-   return;
-end;
-
-for block = 1:nBlocks
-   if size(trialTypes{block}, 1) ~= size(movementRates{block}, 1) | ...
-          size(trialTypes{block}, 1) ~= size(blankDurations{block}, 1) | ...
-          size(trialTypes{block}, 2) ~= size(movementRates{block}, 2) | ...
-          size(trialTypes{block}, 2) ~= size(blankDurations{block}, 2)
-      ['ERROR: Block ' num2str(block) ' contains matrices of different size']
-      return;
+minListLength = 8; % 2 x 2 x 2 design
+numBlocks = length(prefix);
+for b = 1:numBlocks
+   numReps = ceil(numTrials{b} / minListLength);
+   listLength = minListLength * numReps;
+   if listLength > numTrials
+      fprintf(2, 'WARNING: Unbalanced trials in block %d\n\n', block);
    end;
-end;
+   
+   % construct a list that balances oddTarget, oddProbe, probeTarget
+% % construct a list that balances t1Field, t2Type, and t2Lag
+% t1Field = [];
+% for field = 1:t1NumFields
+%    t1Field = [t1Field; repmat(field, [2 * t2NumLags, 1])];
+% end;
+% t2Type = repmat([repmat(1, [t2NumLags, 1]); repmat(2, [t2NumLags, 1])], [t1NumFields, 1]);
+% t2Lag = repmat(laglist', [2 * t1NumFields, 1]);
+
+% % extend the lists as needed
+% if numReps > 1
+%    t1Field = repmat(t1Field, [numReps, 1]);
+%    t2Type  = repmat(t2Type,  [numReps, 1]);
+%    t2Lag   = repmat(t2Lag,   [numReps, 1]);
+% end;
+
+% % shuffle them
+% [t1Field, order] = Shuffle(t1Field);
+% t2Type = t2Type(order);
+% t2Lag  = t2Lag(order);
+
 
 fprintf(2, 'Ready to generate %d block(s) for %d subject(s).\n', nBlocks, length(subjects));
 fprintf(2, 'Press any key to begin, ''q'' to exit...\n');
