@@ -1,6 +1,6 @@
 function shifttrack()
 
-% $Id: track.m,v 1.8 2004/02/09 20:13:04 fencsik Exp $
+% $Id: track.m,v 1.9 2004/02/18 15:33:10 fencsik Exp $
 
 % Can observers tolerate a longer gap duration if all items disappear at once?
 % constant blank duration method rather than staircase
@@ -346,7 +346,6 @@ for block = 1:2
    end
 
    load(pathsFile);
-   nTargets = nTargets;
 
    trajectory = paths{1};
 
