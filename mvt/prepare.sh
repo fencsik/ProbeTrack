@@ -3,16 +3,16 @@
 # moves experiment files to the appropriate Public directory 
 # so experimenters can access them
 # 
-# $Id: prepare.sh,v 1.7 2004/06/24 16:03:35 fencsik Exp $
+# $Id: prepare.sh,v 1.8 2004/08/13 19:59:36 fencsik Exp $
 
-PUBLIC_DIR=~/Public/Experiments/Tracking/StopTrack/StopTrack4
+PUBLIC_DIR=~/Public/Experiments/Tracking/ShiftTrack/ShiftTrack5
 
 GENERATOR_IN=generator.m
 TRACK_IN=track.m
 TRAIN_IN=train.m
-GENERATOR_OUT=StopTrack4Gen.m
-TRACK_OUT=StopTrack4.m
-TRAIN_OUT=StopTrack4Train.m
+GENERATOR_OUT=ShiftTrack5Gen.m
+TRACK_OUT=ShiftTrack5.m
+TRAIN_OUT=ShiftTrack5Train.m
 
 PATH_FILES="*.mat"
 
