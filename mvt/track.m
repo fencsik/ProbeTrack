@@ -62,12 +62,12 @@ blocktime = now;
 [nDisks, nTrials] = size(startDirections);
 
 screenNumber = max(Screen('Screens'));
-rectDisplay = rectScreen;
 winMain = Screen(screenNumber, 'OpenWindow', [], [], 8);
+rectDisplay = rectScreen; % rename so rectScreen can be used otherwise
 rectScreen = Screen(winMain, 'Rect');
 [centerX, centerY] = RectCenter(rectScreen);
-rectDisplay = CenterRect(rectDisplay, rectScreen);
 refreshDuration = 1 / Screen(winMain, 'FrameRate', []); % sec/frame
+rectDisplay = CenterRect(rectDisplay, rectScreen);
 
 hidecursor;
 
@@ -124,7 +124,7 @@ Snd('Play', beepCorrect);
 %%% define fixation point
 fixationSize = 20;
 fixationThickness = 1;
-rectFixation = CenterRect([0 0 fixationSize fixationSize], rectScreen);
+rectFixation = CenterRect([0 0 fixationSize fixationSize], rectDisplay);
 fixationStart = [centerX, centerY];
 fixationLimits = [fixationStart - 25, fixationStart + 25];
 fixationVelocity = [3/4, 0];
@@ -136,6 +136,32 @@ Screen(winFixation, 'FillRect', colFixation, ...
        [fixationRadius - fixationThickness, 0, fixationRadius + fixationThickness, fixationSize]);
 winFixationBlank = Screen(winMain, 'OpenOffscreenWindow', [], rectFixation);
 Screen(winFixationBlank, 'FillRect', colBackground);
+% generate fixation presentation Rects 
+rectFixationMain = zeros(200, 4);
+pos = fixationStart;
+rectFixationMain(1, :) = rectFixation;
+backToStart = 0;
+f = 1;
+while 1
+   rectFixationMain(f, :) = [pos - fixationRadius, pos + fixationRadius];
+   newpos = pos + fixationVelocity;
+   if ~IsInRect(newpos(1), newpos(2), fixationLimits)
+      fixationVelocity = -1 * fixationVelocity;
+   end
+   pos = newpos;
+   if all(pos == fixationStart)
+      if backToStart == 0
+         backToStart = backToStart + 1;
+      else
+         break;
+      end
+   end
+   f = f + 1;
+end
+rectFixationMain = rectFixationMain(1:f, :);
+nFixationFrames = f;
+rectFixationDisplay = rectFixationMain - repmat([rectDisplay(RectLeft), rectDisplay(RectTop)], [nFixationFrames, 2]);
+   
 
 %%% Define display windows %%%
 dispNames        = {'winDisplay(1)', 'winDisplay(2)', 'winDisplayBlank'};
@@ -157,11 +183,11 @@ end
 diskRadius = diskDiameter / 2;
 border = 2;
 rectDisk    = [0 0 diskDiameter diskDiameter];
-diskNames        = {'', 'Correct', 'Error', 'Indicator', 'MouseOver'};
-diskBackgrounds  = {'[]', '[]', '[]', '[]', 'colOffWhite'};
-diskColors       = {'colDisk', 'colDiskCorrect', 'colDiskError', 'colDiskIndicator', 'colTransparent'};
-diskBorder       = {'border', 'border', 'border', 'border', '[]'};
-diskBorderColors = {'colDiskBorder', 'colDiskBorder', 'colDiskBorder', 'colDiskBorder', 'colTransparent'};
+diskNames        = {'', 'Correct', 'Error', 'Indicator', 'MouseOver', 'Blank'};
+diskBackgrounds  = {'[]', '[]', '[]', '[]', 'colOffWhite', 'colTransparent'};
+diskColors       = {'colDisk', 'colDiskCorrect', 'colDiskError', 'colDiskIndicator', 'colTransparent', 'colTransparent'};
+diskBorder       = {'border', 'border', 'border', 'border', '[]', '[]'};
+diskBorderColors = {'colDiskBorder', 'colDiskBorder', 'colDiskBorder', 'colDiskBorder', 'colTransparent', 'colTransparent'};
 for d = 1:length(diskNames)
    name = sprintf('winDisk%s', diskNames{d});
    eval(sprintf('%s = Screen(winMain, ''OpenOffScreenWindow'', [], rectDisk);', name));
@@ -176,19 +202,6 @@ for d = 1:length(diskNames)
 end
 
 
-% screen('copywindow', winDisplayBlank, winMain);
-% screen('copywindow', winDisk, winMain, [],          CenterRectOnPoint(rectDisk, 100, 100));
-% screen('copywindow', winDiskCorrect, winMain, [],   CenterRectOnPoint(rectDisk, 100, 200));
-% screen('copywindow', winDiskError, winMain, [],     CenterRectOnPoint(rectDisk, 100, 300));
-% screen('copywindow', winDiskIndicator, winMain, [], CenterRectOnPoint(rectDisk, 100, 400));
-% screen('copywindow', winDiskMouseOver, winMain, [], CenterRectOnPoint(rectDisk, 100, 500));
-% screen('copywindow', winDisk, winMain, [],          CenterRectOnPoint(rectDisk, 300, 100), 'transparent');
-% screen('copywindow', winDiskCorrect, winMain, [],   CenterRectOnPoint(rectDisk, 300, 200), 'transparent');
-% screen('copywindow', winDiskError, winMain, [],     CenterRectOnPoint(rectDisk, 300, 300), 'transparent');
-% screen('copywindow', winDiskIndicator, winMain, [], CenterRectOnPoint(rectDisk, 300, 400), 'transparent');
-% screen('copywindow', winDiskMouseOver, winMain, [], CenterRectOnPoint(rectDisk, 300, 500), 'transparent');
-% MouseWait(winMain);
-
 
 %%% Define animation loop
 %%% 1. Allow fixation to loop briefly
@@ -200,7 +213,7 @@ animationLoop = {
       'while GetSecs - startTime <= .5;'
       '   Screen(''copywindow'', winDisplay(1), winMain, [], rectDisplay);'
       '   if doFixation == 1;'
-      '      Screen(''copywindow'', winFixation, winMain, [], rectFixationPresentation(mod(fixationFrame, nFixationFrames) + 1, :), ''transparent'');'
+      '      Screen(''copywindow'', winFixation, winMain, [], rectFixationMain(mod(fixationFrame, nFixationFrames) + 1, :), ''transparent'');'
       '      fixationFrame = fixationFrame + 1;'
       '   end;'
       '   Screen(winMain, ''waitblanking'');'
@@ -210,7 +223,7 @@ animationLoop = {
       '   while GetSecs - startTime <= 1/3;'
       '      Screen(''copywindow'', winDisplay(f), winMain, [], rectDisplay);'
       '      if doFixation == 1;'
-      '         Screen(''copywindow'', winFixation, winMain, [], rectFixationPresentation(mod(fixationFrame, nFixationFrames) + 1, :), ''transparent'');'
+      '         Screen(''copywindow'', winFixation, winMain, [], rectFixationMain(mod(fixationFrame, nFixationFrames) + 1, :), ''transparent'');'
       '         fixationFrame = fixationFrame + 1;'
       '      end;'
       '      Screen(winMain, ''waitblanking'');'
@@ -220,7 +233,7 @@ animationLoop = {
       'while GetSecs - startTime <= 1/4;'
       '   Screen(''copywindow'', winDisplay(1), winMain, [], rectDisplay);'
       '   if doFixation == 1;'
-      '      Screen(''copywindow'', winFixation, winMain, [], rectFixationPresentation(mod(fixationFrame, nFixationFrames) + 1, :), ''transparent'');'
+      '      Screen(''copywindow'', winFixation, winMain, [], rectFixationMain(mod(fixationFrame, nFixationFrames) + 1, :), ''transparent'');'
       '      fixationFrame = fixationFrame + 1;'
       '   end;'
       '   Screen(winMain, ''waitblanking'');'
@@ -231,15 +244,19 @@ animationLoop = {
       '   next = mod(f, 2) + 1;'
       '   Screen(''copywindow'', winDisplayBlank, winDisplay(next));'
       '   if f < nFrames;'
+      '      index = (f + 1 == blankOnset);'
+      '      if any(index), diskPointers(index) = winDiskBlank; end;'
+      '      index = (f + 1 == blankOffset);'
+      '      if any(index), diskPointers(index) = winDisk; end;'
       '      for d = 1:nDisks;'
       '         Screen(''copywindow'', diskPointers(d), winDisplay(next), [], rectStim(d, :, f + 1), ''transparent'');'
       '      end;'
+      '      if doFixation == 1;'
+      '         Screen(''copywindow'', winFixation, winDisplay(next), [], rectFixationDisplay(mod(fixationFrame, nFixationFrames) + 1, :), ''transparent'');'
+      '         fixationFrame = fixationFrame + 1;'
+      '      end;'
       '   end;'
       '   Screen(''copywindow'', winDisplay(this), winMain, [], rectDisplay);'
-      '   if doFixation == 1;'
-      '      Screen(''copywindow'', winFixation, winMain, [], rectFixationPresentation(mod(fixationFrame, nFixationFrames) + 1, :), ''transparent'');'
-      '      fixationFrame = fixationFrame + 1;'
-      '   end;'
       '   Screen(winMain, ''waitblanking'');'
       '   frameDisplayTime(f) = GetSecs;'
       'end;'
@@ -272,7 +289,7 @@ else
    instr{1} = {'Instructions';
                '';
                'In this experiment, you need to keep track of some disks on ';
-               'the screen.  At the start of each trial, you will see ten   ';
+               'the screen.  At the start of each trial, you will see 10    ';
                ['white disks on a gray background.  ' nTargetsString ' of these disks will    '];
                'blink on and off: these are your targets.  After the disks  ';
                'stop blinking, all the disks will begin to move around the  ';
@@ -290,8 +307,7 @@ if instrFixation == 1
                'point while keeping track of the targets.                   ';
                '';
                'During the trial, all of the disks will disappear briefly,  ';
-               'then reappear and stop moving.                              ';
-               '';
+               'then reappear, at which point the trial will end.           ';
                '';
               };
 else
@@ -303,7 +319,7 @@ else
                'fixation point and keep track of the targets.               ';
                '';
                'During the trial, all of the disks will disappear briefly,  ';
-               'then reappear and stop moving.                              ';
+               'then reappear, at which point the trial will end.           ';
                '';
               };
 end
@@ -315,13 +331,14 @@ if blankDuration == 0
 end
 instr{3} = {'Instructions';
             '';
-            'Once all the disks stop moving, the arrow cursor will       ';
-            'appear.  Use the mouse to click on each of the targets.     ';
-            'If you click on a target, it will be highlighted in green   ';
-            'and you will hear a click.  If you click on a non-target, it';
-            'will be highlighted in red and you will hear a beep.  Once  ';
-            'you have selected four disks, any targets that you missed   ';
-            'will blink in yellow.                                       ';
+            'Once the trial ends, the arrow cursor will appear.  Use the ';
+            'mouse to click on each of the targets.  If you click on a   ';
+            'target, it will be highlighted in green and you will hear a ';
+            'click.  If you click on a non-target, it will be highlighted';
+           ['in red and you will hear a beep.  Once you have selected ' nTargetsString '  '];
+            'disks, any targets that you missed will blink in yellow.    ';
+            '';
+            '';
            };
 
 for a = [1 2 3]
@@ -357,7 +374,8 @@ for trial = 1:nTrials
    pos = startPositions(:, :, trial);
    delta = [velocity .* cos(startDirections(:, trial)), ...
             -1 .* velocity .* sin(startDirections(:, trial))];
-   blankEnd = blankStarts(:, trial) + blankDuration;
+   blankOnset  = blankStarts(:, trial);
+   blankOffset = blankOnset + blankDuration;
    reappearancePositions = zeros(nDisks, 2);
    rectStim = zeros(nDisks, 4, nFrames);
    rectBlankDisk = repmat([-110 -110 -90 -90], [nDisks, 1]);
@@ -369,11 +387,11 @@ for trial = 1:nTrials
          % mark positions of any disks that are in their post-gap reappearance positions
          switch shift(trial)
           case -1
-            index = f == blankStarts(:, trial) - blankDuration - 1;
+            index = f == blankOnset - blankDuration - 1;
           case 0
-            index = f == blankStarts(:, trial) - 1;
+            index = f == blankOnset - 1;
           case 1
-            index = f == blankEnd;
+            index = f == blankOffset;
           otherwise
             error(['unknown shift ', num2str(shift), ' requested.']);
          end
@@ -383,17 +401,13 @@ for trial = 1:nTrials
 
          % At the end of each disk's blank interval, adjust its reappearance
          % position according to the current trialType
-         index = f == blankEnd;
+         index = f == blankOffset;
          if any(index)
             pos(index, :) = reappearancePositions(index, :);
          end
       end
 
       rectStim(:, :, f) = [pos - diskRadius, pos + diskRadius];
-      blanking = f >= blankStarts(:, trial) & f < blankEnd;
-      if any(blanking)
-         rectStim(blanking, :, f) = rectBlankDisk(blanking, :);
-      end
 
       nextX = pos(:, 1) + delta(:, 1);
       nextY = pos(:, 2) + delta(:, 2);
@@ -409,9 +423,9 @@ for trial = 1:nTrials
       pos = pos + delta;
 
    end % f = 1:nFrames
-   if moveType == 0 & all(blankStarts(1, trial) == blankStarts(:, trial))
-      for f = 1:(blankStarts(1, trial)-2)
-         rectStim(:, :, f) = rectStim(:, :, blankStarts(1, trial) - 1);
+   if moveType == 0 & all(blankOnset(1) == blankOnset)
+      for f = 1:(blankOnset(1)-2)
+         rectStim(:, :, f) = rectStim(:, :, blankOnset(1) - 1);
       end
    elseif moveType == 0
       error('cannot run a static trial with asynchronous disappearance');
@@ -421,31 +435,6 @@ for trial = 1:nTrials
            nFrames * refreshDuration, nFrames);
    fprintf('Preparation time = %0.3f sec.\n', GetSecs - prepStart);
 
-   % generate fixation presentation Rects 
-   rectFixationPresentation = zeros(nFrames, 4);
-   pos = fixationStart;
-   rectFixationPresentation(1, :) = rectFixation;
-   backToStart = 0;
-   f = 1;
-   while 1
-      rectFixationPresentation(f, :) = [pos - fixationRadius, pos + fixationRadius];
-      newpos = pos + fixationVelocity;
-      if ~IsInRect(newpos(1), newpos(2), fixationLimits)
-         fixationVelocity = -1 * fixationVelocity;
-      end
-      pos = newpos;
-      if all(pos == fixationStart)
-         if backToStart == 0
-            backToStart = backToStart + 1;
-         else
-            break;
-         end
-      end
-      f = f + 1;
-   end
-   rectFixationPresentation = rectFixationPresentation(1:f, :);
-   nFixationFrames = f;
-   
    diskPointers = repmat(winDisk, [nDisks, 1]);
 
    Screen('copywindow', winDisplayBlank, winMain, [], rectDisplay);
@@ -473,34 +462,9 @@ for trial = 1:nTrials
    end
    Screen('copywindow', winDisplay(1), winMain, [], rectDisplay);
    if doFixation == 1
-      Screen('copywindow', winFixation, winMain, [], rectFixationPresentation(1, :), 'transparent');
+      Screen('copywindow', winFixation, winMain, [], rectFixationMain(1, :), 'transparent');
    end
    WaitSecs(.5);
-
-%    for d = [2 1 2 1 2 1 2 1]
-%       Screen('copywindow', winDisplay(d), winMain, [], rectDisplay);
-%       if doFixation == 1
-%          Screen('copywindow', winFixation, winMain, [], rectFixationPresentation(1, :));
-%       end
-%       WaitSecs(1/3);
-%    end
-%    WaitSecs(.2);
-
-%    timer = ceil(.5 / refreshDuration);
-%    nFlashes = 8;
-%    flashes = 0;
-%    refreshes = 0;
-%    Screen('copywindow', winDisplay(1), winMain, [], rectDisplay);
-%    while flashes > 0
-%       Screen('copywindow', winFixation, winMain, [], ...
-%              rectFixationPresentation(mod(refreshes, nFixationFrames) + 1, :), 'transparent');
-%       Screen(winMain, 'waitblanking');
-%       refreshes = refreshes + 1;
-%       timer = timer - 1;
-%       if timer == 0
-%          timer = ceil(1 / 3 / refreshDuration);
-%          flashes = flashes + 1;
-%          Screen('copywindow', winDisplay(mod(flashes, 2) + 1;
 
    %%% Display animation loop
    %Rush(animationLoop, 0);
