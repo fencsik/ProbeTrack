@@ -1,7 +1,7 @@
 ShiftTrack Notes and Musings
 by David Fencsik
 
-$Id: notes.txt,v 1.1 2003/12/18 15:46:57 fencsik Exp $
+$Id: notes.txt,v 1.2 2003/12/18 20:17:05 fencsik Exp $
 
 December 16, 2003:
 
@@ -26,3 +26,9 @@ blank interval.
 Start playing with confusion just before disappearance: e.g., multiple
 objects cross over, post-gap distractor is closer to pre-gap target
 than the post-gap target. 
+
+
+December 18, 2003:
+
+Well, what the heck do we know now? Results of ShiftTrack3 are that -1
+and 0 are approx. equivalent, 
