@@ -4,18 +4,18 @@ function pathsFile = generator (sInitial)
 %%% generates a set of trajectories for use with Multiple Object Tracking experiments
 %%% Authors: David Fencsik (based on file by Todd Horowitz)
 %%%
-%%% $Id: generator.m,v 1.29 2004/06/24 17:29:33 fencsik Exp $
+%%% Version: $Revision: 1.30 $ $Date: 2004/08/13 19:25:10 $ (UTC)
 
 starttime = clock;
 debug = 0;
-stopAfterNKills = 0;
+stopAfterNKills = 100;
 
-subjects = 3:12; % e.g, 1:10 [ 2 7 11] 
+subjects = 1; % e.g, 1:10 [ 2 7 11] 
 %trialDuration = 4;
 % Possible trial durations, in seconds
-minTrialDuration = 2;
-maxTrialDuration = 5;
-nDisks = 10;
+minTrialDuration = 6;
+maxTrialDuration = 6;
+nDisks = 8;
 %nTargets = 2;
 
 % block-level variables
@@ -26,10 +26,11 @@ prefix = {%'trainA';
           'prac4m'; 'exp4m';
           'trainB';
          };
-%prefix = {'prac', 'exp'}; % for testing
+prefix = {'test'}; % for testing
 practrials = [10 1];
 exptrials = [40 1];
 mvttrials = [30 1];
+testtrials = [1 1];
 trialTypes = {%repmat(1, mvttrials);
               repmat(0, practrials); repmat(0, exptrials);
               repmat(1, practrials); repmat(1, exptrials);
@@ -51,30 +52,21 @@ blankDurations = {%repmat(0, mvttrials);
                   repmat(23, practrials); repmat(23, exptrials);
                   repmat(23, mvttrials);
                  }; % 23 = 307 ms, 30 = 400 ms, 38 = 507 ms, 45 = 600 ms
-% nDisks = {repmat(10, mvttrials);
-%           repmat([10; 10], practrials);
-%           repmat([10; 10], practrials);
-%           repmat([10; 10], exptrials);
-%           repmat([10; 10], exptrials);
-%          };
-% nTargets = {repmat(10, mvttrials);
-%             repmat([10; 10], practrials);
-%             repmat([10; 10], practrials);
-%             repmat([10; 10], exptrials);
-%             repmat([10; 10], exptrials);
-%            };
+trialTypes = {repmat([-1; 0; 1], testtrials)};
+movementRates = {repmat([9; 9; 9], testtrials)};
+blankDurations = {repmat([23; 23; 23], testtrials)}; % 23 = 307 ms, 30 = 400 ms, 38 = 507 ms, 45 = 600 ms
 
 switchedDisk = 0;
 nBlocks = size(trialTypes,1);
-if nBlocks ~= size(movementRates,1) || nBlocks ~= size(blankDurations,1)
+if nBlocks ~= size(movementRates,1) | nBlocks ~= size(blankDurations,1)
    'ERROR: block variables are not the same size'
    return;
 end;
 
 for block = 1:nBlocks
-   if size(trialTypes{block}, 1) ~= size(movementRates{block}, 1) || ...
-          size(trialTypes{block}, 1) ~= size(blankDurations{block}, 1) || ...
-          size(trialTypes{block}, 2) ~= size(movementRates{block}, 2) || ...
+   if size(trialTypes{block}, 1) ~= size(movementRates{block}, 1) | ...
+          size(trialTypes{block}, 1) ~= size(blankDurations{block}, 1) | ...
+          size(trialTypes{block}, 2) ~= size(movementRates{block}, 2) | ...
           size(trialTypes{block}, 2) ~= size(blankDurations{block}, 2)
       ['ERROR: Block ' num2str(block) ' contains matrices of different size']
       return;
@@ -97,8 +89,8 @@ maxMovieFrames = ceil(maxTrialDuration*1000/predictedMovieFrameDuration);
 minMovieFrames = ceil(minTrialDuration*1000/predictedMovieFrameDuration);
 %%% slackDuration = maxTrialDuration - minTrialDuration;
 %%% slackFrames = ceil(slackDuration*1000/predictedMovieFrameDuration);
-%%% blankWindow(1) = round(2000/predictedMovieFrameDuration);
-%%% blankWindow(2) = minMovieFrames - round(1000/predictedMovieFrameDuration);
+blankWindowStart = round(2000/predictedMovieFrameDuration);
+blankWindowEnd   = minMovieFrames - round(1000/predictedMovieFrameDuration);
 %%% if blankWindow(1) >= blankWindow(2)
 %%%    'ERROR: Negative blank window requested.'
 %%%    return;
@@ -138,7 +130,7 @@ state=rand('state');
 % startCoordinates = zeros(nBalls, 2);
 xdim = 5; ydim = 6;% a 5 by 6 grid of positions
 windowX = 100;windowY = 100;% each cell is 125 by 125 pixels
-cxy = newGrids(xdim, ydim, windowX, windowY, screenRect);
+%%cxy = newGrids(xdim, ydim, windowX, windowY, screenRect);
 
 
 nBlocks = size(trialTypes, 1);
@@ -156,9 +148,10 @@ for sub = subjects
       nTrials = size(trialType, 1);
 
       % determine trial length (in frames)
-      movieFrames = minMovieFrames + Randi(maxMovieFrames - (minMovieFrames-1), [nTrials,1]) - 1;
-      blankStart = movieFrames - blankDuration;
-      blankEnd = movieFrames;
+      movieFrames = minMovieFrames + Randi(maxMovieFrames - (minMovieFrames-1), [nTrials,1]) - 1
+      %% blank interval is picked separately for each disk in ShiftTrack5
+      % blankStart = movieFrames - blankDuration;
+      % blankEnd = movieFrames;
 
       % movement vector length
       targetMagnitude = (movementRate*30)*(predictedMovieFrameDuration)/1000;
@@ -168,17 +161,28 @@ for sub = subjects
       badTurns = 0;
 
       for trial = 1:nTrials
-         % Procedure for StopTrack3, in which we replicate StopTrack1/2 but with
-         % variable trial durations.
-         % 10. Pick initial locations
-         % 20. Once we get to X frames before the gap, start making sure there's no bounces.
-         % 30. When we get to the last frame, make sure stimuli are a min distance apart.
-         % 40. If trialtype = 0 (static), then make all disks static by setting all
-         %     pre-gap locations to the locations in the last visible pre-gap frame.
+         % Procedure for ShiftTrack5, which implements the basic shifttrack
+         % manipulations with asynchronous disappearance.
+         %
+         % 1. Pick random blank intervals, separately for each disk
+         % 2. Pick random starting locations
+         % 3. Once we get to X frames before each disk's gap, 
+         %    start making sure there's no bounces.
+         % 4. As we get to the end of each disk's gap, reset it's 
+         %    reappearance position.
+         % 5. When we get to the last frame, make sure stimuli are 
+         %    a min distance apart.
+         % 6. Reset each disk's position during its gap to an off-screen
+         %    location.
 
          if debug
             [movieFrames(trial),  blankStart(trial), blankEnd(trial)]
          end;
+         
+         % Pick random blank intervals for each disk
+         blankStart = Randi(blankWindowEnd - blankWindowStart + 1, [nDisks, 1]) + ...
+             blankWindowStart - 1;
+         blankEnd = blankStart + blankDuration(trial);
          
          trajectory = zeros(nDisks, 2, movieFrames(trial));
 
@@ -282,10 +286,11 @@ for sub = subjects
                trajectory(:, :, f) = newCoordinates;
 
 
-               % make sure disks don't bounce just before, during, and just after the blank interval:
-               %if blankDuration(trial) > 0 & f > (blankStart(trial) - 10) & f < blankEnd(trial) + 5
-               if blankDuration(trial) > 0 & f > (blankStart(trial) - blankDuration(trial))
-                  if any(bounce > 0)
+               % make sure disks don't bounce anywhere between the -1 and 1 positions
+               % (but only check those in their blank interval
+               if blankDuration(trial) > 0 & any(f > blankStart - blankDuration(trial) & f <= blankEnd)
+                  disks = (f > blankStart - blankDuration(trial) & f <= blankEnd);
+                  if any(bounce(disks) > 0)
                      deathFlag = 3;
                      kills(deathFlag) = kills(deathFlag) + 1;
                      if debug
@@ -296,24 +301,45 @@ for sub = subjects
                end;
 
 
-               % make sure disks are a mindistance apart on last visible pre-gap frame
-               if blankDuration(trial) > 0 & f == blankStart(trial) - 1
-                  if any(InterDiskDistances(newCoordinates) < bufferZone)
-                     deathFlag = 4;
-                     kills(deathFlag) = kills(deathFlag) + 1;
-                     if debug
-                        fprintf(1, 'failed at step %d, frame %d\n', deathFlag, f);
-                     end;
-                     break;
+               %% % make sure disks are a mindistance apart on last visible pre-gap frame
+               %% if blankDuration(trial) > 0 & f == blankStart(trial) - 1
+               %%    if any(InterDiskDistances(newCoordinates) < bufferZone)
+               %%       deathFlag = 4;
+               %%       kills(deathFlag) = kills(deathFlag) + 1;
+               %%       if debug
+               %%          fprintf(1, 'failed at step %d, frame %d\n', deathFlag, f);
+               %%       end;
+               %%       break;
+               %%    end;
+               %% end;
+
+
+               %% % set preBlankCoordinates
+               %% if blankDuration(trial) > 0 & f == blankStart(disk) - 1
+               %%    preBlankCoordinates = newCoordinates;
+               %%    preBlankDirections = direction;
+               %% end;
+
+
+               % At the end of each disk's blank interval, adjust its reappearance
+               % position according to the current trialType
+               if blankDuration(trial) > 0 & any(f == blankEnd)
+                  disks = (f == blankEnd);
+                  if trialType(trial) == -1
+                     % move to position -1
+                     trajectory(disks, :, f) = trajectory(disks, :, f - (2 * blankDuration(trial)));
+                  elseif trialType(trial) == 0
+                     % move to position 0
+                     trajectory(disks, :, f) = trajectory(disks, :, f - blankDuration(trial));
+                  elseif trialType(trial) == 1
+                     % move to position 1
+                     % nothing to do
+                  else
+                     ['ERROR: unknown trial type ', num2str(trialType), ' requested.']
+                     return;
                   end;
                end;
 
-
-               % set preBlankCoordinates
-               if blankDuration(trial) > 0 & f == blankStart(trial) - 1
-                  preBlankCoordinates = newCoordinates;
-                  preBlankDirections = direction;
-               end;
 
                % if f is the final frame, then check that everything is far enough apart
                if f == movieFrames(trial)
@@ -328,16 +354,6 @@ for sub = subjects
                   end;
                end;
                
-               % if f is the final frame and the trialType == 0, then make static
-               if f == movieFrames(trial) & trialType(trial) == 0
-                  for d = 1:nDisks
-                     trajectory(d, 1, 1:(blankStart(trial)-2)) = trajectory(d, 1, blankStart(trial)-1);
-                     trajectory(d, 2, 1:(blankStart(trial)-2)) = trajectory(d, 2, blankStart(trial)-1);
-                     startCoordinates(d,:) = trajectory(d, :, blankStart(trial)-1);
-                     %% startCoordinates = zeros(nDisks, 2);
-                  end;
-               end;
-                     
 
                %set the old coordinates (for the next frame) equal to the coordinates used for the current frame 
                oldCoordinates = newCoordinates;
@@ -346,7 +362,7 @@ for sub = subjects
          end; % while deathFlag > 0
          
          if blankDuration(trial) > 0
-            trajectory(:, :, (blankStart(trial)):(blankEnd(trial)-1)) = -50;
+            trajectory(:, :, (blankStart(trial)):(blankEnd(trial)-1)) = -100;
          end;
          
          paths{trial} = trajectory;
