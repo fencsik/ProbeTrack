@@ -4,7 +4,7 @@ function pathsFile = stGenerator (sInitial)
 % generates a set of trajectories for use with ShiftTrack experiments
 % Authors: David Fencsik (based on file by Todd Horowitz)
 %
-% $Id: generator.m,v 1.12 2004/01/21 21:21:55 fencsik Exp $
+% $Id: generator.m,v 1.13 2004/01/22 21:20:39 fencsik Exp $
 
 % Modified by David Fencsik
 % started  9/29/2003
@@ -32,25 +32,27 @@ subjects = 1; % e.g, 1:10 [ 2 7 11]
 
 % Possible trial durations, in seconds
 minTrialDuration = 5;
-maxTrialDuration = 8;
+maxTrialDuration = 6;
 
-nDisks = 8;
-nTargets = 4;
+nDisks = 4;
+nTargets = 2;
 
 % each variable contains block-level info. Thus, for trialTypes, there should be one
 % array for each block; for prefix, there should be one value per block; etc.
 
 trialTypes = {repmat([1;2], [2 1]); 
               repmat([1;2], [5 1])};
+trialTypes = {1};
 %reappearanceOffset = [1.0];
 prefix = {'testP'; 'testR'}; %{'train';'a';'b';'c'}; 
+prefix = {'test'};
 
 blankDurations = {23; 23};
 movementRates = {9; 9};
 movementNoises = {0; 0};
 
 bufferZone = 50;
-preBlankRect = [0 0 1024 768];
+preBlankRect = [0 0 1024-200 768-100];
 
 clear screen;
 
@@ -141,6 +143,7 @@ for sub = subjects
       movieFrames = ones(1, nTrials) * maxMovieFrames;
 
       for trial = 1:nTrials
+         trial
 
          % Procedure for new design: In which a distractor reappears in the pre-gap
          % location of a target.
@@ -190,9 +193,9 @@ for sub = subjects
             % is both a minimum distance from other disks and will not reappear too
             % close to any target disk after the blank interval.
             preBlankCoordinates = zeros(nDisks, 2);
-            preBlankDirections = zeros(nDisks, 1)
+            preBlankDirections = zeros(nDisks, 1);
             postBlankCoordinates = zeros(nDisks, 2);
-            postBlankDirections = zeros(nDisks, 1)
+            postBlankDirections = zeros(nDisks, 1);
             for disk = 1:nDisks
                replacements = 0;
                badPlacement = 1;
@@ -220,9 +223,9 @@ for sub = subjects
                      direction = preBlankDirections(disk);
                      frame = blankInterval(trial,1);
                      while frame <= blankInterval(trial,2) % go up through the first post-blank frame
-                        %% calculate new coordinates and then check for disks going out of bounds
+                        %% calculate new coordinates and then check for disk going out of bounds
                         for i = 1:3
-                           [finalTheta, finalMagnitude] = addNoiseVector(direction, magnitude, 0, 0);
+                           [finalTheta, finalMagnitude] = addNoiseVector(direction, targetMagnitude, 0, 0);
                            newCoordinates = computeCoordinates(oldCoordinates, finalTheta, finalMagnitude);
                            status = OutOfBounds(newCoordinates, screenRect, edgeZone);
                            if status ~= 0
@@ -233,18 +236,20 @@ for sub = subjects
                               break;
                            end;
                         end;
+                        oldCoordinates = newCoordinates;
+                        frame = frame + 1;
                      end;
                      if badPlacement
                         kills(2) = kills(2) + 1;
                      else
-                        postBlankCoordinates(disk) = newCoordinates;
+                        postBlankCoordinates(disk,:) = newCoordinates;
                         postBlankDirections(disk) = direction;
                         
                         % check to make sure this doesn't reappear too close to any
                         % (other) targets' disappearance locations
                         if disk > 1
                            x = postBlankCoordinates(disk, 1); y = postBlankCoordinates(disk,2);
-                           coord = preBlankCoordintes(1:(min(nTargets, disk-1)), :);
+                           coord = preBlankCoordinates(1:(min(nTargets, disk-1)), :);
                            if disk <= nTargets && ... 
                                       any(sqrt((x - coord(:,1)).^2 + (y- coord(:,2).^2)) < bufferZone)
                               % this disk reappears too close to some (other) target's disappearance location
@@ -261,23 +266,28 @@ for sub = subjects
                         break;
                      end;
                   end;
-               end;
+               end; % while badPlacement
                if badPath
                   break;
                end;
-            end;
+            end; % for disk = 1:nDisks
 
             if ~badPath && trialType(trial) == 2
                % move the first distracter such that it will reappear at the first target's
                % disappearance locations
                dirmod = fullCircle / 4 * Shuffle([1 -1]);
                for d = dirmod
-                  direction(nTargets+1) = direction(1) + dirmod;
-                  [finalTheta finalMagnitude] = addNoiseVector(fullCircle - direction(nTargets+1), ...
+                  % turn by 90 degrees
+                  direction = preBlankDirections(1) + d;
+                  [finalTheta finalMagnitude] = addNoiseVector(direction, ...
                                                                targetMagnitude*(blankDuration), 0, 0);
-                  preBlankCoordinates(nTargets+1) = computeCoordinates(preBlankCoordinates(1,:), finalTheta, finalMagnitude);
+                  preBlankCoordinates(nTargets+1,:) = computeCoordinates(preBlankCoordinates(1,:), finalTheta, finalMagnitude);
+                  postBlankCoordinates(nTargets+1,:) = preBlankCoordinates(1,:);
+                  % direction of travel is reverse of direction
+                  preBlankDirections(nTargets+1) = mod(direction + halfCircle - 1, fullCircle) + 1;
+                  postBlankDirections(nTargets+1) = preBlankDirections(nTargets+1);
                   % check if this pre-blank location is out-of-bounds
-                  if OutOfBounds(preBlankCoordinates(nTargets+1)) == 0
+                  if OutOfBounds(preBlankCoordinates(nTargets+1,:), screenRect, edgeZone) == 0
                      badPath = 0;
                      break;
                   else
@@ -288,11 +298,28 @@ for sub = subjects
                   kills(4) = kills(4) + 1;
                end;
             end;
-            
+
+%             if ~badPath
+%                [preBlankCoordinates preBlankDirections]
+%                [postBlankCoordinates postBlankDirections]
+%                plot(preBlankCoordinates(:,1), preBlankCoordinates(:,2),'b.'); 
+%                %axis([screenRect(1) screenRect(3) screenRect(2) screenRect(4)]); 
+%                axis([0 1000 0 1000]); 
+%                hold on; 
+%                plot(postBlankCoordinates(:,1), postBlankCoordinates(:,2),'g.'); 
+
+%                plot(preBlankCoordinates(1,1), preBlankCoordinates(1,2), 'bo');
+%                plot(postBlankCoordinates(1,1), postBlankCoordinates(1,2), 'ro');
+%                plot(preBlankCoordinates(nTargets+1,1), preBlankCoordinates(nTargets+1,2), 'b*');
+%                plot(postBlankCoordinates(nTargets+1,1), postBlankCoordinates(nTargets+1,2), 'r*');
+%                hold off;
+%             end;
+
             if ~badPath
                % move disks backwards until minDuration start frame
                frame = blankInterval(trial, 1) - 1;
                trajectory(:, :, frame) = preBlankCoordinates;
+               %trajectory(:,:,frame)
                oldCoordinates = trajectory(:, :, frame);
                reverse = mod(preBlankDirections + halfCircle - 1, fullCircle) + 1;
                startFrame = slackFrames;
@@ -302,11 +329,11 @@ for sub = subjects
 
                   %% calculate new coordinates and then check for disks going out of bounds
                   for i = 1:3
-                     [finalTheta, finalMagnitude] = addNoiseVector(direction, magnitude, 0, 0);
+                     [finalTheta, finalMagnitude] = addNoiseVector(reverse, magnitude, 0, 0);
                      newCoordinates = computeCoordinates(oldCoordinates, finalTheta, finalMagnitude);
                      status = OutOfBounds(newCoordinates, screenRect, edgeZone);
-                     if status ~= 0
-                        direction = BounceOffWall(direction, status);
+                     if any(status > 0)
+                        reverse = BounceOffWall(reverse, status);
                         badPath = 1;
                      else
                         badPath = 0;
@@ -314,7 +341,7 @@ for sub = subjects
                      end;
                   end;
                   if badPath
-                     kills(5) = kills(5) + 1; 
+                     kills(5) = kills(5) + 1; % note that kills(5) is nested within kills(6)
                      break;
                   end;
 
@@ -325,7 +352,7 @@ for sub = subjects
                   if frame <= startFrame
                      badPath = 0;
                      for disk = 1:nDisks
-                        x = newCoordinates(disk,:); y = newCoordinates(disk,:);
+                        x = oldCoordinates(disk,1); y = oldCoordinates(disk,2);
                         newCoordinates(disk, :) = [];
                         % break out of this loop as soon as we find two disks
                         % that are too close.
@@ -346,7 +373,7 @@ for sub = subjects
                   frame = frame - 1;
                end; % while frame > 0
                if badPath % then we weren't able to find a good starting frame
-                  kills(6) = kills(6) + 1;
+                  kills(6) = kills(6) + 1; % note that kills(6) is a superset of kills(5)
                end;
             end; % if ~badPath
 
@@ -360,28 +387,22 @@ for sub = subjects
                % move disks forward until the end of the trial:
                frame = frame + 1;
                while frame <= movieFrames(trial)
-                  % adds a noise vector with random direction and noiseFactor*magnitude magnitude to the signal vector
-                  %noiseDirection = 0 %Randi(fullCircle, [nDisks 1]); 
-                  [finalTheta, finalMagnitude] = addNoiseVector(direction, magnitude, 0, 0); 
-                  newCoordinates = computeCoordinates(oldCoordinates, finalTheta, finalMagnitude); % recompute coordinates
-
-                  % now check for disks going out of bounds
-                  for disk = 1:nDisks
-                     status = OutOfBounds(newCoordinates(disk,:), screenRect, edgeZone);
-                     if status ~= 0
-                        direction(disk) = BounceOffWall(direction(disk), status);
+                  %% calculate new coordinates and then check for disks going out of bounds
+                  for i = 1:3
+                     [finalTheta, finalMagnitude] = addNoiseVector(direction, magnitude, 0, 0);
+                     newCoordinates = computeCoordinates(oldCoordinates, finalTheta, finalMagnitude);
+                     status = OutOfBounds(newCoordinates, screenRect, edgeZone);
+                     if any(status > 0)
+                        direction = BounceOffWall(direction, status);
+                        badPath = 1;
+                     else
+                        badPath = 0;
+                        break;
                      end;
                   end;
-
-                  % re-compute newCoordinates to implement reversal:
-                  [finalTheta, finalMagnitude] = addNoiseVector(direction, magnitude, 0, 0); 
-                  newCoordinates = computeCoordinates(oldCoordinates, finalTheta, finalMagnitude); % recompute coordinates
-
-                  % now double-check to see if there is still a boundary violation
-                  for disk = 1:nDisks
-                     if OutOfBounds(newCoordinates(disk, :), screenRect, edgeZone)
-                        badTurns = badTurns + 1;
-                     end;
+                  if badPath
+                     kills(7) = kills(7) + 1; % note that kills(7) is nested within kills(8)
+                     break;
                   end;
 
                   trajectory(:, :, frame) = newCoordinates;
@@ -394,13 +415,13 @@ for sub = subjects
                badPath = 0;
                newCoordinates = trajectory(:, :, movieFrames(trial));
                for disk = 1:nDisks
-                  x = newCoordinates(disk,:); y = newCoordinates(disk,:);
+                  x = newCoordinates(disk,1); y = newCoordinates(disk,2);
                   newCoordinates(disk, :) = [];
                   % break out of this loop as soon as we find two disks
                   % that are too close.
                   if any(sqrt((x - newCoordinates(:, 1)).^2 + (y - newCoordinates(:, 2)).^2) < bufferZone)
                      badPath = 1;
-                     kills(5) = kills(5) + 1;
+                     kills(8) = kills(8) + 1; % note that kills(8) is a superset of kills(7)
                      break;
                   end;
                end;
@@ -418,24 +439,26 @@ for sub = subjects
                   break;
                end;
             end; 
+            if restarts > 1 && mod(restarts,50) == 1
+               restarts
+            end;
          end; % while badPath
          
          if badPath
             break;
          end;
          paths{trial} = trajectory;
-         starts{trial} = startCoordinates;
+         starts{trial} = trajectory(:,:,1);
          clear trajectory;
       end; % for trial = 1:nTrials
-           %	endTime = GetSecs;
-           %timePassed = endTime - initTime
+
       kills
-      badTurns
+
       if badPath
          ['ERROR: Too many restarted paths on trial ' num2str(trial)]
          break;
       else
-         save (filename,  'paths', 'starts', 'movementRate', 'movementNoise', 'trialDuration', 'blankDuration', 'nTrials', 'nDisks', 'predictedMovieFrameDuration', 'movieFrames', 'shiftFactor', 'shiftAmount');
+         save (filename, 'nTrials', 'paths', 'starts', 'movementRate', 'movieFrames', 'blankDuration', 'trialType', 'nDisks', 'nTargets', 'predictedMovieFrameDuration');
          fprintf(1, 'Finished %s.\n', filename);
       end;
       if badPath
@@ -474,24 +497,29 @@ function [finalTheta, finalMagnitude] = addNoiseVector(direction, magnitude, noi
 
 
 function out = OutOfBounds (coordinates, edgeRect, border)
-   [r c] = size(coordinates);
-   if r == 1 && c == 2
-      out = 0; %zeros(r, 1);
-      if (coordinates(1) < (edgeRect(1) + border))
-         % approaching left edge
-         out = 1;
-      elseif (coordinates(2) < (edgeRect(2) + border))
-         % approaching ceiling
-         out = 2;
-      elseif (coordinates(1) > (edgeRect(3) - border))
-         % approaching right edge
-         out = 3;
-      elseif (coordinates(2) > (edgeRect(4) - border))
-         % approaching floor
-         out = 4;
-      end;
+% Sets bits of out array, such that 
+%    bit 1 (1): approaching left edge
+%    bit 2 (2): approaching ceiling
+%    bit 3 (4): approaching right edge
+%    bit 4 (8): approaching floor
+   [nrow ncol] = size(coordinates);
+   out = zeros(nrow, 1);
+   if ncol == 2
+      left    = (coordinates(:,1) < (edgeRect(1) + border)); % approaching left edge
+      ceiling = (coordinates(:,2) < (edgeRect(2) + border)); % approaching ceiling
+      right   = (coordinates(:,1) > (edgeRect(3) - border)); % approaching right edge
+      floor   = (coordinates(:,2) > (edgeRect(4) - border)); % approaching floor
+
+      out(left)    = out(left) + 1;
+      out(ceiling) = out(ceiling) + 2;
+      out(right)   = out(right) + 4;
+      out(floor)   = out(floor) + 8;
+   elseif ncol < 2
+      'ERROR: OutOfBounds given input with less than two columns'
+      return;
    else
-      out = 5;
+      'ERROR: OutOfBounds given input with more than two columns'
+      return;
    end;
 
    
@@ -501,17 +529,34 @@ function newdir = BounceOffWall (olddir, wall)
 % and wall is the output of the OutOfBounds function above.
    global fullCircle halfCircle;
 
-   switch wall
-    case 1
-     % approaching left edge
-     newdir = fullCircle - olddir;
-    case 2
-     % approaching ceiling
-     newdir = halfCircle - olddir;
-    case 3
-     % approaching right edge
-     newdir = fullCircle - olddir;
-    case 4
-     % approaching floor
-     newdir = halfCircle - olddir;
+   if size(olddir,1) == size(wall,1)
+      newdir  = olddir;
+      left    = (bitand(wall,1) > 0);
+      ceiling = (bitand(wall,2) > 0);
+      right   = (bitand(wall,4) > 0);
+      floor   = (bitand(wall,8) > 0);
+
+      newdir(left)    = fullCircle - newdir(left);
+      newdir(ceiling) = halfCircle - newdir(ceiling);
+      newdir(right)   = fullCircle - newdir(right);
+      newdir(floor)   = halfCircle - newdir(floor);
+   else
+      'ERROR: BounceOfWall given mismatched input'
+      return;
    end;
+   % if bitand(wall, 1)
+   %    % approaching left edge
+   %    newdir = fullCircle - olddir;
+   % end;
+   % if bitand(wall, 2)
+   %    % approaching ceiling
+   %    newdir = halfCircle - olddir;
+   % end;
+   % if bitand(wall, 4)
+   %    % approaching right edge
+   %    newdir = fullCircle - olddir;
+   % end;
+   % if bitand(wall, 8)
+   %    % approaching floor
+   %    newdir = halfCircle - olddir;
+   % end;
