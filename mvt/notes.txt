@@ -1,7 +1,7 @@
 ShiftTrack Notes and Musings
 by David Fencsik
 
-$Id: notes.txt,v 1.4 2004/01/08 20:25:14 fencsik Exp $
+$Id: notes.txt,v 1.5 2004/05/07 21:08:28 fencsik Exp $
 
 December 16, 2003:
 
@@ -70,9 +70,24 @@ matching account, participants should be unable to track the target
 and always switch to the distracter.
 
 
-January 6, 2004:
+May 6, 2004: 
 
-Variables added into stGenerator.m trial loop (* means save to path file):
+I had three ideas just before VSS (* indicates not from VSS):
 
-*trialType (one value for each trial)
-blankInterval (two values for each trial, start and end)
+1. ShiftTrack3 should be replicated with no movement following the
+   gap. In that experiment, the advantage of Position -1 over Position
+   1 may have occurred because in Position -1, the disk moved over
+   Position 0 300 ms after the gap. Eliminating post-gap motion will
+   remove this confound.
+2. StopTrack2 needs to be replicated with a variable tracking
+   interval. In the original experiment, trial length was fixed at 4
+   sec. Since the gap always began 300 ms prior to the final frame,
+   subjects could have anticipated the gap.
+3. ShiftTrack studies could be run with all save one item shifting
+   positions, and then test the one. This way, subjects might use one
+   set for reacquisition, and we can test how effective that is when
+   stimuli are inconsistent with their set. One difficulty with this
+   is that the odd-one-out might cue which is the target.
+4. *Extend range of targets tested in ShiftTrack and StopTrack.
+5. *Change recall method, so they only have to make one decision:
+   this makes capacity estimates easier. 
