@@ -4,7 +4,7 @@ function pathsFile = stGenerator (sInitial)
 % generates a set of trajectories for use with ShiftTrack experiments
 % Authors: David Fencsik (based on file by Todd Horowitz)
 %
-% $Id: generator.m,v 1.9 2004/01/14 21:08:58 fencsik Exp $
+% $Id: generator.m,v 1.10 2004/01/15 21:19:55 fencsik Exp $
 
 % Modified by David Fencsik
 % started  9/29/2003
@@ -117,6 +117,7 @@ xdim = 5; ydim = 6;% a 5 by 6 grid of positions
 windowX = 100;windowY = 100;% each cell is 125 by 125 pixels
 cxy = newGrids(xdim, ydim, windowX, windowY, screenRect);
 
+
 for sub = subjects
    %	initTime = GetSecs;
    restarts = 0;
@@ -147,6 +148,11 @@ for sub = subjects
          %    nTrials = size(shiftFactor, 1);
          %    movieFrames = ones(nTrials, 1) * estMovieFrames + shiftAmount;
          % end; % if (withinBlock == 0)
+         
+         % use kills to keep track of where problems are occuring
+         kills = zeros(1,10);
+         badTurns = 0;
+
          for trial = 1:nTrials
 
             % Procedure for new design: In which a distractor reappears in the pre-gap
@@ -187,6 +193,7 @@ for sub = subjects
             
             % compute trajectories
             trajectory = zeros(nDisks, 2, maxMovieFrames);
+            movieFrames <-------------- START HERE <----------------
             restarts = 0;
             badPaths = 1;
             while badPaths
@@ -217,11 +224,13 @@ for sub = subjects
                      if any(sqrt((x - coord1(:,1)).^2 + (y - coord1(:,2)).^2) < bufferZone)
                         % disks are too close
                         badPlacement = 1;
+                        kills(1) = kills(1) + 1;
                         break;
                      elseif disk <= nTargets && ... 
                             any(sqrt((x - coord2(:,1)).^2 + (y- coord2(:,2).^2)) < bufferZone)
                         % disks reappear too close to this target's disappearance location
                         badPlacement = 1;
+                        kills(2) = kills(2) + 1;
                         break;
                      end;
                   end;
@@ -236,11 +245,14 @@ for sub = subjects
                                                                      targetMagnitude*(blankDuration), 0, 0);
                         preBlankCoordinates(nTargets+1) = computeCoordinates(preBlankCoordinates(1,:), finalTheta, finalMagnitude);
                         % check if this pre-blank location is out-of-bounds
-                        if OutOfBounds(preBlankCoordinates(nTargets+1)) ~= 0
-                           badPlacement = 1;
-                        else
+                        if OutOfBounds(preBlankCoordinates(nTargets+1)) == 0
                            break;
+                        else
+                           badPlacement = 1;
                         end;
+                     end;
+                     if badPlacement
+                        kills(3) = kills(3) + 1;
                      end;
                   end;
                   
@@ -288,13 +300,14 @@ for sub = subjects
                         [finalTheta, finalMagnitude] = addNoiseVector(reverse, magnitude, noiseDirection, noiseMagnitude); 
                         newCoordinates = computeCoordinates(oldCoordinates, finalTheta, finalMagnitude); % recompute coordinates
 
-                        % now double-check to see if there is occlusion or boundary violation
+                        % now double-check to see if there is still a boundary violation
                         for disk = 1:nDisks
                            if OutOfBounds(newCoordinates(disk, :), screenRect, edgeZone)
-                              kills = kills +1;
+                              badTurns = badTurns + 1;
                            end;
                         end;
-                        
+
+                        trajectory(:, :, frame) = newCoordinates;
                         oldCoordinates = newCoordinates;
                         % if we're at the start frame for the min trial duration, then start checking to
                         % see if the objects are a min distance apart.
@@ -313,15 +326,16 @@ for sub = subjects
                               break;
                            end;
                         end;
-                     end;
-                  end;
-                     
-                        
-                              
-                              
-                        
                         frame = frame - 1;
                      end;
+                     % now we know that all trajectory(:, :, startFrames:maxMovieFrames)
+                  end;
+                     
+                  if ~badPlacement
+                     % move disks forward until the 
+                              
+                              
+                        
 
                         
                         
@@ -382,6 +396,7 @@ for sub = subjects
          %	endTime = GetSecs;
          %timePassed = endTime - initTime
          kills
+         badTurns
          save (filename,  'paths', 'starts', 'movementRate', 'movementNoise', 'trialDuration', 'blankDuration', 'nTrials', 'nDisks', 'predictedMovieFrameDuration', 'movieFrames', 'shiftFactor', 'shiftAmount');
          fprintf(1, 'Finished %s.\n', filename);
       end; % for prac = [0 1]
