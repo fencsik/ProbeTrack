@@ -4,7 +4,7 @@ function pathsFile = stGenerator (sInitial)
 % generates a set of trajectories for use with ShiftTrack experiments
 % Authors: David Fencsik (based on file by Todd Horowitz)
 %
-% $Id: generator.m,v 1.20 2004/02/09 15:30:18 fencsik Exp $
+% $Id: generator.m,v 1.21 2004/02/09 20:11:17 fencsik Exp $
 
 % Modified by David Fencsik
 % started  9/29/2003
@@ -32,7 +32,7 @@ nTargets = 5;
 % block-level variables
 prefix = {'mvt_'; 'pracA_'; 'pracB_'; 'pracC_'; 'pracD_'; 'exp_'};
 prefix = {'prac', 'exp'}; % for testing
-practrials = [3 1];
+practrials = [4 1];
 exptrials = [15 1];
 mvttrials = [30 1];
 trialTypes = {%repmat(1, mvttrials);
@@ -153,7 +153,7 @@ for sub = subjects
       blankStart = zeros(nTrials, 1);
       blankEnd = zeros(nTrials, 1);
 
-      shiftFactor = ones(size(trialType, 2), 1);
+      shiftFactor = ones(size(trialType, 1), 1);
       shiftAmount = ceil((shiftFactor-1.0) .* blankDuration);
       movieFrames = ones(nTrials, 1) * maxMovieFrames;
       % blankStart should be picked randomly for each trial:
@@ -216,7 +216,7 @@ for sub = subjects
          deathFlag = 999;
          while deathFlag > 0
             % quit if we've been going for too long:
-            if stopAfterNKills & sum(kills(1:(size(kills,2)-1))) > (50*nTrials)
+            if stopAfterNKills > 0 & sum(kills(1:(size(kills,2)-1))) > (stopAfterNKills*nTrials)
                kills = [1:(size(kills, 2)); kills]
                fprintf(1, 'Too many kills.\n');
                fprintf(1, 'Last kill = %d\n', deathFlag);
@@ -263,10 +263,10 @@ for sub = subjects
                   end;
                end; % for d = 1:nDisks
                if ~badPlacement
-                  %if debug
-                  %   fprintf(1, 'Picked new locations.\n');
-                  %end;
-                  redoLocationsCounter = 0;
+                  if debug
+                     fprintf(1, 'Picked new locations. ');
+                  end;
+                  redoLocationsCounter = 3;
                end;
             end;
 
@@ -286,7 +286,6 @@ for sub = subjects
 
             f = 2;
             while f <= movieFrames(trial)
-            %for f = 2:movieFrames(trial)
                % move one frame:
                [x y direction err bounce] = MoveOneStep (oldCoordinates, direction, magnitude, screenRect, edgeZone, fullCircle);
 
@@ -304,24 +303,37 @@ for sub = subjects
                trajectory(:, :, f) = newCoordinates;
 
 
-                % make sure disks are a mindistance apart on last visible pre-gap frame
-                if blankDuration(trial) > 0 & f == blankStart(trial) - 1
-                   if any(InterDiskDistances(newCoordinates) < bufferZone)
-                      deathFlag = 3;
-                      kills(deathFlag) = kills(deathFlag) + 1;
-                      if debug
-                         fprintf(1, 'failed at step %d, frame %d\n', deathFlag, f);
-                      end;
-                      break;
-                   % elseif any(OutOfBoundsBits(newCoordinates, screenRect, preBlankBorder) > 0)
-                   %    deathFlag = 4;
-                   %    kills(deathFlag) = kills(deathFlag) + 1;
-                   %    if debug
-                   %       fprintf(1, 'failed at step %d, frame %d\n', deathFlag, f);
-                   %    end;
-                   %    break;
-                   end;
-                end;
+               % make sure disks don't bounce just before, during, and just after the blank interval:
+               if blankDuration(trial) > 0 & f > blankStart(trial) - 5 & f < blankEnd(trial) + 5
+                  if any(bounce > 0)
+                     deathFlag = 3;
+                     kills(deathFlag) = kills(deathFlag) + 1;
+                     if debug
+                        fprintf(1, 'failed at step %d, frame %d\n', deathFlag, f);
+                     end;
+                     break;
+                  end;
+               end;
+
+
+               % make sure disks are a mindistance apart on last visible pre-gap frame
+               if blankDuration(trial) > 0 & f == blankStart(trial) - 1
+                  if any(InterDiskDistances(newCoordinates) < bufferZone)
+                     deathFlag = 4;
+                     kills(deathFlag) = kills(deathFlag) + 1;
+                     if debug
+                        fprintf(1, 'failed at step %d, frame %d\n', deathFlag, f);
+                     end;
+                     break;
+                     % elseif any(OutOfBoundsBits(newCoordinates, screenRect, preBlankBorder) > 0)
+                     %    deathFlag = 4;
+                     %    kills(deathFlag) = kills(deathFlag) + 1;
+                     %    if debug
+                     %       fprintf(1, 'failed at step %d, frame %d\n', deathFlag, f);
+                     %    end;
+                     %    break;
+                  end;
+               end;
 
 
                % set preBlankCoordinates
@@ -330,7 +342,7 @@ for sub = subjects
                   preBlankDirections = direction;
                end;
 
-                  
+               
                % make sure that all disks reappear at a mindistance from where the TARGETS disappeared.
                if blankDuration(trial) > 0 & f == blankEnd(trial) 
                   pre = trajectory(1:nTargets, :, blankStart(trial) - 1); 
@@ -370,13 +382,21 @@ for sub = subjects
                         f2 = f - 1;
                         while f2 > 0
                            [x y rev err bounce] = MoveOneStep (testTraj(1, :, f2+1), rev, magnitude(1), screenRect, edgeZone, fullCircle);
-                           if any(err > 0) | any(bounce > 0)
+                           if any(err > 0) 
                               break;
                            end;
                            if x == 0 | y == 0
                               fprintf(1, 'Bad values: x = %d, y = %d, frame = %d\n', x, y, f2);
                               return;
                            end;
+
+                           % check that this disk doesn't bounce during the blank interval and just before it.
+                           if f2 > blankStart(trial) - 5
+                              if any(bounce > 0)
+                                 break;
+                              end;
+                           end;
+
                            testTraj(1, :, f2) = [x, y];
 
                            % check that this disk is far from all the other disks on the last visible
@@ -475,6 +495,7 @@ for sub = subjects
          
          if debug & switchedDisk > 0 
             fprintf(1, 'Switch disk 1 and %d.\n', switchedDisk); 
+            switchedDisk = 0;
          end;
          paths{trial} = trajectory;
          starts{trial} = startCoordinates;
