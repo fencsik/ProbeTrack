@@ -1,7 +1,7 @@
-function ShiftTrack3()
+function shifttrack()
 
 % ShiftTrack3: runs ShiftTrack3, with conditions defined by path files.
-% $Id: track.m,v 1.4 2003/12/19 15:44:40 fencsik Exp $
+% $Id: track.m,v 1.5 2004/01/09 13:15:18 fencsik Exp $
 
 % Can observers tolerate a longer gap duration if all items disappear at once?
 % constant blank duration method rather than staircase
@@ -166,50 +166,50 @@ screenBlank=screen(MainWindow, 'OpenOffscreenWindow',  gray, screenRect);
 % the frame array keeps track of which frame of its trajectory each
 % object is in.
 loop = {
-'		while (frame <= (trialFrames-trialShift));'
-'			thisFrame = mod(frame - 1, 2) + 1;'
-'			lastFrame = mod(frame, 2) + 1;'
-'			time1 = GetSecs;'
-'			for n = 1:nDisks;'
-'				if frame > 1;'
-'					screen(''CopyWindow'', eraserPointer, stimulus(lastFrame), imageRect, lastPlaceRect{n}, ''transparent'');'
-'				end;'
-'				placeRect{n} = [trajectory(n,1,frame+frameOffset(n))-imageX  trajectory(n,2,frame+frameOffset(n))-imageY  trajectory(n,1,frame+frameOffset(n))  trajectory(n,2,frame+frameOffset(n))];'
-%				% for each object, when it begins its blank, then move it 
-%				% to the frame it should be in when it reappears.
-'               if (blankDuration > 0);'
-'   				if (preBlank(n)) & (frame >= startBlankTime(n));'
-'			    		preBlank(n) = 0;'
-'   					frameOffset(n) = trialShift;'
-'			    	end;'
-'				    if (frame >= startBlankTime(n)) & (frame <= endBlankTime(n));'
-'	    				pointer = eraserPointer;'
-'	    			else;'
-'		    			pointer = ballPointer;'
-'   				end;'
-'               else;'
-'                   pointer = ballPointer;'
-'               end;'
-'				screen(''CopyWindow'', pointer, stimulus(thisFrame), imageRect, placeRect{n}, ''transparent'');'
-'			end;'
-'			if tracer;'
-'				screen(''CopyWindow'', tracerPaths, stimulus(thisFrame), [], [], ''transparent'');'
-'			end;'
-'			screen(MainWindow, ''WaitBlanking'', 1);'
-'			screen(''CopyWindow'', stimulus(thisFrame), MainWindow);'
-'			frameDuration(frame) = GetSecs - time1;'
-'			lastPlaceRect = placeRect;'
-'			frame = frame + 1;'
-'		end;'
+'   while (frame <= (trialFrames-trialShift));'
+'      thisFrame = mod(frame - 1, 2) + 1;'
+'      lastFrame = mod(frame, 2) + 1;'
+'      time1 = GetSecs;'
+'      for n = 1:nDisks;'
+'         if frame > 1;'
+'            screen(''CopyWindow'', eraserPointer, stimulus(lastFrame), imageRect, lastPlaceRect{n}, ''transparent'');'
+'         end;'
+'         placeRect{n} = [trajectory(n,1,frame+frameOffset(n))-imageX  trajectory(n,2,frame+frameOffset(n))-imageY  trajectory(n,1,frame+frameOffset(n))  trajectory(n,2,frame+frameOffset(n))];'
+%         % for each object, when it begins its blank, then move it 
+%         % to the frame it should be in when it reappears.
+'         if (blankDuration > 0);'
+'            if (preBlank(n)) & (frame >= startBlankTime(n));'
+'               preBlank(n) = 0;'
+'               frameOffset(n) = trialShift;'
+'            end;'
+'            if (frame >= startBlankTime(n)) & (frame <= endBlankTime(n));'
+'               pointer = eraserPointer;'
+'            else;'
+'               pointer = ballPointer;'
+'            end;'
+'         else;'
+'            pointer = ballPointer;'
+'         end;'
+'         screen(''CopyWindow'', pointer, stimulus(thisFrame), imageRect, placeRect{n}, ''transparent'');'
+'      end;'
+'      if tracer;'
+'         screen(''CopyWindow'', tracerPaths, stimulus(thisFrame), [], [], ''transparent'');'
+'      end;'
+'      screen(MainWindow, ''WaitBlanking'', 1);'
+'      screen(''CopyWindow'', stimulus(thisFrame), MainWindow);'
+'      frameDuration(frame) = GetSecs - time1;'
+'      lastPlaceRect = placeRect;'
+'      frame = frame + 1;'
+'   end;'
 };
 
 pointerNames = {'ballPointer', 'currentSelectionBall', 'unselectedBall', 'selectedCorrectBall', 'unselectedCorrectBall', 'selectedErrorBall'};
 diskBackgroundColors = {'[]', 'lightGray', 'gray', 'green', 'yellow', 'red'};
 diskForegroundColors = {'darkGray', 'darkGray', 'darkGray', 'darkGray', 'darkGray', 'darkGray'};
 for p = 1:6
-	eval([pointerNames{p}, ' = screen(MainWindow, ''OpenOffScreenWindow'', ', diskBackgroundColors{p}, ', imageRect);']);
-	eval(['screen(', pointerNames{p}, ', ''FillOval'', black, imageRect);']);
-	eval(['screen(', pointerNames{p}, ', ''FillOval'',', diskForegroundColors{p}, ', ballRect);']);
+   eval([pointerNames{p}, ' = screen(MainWindow, ''OpenOffScreenWindow'', ', diskBackgroundColors{p}, ', imageRect);']);
+   eval(['screen(', pointerNames{p}, ', ''FillOval'', black, imageRect);']);
+   eval(['screen(', pointerNames{p}, ', ''FillOval'',', diskForegroundColors{p}, ', ballRect);']);
 end
 eraserPointer = screen(MainWindow, 'OpenOffScreenWindow', [], imageRect);
 screen(eraserPointer, 'FillOval', gray, imageRect);
