@@ -1,7 +1,7 @@
 MVT Task Notes and Musings
 by David Fencsik
 
-$Id: notes.txt,v 1.2 2004/08/13 15:52:47 fencsik Exp $
+$Id: notes.txt,v 1.3 2004/08/19 20:00:53 fencsik Exp $
 
 December 16, 2003:
 
@@ -159,3 +159,9 @@ bit longer, say 6 s). Block position and maybe manipulate ntargets (2
 and 4?).
 
 
+
+August 19, 2004:
+
+Regarding #1 from the first list from August 13, 2004, Todd points
+out that this might be a worthwhile study to run, just to have it
+available. 
