@@ -2,7 +2,7 @@
 # prepare.sh: 
 # moves experiment files to the appropriate directory so the RAs can access them
 # 
-# $Id: prepare.sh,v 1.2 2004/05/11 14:51:59 fencsik Exp $
+# $Id: prepare.sh,v 1.3 2004/05/11 16:58:44 fencsik Exp $
 
 PUBLIC_DIR=~/Public/Experiments/ShiftTrack4
 
@@ -47,5 +47,7 @@ if [ -f $TRAIN_IN ]; then
     cp -a $TRAIN_IN $PUBLIC_DIR/$TRAIN_OUT
 fi
 
-echo mv $PATH_FILES $PUBLIC_DIR/
-mv $PATH_FILES $PUBLIC_DIR/
+if [ ! -z $1 ]; then
+    echo mv $PATH_FILES $PUBLIC_DIR/
+    mv $PATH_FILES $PUBLIC_DIR/
+fi
