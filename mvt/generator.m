@@ -4,7 +4,7 @@ function pathsFile = stGenerator (sInitial)
 % generates a set of trajectories for use with ShiftTrack experiments
 % Authors: David Fencsik (based on file by Todd Horowitz)
 %
-% $Id: generator.m,v 1.19 2004/02/09 14:03:00 fencsik Exp $
+% $Id: generator.m,v 1.20 2004/02/09 15:30:18 fencsik Exp $
 
 % Modified by David Fencsik
 % started  9/29/2003
@@ -12,7 +12,8 @@ function pathsFile = stGenerator (sInitial)
 % version of  01/06/2004
 
 starttime = clock;
-debug = 1;
+debug = 0;
+stopAfterNKills = 0;
 
 % Scrap this:
 % withinBlock = 0; % 1 = within-block design, each prefix gets R repetitions of each trial
@@ -30,30 +31,30 @@ nTargets = 5;
 
 % block-level variables
 prefix = {'mvt_'; 'pracA_'; 'pracB_'; 'pracC_'; 'pracD_'; 'exp_'};
-prefix = {'test'}; % for testing
-practrials = [10 1];
-exptrials = [1 1];
+prefix = {'prac', 'exp'}; % for testing
+practrials = [3 1];
+exptrials = [15 1];
 mvttrials = [30 1];
 trialTypes = {%repmat(1, mvttrials);
               %repmat(1, practrials);
               %repmat(1, practrials);
               %repmat(1, practrials);
-              %repmat(1, practrials);
-              repmat(2, exptrials)
+              repmat([1; 2], practrials);
+              repmat([1; 2], exptrials)
              };
 movementRates = {%repmat(9, mvttrials);
                  %repmat(9, practrials);
                  %repmat(9, practrials);
                  %repmat(9, practrials);
-                 %repmat(9, practrials);
-                 repmat(9, exptrials)
+                 repmat([9; 9], practrials)
+                 repmat([9; 9], exptrials)
                 };
 blankDurations = {%repmat(0, mvttrials);
                   %repmat(23, practrials);
                   %repmat(23, practrials);
                   %repmat(23, practrials);
-                  %repmat(23, practrials);
-                  repmat(23, exptrials);
+                  repmat([23; 23], practrials);
+                  repmat([23; 23], exptrials);
                  }; % 23 = 307 ms, 30 = 400 ms, 38 = 507 ms, 45 = 600 ms
 
 switchedDisk = 0;
@@ -215,7 +216,7 @@ for sub = subjects
          deathFlag = 999;
          while deathFlag > 0
             % quit if we've been going for too long:
-            if sum(kills(1:(size(kills,2)-1))) > (50*nTrials)
+            if stopAfterNKills & sum(kills(1:(size(kills,2)-1))) > (50*nTrials)
                kills = [1:(size(kills, 2)); kills]
                fprintf(1, 'Too many kills.\n');
                fprintf(1, 'Last kill = %d\n', deathFlag);
@@ -374,10 +375,29 @@ for sub = subjects
                            end;
                            if x == 0 | y == 0
                               fprintf(1, 'Bad values: x = %d, y = %d, frame = %d\n', x, y, f2);
+                              return;
                            end;
                            testTraj(1, :, f2) = [x, y];
-                           %if f2 == blankStart(trial) - 1
-                           %   if any(DistancesFromDisk(testTraj(f2, :)) < buffer)
+
+                           % check that this disk is far from all the other disks on the last visible
+                           % pre-gap frame.
+                           if f2 == blankStart(trial) - 1
+                              testcoords = trajectory(:, :, f2);
+                              testcoords(nTargets + 1, :) = [];
+                              if any(DistancesFromDisk(testTraj(1, :, f2), testcoords) < bufferZone)
+                                 break;
+                              end;
+                           end;
+
+                           % check that this disk is far enough from the other disks during the first frame
+                           if f2 == 1
+                              testcoords = trajectory(:, :, f2);
+                              testcoords(nTargets + 1, :) = [];
+                              if any(DistancesFromDisk(testTraj(1, :, f2), testcoords) < bufferZone)
+                                 break;
+                              end;
+                           end;
+
                            f2 = f2 - 1;
                         end;
                         if f2 == 0
@@ -416,7 +436,7 @@ for sub = subjects
                      newCoordinates(1, :) = trajectory(1, :, f);
                      
                      if debug
-                        fprintf(1, 'passed check 6, frame %d, kills(5:6) = [%d %d]\n', f, kills(5), kills(6));
+                        fprintf(1, 'passed check 6, frame %d\n', f);
                      end;
                   end;
                end; % if blankDuration(trial) > 0 & f == blankEnd(trial) & trialType(trial) == 2
