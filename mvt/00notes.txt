@@ -15,6 +15,7 @@ ShiftTrack4: same as above, but with all objects freezing upon
 	     manipulation (ntargets = {2,5})
 ShiftTrack5: ShiftTrack3 with asynchronous disappearance.
 ShiftTrack6: ShiftTrack4 with a within-subjects design.
+ShiftTrack7: first odd-one-out design
 StopTrack1: Basic stoptrack, with moving and static conditions and
 	    tracking load conditions of 1 and 4.
 StopTrack2: StopTrack1 with tracking loads of 1-4.
@@ -22,3 +23,14 @@ StopTrack3: static and moving tracking, 2 and 4 targets, with random
 	    trial length.
 StopTrack4: StopTrack3 with extra practice block (and all new
 	    subjects).
+
+
+
+
+Todo:
+
+* make track.m and train.m increasingly passive: gets following
+  parameters from path file:
+  * experiment
+  * nTargets
+* need to export which disk to probe
