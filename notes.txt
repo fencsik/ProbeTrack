@@ -1,7 +1,7 @@
-MVT Task Notes and Musings
+Tracking Project Notes and Musings
 by David Fencsik
 
-$Id: notes.txt,v 1.6 2004/10/06 16:55:13 fencsik Exp $
+$Id$
 
 December 16, 2003:
 
@@ -252,3 +252,20 @@ These are the ideas we came up with at the meeting:
     target in a cued location vs. asking whether a particular animal
     was at that location.
 
+
+October 21, 2004:
+
+Todd told me a of a recent meeting with Yuhong Jiang, in which she
+suggested a new dual-task MOT meets visual search study.  The premise
+is that people are able to overlap both tasks because they use the
+Horowitz All-purpose Task-postponement (HAT) memory store to postpone
+the tracking task, perform the search task, then switch back to the
+tracking task.  The only detriment to performance would come from
+uncertainty in locating the targets (which continued to move during
+the gap) using their last known positions from the HAT store.
+
+This uncertainty should be constant for any particular gap length, and
+shouldn't depend on the presence or difficulty (?) of an intervening
+task.
+
+More to come...
