@@ -4,9 +4,8 @@ function pathsFile = generator (sInitial)
 %%% generates a set of trajectories for use with Multiple Object Tracking experiments
 %%% Authors: David Fencsik (based on file by Todd Horowitz)
 %%%
-%%% Version: $Revision: 1.33 $ $Date: 2004/08/16 17:24:38 $ (UTC)
+%%% Version: $Revision: 1.34 $ $Date: 2004/08/17 17:52:29 $ (UTC)
 
-starttime = clock;
 debug = 0;
 stopAfterNKills = 0;
 
@@ -44,12 +43,6 @@ blankDurations = {repmat(0, mvttrials);
                   repmat(23, practrials); repmat(23, exptrials);
                   repmat(23, practrials); repmat(23, exptrials);
                  }; % 23 = 307 ms, 30 = 400 ms, 38 = 507 ms, 45 = 600 ms
-% trialTypes = {repmat(-1, practrials); repmat(0, practrials); repmat(1, practrials); 
-%               repmat(-1, exptrials); repmat(0, exptrials); repmat(1, exptrials);};
-% movementRates = {repmat(9, practrials); repmat(9, practrials); repmat(9, practrials); 
-%                  repmat(9, exptrials); repmat(9, exptrials); repmat(9, exptrials);};
-% blankDurations = {repmat(23, practrials); repmat(23, practrials); repmat(23, practrials); 
-%                  repmat(23, exptrials); repmat(23, exptrials); repmat(23, exptrials);}; % 23 = 307 ms, 30 = 400 ms, 38 = 507 ms, 45 = 600 ms
 
 switchedDisk = 0;
 nBlocks = size(trialTypes,1);
@@ -67,6 +60,18 @@ for block = 1:nBlocks
       return;
    end;
 end;
+
+fprintf(2, 'Ready to generate %d block(s) for %d subject(s).\n', nBlocks, length(subjects));
+fprintf(2, 'Press any key to begin, ''q'' to exit...\n');
+c = GetChar;
+
+if c == 'q' | c == 'Q'
+   return;
+else
+   fprintf(2, '\nBeginning path-file generation...\n\n');
+end;
+
+starttime = clock;
 
 
 bufferZone = 50;
