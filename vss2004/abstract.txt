@@ -1,19 +1,27 @@
-The Use of Trajectory Information in Multiple Object Tracking
-
-Observers are able to follow a subset of randomly moving identical
-objects. They are even able to do this when the objects disappear for
-up to a 400 ms interval (REF?). We investigate possible mechanisms
-that could facilitate matching objects across a blank interval. One
-possible mechanism is location-based matching, and another is
-predictive tracking based on the pre-disappearance trajectories of
-each object. In our studies, observers tracked 5 out of 10 dark gray
-disks moving randomly on a light gray background for 5 sec. During the
-tracking interval, all the objects disappeared for a 300 ms blank
-interval, then reappeared at various distances from their
-pre-disappearance locations. Through a series of such experiments, we
-show that both spatial location and trajectory information are used
-for re-acquiring  
+Tracking Multiple Moving Objects Before, During, and After Disappearance
 
 
+David E. Fencsik, Todd S. Horowitz, Sarah B. Klieger, and Jeremy
+M. Wolfe
 
-Results: suggest
+
+Observers in multi-element tracking experiments can successfully
+track a subset of randomly moving identical objects, even if all of
+the objects disappear for 300-400 ms (e.g., Alvarez, Wolfe, Horowitz,
+& Arsenio, 2001). Thus, the mechanisms used for tracking must be able
+to reacquire the objects once they reappear. One possibility is that,
+after the gap, objects are matched to the pre-gap objects based on
+spatial location. Another possibility is that tracking is based on
+movement trajectories, so post-gap locations can be predicted from
+pre-gap motion. We report a series of experiments designed to
+investigate the mechanisms used to reacquire moving objects after a
+gap. In our studies, observers tracked 5 out of 10 dark gray disks
+moving randomly on a light gray background for 5 sec. During the
+tracking interval, all the objects disappeared for a 300 ms gap, then
+reappeared at various distances from their pre-gap locations. Our
+results indicate that both spatial-location and trajectory information
+are used in reacquiring objects after a gap.
+
+
+Supported by some very kind people at the NIMH.
+
