@@ -16,6 +16,7 @@ $LastChangedDate$
 * shifttrack6: shifttrack4 with a within-block design
 * shifttrack7: odd-one-out design
 * shifttrack8: shifttrack6 with 1 vs. 4 targets
+* shifttrack9: within-subject comparison of synch vs. asynch
 
 * stoptrack1: compare performance on moving and static trials with 1
   or 4 targets
