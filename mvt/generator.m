@@ -4,7 +4,7 @@ function pathsFile = generator (sInitial)
 %%% generates a set of trajectories for use with Multiple Object Tracking experiments
 %%% Authors: David Fencsik (based on file by Todd Horowitz)
 %%%
-%%% Version: $Revision: 1.34 $ $Date: 2004/08/17 17:52:29 $ (UTC)
+%%% Version: $Revision: 1.35 $ $Date: 2004/08/19 20:00:02 $ (UTC)
 
 debug = 0;
 stopAfterNKills = 0;
@@ -12,37 +12,49 @@ stopAfterNKills = 0;
 subjects = 1:12; % e.g, 1:10 [ 2 7 11] 
 %trialDuration = 4;
 % Possible trial durations, in seconds
-minTrialDuration = 6;
+minTrialDuration = 3;
 maxTrialDuration = 6;
 nDisks = 10;
+asynchronous = 0; % 1 = asynchronous, 0 = synchronous
+staticReappearance = 1; % 1 = static, 0 = moving; effectively is 0 if asynchronous == 1
 %nTargets = 2;
 
 % block-level variables
 prefix = {'train'; 
-          'pracA'; 'expA'; 
-          'pracB'; 'expB'; 
-          'pracC'; 'expC'; 
+          'prac2A'; 'exp2A'; 
+          'prac2B'; 'exp2B'; 
+          'prac5A'; 'exp5A'; 
+          'prac5B'; 'exp5B'; 
          };
 % prefix = {'pracA'; 'pracB'; 'pracC'; 'expA'; 'expB'; 'expC';}; % for testing
-practrials = [10 1];
-exptrials = [40 1];
+practrials = [3 1];
+exptrials = [20 1];
 mvttrials = [30 1];
 testtrials = [1 1];
 trialTypes = {repmat(1, mvttrials);
-              repmat(-1, practrials); repmat(-1, exptrials);
-              repmat(0, practrials); repmat(0, exptrials);
-              repmat(1, practrials); repmat(1, exptrials);
+              repmat([-1; 0; 1], practrials); repmat([-1; 0; 1], exptrials);
+              repmat([-1; 0; 1], practrials); repmat([-1; 0; 1], exptrials);
+              repmat([-1; 0; 1], practrials); repmat([-1; 0; 1], exptrials);
+              repmat([-1; 0; 1], practrials); repmat([-1; 0; 1], exptrials);
              };
 movementRates = {repmat(9, mvttrials);
-                 repmat(9, practrials); repmat(9, exptrials);
-                 repmat(9, practrials); repmat(9, exptrials);
-                 repmat(9, practrials); repmat(9, exptrials);
+                 repmat([9; 9; 9], practrials); repmat([9; 9; 9], exptrials);
+                 repmat([9; 9; 9], practrials); repmat([9; 9; 9], exptrials);
+                 repmat([9; 9; 9], practrials); repmat([9; 9; 9], exptrials);
+                 repmat([9; 9; 9], practrials); repmat([9; 9; 9], exptrials);
                 };
 blankDurations = {repmat(0, mvttrials);
-                  repmat(23, practrials); repmat(23, exptrials);
-                  repmat(23, practrials); repmat(23, exptrials);
-                  repmat(23, practrials); repmat(23, exptrials);
+                  repmat([23; 23; 23], practrials); repmat([23; 23; 23], exptrials);
+                  repmat([23; 23; 23], practrials); repmat([23; 23; 23], exptrials);
+                  repmat([23; 23; 23], practrials); repmat([23; 23; 23], exptrials);
+                  repmat([23; 23; 23], practrials); repmat([23; 23; 23], exptrials);
                  }; % 23 = 307 ms, 30 = 400 ms, 38 = 507 ms, 45 = 600 ms
+
+%%% subjects = 1;
+%%% prefix = {'test'};
+%%% trialTypes = {repmat([-1; 0; 1], testtrials)};
+%%% movementRates = {repmat([9; 9; 9], testtrials)};
+%%% blankDurations = {repmat([23; 23; 23], testtrials)};
 
 switchedDisk = 0;
 nBlocks = size(trialTypes,1);
@@ -89,8 +101,8 @@ maxMovieFrames = ceil(maxTrialDuration*1000/predictedMovieFrameDuration);
 minMovieFrames = ceil(minTrialDuration*1000/predictedMovieFrameDuration);
 %%% slackDuration = maxTrialDuration - minTrialDuration;
 %%% slackFrames = ceil(slackDuration*1000/predictedMovieFrameDuration);
-blankWindowStart = round(2000/predictedMovieFrameDuration);
-blankWindowEnd   = minMovieFrames - round(1000/predictedMovieFrameDuration);
+%%% blankWindowStart = round(2000/predictedMovieFrameDuration);
+%%% blankWindowEnd   = minMovieFrames - round(1000/predictedMovieFrameDuration);
 %%% if blankWindow(1) >= blankWindow(2)
 %%%    'ERROR: Negative blank window requested.'
 %%%    return;
@@ -149,9 +161,6 @@ for sub = subjects
 
       % determine trial length (in frames)
       movieFrames = minMovieFrames + Randi(maxMovieFrames - (minMovieFrames-1), [nTrials,1]) - 1;
-      %% blank interval is picked separately for each disk in ShiftTrack5
-      % blankStart = movieFrames - blankDuration;
-      % blankEnd = movieFrames;
 
       % movement vector length
       targetMagnitude = (movementRate*30)*(predictedMovieFrameDuration)/1000;
@@ -179,9 +188,23 @@ for sub = subjects
             [movieFrames(trial),  blankStart(trial), blankEnd(trial)]
          end;
          
-         % Pick random blank intervals for each disk
-         blankStart = Randi(blankWindowEnd - blankWindowStart + 1, [nDisks, 1]) + ...
-             blankWindowStart - 1;
+         blankWindowStart = round(2000/predictedMovieFrameDuration);
+         blankWindowEnd   = movieFrames(trial) - round(1000/predictedMovieFrameDuration);
+         if asynchronous == 1
+            % Pick random blank intervals for each disk
+            blankStart = Randi(blankWindowEnd - blankWindowStart + 1, [nDisks, 1]) + ...
+                blankWindowStart - 1;
+         else
+            if staticReappearance == 1
+               % The blank interval occurs blankDuration(trial) frames before the
+               % last frame
+               blankStart = repmat(movieFrames(trial) - blankDuration(trial), [nDisks, 1]);
+            else
+               % Pick one random blank interval for all disks
+               blankStart = repmat(Randi(blankWindowEnd - blankWindowStart + 1, 1) + blankWindowStart - 1, ...
+                                   [nDisks, 1]);
+            end;
+         end;
          blankEnd = blankStart + blankDuration(trial);
          
          trajectory = zeros(nDisks, 2, movieFrames(trial));
