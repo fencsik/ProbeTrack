@@ -1,7 +1,7 @@
 MVT Task Notes and Musings
 by David Fencsik
 
-$Id: notes.txt,v 1.4 2004/08/25 21:50:35 fencsik Exp $
+$Id: notes.txt,v 1.5 2004/09/24 18:14:32 fencsik Exp $
 
 December 16, 2003:
 
@@ -184,3 +184,11 @@ with increasing tracking load?
 
 What we need here are some good theories.  
 
+
+September 24, 2004:
+
+Regarding Jeremy's task mentioned above: Can people maintain any
+sort of order information regarding the targets? Is there any kind of
+recency or primacy effects? Can they do an N-back sorta thing where
+the only have to track the most recent N objects and drop the (N+1)th
+back each time a new one is added?
