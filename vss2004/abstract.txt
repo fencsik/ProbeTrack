@@ -1,0 +1,19 @@
+The Use of Trajectory Information in Multiple Object Tracking
+
+Observers are able to follow a subset of randomly moving identical
+objects. They are even able to do this when the objects disappear for
+up to a 400 ms interval (REF?). We investigate possible mechanisms
+that could facilitate matching objects across a blank interval. One
+possible mechanism is location-based matching, and another is
+predictive tracking based on the pre-disappearance trajectories of
+each object. In our studies, observers tracked 5 out of 10 dark gray
+disks moving randomly on a light gray background for 5 sec. During the
+tracking interval, all the objects disappeared for a 300 ms blank
+interval, then reappeared at various distances from their
+pre-disappearance locations. Through a series of such experiments, we
+show that both spatial location and trajectory information are used
+for re-acquiring  
+
+
+
+Results: suggest
