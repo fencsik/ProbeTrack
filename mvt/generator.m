@@ -4,7 +4,7 @@ function pathsFile = stGenerator (sInitial)
 % generates a set of trajectories for use with ShiftTrack experiments
 % Authors: David Fencsik (based on file by Todd Horowitz)
 %
-% $Id: generator.m,v 1.10 2004/01/15 21:19:55 fencsik Exp $
+% $Id: generator.m,v 1.11 2004/01/20 22:17:05 fencsik Exp $
 
 % Modified by David Fencsik
 % started  9/29/2003
@@ -152,6 +152,7 @@ for sub = subjects
          % use kills to keep track of where problems are occuring
          kills = zeros(1,10);
          badTurns = 0;
+         movieFrames = ones(1, nTrials) * maxMovieFrames;
 
          for trial = 1:nTrials
 
@@ -182,7 +183,7 @@ for sub = subjects
             % 90. Done.
 
             ttype = trialType(trial)
-            
+
             % Determine the first invisible blank-interval frame: The gap can occur at 
             % least 2 seconds after the start of tracking but no later than 1 second 
             % before the end of tracking:
@@ -190,10 +191,9 @@ for sub = subjects
             blankWindow(2) = minMovieFrames - round(1000/predictedMovieFrameDuration);
             blankInterval(trial,1) = randi(blankWindow(2) - blankWindow(1)) + blankWindow(1)
             blankInterval(trial,2) = blankInterval(trial,1) + blankDuration
-            
+
             % compute trajectories
-            trajectory = zeros(nDisks, 2, maxMovieFrames);
-            movieFrames <-------------- START HERE <----------------
+            trajectory = zeros(nDisks, 2, movieFrames(trial));
             restarts = 0;
             badPaths = 1;
             while badPaths
@@ -269,17 +269,18 @@ for sub = subjects
                      reverse = mod(directions + halfCircle - 1, fullCircle) + 1;
                      startFrame = slackFrames;
                      frame = frame - 1;
-                     badPlacement = 1;
                      while frame > 0
-                        noiseDirection = Randi(fullCircle, [nDisks 1]); % random directions in 24 degree increments
+                        badPlacement = 1;
 
                         % adds a noise vector with random direction and noiseFactor*magnitude magnitude to the signal vector
+                        noiseDirection = Randi(fullCircle, [nDisks 1]); % random directions in 24 degree increments
                         [finalTheta, finalMagnitude] = addNoiseVector(reverse, magnitude, noiseDirection, noiseMagnitude); 
                         newCoordinates = computeCoordinates(oldCoordinates, finalTheta, finalMagnitude); % recompute coordinates
 
                         % now check for disks going out of bounds
                         for disk = 1:nDisks
                            status = OutOfBounds(newCoordinates(disk,:), screenRect, edgeZone);
+                           if status != <============= START HERE <===================
                            switch status
                             case 1
                              % approaching left edge
@@ -311,30 +312,43 @@ for sub = subjects
                         oldCoordinates = newCoordinates;
                         % if we're at the start frame for the min trial duration, then start checking to
                         % see if the objects are a min distance apart.
-                        if frame <= startFrames
+                        if frame <= startFrame
                            badPlacement = 0;
                            for disk = 1:nDisks
                               x = newCoordinates(disk,:); y = newCoordinates(disk,:);
                               newCoordinates(disk, :) = [];
+                              % break out of this loop as soon as we find two disks
+                              % that are too close.
                               if any(sqrt((x - newCoordinates(:, 1)).^2 + (y - newCoordinates(:, 2)).^2) < bufferZone)
                                  badPlacement = 1;
                                  break;
                               end;
                            end;
                            if ~badPlacement
-                              startFrames = frame;
+                              % we've found an appropriate starting frame:
+                              trajectory = trajectory(:, :, frame:movieFrames(trial));
+                              movieFrames(trial) = size(trajectory, 3);
+                              blankInterval(trial, 1) = blankInterval(trial, 1) - frame + 1;
+                              blankInterval(trial, 2) = blankInterval(trial, 2) - frame + 1;
                               break;
                            end;
                         end;
                         frame = frame - 1;
                      end;
-                     % now we know that all trajectory(:, :, startFrames:maxMovieFrames)
                   end;
                      
                   if ~badPlacement
+                     % now we know that trajectory(:, :, 1:(blankInterval-1)) is all properly spaced and now we
+                     % need to figure out the rest of the trajectory
+                     frame = blankInterval(trial, 1);
+                     % get last 
+                     oldCoordinates = trajectory(:, :, frame - 1); 
                      % move disks forward until the 
                               
                               
+%                      frame = blankInterval(trial, 1) - 1;
+%                      trajectory(:, :, frame) = preBlankCoordinates;
+%                      oldCoordinates = trajectory(:, :, frame);
                         
 
                         
