@@ -1,7 +1,7 @@
 MVT Task Notes and Musings
 by David Fencsik
 
-$Id: notes.txt,v 1.3 2004/08/19 20:00:53 fencsik Exp $
+$Id: notes.txt,v 1.4 2004/08/25 21:50:35 fencsik Exp $
 
 December 16, 2003:
 
@@ -159,9 +159,28 @@ bit longer, say 6 s). Block position and maybe manipulate ntargets (2
 and 4?).
 
 
-
 August 19, 2004:
 
 Regarding #1 from the first list from August 13, 2004, Todd points
 out that this might be a worthwhile study to run, just to have it
 available. 
+
+
+August 23, 2004:
+
+Jeremy designed a new kind of MVT task in which targets are cued one
+at a time while they are already moving.  Objects can be cued as
+targets, then removed from the target set later.  Generally, this
+allows us to study target acquisition and tracking processes.
+
+Some specific question we might want to ask: How many targets can be
+acquired/dropped simultaneously?  Can people simultaneously add some
+targets while dropping others?  Is there any advantage to recalling
+features from a recently dropped object as compared to an object that
+was never a target?  How long does such an advantage last?  Can there
+be a sudden switch from one group of targets to a non-overlapping set
+of targets?  Does dropping/adding of targets become more difficult
+with increasing tracking load?
+
+What we need here are some good theories.  
+
