@@ -1,7 +1,7 @@
 MVT Task Notes and Musings
 by David Fencsik
 
-$Id: notes.txt,v 1.5 2004/09/24 18:14:32 fencsik Exp $
+$Id: notes.txt,v 1.6 2004/10/06 16:55:13 fencsik Exp $
 
 December 16, 2003:
 
@@ -192,3 +192,63 @@ sort of order information regarding the targets? Is there any kind of
 recency or primacy effects? Can they do an N-back sorta thing where
 the only have to track the most recent N objects and drop the (N+1)th
 back each time a new one is added?
+
+
+September 28, 2004:
+
+Need to meet with Todd and Skyler regarding future directions for the
+MVT projects.  Things to discuss:
+
+* Brian's suggestions
+* Future Noah direction: what's hiding behind this bush?
+* "Killer ShiftTrack study": all reappear at position X except one,
+  which reappears at position Y (Y != X). 
+* Other ways to study preparatory set: adjust proportion of
+  move/non-move/rewind trials within a block. 
+
+These are the ideas we came up with at the meeting:
+
+* Studies we want from Brian's suggestions:
+  * Vary gap duration and reappearance position (e.g., move,
+    non-move) to test memory duration for various kinds of info.
+    Maybe Brian can run this one?
+  * ShiftTrack with 1 vs. 4 targets, just to see if there's a bigger,
+    qualitative difference than there was with 2 vs. 5 targets.  Gave
+    this to Skyler to program up and run.
+  * Contextual Cuing & Tracking: Ogawa and Yagi (2002) had a VSS
+    poster (?) showing that repeating the trajectories of targets and
+    distractors aids tracking performance (a la Jiang & Chun's
+    contextual cuing in visual search).  Are there other "features"
+    that might aid tracking: e.g., is it just target paths, just
+    distractor paths, or both that need to be repeated (Ogawa &
+    Yagi's results speak to this)?  Is it the trajectory or the final
+    display that matters?  What if we rotate all the trajectories by
+    90 degrees?
+* Todd's new studies, which are still in development, but nearing
+  deployment:
+  * AllTrack: track everything and test fidelity of location memory.
+    This is intended to provide a converging estimate of location
+    capacity for the NoahTrack results.
+  * ProbeTrack: track subset of objects and make a speeded
+    target/non-target discrimination response to a probed object.
+    Probe is presented at a variable delay following a gap.  The idea
+    is to figure out how quickly Os reacquire targets following a gap.
+* Jeremy's Pick-Up and Drop-Off (PUDO) tracking experiments:
+  currently being run with three major conditions--standard tracking with
+  simultaneously cued targets, target set gets built up one at a time
+  (possibly with two different tracking durations), and targets get
+  added and deleted during tracking.
+* ShiftTrack "Killer" study: track 4/8, all-but-one reappear at
+  position 1 (odd-one-out reappears at 0) and manipulate three
+  conditions: odd-one-out is target or distractor, probe is
+  target or distractor, and probe is odd-one-out or not.  I need to
+  code this on up.
+* NoahTrack: 
+  * Run a version with a cue of "what is behind this bush?"  Possibly
+    also change identities of stimuli during tracking.  
+  * Run a version that allows us to estimate how many objects' worth
+    of locations are stored separately from how many identities are
+    stored.  This manipulation involves asking whether there is a
+    target in a cued location vs. asking whether a particular animal
+    was at that location.
+
