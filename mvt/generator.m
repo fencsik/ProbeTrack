@@ -4,7 +4,7 @@ function pathsFile = stGenerator (sInitial)
 % generates a set of trajectories for use with ShiftTrack experiments
 % Authors: David Fencsik (based on file by Todd Horowitz)
 %
-% $Id: generator.m,v 1.8 2004/01/09 17:02:00 fencsik Exp $
+% $Id: generator.m,v 1.9 2004/01/14 21:08:58 fencsik Exp $
 
 % Modified by David Fencsik
 % started  9/29/2003
@@ -88,6 +88,8 @@ targetNoiseMagnitude = (movementNoise*30)*(predictedMovieFrameDuration)/1000;
 %distractorNoiseMagnitude = (distractorNoise*30)*(predictedMovieFrameDuration);
 degreesPerDirection = 360/24;
 
+maxRestarts = 1000; % per subject
+maxReplacements = 100; % per disk
 tau = clock;
 rand('state',sum(100*tau));
 state=rand('state');
@@ -117,7 +119,7 @@ cxy = newGrids(xdim, ydim, windowX, windowY, screenRect);
 
 for sub = subjects
    %	initTime = GetSecs;
-   kills = [0; 0; 0];
+   restarts = 0;
    
 %    if withinBlock == 0
 %       cycles = nTrialTypes;
@@ -185,33 +187,158 @@ for sub = subjects
             
             % compute trajectories
             trajectory = zeros(nDisks, 2, maxMovieFrames);
-            deathFlag = 999;
-            while deathFlag > 0
-               % place each disk, one at a time, give it a trajectory, and make sure it
-               % is both a minimum distance from other disks and will not reappear too
-               % close to any target disk after the blank interval.
-               preBlankCoordinates = zeros(nDisks,2);
-               direction = Randi(fullCircle, [nDisks 1]); % initial random directions in 24 degree increments
-               for disk = 1:nDisks
-                  badPlacement = 1;
-                  while badPlacement
-                     % pick a location in the rectangle
-                     x = Randi(preBlankRect(3) - preBlankRect(1));
-                     y = Randi(preBlankRect(4) - preBlankRect(2));
-                     preBlankCoordinates(disk,:) = [x y];
-                     badPlacement = 0;
-                     if disk > 1
-                        % check to make sure that pre-blank coordinates are far enough
-                        % from any other disks
-                        for disk2 = 1:(disk-1)
-                        end;
-                        % check that reappearance location of this disk is far enough
-                        % from the reappearance of any targets.
-                        for disk2 = 1:nTargets
+            restarts = 0;
+            badPaths = 1;
+            while badPaths
+               badPaths = 0
+               badPlacement = 1;
+               replacements = 0;
+               while badPlacement
+                  % place each disk and give it a direction, and make sure it
+                  % is both a minimum distance from other disks and will not reappear too
+                  % close to any target disk after the blank interval.
+                  x = Randi(preBlankRect(3) - preBlankRect(1), [nDisks 1]);
+                  y = Randi(preBlankRect(4) - preBlankRect(2), [nDisks 1]);
+                  preBlankCoordinates = [x y];
+                  direction = Randi(fullCircle, [nDisks 1]);
+                  badPlacement = 0;
+
+                  % determine reappearance location of the disks
+                  [finalTheta, finalMagnitude] = addNoiseVector(direction, targetMagnitude*(blankDuration), 0, 0);
+                  postBlankCoordinates = computeCoordinates(preBlankCoordinates, finalTheta, finalMagnitude);
+
+                  coord1 = preBlankCoordinates;
+                  coord2 = postBlankCoordinates;
+                  for disk = 1:nDisks
+                     x = preBlankCoordinates(disk,1); y = preBlankCoordinates(disk,2);
+                     % remove current disk from comparison lists
+                     coord1(disk,:) = [];
+                     coord2(disk,:) = [];
+                     if any(sqrt((x - coord1(:,1)).^2 + (y - coord1(:,2)).^2) < bufferZone)
+                        % disks are too close
+                        badPlacement = 1;
+                        break;
+                     elseif disk <= nTargets && ... 
+                            any(sqrt((x - coord2(:,1)).^2 + (y- coord2(:,2).^2)) < bufferZone)
+                        % disks reappear too close to this target's disappearance location
+                        badPlacement = 1;
+                        break;
+                     end;
+                  end;
+                  
+                  if ~badPlacement && ttype == 2
+                     % move the first distracter such that it will reappear at the first target's
+                     % disappearance locations
+                     dirmod = fullCircle / 4 * Shuffle([1 -1]);
+                     for d = dirmod
+                        direction(nTargets+1) = direction(1) + dirmod;
+                        [finalTheta finalMagnitude] = addNoiseVector(fullCircle - direction(nTargets+1), ...
+                                                                     targetMagnitude*(blankDuration), 0, 0);
+                        preBlankCoordinates(nTargets+1) = computeCoordinates(preBlankCoordinates(1,:), finalTheta, finalMagnitude);
+                        % check if this pre-blank location is out-of-bounds
+                        if OutOfBounds(preBlankCoordinates(nTargets+1)) ~= 0
+                           badPlacement = 1;
+                        else
+                           break;
                         end;
                      end;
                   end;
-               end;
+                  
+                  if ~badPlacement
+                     % move disks backwards until minDuration start frame
+
+                     % set up vectors of individual signal and noise magnitudes
+                     magnitude = ones(nDisks, 1) * targetMagnitude; 
+                     noiseMagnitude = ones(nDisks, 1) * targetNoiseMagnitude; 
+
+                     frame = blankInterval(trial, 1) - 1;
+                     trajectory(:, :, frame) = preBlankCoordinates;
+                     oldCoordinates = trajectory(:, :, frame);
+                     reverse = mod(directions + halfCircle - 1, fullCircle) + 1;
+                     startFrame = slackFrames;
+                     frame = frame - 1;
+                     badPlacement = 1;
+                     while frame > 0
+                        noiseDirection = Randi(fullCircle, [nDisks 1]); % random directions in 24 degree increments
+
+                        % adds a noise vector with random direction and noiseFactor*magnitude magnitude to the signal vector
+                        [finalTheta, finalMagnitude] = addNoiseVector(reverse, magnitude, noiseDirection, noiseMagnitude); 
+                        newCoordinates = computeCoordinates(oldCoordinates, finalTheta, finalMagnitude); % recompute coordinates
+
+                        % now check for disks going out of bounds
+                        for disk = 1:nDisks
+                           status = OutOfBounds(newCoordinates(disk,:), screenRect, edgeZone);
+                           switch status
+                            case 1
+                             % approaching left edge
+                             reverse(disk) = fullCircle - reverse(disk);
+                            case 2
+                             % approaching ceiling
+                             reverse(disk) = halfCircle - reverse(disk);
+                            case 3
+                             % approaching right edge
+                             reverse(disk) = fullCircle - reverse(disk);
+                            case 4
+                             % approaching floor
+                             reverse(disk) = halfCircle - reverse(disk);
+                           end;
+                        end;
+
+                        % re-compute newCoordinates to implement reversal:
+                        [finalTheta, finalMagnitude] = addNoiseVector(reverse, magnitude, noiseDirection, noiseMagnitude); 
+                        newCoordinates = computeCoordinates(oldCoordinates, finalTheta, finalMagnitude); % recompute coordinates
+
+                        % now double-check to see if there is occlusion or boundary violation
+                        for disk = 1:nDisks
+                           if OutOfBounds(newCoordinates(disk, :), screenRect, edgeZone)
+                              kills = kills +1;
+                           end;
+                        end;
+                        
+                        oldCoordinates = newCoordinates;
+                        % if we're at the start frame for the min trial duration, then start checking to
+                        % see if the objects are a min distance apart.
+                        if frame <= startFrames
+                           badPlacement = 0;
+                           for disk = 1:nDisks
+                              x = newCoordinates(disk,:); y = newCoordinates(disk,:);
+                              newCoordinates(disk, :) = [];
+                              if any(sqrt((x - newCoordinates(:, 1)).^2 + (y - newCoordinates(:, 2)).^2) < bufferZone)
+                                 badPlacement = 1;
+                                 break;
+                              end;
+                           end;
+                           if ~badPlacement
+                              startFrames = frame;
+                              break;
+                           end;
+                        end;
+                     end;
+                  end;
+                     
+                        
+                              
+                              
+                        
+                        frame = frame - 1;
+                     end;
+
+                        
+                        
+                        
+                        
+
+               %       badPlacement
+               %       replacements = replacements + 1;
+               %    end;
+               %    if replacements > maxReplacements
+               %       badPaths = 1;
+               %       break;
+               %    end;
+               % end;
+                     
+                     
+
                
               
                % 			if kills > 1000;
@@ -220,81 +347,11 @@ for sub = subjects
                % 				return;
                % 			end;
 
-               % create a random permutation of the 35 possible locations
-               randselect = randperm(xdim*ydim);
-
-               %starting positions for each ball are selected from the randomset
-               startCoordinates = cxy(randselect(1:nDisks), :);
                oldCoordinates = startCoordinates;
                newCoordinates = startCoordinates;
-               direction = Randi(24, [nDisks 1]); % initial random directions in 24 degree increments
-               theta = (direction*30)*(pi/180); % initial direction in radians
-               % set up vectors of individual signal and noise magnitudes
-               magnitude = ones(nDisks, 1) * targetMagnitude; 
-               noiseMagnitude = ones(nDisks, 1) * targetNoiseMagnitude; 
-               %magnitude(1:tracknumber) = targetMagnitude;
-               %noiseMagnitude(1:tracknumber) = targetNoiseMagnitude;
-
 
                deathFlag = 0;
                for f = 1:movieFrames(trial)
-                  % while loop waits until a viable trajectory is generated
-                  count = 0;
-                  count = count+1;
-                  noiseDirection = Randi(24, [nDisks 1]); % random directions in 24 degree increments
-
-                  % adds a noise vector with random direction and noiseFactor*magnitude magnitude to the signal vector
-                  [finalTheta, finalMagnitude] = addNoiseVector(direction, magnitude, noiseDirection, noiseMagnitude); 
-                  newCoordinates = computeCoordinates(oldCoordinates, finalTheta, finalMagnitude); % recompute coordinates
-
-                  % now prevent distractors from going out of bounds
-
-                  for a = 1:nDisks
-                     if (newCoordinates(a, 2) > (screenY - edgeZone))
-                        % approaching floor
-                        direction(a) = halfCircle - direction(a);
-                     elseif (newCoordinates(a, 2) < edgeZone)
-                        % approaching ceiling
-                        direction(a) = halfCircle - direction(a);
-                     elseif (newCoordinates(a, 1) > (screenX - edgeZone))
-                        % 						if (newCoordinates(a, 1) > (screenX - edgeZone))
-                        % approaching right edge
-                        direction(a) = fullCircle - direction(a);
-                     elseif (newCoordinates(a, 1) < edgeZone)
-                        % approaching left edge
-                        direction(a) = fullCircle - direction(a);
-                     else
-                        % do nothing
-
-                     end
-                  end
-
-                  % adds a noise vector with random direction and noiseFactor*magnitude magnitude to the signal vector
-                  [finalTheta, finalMagnitude] = addNoiseVector(direction, magnitude, noiseDirection, noiseMagnitude); 
-                  newCoordinates = computeCoordinates(oldCoordinates, finalTheta, finalMagnitude); % recompute coordinates
-
-                  % now double-check to see if there is occlusion or boundary violation
-
-                  for a = 1:nDisks
-                     if (newCoordinates(a, 2) > (screenY - imageY))|(newCoordinates(a, 2) < imageY)
-                        % floor or ceiling
-                        deathFlag = 1;
-                        kills = kills +1;
-                        % ['vertical boundary violation with ball ' num2str(a)]
-                        % ['  coordinates (' num2str(newCoordinates(a, 1)) ',' num2str(newCoordinates(a, 2)) ')']
-                        % ['  frame ' num2str(f)']
-                        % clear screen;
-                        % return;
-                     elseif (newCoordinates(a, 1) > (screenX - imageX))|(newCoordinates(a, 1) < imageX)
-                        deathFlag = 2;
-                        kills = kills +1;
-                        % ['horizontal boundary violation with ball ' num2str(a)]
-                        % ['  coordinates (' num2str(newCoordinates(a, 1)) ',' num2str(newCoordinates(a, 2)) ')']
-                        % clear screen;
-                        % return;
-                     end
-                  end
-
                   % now prevent balls from occluding one another on final frame
                   if f == movieFrames(trial)
                      for b = 1:nDisks
@@ -343,15 +400,37 @@ newCoordinates(:, 2) = magnitude.*cos(theta) + oldCoordinates(:, 2); %y coordina
 
 function [finalTheta, finalMagnitude] = addNoiseVector(direction, magnitude, noiseDirection, noiseMagnitude)
 
-degreesPerDirection = 360/24;
+   degreesPerDirection = 360/24;
 
-direction = mod(direction - 1, 24) + 1; % eliminate negative directions
-theta = (direction*degreesPerDirection)*(pi/180); % direction to radians
-noiseTheta = (noiseDirection*degreesPerDirection)*(pi/180); % noise direction in radians
+   direction = mod(direction - 1, 24) + 1; % eliminate negative directions
+   theta = (direction*degreesPerDirection)*(pi/180); % direction to radians
+   noiseTheta = (noiseDirection*degreesPerDirection)*(pi/180); % noise direction in radians
 
-%now convert to cartesian coordinates and add
-[signalX, signalY] = pol2cart(theta, magnitude);
-[noiseX, noiseY] = pol2cart(noiseTheta, noiseMagnitude);
-finalX = signalX + noiseX;
-finalY = signalY + noiseY;
-[finalTheta, finalMagnitude] = cart2pol(finalX, finalY);
+   %now convert to cartesian coordinates and add
+   [signalX, signalY] = pol2cart(theta, magnitude);
+   [noiseX, noiseY] = pol2cart(noiseTheta, noiseMagnitude);
+   finalX = signalX + noiseX;
+   finalY = signalY + noiseY;
+   [finalTheta, finalMagnitude] = cart2pol(finalX, finalY);
+
+
+function out = OutOfBounds (coordinates, edgeRect, border)
+   [r c] = size(coordinates);
+   if r == 1 && c == 2
+      out = 0; %zeros(r, 1);
+      if (coordinates(1) < (edgeRect(1) + border))
+         % approaching left edge
+         out = 1;
+      elseif (coordinates(2) < (edgeRect(2) + border))
+         % approaching ceiling
+         out = 2;
+      elseif (coordinates(1) > (edgeRect(3) - border))
+         % approaching right edge
+         out = 3;
+      elseif (coordinates(2) > (edgeRect(4) - border))
+         % approaching floor
+         out = 4;
+      end;
+   elseif
+      out = 5;
+   end;
