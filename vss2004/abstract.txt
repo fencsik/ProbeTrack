@@ -28,8 +28,6 @@ should be best at position 0 and equal for positions -1 and
 1. Instead, we found that position -1 produced performance superior to
 position 1, and not significantly different from position 0. This
 result indicates that the visual system takes into account the history
-of an object's motion trajectory when reacquiring targets. Generally,
-our results show that both location and trajectory information are
-used in the reacquisition of targets following a gap.
+of an object's motion trajectory when reacquiring targets. 
 
 Supported by NIH grant MH065576 to TSH.
