@@ -4,52 +4,52 @@ function pathsFile = generator (sInitial)
 %%% generates a set of trajectories for use with Multiple Object Tracking experiments
 %%% Authors: David Fencsik (based on file by Todd Horowitz)
 %%%
-%%% $Id: generator.m,v 1.28 2004/06/24 16:59:14 fencsik Exp $
+%%% $Id: generator.m,v 1.29 2004/06/24 17:29:33 fencsik Exp $
 
 starttime = clock;
 debug = 0;
 stopAfterNKills = 0;
 
-subjects = 1:2; % e.g, 1:10 [ 2 7 11] 
+subjects = 3:12; % e.g, 1:10 [ 2 7 11] 
 %trialDuration = 4;
 % Possible trial durations, in seconds
-minTrialDuration = 4;
-maxTrialDuration = 4;
+minTrialDuration = 2;
+maxTrialDuration = 5;
 nDisks = 10;
 %nTargets = 2;
 
 % block-level variables
-prefix = {'trainA'; 
-%           'prac2s'; 'exp2s'; 
-%           'prac2m'; 'exp2m'; 
-%           'prac4s'; 'exp4s'; 
-%           'prac4m'; 'exp4m';
-%           'trainB';
+prefix = {%'trainA'; 
+          'prac2s'; 'exp2s'; 
+          'prac2m'; 'exp2m'; 
+          'prac4s'; 'exp4s'; 
+          'prac4m'; 'exp4m';
+          'trainB';
          };
 %prefix = {'prac', 'exp'}; % for testing
 practrials = [10 1];
 exptrials = [40 1];
 mvttrials = [30 1];
-trialTypes = {repmat(1, mvttrials);
-%               repmat(0, practrials); repmat(0, exptrials);
-%               repmat(1, practrials); repmat(1, exptrials);
-%               repmat(0, practrials); repmat(0, exptrials);
-%               repmat(1, practrials); repmat(1, exptrials);
-%               repmat(1, mvttrials);
+trialTypes = {%repmat(1, mvttrials);
+              repmat(0, practrials); repmat(0, exptrials);
+              repmat(1, practrials); repmat(1, exptrials);
+              repmat(0, practrials); repmat(0, exptrials);
+              repmat(1, practrials); repmat(1, exptrials);
+              repmat(1, mvttrials);
              };
-movementRates = {repmat(9, mvttrials);
-%                  repmat(9, practrials); repmat(9, exptrials);
-%                  repmat(9, practrials); repmat(9, exptrials);
-%                  repmat(9, practrials); repmat(9, exptrials);
-%                  repmat(9, practrials); repmat(9, exptrials);
-%                  repmat(9, mvttrials);
+movementRates = {%repmat(9, mvttrials);
+                 repmat(9, practrials); repmat(9, exptrials);
+                 repmat(9, practrials); repmat(9, exptrials);
+                 repmat(9, practrials); repmat(9, exptrials);
+                 repmat(9, practrials); repmat(9, exptrials);
+                 repmat(9, mvttrials);
                 };
-blankDurations = {repmat(0, mvttrials);
-%                   repmat(23, practrials); repmat(23, exptrials);
-%                   repmat(23, practrials); repmat(23, exptrials);
-%                   repmat(23, practrials); repmat(23, exptrials);
-%                   repmat(23, practrials); repmat(23, exptrials);
-%                   repmat(23, mvttrials);
+blankDurations = {%repmat(0, mvttrials);
+                  repmat(23, practrials); repmat(23, exptrials);
+                  repmat(23, practrials); repmat(23, exptrials);
+                  repmat(23, practrials); repmat(23, exptrials);
+                  repmat(23, practrials); repmat(23, exptrials);
+                  repmat(23, mvttrials);
                  }; % 23 = 307 ms, 30 = 400 ms, 38 = 507 ms, 45 = 600 ms
 % nDisks = {repmat(10, mvttrials);
 %           repmat([10; 10], practrials);
