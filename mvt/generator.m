@@ -4,26 +4,30 @@ function pathsFile = stGenerator (sInitial)
 % generates a set of trajectories for use with ShiftTrack experiments
 % Authors: David Fencsik (based on file by Todd Horowitz)
 %
-% $Id: generator.m,v 1.3 2003/12/19 15:44:40 fencsik Exp $
+% $Id: generator.m,v 1.4 2004/01/06 16:28:56 fencsik Exp $
 
 % Modified by David Fencsik
 % started  9/29/2003
 % based on tGenerator6c of  9/15/2003
 % version of  11/25/2003
 
-withinBlock = 0; % 1 = within-block design, each prefix gets R repetitions of each 
-                 % trial type (not implemented);
-                 % 0 = between-block design, each prefix gets R repetitions
-                 % of one trial type
-subjects = 1:3; % e.g, 1:10 [ 2 7 11] 
+withinBlock = 0; % 1 = within-block design, each prefix gets R repetitions of each trial
+                 % type (not implemented); 
+                 % 0 = between-block design, each prefix gets R
+                 % repetitions of one trial type
+movingCue = 1; % 0 = objects are cued in first frame and not handled by this file.  
+               % 1 = objects begin moving at cuingRate with cuingNoise for
+               % cuingDuration, then switch to standard movement rates
+subjects = 1; % e.g, 1:10 [ 2 7 11] 
 trialDuration = 5;
 nDisks = 10;
 trialTypes = [0.0; -1.0; 0.0; 1.0];
 nTrialTypes = size(trialTypes,1);
 repetitions = 50; % one value, or one value per trial type
 practiceRepetitions = 10; 
-prefix = {'train';'a';'b';'c'}; % if withinBlock = 0, then one value per trial type,
-                        % otherwise any value(s).
+prefix = {'test'} %{'train';'a';'b';'c'}; 
+                  % if withinBlock = 0, then one value per trial type, otherwise any
+                  % value(s).
 practicePrefix = 'p_'; %  
 
 movementRate = 8;
