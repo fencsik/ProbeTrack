@@ -4,7 +4,7 @@ function pathsFile = stGenerator (sInitial)
 % generates a set of trajectories for use with ShiftTrack experiments
 % Authors: David Fencsik (based on file by Todd Horowitz)
 %
-% $Id: generator.m,v 1.21 2004/02/09 20:11:17 fencsik Exp $
+% $Id: generator.m,v 1.22 2004/02/09 21:55:24 fencsik Exp $
 
 % Modified by David Fencsik
 % started  9/29/2003
@@ -21,41 +21,50 @@ stopAfterNKills = 0;
 %                  % 0 = between-block design, each prefix gets R
 %                  % repetitions of one trial type
 
-subjects = 1; % e.g, 1:10 [ 2 7 11] 
+subjects = 1:8; % e.g, 1:10 [ 2 7 11] 
 %trialDuration = 4;
 % Possible trial durations, in seconds
 minTrialDuration = 5;
 maxTrialDuration = 6;
 nDisks = 10;
-nTargets = 5;
+nTargets = 1;
 
 % block-level variables
-prefix = {'mvt_'; 'pracA_'; 'pracB_'; 'pracC_'; 'pracD_'; 'exp_'};
-prefix = {'prac', 'exp'}; % for testing
-practrials = [4 1];
-exptrials = [15 1];
+prefix = {'mvt1_'; 'prac1a_'; 'prac1b_'; 'exp1a_'; 'exp1b_'};
+%prefix = {'prac', 'exp'}; % for testing
+practrials = [5 1];
+exptrials = [25 1];
 mvttrials = [30 1];
-trialTypes = {%repmat(1, mvttrials);
-              %repmat(1, practrials);
-              %repmat(1, practrials);
-              %repmat(1, practrials);
+trialTypes = {repmat(1, mvttrials);
               repmat([1; 2], practrials);
-              repmat([1; 2], exptrials)
+              repmat([1; 2], practrials);
+              repmat([1; 2], exptrials);
+              repmat([1; 2], exptrials);
              };
-movementRates = {%repmat(9, mvttrials);
-                 %repmat(9, practrials);
-                 %repmat(9, practrials);
-                 %repmat(9, practrials);
-                 repmat([9; 9], practrials)
-                 repmat([9; 9], exptrials)
+movementRates = {repmat(9, mvttrials);
+                 repmat([9; 9], practrials);
+                 repmat([9; 9], practrials);
+                 repmat([9; 9], exptrials);
+                 repmat([9; 9], exptrials);
                 };
-blankDurations = {%repmat(0, mvttrials);
-                  %repmat(23, practrials);
-                  %repmat(23, practrials);
-                  %repmat(23, practrials);
+blankDurations = {repmat(0, mvttrials);
+                  repmat([23; 23], practrials);
                   repmat([23; 23], practrials);
                   repmat([23; 23], exptrials);
+                  repmat([23; 23], exptrials);
                  }; % 23 = 307 ms, 30 = 400 ms, 38 = 507 ms, 45 = 600 ms
+% nDisks = {repmat(10, mvttrials);
+%           repmat([10; 10], practrials);
+%           repmat([10; 10], practrials);
+%           repmat([10; 10], exptrials);
+%           repmat([10; 10], exptrials);
+%          };
+% nTargets = {repmat(10, mvttrials);
+%             repmat([10; 10], practrials);
+%             repmat([10; 10], practrials);
+%             repmat([10; 10], exptrials);
+%             repmat([10; 10], exptrials);
+%            };
 
 switchedDisk = 0;
 nBlocks = size(trialTypes,1);
