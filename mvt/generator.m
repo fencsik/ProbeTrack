@@ -4,7 +4,7 @@ function pathsFile = generator (sInitial)
 %%% generates a set of trajectories for use with Multiple Object Tracking experiments
 %%% Authors: David Fencsik (based on file by Todd Horowitz)
 %%%
-%%% Version: $Revision: 1.36 $ $Date: 2004/09/30 19:22:33 $ (UTC)
+%%% Version: $Revision: 1.37 $ $Date: 2004/10/05 20:29:13 $ (UTC)
 
 debug = 0;
 stopAfterNKills = 0;
@@ -30,38 +30,39 @@ numTrials = {30; 9; 60; 9; 60; 9; 60; 9; 60};
 prefix = {'test'};
 numTrials = {2};
 
-minListLength = 8; % 2 x 2 x 2 design
+minListLength = 64; % 8 x 8 design
 numBlocks = length(prefix);
 for b = 1:numBlocks
    numReps = ceil(numTrials{b} / minListLength);
    listLength = minListLength * numReps;
-   if listLength > numTrials
-      fprintf(2, 'WARNING: Unbalanced trials in block %d\n\n', block);
+   if listLength > numTrials{b}
+      fprintf(2, 'WARNING: Unbalanced trials in block %d\n\n', b);
    end;
    
-   % construct a list that balances oddTarget, oddProbe, probeTarget
-% % construct a list that balances t1Field, t2Type, and t2Lag
-% t1Field = [];
-% for field = 1:t1NumFields
-%    t1Field = [t1Field; repmat(field, [2 * t2NumLags, 1])];
-% end;
-% t2Type = repmat([repmat(1, [t2NumLags, 1]); repmat(2, [t2NumLags, 1])], [t1NumFields, 1]);
-% t2Lag = repmat(laglist', [2 * t1NumFields, 1]);
+   % construct a list that balances oddDisk and probeDisk
+   odd = repmat((1:8)', [8, 1]);
+   probe = [];
+   for p = 1:8
+      probe = [probe; repmat(p, [8, 1])];
+   end;
+   
+   % extend the lists as needed
+   if numReps > 1
+      odd   = repmat(odd,   [numReps, 1]);
+      probe = repmat(probe, [numReps, 1]);
+   end;
+   
+   [probe, order] = Shuffle(probe);
+   odd = odd(order);
+   
+   probeDisk{b} = probe;
+   oddDisk{b}   = odd;
+end;
 
-% % extend the lists as needed
-% if numReps > 1
-%    t1Field = repmat(t1Field, [numReps, 1]);
-%    t2Type  = repmat(t2Type,  [numReps, 1]);
-%    t2Lag   = repmat(t2Lag,   [numReps, 1]);
-% end;
-
-% % shuffle them
-% [t1Field, order] = Shuffle(t1Field);
-% t2Type = t2Type(order);
-% t2Lag  = t2Lag(order);
+return;
 
 
-fprintf(2, 'Ready to generate %d block(s) for %d subject(s).\n', nBlocks, length(subjects));
+fprintf(2, 'Ready to generate %d block(s) for %d subject(s).\n', numBlocks, length(subjects));
 fprintf(2, 'Press any key to begin, ''q'' to exit...\n');
 c = GetChar;
 
