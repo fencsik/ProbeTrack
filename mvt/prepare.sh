@@ -2,7 +2,7 @@
 # prepare.sh: 
 # moves experiment files to the appropriate directory so the RAs can access them
 # 
-# $Id: prepare.sh,v 1.1 2004/05/10 20:46:00 fencsik Exp $
+# $Id: prepare.sh,v 1.2 2004/05/11 14:51:59 fencsik Exp $
 
 PUBLIC_DIR=~/Public/Experiments/ShiftTrack4
 
@@ -32,7 +32,20 @@ if [ -x $TRAIN_IN ]; then
     exit -1
 fi
 
-cp -a $GENERATOR_IN $PUBLIC_DIR/$GENERATOR_OUT
-cp -a $TRACK_IN $PUBLIC_DIR/$TRACK_OUT
-cp -a $TRAIN_IN $PUBLIC_DIR/$TRAIN_OUT
+if [ -f $GENERATOR_IN ]; then
+    echo cp -a $GENERATOR_IN $PUBLIC_DIR/$GENERATOR_OUT
+    cp -a $GENERATOR_IN $PUBLIC_DIR/$GENERATOR_OUT
+fi
+
+if [ -f $TRACK_IN ]; then
+    echo cp -a $TRACK_IN $PUBLIC_DIR/$TRACK_OUT
+    cp -a $TRACK_IN $PUBLIC_DIR/$TRACK_OUT
+fi
+
+if [ -f $TRAIN_IN ]; then
+    echo cp -a $TRAIN_IN $PUBLIC_DIR/$TRAIN_OUT
+    cp -a $TRAIN_IN $PUBLIC_DIR/$TRAIN_OUT
+fi
+
+echo mv $PATH_FILES $PUBLIC_DIR/
 mv $PATH_FILES $PUBLIC_DIR/
