@@ -4,7 +4,7 @@ function pathsFile = stGenerator (sInitial)
 % generates a set of trajectories for use with ShiftTrack experiments
 % Authors: David Fencsik (based on file by Todd Horowitz)
 %
-% $Id: generator.m,v 1.7 2004/01/08 20:25:14 fencsik Exp $
+% $Id: generator.m,v 1.8 2004/01/09 17:02:00 fencsik Exp $
 
 % Modified by David Fencsik
 % started  9/29/2003
@@ -45,21 +45,14 @@ practicePrefix = 'p_'; %
 
 movementRate = 8;
 movementNoise = 0;
-bufferZone = 50;
 predictedMovieFrameDuration = 13.33;
 blankDurations = [0; 23; 23; 23];
 
+bufferZone = 50;
+preBlankRect = [0 0 1024 768];
+
 nTrialTypes = size(reappearanceOffset,1);
 
-
-%MainWindow = screen(0, 'OpenWindow', [], [], 8);
-imageX=35;
-imageY=35;
-imageRect = [0 0 imageX imageY];
-screenX = 1024;
-screenY = 768;
-screenRect = [0 0 screenX screenY];
-%hz = round(screen(MainWindow, 'FrameRate'));
 
 clear screen;
 
@@ -72,8 +65,17 @@ slackDuration = maxTrialDuration - minTrialDuration
 slackFrames = ceil(slackDuration*1000/predictedMovieFrameDuration);
 
 
-%frameDuration = refreshesPerFrame/hz;
+% size/distance variables
+%MainWindow = screen(0, 'OpenWindow', [], [], 8);
+imageX=35;
+imageY=35;
+imageRect = [0 0 imageX imageY];
+screenX = 1024;
+screenY = 768;
+screenRect = [0 0 screenX screenY];
+%hz = round(screen(MainWindow, 'FrameRate'));
 edgeZone = imageY;
+
 
 
 % movement variables
@@ -89,6 +91,24 @@ degreesPerDirection = 360/24;
 tau = clock;
 rand('state',sum(100*tau));
 state=rand('state');
+
+
+% ensure that pre-gap rectangle is not too big and is centered within the screenRect
+preBlankRect(1) = preBlankRect(1) + edgeZone;
+preBlankRect(2) = preBlankRect(2) + edgeZone;
+preBlankRect(3) = preBlankRect(3) - edgeZone;
+preBlankRect(4) = preBlankRect(4) - edgeZone;
+if preBlankRect(3) - preBlankRect(1) > screenX
+   preBlankRect(1) = 0;
+   preBlankRect(3) = screenX;
+end;
+if preBlankRect(4) - preBlankRect(2) > screenY
+   preBlankRect(2) = 0;
+   preBlankRect(4) = screenY;
+end;
+preBlankRect = CenterRect(preBlankRect, screenRect);
+
+
 
 % startCoordinates = zeros(nBalls, 2);
 xdim = 5; ydim = 6;% a 5 by 6 grid of positions
@@ -158,36 +178,42 @@ for sub = subjects
             % Determine the first invisible blank-interval frame: The gap can occur at 
             % least 2 seconds after the start of tracking but no later than 1 second 
             % before the end of tracking:
-            blankInterval(trial,1) = randi((max - ...
-                                           round(2000/predictedMovieFrameDuration)
-                                           
+            blankWindow(1) = round(2000/predictedMovieFrameDuration);
+            blankWindow(2) = minMovieFrames - round(1000/predictedMovieFrameDuration);
+            blankInterval(trial,1) = randi(blankWindow(2) - blankWindow(1)) + blankWindow(1)
+            blankInterval(trial,2) = blankInterval(trial,1) + blankDuration
             
-            
-            
-            % blankWindow(1) = round(2000/predictedMovieFrameDuration); % blank comes at least 2 seconds after start of tracking
-            % blankWindow(2) = trialFrames - round(1000/predictedMovieFrameDuration); % blank comes no later than 1 seconds before end of tracking 
-            % 
-            % % select start time for blank interval
-            % startBlankTimeRange = blankWindow(2) - blankWindow(1);
-            % if condition == 1
-            %    % set start of blank to the same frame for all disks
-            %    startBlankTime = ones(1, nDisks);
-            %    startBlankTime = startBlankTime * randi(startBlankTimeRange);
-            % else
-            %    % generate different random starting blank frames for each disk
-            %    startBlankTime = randi(startBlankTimeRange, [1, nDisks]);
-            % end
-            % startBlankTime = blankWindow(1) + startBlankTime;
-            % endBlankTime = startBlankTime + blankDuration;
-            % finalFrame = trialFrames; % finalFrame is leftover from dougtrack4
-            % 
-            % % get coordinates
-            % trajectory = paths{trial};
-            % startCoordinates = starts{trial};
-
             % compute trajectories
+            trajectory = zeros(nDisks, 2, maxMovieFrames);
             deathFlag = 999;
             while deathFlag > 0
+               % place each disk, one at a time, give it a trajectory, and make sure it
+               % is both a minimum distance from other disks and will not reappear too
+               % close to any target disk after the blank interval.
+               preBlankCoordinates = zeros(nDisks,2);
+               direction = Randi(fullCircle, [nDisks 1]); % initial random directions in 24 degree increments
+               for disk = 1:nDisks
+                  badPlacement = 1;
+                  while badPlacement
+                     % pick a location in the rectangle
+                     x = Randi(preBlankRect(3) - preBlankRect(1));
+                     y = Randi(preBlankRect(4) - preBlankRect(2));
+                     preBlankCoordinates(disk,:) = [x y];
+                     badPlacement = 0;
+                     if disk > 1
+                        % check to make sure that pre-blank coordinates are far enough
+                        % from any other disks
+                        for disk2 = 1:(disk-1)
+                        end;
+                        % check that reappearance location of this disk is far enough
+                        % from the reappearance of any targets.
+                        for disk2 = 1:nTargets
+                        end;
+                     end;
+                  end;
+               end;
+               
+              
                % 			if kills > 1000;
                % 				clear screen;
                % 				kills
@@ -209,7 +235,6 @@ for sub = subjects
                %magnitude(1:tracknumber) = targetMagnitude;
                %noiseMagnitude(1:tracknumber) = targetNoiseMagnitude;
 
-               trajectory = zeros(nDisks, 2, movieFrames(trial));
 
                deathFlag = 0;
                for f = 1:movieFrames(trial)
