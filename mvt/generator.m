@@ -4,7 +4,7 @@ function pathsFile = generator (sInitial)
 %%% generates a set of trajectories for use with Multiple Object Tracking experiments
 %%% Authors: David Fencsik (based on file by Todd Horowitz)
 %%%
-%%% Version: $Revision: 1.38 $ $Date: 2004/10/06 18:39:18 $ (UTC)
+%%% $LastChangedDate$
 
 debug = 0;
 stopAfterNKills = 0;
@@ -26,21 +26,25 @@ normShift = 1;
 oddShift = 0;
 
 %%%%% Define blocks %%%%%
-prefix = {'train'; 'prac2A'; 'exp2A'; 'prac2B'; 'exp2B'; 'prac5A'; 'exp5A'; 'prac5B'; 'exp5B'};
-numTrialsList = {30; 9; 60; 9; 60; 9; 60; 9; 60};
+prefix = {'a', 'b'};
+numTrialsList = {30; [8, 60]; [8, 60]; [8, 60]; [9, 60]};
 
 prefix = {'test'};
-numTrialsList = {2};
+numTrialsList = {[1, 2]};
 
 %%%%% Define IVs %%%%%
 minListLength = 64; % 8 x 8 design
 numBlocks = length(prefix);
 for b = 1:numBlocks
-   numReps = ceil(numTrialsList{b} / minListLength);
+   numTrials = numTrialsList{b};
+   if length(numTrials) > 1
+      numTrials = numTrials(2);
+   end
+   numReps = ceil(numTrials / minListLength);
    listLength = minListLength * numReps;
-   if listLength > numTrialsList{b}
+   if listLength > numTrials
       fprintf(2, 'WARNING: Unbalanced trials in block %d\n\n', b);
-   end;
+   end
    
    % construct a list that balances oddDisk and probeDisk
    odd = repmat((1:8)', [8, 1]);
@@ -133,6 +137,11 @@ for sub = subjects
    for block = 1:numBlocks
       filename = [prefix{block} num2str(sub)];
       numTrials = numTrialsList{block};
+      pracTrials = 0;
+      if length(numTrials) > 1
+         pracTrials = numTrials(1);
+         numTrials = numTrials(1) + numTrials(2);
+      end
 
       probeDisk = probeDiskList{block};
       oddDisk = oddDiskList{block};
@@ -148,19 +157,11 @@ for sub = subjects
       badTurns = 0;
 
       for trial = 1:numTrials
-         % Procedure for ShiftTrack5, which implements the basic shifttrack
-         % manipulations with asynchronous disappearance.
-         %
-         % 1. Pick random blank intervals, separately for each disk
-         % 2. Pick random starting locations
-         % 3. Once we get to X frames before each disk's gap, 
-         %    start making sure there's no bounces.
-         % 4. As we get to the end of each disk's gap, reset it's 
-         %    reappearance position.
-         % 5. When we get to the last frame, make sure stimuli are 
-         %    a min distance apart.
-         % 6. Reset each disk's position during its gap to an off-screen
-         %    location.
+         if trial <= pracTrials;
+            trialindex = Randi(listLength);
+         else
+            trialindex = trial - pracTrials;
+         end
 
          blankWindowStart = round(2000/predictedMovieFrameDuration);
          blankWindowEnd   = movieFrames(trial) - round(1000/predictedMovieFrameDuration);
@@ -327,7 +328,7 @@ for sub = subjects
                if blankDuration > 0 & any(f == blankEnd)
                   disks = (f == blankEnd);
                   for d = disks
-                     if d == oddDisk(trial)
+                     if d == oddDisk(trialindex)
                         shift = oddShift;
                      else
                         shift = normShift;
@@ -343,7 +344,7 @@ for sub = subjects
                         % move to position 1
                         % nothing to do
                      else
-                        ['ERROR: unknown trial type ', num2str(trialType), ' requested.']
+                        ['ERROR: unknown shift ', num2str(shift), ' requested.']
                         return;
                      end;
                   end;
@@ -380,8 +381,8 @@ for sub = subjects
          clear trajectory;
       end; % for trial = 1:numTrials
 
-      save (filename, 'paths', 'movementRate', 'blankStart', 'blankDuration', ...
-            'nTargets', 'probeDisk', 'oddDisk', 'normShift', 'oddShift', ...
+      save (filename, 'experiment', 'paths', 'movementRate', 'blankStart', 'blankDuration', ...
+            'pracTrials', 'nTargets', 'probeDisk', 'oddDisk', 'normShift', 'oddShift', ...
             'asynchronous', 'responseMode', 'predictedMovieFrameDuration');
 
       fprintf(2, '***** Finished %s *****\nKills by category:\n', filename);
