@@ -12,7 +12,6 @@ global screenY
 global MainWindow
 global nDirections
 
-ExperimentName = 'ShiftTrack6';
 minimumAccuracy = '60%';
 % min/max frame duration in ms: if average frame duration is outside of these bounds, then
 % panic and exit. The MATLAB interpreter is occassionally off and this catches it.
@@ -23,12 +22,11 @@ screenNumber = max(Screen('Screens'));
 
 logging = 0;
 if logging;
-   LogFileName = [ExperimentName '.log'];
+   LogFileName = ['track.log'];
    logFile = fopen(LogFileName,'a');
    fprintf(logFile, '\nStarted on %s\n', datestr(now));
 end;
 
-dataFileName = [ExperimentName 'Data.txt'];
 
 prompt = {'Subject''s initials',
           'Path file',
@@ -37,7 +35,7 @@ prompt = {'Subject''s initials',
           'Correct for 10-bit DAC (0 = no, 1 = yes)',
           'Tracers? (0 = no, 1 = yes)'
           };
-defaults = {'xxx', 'test1', 'a', '''', '1', '0'};
+defaults = {'xxx', 'a1', '''', 'a', '0', '0'};
 answer = inputdlg(prompt, 'Experimental Setup Information', 1, defaults);
 % check for cancel button-press
 if size(answer) < 1
@@ -63,13 +61,6 @@ end
 responseTarget = KbName(responseTarget(1));
 responseDistractor = KbName(responseDistractor(1));
 allowedResponses = [responseTarget, responseDistractor];
-
-
-% other major variables
-dataFile = fopen(dataFileName, 'a');
-fprintf(dataFile,['experiment,sub,time,pathfile,prac,trial,nframes,blankframes,framedur,' ... 
-                  'speed,ndisks,ntargets,normShift,oddShift,oddDisk,probeDisk,error,nerrors,rt\n']);
-fclose(dataFile);
 
 
 % video setup
@@ -155,8 +146,8 @@ pointerNames = {'ballPointer',
                 'unselectedCorrectBall', 
                 'selectedErrorBall',
                 'probeBall'};
-diskBackgroundColors = {      '[]', 'offwhite',    '[]',     '[]',  '[]',  '[]'};
-diskForegroundColors = {'offwhite', 'offwhite', 'green', 'yellow', 'red', 'red'};
+diskBackgroundColors = {      '[]', 'offwhite',    '[]',     '[]',  '[]',     '[]'};
+diskForegroundColors = {'offwhite', 'offwhite', 'green', 'yellow', 'red', 'yellow'};
 for p = 1:length(pointerNames)
    eval([pointerNames{p}, ' = screen(MainWindow, ''OpenOffScreenWindow'', ', diskBackgroundColors{p}, ', imageRect);']);
    eval(['screen(', pointerNames{p}, ', ''FillOval'', black, imageRect);']);
@@ -180,8 +171,17 @@ end;
 
 
 load(pathsFile);
+%responseMode = 1;
 nDisks = size(paths{1}, 1);
 nTrials = size(paths, 2);
+nTrialString = num2str(nTrials);
+
+dataFileName = [experiment 'Data.txt'];
+dataFile = fopen(dataFileName, 'a');
+fprintf(dataFile,['experiment,sub,time,pathfile,prac,trial,nframes,blankframes,framedur,' ... 
+                  'speed,ndisks,ntargets,normShift,oddShift,oddDisk,probeDisk,error,nerrors,rt\n']);
+fclose(dataFile);
+
 
 % instructions
 nDiskString = num2str(nDisks);
@@ -194,64 +194,63 @@ else
    nounEnd = 's';
 end;
 
-taskInstructionString = {
-      'In this experiment, you are asked to keep track of some disks on the screen.';
-      ['At the beginning of each trial, you will see ', nDiskString, ' dark gray disks on a medium gray background.'];
-      [tracknumberString ' of these disks will blink on and off: These are your targets.'];
+instructionsTask1 = {
+      'In this experiment, you are asked to';
+      'keep track of some disks on the screen.';
+      'At the beginning of each trial, you will';
+      'see several disks on a gray background.';
+      'Some of these disks will blink on and off:';
+      'These are your targets.';
+                   };
+
+instructionsTask2 = {
+      'After the targets stop blinking, all the disks';
+      'will start to move around the screen.';
+      'At some point during the trial, all of the';
+      'disks will disappear briefly, and then reappear';
+      'and stop moving.';
       '';
+      'Your task is to keep track of the targets';
+      'throughout the trial.';
+      };
+
+% remove mention of blank interval if there is none
+if blankDuration > 0
+   lines2Start = 3;
+   lines2Remove = 3;
+   for a = lines2Start:(length(instructionsTask2) - lines2Remove)
+      instructionsTask2{a} = instructionsTask2{a + lines2Remove};
+   end
+   for a = (length(instructionsTask2) - lines2Remove + 1):length(instructionsTask2)
+      instructionsTask2{a} = '';
+   end
+end
+
+if responseMode == 1
+   instructionsResponse = {
+         'When the trial ends, the arrow cursor will appear.';
+         'Use the mouse to click on all of the targets.';
+         'If you click on a target, it will be highlighted in green';
+         'and you will hear a high tone.';
+         'If you click on a non-target, it will be highlighted in red';
+         'and you will hear a low tone.';
+         'You get one chance for every target that flashed at the beginning of the trial.';
+         'Once you are done, any targets you missed will blink in yellow.';
                    };
-
-if nTargets == 1
-   taskInstructionString{3} = 'One disk will blink on and off: This is your target.';
-end;
-
-%%% if trialType(1) == 1
-taskInstructionString{5} = ['After the target' nounEnd ' stop' verbEnd ' blinking, all the disks will start to move around the screen.'];
-taskInstructionString{6} = 'At some point during the trial, all of the disks will disappear briefly';
-taskInstructionString{7} = 'and then reappear and stop moving immediately.';
-%%% else
-%%%    taskInstructionString{5} = ['After the target' nounEnd ' stop' verbEnd ' blinking, the disks will remain in place for several seconds.'];
-%%%    taskInstructionString{6} = 'At some point during the trial, all the disks will become invisible, during which time';
-%%%    taskInstructionString{7} = 'they will move, and then reappear and stop moving.';
-%%% end;
-
-%%% taskInstructionString{5} = ['After the target' nounEnd ' stop' verbEnd ' blinking, all the disks will start to move around the screen.'];
-%%% taskInstructionString{6} = 'At some point during the trial, all the disks will become invisible and then reappear and stop moving.';
-%%% taskInstructionString{7} = 'The disks will reappear near the point where they were last visible.';
-
-if nTargets == 1
-   taskInstructionString{8} = 'Your task is to keep track of the target throughout the trial.';
-else
-   taskInstructionString{8} = ['Your task is to keep track of the ' tracknumberString ' targets throughout the trial.'];
-end;
-taskInstructionString{9} = '';
-
-% if condition == 1 
-%    gapInstructionString = {
-%          'At some point during the trial, all the disks will briefly become invisible, and then reappear.';
-%                    };
-% else
-%    gapInstructionString = {
-%          'One by one, the disks will briefly become invisible and then reappear.';
-%                    };
-% end
-
-responseInstructionString = {
-      'When the trial ends, the arrow cursor will appear.';
-      'Use the mouse to click on all of the targets.';
-      'If you click on a target, it will be highlighted in green';
-      'and you will hear a low tone.';
-      'If you click on a non-target, it will be highlighted in red';
-      'and you will hear a high tone.';
-      ['After you have clicked on ' tracknumberString ' disks, any targets you missed will blink in yellow.'];
+elseif responseMode == 3
+   instructionsResponse = {
+         'When the trial ends, one of the disks will be highlighted in yellow.';
+         'You must decide if this disk was a target or not.';
+         'Press the RED button if you think it was a TARGET.';
+         'Press the BLUE button if you think it was a DISTRACTOR.';
+         'If you are correct, the disk will be highlighted in green';
+         'and you will hear a high tone.';
+         'If you are incorrect, it will be highlighted in red';
+         'and you will hear a low tone.';
                    };
-
-if nTargets == 1
-   responseInstructionString{2} = 'Use the mouse to click on the target.';
-   responseInstructionString{7} = 'If you select a non-target by mistake, the actual target will blink in yellow';
-end;
-
-feedbackInstructionString = {
+end
+   
+instructionsFeedback = {
       'After each experimental trial, you will receive feedback'
       'on your performance so far.';
       'The feedback will tell you how you did on the previous trial';
@@ -260,25 +259,24 @@ feedbackInstructionString = {
                    };
 
 screen('CopyWindow', screenBlank, MainWindow);
-CenterCellText(MainWindow, taskInstructionString, 50);
-CenterText('press any key to continue', 0, 250);
-FlushEvents('keyDown');
-GetChar;
-% screen('CopyWindow', screenBlank, MainWindow);
-% CenterCellText(MainWindow, gapInstructionString, 50);
-% CenterText('press any key to continue', 0, 250);
-% FlushEvents('keyDown');
-% GetChar;
-screen('CopyWindow', screenBlank, MainWindow);
-CenterCellText(MainWindow, responseInstructionString, 50);
-CenterText('press any key to continue', 0, 250);
+% task instructions 1
+CenterCellText(MainWindow, instructionsTask1, 50);
+CenterText('press any key to continue', 0, 300);
 FlushEvents('keyDown');
 GetChar;
 screen('CopyWindow', screenBlank, MainWindow);
-% CenterCellText(MainWindow, feedbackInstructionString, 50);
-% CenterText('press any key to continue', 0, 250);
-% FlushEvents('keyDown');
-% GetChar;
+% task instructions 2
+CenterCellText(MainWindow, instructionsTask2, 50);
+CenterText('press any key to continue', 0, 300);
+FlushEvents('keyDown');
+GetChar;
+screen('CopyWindow', screenBlank, MainWindow);
+% response instructions
+CenterCellText(MainWindow, instructionsResponse, 50);
+CenterText('press any key to continue', 0, 300);
+FlushEvents('keyDown');
+GetChar;
+screen('CopyWindow', screenBlank, MainWindow);
 
 slowFlag = 0;
 
@@ -365,7 +363,7 @@ for trial = 1:nTrials
    %%%          end;
    %%%       end;
 
-   [newX newY] = CenterText(['Press any key to begin trial ', trialString]);
+   [newX newY] = CenterText(['Press any key to begin trial ', trialString, ' of ' nTrialString]);
    FlushEvents('keyDown');
    GetChar;
    screen('CopyWindow', screenBlank, MainWindow);
@@ -459,8 +457,10 @@ for trial = 1:nTrials
       end
       if error == 0
          snd('play', beep);
+         Screen('CopyWindow', selectedCorrectBall, MainWindow, imageRect, stimRect(probe, :, testFrame), 'transparent');
       else
          snd('play', errbeep);
+         Screen('CopyWindow', selectedErrorBall, MainWindow, imageRect, stimRect(probe, :, testFrame), 'transparent');
       end
       nErrors = error;
       latency = responseTime - probeOnsetTime;
@@ -482,14 +482,14 @@ for trial = 1:nTrials
             [x, y, button] = getmouse;
             for d = 1:nDisks
                if diskVector(d) == 1
-                  screen('CopyWindow', selectedCorrectBall, MainWindow, imageRect, stimRect(d, :, testFrame));
+                  screen('CopyWindow', selectedCorrectBall, MainWindow, imageRect, stimRect(d, :, testFrame), 'transparent');
                elseif diskVector(d) == 2
-                  screen('CopyWindow', selectedErrorBall, MainWindow, imageRect, stimRect(d, :, testFrame));
+                  screen('CopyWindow', selectedErrorBall, MainWindow, imageRect, stimRect(d, :, testFrame), 'transparent');
                else
                   if IsInRect(x, y, stimRect(d, :, testFrame))
-                     screen('CopyWindow', currentSelectionBall, MainWindow, imageRect, stimRect(d, :, testFrame));
+                     screen('CopyWindow', currentSelectionBall, MainWindow, imageRect, stimRect(d, :, testFrame), 'transparent');
                   else
-                     screen('CopyWindow', ballPointer, MainWindow, imageRect, stimRect(d, :, testFrame));
+                     screen('CopyWindow', ballPointer, MainWindow, imageRect, stimRect(d, :, testFrame), 'transparent');
                   end
                end
             end
@@ -509,12 +509,12 @@ for trial = 1:nTrials
                if diskVector(d) == 0
                   clickedInARect = 1;
                   if d <= nTargets
-                     screen('CopyWindow', selectedCorrectBall, MainWindow, imageRect, stimRect(d, :, testFrame));
+                     screen('CopyWindow', selectedCorrectBall, MainWindow, imageRect, stimRect(d, :, testFrame), 'transparent');
                      snd('play', beep);
                      locationError(d) = 0;
                      diskVector(d) = 1;
                   else
-                     screen('CopyWindow', selectedErrorBall, MainWindow, imageRect, stimRect(d, :, testFrame));
+                     screen('CopyWindow', selectedErrorBall, MainWindow, imageRect, stimRect(d, :, testFrame), 'transparent');
                      snd('play', errbeep);
                      diskVector(d) = 2;
                   end
@@ -582,7 +582,7 @@ for trial = 1:nTrials
    %                  'speed,ndisks,ntargets,normShift,oddShift,oddDisk,probeDisk,error,nerrors,rt\n');
    count = fprintf(dataFile, ...
                    '%s,%s,%s,%s,%d,%d,%d,%d,%6.4f,%d,%d,%d,%d,%d,%d,%d,%d,%d,%6.6f\n', ...
-                   ExperimentName, subject, timestamp, pathsFile, practice, ...
+                   experiment, subject, timestamp, pathsFile, practice, ...
                    trial, trialFrames, blankDuration, averageFrameDuration, ...
                    movementRate, nDisks, nTargets, normShift, oddShift, oddDisk(trial), probeDisk(trial), ...
                    error, nErrors, latency);

@@ -10,7 +10,7 @@ debug = 0;
 stopAfterNKills = 0;
 
 experiment = 'ShiftTrack7';
-subjects = 1; %:12; % e.g, 1:10 [ 2 7 11] 
+subjects = 1:10;
 %trialDuration = 4;
 % Possible trial durations, in seconds
 minTrialDuration = 5;
@@ -26,11 +26,11 @@ normShift = 1;
 oddShift = 0;
 
 %%%%% Define blocks %%%%%
-prefix = {'a', 'b'};
-numTrialsList = {30; [8, 60]; [8, 60]; [8, 60]; [9, 60]};
+prefix = {'a', 'b', 'c', 'd'};
+numTrialsList = {[8, 64]; [8, 64]; [8, 64]; [8, 64]; };
 
-prefix = {'test'};
-numTrialsList = {[1, 2]};
+%prefix = {'test'};
+%numTrialsList = {[1, 2]};
 
 %%%%% Define IVs %%%%%
 minListLength = 64; % 8 x 8 design
@@ -137,15 +137,19 @@ for sub = subjects
    for block = 1:numBlocks
       filename = [prefix{block} num2str(sub)];
       numTrials = numTrialsList{block};
+      probeDisk = probeDiskList{block};
+      oddDisk = oddDiskList{block};
+      
       pracTrials = 0;
       if length(numTrials) > 1
          pracTrials = numTrials(1);
          numTrials = numTrials(1) + numTrials(2);
+         pracProbeDisk = Shuffle(probeDisk);
+         probeDisk = [pracProbeDisk(1:pracTrials); probeDisk];
+         pracOddDisk = Shuffle(oddDisk);
+         oddDisk = [pracOddDisk(1:pracTrials); oddDisk];
       end
 
-      probeDisk = probeDiskList{block};
-      oddDisk = oddDiskList{block};
-      
       % determine trial length (in frames)
       movieFrames = minMovieFrames + Randi(maxMovieFrames - (minMovieFrames-1), [numTrials,1]) - 1;
 
@@ -157,12 +161,6 @@ for sub = subjects
       badTurns = 0;
 
       for trial = 1:numTrials
-         if trial <= pracTrials;
-            trialindex = Randi(listLength);
-         else
-            trialindex = trial - pracTrials;
-         end
-
          blankWindowStart = round(2000/predictedMovieFrameDuration);
          blankWindowEnd   = movieFrames(trial) - round(1000/predictedMovieFrameDuration);
          if asynchronous == 1
@@ -328,7 +326,7 @@ for sub = subjects
                if blankDuration > 0 & any(f == blankEnd)
                   disks = (f == blankEnd);
                   for d = disks
-                     if d == oddDisk(trialindex)
+                     if d == oddDisk(trial)
                         shift = oddShift;
                      else
                         shift = normShift;
