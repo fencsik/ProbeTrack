@@ -1,7 +1,7 @@
 MVT Task Notes and Musings
 by David Fencsik
 
-$Id: notes.txt,v 1.1 2004/08/12 14:23:36 fencsik Exp $
+$Id: notes.txt,v 1.2 2004/08/13 15:52:47 fencsik Exp $
 
 December 16, 2003:
 
@@ -117,4 +117,45 @@ without postponement mechanisms coming into play. One question we may
 be interested in, for example, is whether reappearance at position 1
 is easier to reacquire than reappearance at position 0 with
 asynchronous disappearance. 
+
+
+August 13, 2004:
+
+Future possibilities:
+
+1. Map out reacquisition probability between positions -1 and 1, and
+   investigate perpendicular shifts during gap. This will give us a
+   sense of how a moving object is represented during the gap. As a
+   prerequisite, should try to improve effect sizes to Keane &
+   Pylyshyn levels. Our current explanation for the difference is
+   that we manipulate reappearance position between block and Keane &
+   Pylyshyn did so within block.
+
+2. Study target reacquisition in asynchronous disappearance case. See
+   final paragraph from August 12, 2004. 
+
+Jeremy's primary goal is to find interesting and novel things. His
+suggestsions were:
+
+1. Testing "what's hiding behind this bush" in NoahTrack. Is this
+   programmed up already?
+
+2. Testing whether different kinds of motion (e.g., brownian
+   vs. ballistic) aid in discriminating targets from distracters.
+
+3. He thought that #2 in the previous list might be worth
+   exploring. Run something like ShiftTrack3 or 4 with asynchronous
+   disappearance.
+
+The fastest for me to program up is probably #3 from the second
+list. #1 may be already programmed up, and I'll need Todd to send me
+the latest code at least. #2 involves playing around with the two
+movement vectors again. #3 just involves allowing for different gap
+onset times for each disk. 
+
+We begin with a basic replication of ShiftTrack3 with reappearance
+positions -1, 0, and 1. Trial duration can be fixed (but perhaps a
+bit longer, say 6 s). Block position and maybe manipulate ntargets (2
+and 4?).
+
 
