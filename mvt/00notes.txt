@@ -13,6 +13,7 @@ ShiftTrack3: compare reappearance positions -1, 0, and 1.
 ShiftTrack4: same as above, but with all objects freezing upon
 	     reappearance to eliminate confound.
 ShiftTrack5: ShiftTrack3 with asynchronous disappearance.
+ShiftTrack6: ShiftTrack4 with a within-subjects design.
 StopTrack1: Basic stoptrack, with moving and static conditions and
 	    tracking load conditions of 1 and 4.
 StopTrack2: StopTrack1 with tracking loads of 1-4.
