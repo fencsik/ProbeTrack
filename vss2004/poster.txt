@@ -1,3 +1,5 @@
+%%% $Id: poster.txt,v 1.2 2004/04/11 03:14:57 fencsik Exp $
+
 * Title
 
 Target Reacquisition Strategies in Multiple Object Tracking
@@ -38,14 +40,65 @@ of an object's motion trajectory when reacquiring targets.
 
 Supported by NIH grant MH065576 to TSH.
 
-* Intro
+* The Multi-Element Visual Tracking (MVT) Task 
+
+In a multi-element visual tracking (MVT) task, a group of identical
+stimuli move independently around a display while participants track a
+subset of them. People can successfully track up to about 4 or 5
+separate stimuli (Pylyshyn & Storm, 19??; etc). 
+
+{ILLUSTRATION OF MVT TASK}
+
+* Interruption and Resumption of Tracking
+
+Performance of the MVT task is possible even if the stimuli disappear
+for a 300-400 ms gap (e.g., Alvarez, Wolfe, Horowitz, & Arsenio, 2001
+{VSS01}; ??? & Pylyshyn, VSS03). How do people remember where the
+targets were? When they resume tracking, how do they match visible
+stimuli with targets in memory? Here, we test two hypotheses about the
+information retained about targets when they disappear and the
+processes used to reacquire them when they reappear.
+
+Location-Matching Account
+
+According to this account, people remember the locations of each
+target when they disappear. Upon reappearance, the stimulus closest to
+each target's pre-gap location is selected as a target.
+
+{ILLUSTRATION OF LOCATION-MATCHING ACCOUNT}
+
+Trajectory-Matching Account
+
+According to this account, people remember the trajectories of each
+target when they disappear and predict where they should reappear at
+any point in time.
+
+{ILLUSTRATION OF TRAJECTORY-MATCHING ACCOUNT}
 
 * Present Experiments
+
+We report a series of experiments using the MVT task with a 300 ms gap
+during which all the stimuli become invisible. In the first two
+experiments, we manipulated the reappearance locations of the
+stimuli. In the second two experiments, we manipulated the type of
+information that was available to participants prior to the blank
+interval.
 
 * Manipulations of Reappearance Location
 
 In the first two experiments, we manipulated where the stimuli
-reappeared following the gap. If participants keep track of the 
+reappeared following the gap. Each stimulus is at some point p_0 in
+the last visible pre-gap frame. If it moves with constant velocity
+during the gap (even though it's invisible), then it should reappear
+at point p_1; where that is depends on the velocity of the stimulus
+and the duration of the blank interval. In principle, the stimulus
+could actually reappear anywhere along 
+
+If participants use the pre-gap target
+locations to find targets after the gap, then tracking accuracy should
+increase
+
+
 
 * Experiment 1 (shifttrack2)
 
