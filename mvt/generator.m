@@ -4,13 +4,13 @@ function pathsFile = generator (sInitial)
 %%% generates a set of trajectories for use with Multiple Object Tracking experiments
 %%% Authors: David Fencsik (based on file by Todd Horowitz)
 %%%
-%%% $Id: generator.m,v 1.25 2004/06/01 19:51:46 fencsik Exp $
+%%% $Id: generator.m,v 1.26 2004/06/02 20:30:07 fencsik Exp $
 
 starttime = clock;
 debug = 0;
 stopAfterNKills = 0;
 
-subjects = 2:12; % e.g, 1:10 [ 2 7 11] 
+subjects = 1:12; % e.g, 1:10 [ 2 7 11] 
 %trialDuration = 4;
 % Possible trial durations, in seconds
 minTrialDuration = 2;
