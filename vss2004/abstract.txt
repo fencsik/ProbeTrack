@@ -1,27 +1,35 @@
-Tracking Multiple Moving Objects Before, During, and After Disappearance
+Target reacquisition strategies in multiple object tracking
 
+David E. Fencsik, Todd S. Horowitz, Sarah B. Klieger, and Jeremy M. Wolfe
 
-David E. Fencsik, Todd S. Horowitz, Sarah B. Klieger, and Jeremy
-M. Wolfe
+Observers in multi-element tracking experiments can successfully track
+a subset of randomly moving identical objects, even if all of the
+objects disappear for 300-400 ms (e.g., Alvarez, Wolfe, Horowitz, &
+Arsenio, VSS 01). This interval is too long for apparent motion
+mechanisms to bridge the gap. How does the visual system reacquire the
+target objects? Here we test two approaches to target
+reacquisition. According to a location-matching account, the system
+keeps track of the location of each target at the time of
+disappearance. After the gap, the closest object to each target
+location is identified as a target. According to the
+trajectory-matching account, the system takes into account the traget
+trajectorties at the time of disappearance and searches along the
+trajectory after the gap. In the experiments reported here, observers
+tracked 5 out of 10 dark gray disks moving randomly on a light gray
+background for 5 sec. At a random time during the tracking interval,
+all the objects disappeared for a 300 ms gap, then reappeared at
+various distances from their pre-gap locations. In experiment 1,
+objects appeared either at the point of disappearance (position 0) or
+at the appropriate location expected given a constant direction and
+velocity from the time of disappearance (position 1). Performance was
+superior at position 0, supporting a location-matching account. In
+experiment 2, however, we added position -1, which was as far behind
+position 0 along the trajectory as position 1 was ahead. The
+location-matching account predicts that performance should be best at
+position 0 and equal for positions -1 and 1. Instead, we found that
+position -1 produced performance superior to position 1, and not
+significantly different from position 0. This result indicates that
+the visual system takes into account the history of an object's motion
+trajectory when reacquiring targets.
 
-
-Observers in multi-element tracking experiments can successfully
-track a subset of randomly moving identical objects, even if all of
-the objects disappear for 300-400 ms (e.g., Alvarez, Wolfe, Horowitz,
-& Arsenio, 2001). Thus, the mechanisms used for tracking must be able
-to reacquire the objects once they reappear. One possibility is that,
-after the gap, objects are matched to the pre-gap objects based on
-spatial location. Another possibility is that tracking is based on
-movement trajectories, so post-gap locations can be predicted from
-pre-gap motion. We report a series of experiments designed to
-investigate the mechanisms used to reacquire moving objects after a
-gap. In our studies, observers tracked 5 out of 10 dark gray disks
-moving randomly on a light gray background for 5 sec. During the
-tracking interval, all the objects disappeared for a 300 ms gap, then
-reappeared at various distances from their pre-gap locations. Our
-results indicate that both spatial-location and trajectory information
-are used in reacquiring objects after a gap.
-
-
-Supported by some very kind people at the NIMH.
-
+Supported by NIH grant MH065576 to TSH.
