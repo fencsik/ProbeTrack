@@ -4,7 +4,7 @@ function pathsFile = stGenerator (sInitial)
 % generates a set of trajectories for use with ShiftTrack experiments
 % Authors: David Fencsik (based on file by Todd Horowitz)
 %
-% $Id: generator.m,v 1.5 2004/01/06 20:19:06 fencsik Exp $
+% $Id: generator.m,v 1.6 2004/01/07 20:15:09 fencsik Exp $
 
 % Modified by David Fencsik
 % started  9/29/2003
@@ -33,6 +33,7 @@ minTrialDuration = 5;
 maxTrialDuration = 8;
 
 nDisks = 8;
+nTargets = 4;
 
 reappearanceOffset = [1.0];
 repetitions = 50; % one value, or one value per trial type
@@ -65,7 +66,8 @@ clear screen;
 %  major variables
 %frameDuration = refreshesPerFrame/hz;
 edgeZone = imageY;
-estMovieFrames = ceil(maxTrialDuration*1000/predictedMovieFrameDuration);
+maxMovieFrames = ceil(maxTrialDuration*1000/predictedMovieFrameDuration);
+minMovieFrames = ceil(minTrialDuration*1000/predictedMovieFrameDuration);
 fullCircle = 24;
 halfCircle = 12;
 % increment = (rate*30)*(frameDuration);
@@ -78,15 +80,16 @@ degreesPerDirection = 360/24;
 tau = clock;
 rand('state',sum(100*tau));
 state=rand('state');
+
 % startCoordinates = zeros(nBalls, 2);
 xdim = 5; ydim = 6;% a 5 by 6 grid of positions
 windowX = 100;windowY = 100;% each cell is 125 by 125 pixels
 cxy = newGrids(xdim, ydim, windowX, windowY, screenRect);
 
 for sub = subjects
-%	initTime = GetSecs;
-	kills = 0;
-	
+   %	initTime = GetSecs;
+   kills = 0;
+   
    if withinBlock == 0
       cycles = nTrialTypes;
    else
@@ -114,6 +117,35 @@ for sub = subjects
             movieFrames = ones(nTrials, 1) * estMovieFrames + shiftAmount;
          end; % if (withinBlock == 0)
          for trial = 1:nTrials
+
+            % Procedure for new design: In which a distractor reappears in the pre-gap
+            % location of a target.
+            %  3. Determine the trial type:
+            %   % 1 = Standard shiftrack: all disks disappear and reappear apart.
+            %   % 2 = Distracter shiftrack: one distracter reappears where a target
+            %   %     disappeared from.
+            % 10. Pick the pre-gap frame (t0) during the tracking interval (t0).
+            % 20. Place all the disks with some minimum inter-stimulus distance and a
+            %     random trajectory such that it will not reappear in another disk's
+            %     pre-gap location. If it does, pick a new location/trajectory, with a
+            %     limit for the number of times we can pick again, in which case we
+            %     restart step 20.
+            % 30. If the trial type requires it, set up the first distracter with an
+            %     appropriate location/trajectory. Otherwise, proceed to next step.
+            % 40. Move disks backwards along their trajectories until the minDuration
+            %     frame is reached.
+            % 50. If there is some minimum distance between disks, then stop; otherwise,
+            %     continue moving objects along their trajectory until they are a minimum
+            %     distance apart or the maximum duration is reached, in which case we
+            %     restart step 20, with a limit for how many times we do this.
+            % 60. Set positions to some off-screen value during blank interval.
+            % 70. Disks reappear at appropriate offsets after blank interval.
+            % 80. Move disks along trajectories until the final frame. If they are less
+            %     than a minimum distance apart, then restart at 20.
+            % 90. Done.
+
+            
+            
             % compute trajectories
             deathFlag = 999;
             while deathFlag > 0
@@ -147,7 +179,8 @@ for sub = subjects
                   count = count+1;
                   noiseDirection = Randi(24, [nDisks 1]); % random directions in 24 degree increments
 
-                  [finalTheta, finalMagnitude] = addNoiseVector(direction, magnitude, noiseDirection, noiseMagnitude); % adds a noise vector with random direction and noiseFactor*magnitude magnitude to the signal vector
+                  % adds a noise vector with random direction and noiseFactor*magnitude magnitude to the signal vector
+                  [finalTheta, finalMagnitude] = addNoiseVector(direction, magnitude, noiseDirection, noiseMagnitude); 
                   newCoordinates = computeCoordinates(oldCoordinates, finalTheta, finalMagnitude); % recompute coordinates
 
                   % now prevent distractors from going out of bounds
@@ -172,7 +205,8 @@ for sub = subjects
                      end
                   end
 
-                  [finalTheta, finalMagnitude] = addNoiseVector(direction, magnitude, noiseDirection, noiseMagnitude); % adds a noise vector with random direction and noiseFactor*magnitude magnitude to the signal vector
+                  % adds a noise vector with random direction and noiseFactor*magnitude magnitude to the signal vector
+                  [finalTheta, finalMagnitude] = addNoiseVector(direction, magnitude, noiseDirection, noiseMagnitude); 
                   newCoordinates = computeCoordinates(oldCoordinates, finalTheta, finalMagnitude); % recompute coordinates
 
                   % now double-check to see if there is occlusion or boundary violation
@@ -182,18 +216,18 @@ for sub = subjects
                         % floor or ceiling
                         deathFlag = 1;
                         kills = kills +1;
-                        % 						['vertical boundary violation with ball ' num2str(a)]
-                        % 						['  coordinates (' num2str(newCoordinates(a, 1)) ',' num2str(newCoordinates(a, 2)) ')']
-                        % 						['  frame ' num2str(f)']
-                        % 						clear screen;
-                        % 						return;
+                        % ['vertical boundary violation with ball ' num2str(a)]
+                        % ['  coordinates (' num2str(newCoordinates(a, 1)) ',' num2str(newCoordinates(a, 2)) ')']
+                        % ['  frame ' num2str(f)']
+                        % clear screen;
+                        % return;
                      elseif (newCoordinates(a, 1) > (screenX - imageX))|(newCoordinates(a, 1) < imageX)
                         deathFlag = 2;
                         kills = kills +1;
-                        % 						['horizontal boundary violation with ball ' num2str(a)]
-                        % 						['  coordinates (' num2str(newCoordinates(a, 1)) ',' num2str(newCoordinates(a, 2)) ')']
-                        % 						clear screen;
-                        % 						return;
+                        % ['horizontal boundary violation with ball ' num2str(a)]
+                        % ['  coordinates (' num2str(newCoordinates(a, 1)) ',' num2str(newCoordinates(a, 2)) ')']
+                        % clear screen;
+                        % return;
                      end
                   end
 
@@ -206,9 +240,9 @@ for sub = subjects
                            if interElementDistance < bufferZone
                               deathFlag = 3;
                               kills = kills +1;
-                              % 								['occlusion between balls ' num2str(b) ' and ' num2str(c) ' on final frame ']
-                              % 								clear screen;
-                              % 								return;
+                              % ['occlusion between balls ' num2str(b) ' and ' num2str(c) ' on final frame ']
+                              % clear screen;
+                              % return;
                            end
                         end
                      end
