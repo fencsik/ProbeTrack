@@ -1,8 +1,9 @@
 #!/bin/bash
 # prepare.sh: 
-# moves experiment files to the appropriate directory so the RAs can access them
+# moves experiment files to the appropriate Public directory 
+# so experimenters can access them
 # 
-# $Id: prepare.sh,v 1.4 2004/06/01 19:47:32 fencsik Exp $
+# $Id: prepare.sh,v 1.5 2004/06/03 13:03:47 fencsik Exp $
 
 PUBLIC_DIR=~/Public/Experiments/StopTrack3
 
@@ -32,17 +33,17 @@ if [ -x $TRAIN_IN ]; then
     exit -1
 fi
 
-if [ -f $GENERATOR_IN ]; then
+if [ $GENERATOR_IN -nt $PUBLIC_DIR/$GENERATOR_OUT ]; then
     echo cp -a $GENERATOR_IN $PUBLIC_DIR/$GENERATOR_OUT
     cp -a $GENERATOR_IN $PUBLIC_DIR/$GENERATOR_OUT
 fi
 
-if [ -f $TRACK_IN ]; then
+if [ $TRACK_IN -nt $PUBLIC_DIR/$TRACK_OUT ]; then
     echo cp -a $TRACK_IN $PUBLIC_DIR/$TRACK_OUT
     cp -a $TRACK_IN $PUBLIC_DIR/$TRACK_OUT
 fi
 
-if [ -f $TRAIN_IN ]; then
+if [ $TRAIN_IN -nt $PUBLIC_DIR/$TRAIN_OUT ]; then
     echo cp -a $TRAIN_IN $PUBLIC_DIR/$TRAIN_OUT
     cp -a $TRAIN_IN $PUBLIC_DIR/$TRAIN_OUT
 fi
