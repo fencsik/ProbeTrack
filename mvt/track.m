@@ -1,7 +1,6 @@
 function shifttrack()
 
-% ShiftTrack3: runs ShiftTrack3, with conditions defined by path files.
-% $Id: track.m,v 1.5 2004/01/09 13:15:18 fencsik Exp $
+% $Id: track.m,v 1.6 2004/02/03 19:59:41 fencsik Exp $
 
 % Can observers tolerate a longer gap duration if all items disappear at once?
 % constant blank duration method rather than staircase
@@ -16,53 +15,49 @@ function shifttrack()
 % 11/10/2003 - added check to ensure frame duration is approx. 13 ms. If it
 %              seems to be over, then exit cleanly and tell RA to restart.
 
+   
 global screenX
 global screenY
 global MainWindow
 global nDirections
 
-ExperimentName = 'ShiftTrack2';
+ExperimentName = 'SwitchTrack1';
 minimumAccuracy = '60%';
 % min frame duration in ms: if average frame duration is greater than this
 % value, then panic and exit. The MATLAB interpreter is sometimes slow and
 % can't draw fast enough, and this accomodates that.
 minFrameDuration = 20;
 
-tracer = 0;
+tracer = 1;
 logging = 0;
 if logging;
-	LogFileName = [ExperimentName '.log'];
-	logFile = fopen(LogFileName,'a');
-	fprintf(logFile, '\nStarted on %s\n', datestr(now));
+   LogFileName = [ExperimentName '.log'];
+   logFile = fopen(LogFileName,'a');
+   fprintf(logFile, '\nStarted on %s\n', datestr(now));
 end;
 
 dataFileName = [ExperimentName '_Data.txt'];
 
-% trialTypes = [-0.5 0.0 0.5 1.0 1.5];
-% nTrialTypes = length(trialTypes);
-condition = 1;
-
-% Present initial prompt
-% prompt = {'subject''s initials',  
-%           ['trials per condition (x' num2str(nTrialTypes) ' conditions)'],
-% 		  'disks to track', 
-% 		  'trial duration (movie frames)',
-% 		  'blank duration (movie frames)'};
 prompt = {'Subject''s initials',
-		  'Number of disks to track',
-		  'Practice paths file', 
-		  'Experimental paths file'};
-defaults = {'xxx', '5', 'prac1', 'real1'};
+          'Number of disks to track',
+          'Practice paths file',
+          'Paths file',
+          'Condition (1 = moving, 2 = static)',
+          'Randomize trials (0 = no, 1 = yes)'
+          };
+defaults = {'xxx', '4', 'test1', 'exp_1', '1', '0'};
 answer = inputdlg(prompt, 'Experimental Setup Information', 1, defaults);
 % check for cancel button-press
 if size(answer) < 1
-	'Experiment Cancelled'
-	return
-end
+   'Experiment Cancelled'
+   return
+end;
 
 % now decode answer
-[subject, tracknumber, practicePathsFile, experimentalPathsFile] = deal(answer{:});
+[subject, tracknumber, practicePathsFile, experimentalPathsFile, condition, randomizeTrials] = deal(answer{:});
 tracknumber = str2num(tracknumber);
+condition = str2num(condition);
+randomizeTrials = str2num(randomizeTrials);
 
 % derive initial 3 letters of subject name 
 [junk nameSize] = size(subject);
@@ -73,15 +68,14 @@ else
 	sInitial = subject(1:3);
 end
 
+
 % other major variables
 dataFile = fopen(dataFileName, 'a');
-fprintf(dataFile,'sub,time,pracfile,expfile,blocktype,cond,blankdur,trial,speed,shift,ndisks,tracknumber,framedur,error,nerrors\n');
+fprintf(dataFile,'sub,time,pracfile,pathfile,blocktype,cond,trialdur,blankdur,trial,line,speed,shift,ndisks,ntargets,framedur,error,nerrors\n');
 fclose(dataFile);
-formatString = '%s,%s,%s,%s,%s,%d,%d,%d,%d,%4.2f,%d,%d,%6.4f,%d,%d\n';
-%subject,timestamp,practicePathsFile,experimentalPathsFile,blocktype,condition,blankDuration,trial,movementRate,shiftFactor(trial),nDisks,tracknumber,averageFrameDuration,error,nErrors
+
 
 % video setup
-
 imageX=35;
 imageY=35;
 imageRect = [0 0 imageX imageY];
@@ -111,7 +105,7 @@ clut (red + 1, :) = [255 0 0];
 clut (blue + 1, :) = [0 0 255];
 clut (green + 1, :) = [0 255 0];
 clut (yellow + 1, :) = [255 255 0];
-LoadClut(MainWindow, clut);
+LoadClut(MainWindow, clut/255*1023);
 
 
 screen(MainWindow, 'FillRect', gray);
@@ -142,7 +136,8 @@ stimulus(1) = screen(MainWindow, 'OpenOffscreenWindow', [], screenRect);
 stimulus(2) = screen(MainWindow, 'OpenOffscreenWindow', [], screenRect);
 
 if tracer;
-	tracerPaths = screen(MainWindow, 'OpenOffscreenWindow', [], screenRect);
+   minFrameDuration = minFrameDuration * 2;
+   tracerPaths = screen(MainWindow, 'OpenOffscreenWindow', [], screenRect);
 end;
 
 screen(stimulus(1), 'FillRect', gray);
@@ -161,46 +156,38 @@ screenBlank=screen(MainWindow, 'OpenOffscreenWindow',  gray, screenRect);
 % blankWindow(1) = round(2000/predictedMovieFrameDuration); % blank comes at least 2 seconds after start of tracking
 % blankWindow(2) = totalMovieFrames - round(1000/predictedMovieFrameDuration); % blank comes no later than 1 seconds before end of tracking 
 
+
 % define the stimulus presentation loop
 % time is measured in frames, and measures the total stimulus time
 % the frame array keeps track of which frame of its trajectory each
 % object is in.
 loop = {
-'   while (frame <= (trialFrames-trialShift));'
-'      thisFrame = mod(frame - 1, 2) + 1;'
-'      lastFrame = mod(frame, 2) + 1;'
-'      time1 = GetSecs;'
-'      for n = 1:nDisks;'
-'         if frame > 1;'
-'            screen(''CopyWindow'', eraserPointer, stimulus(lastFrame), imageRect, lastPlaceRect{n}, ''transparent'');'
-'         end;'
-'         placeRect{n} = [trajectory(n,1,frame+frameOffset(n))-imageX  trajectory(n,2,frame+frameOffset(n))-imageY  trajectory(n,1,frame+frameOffset(n))  trajectory(n,2,frame+frameOffset(n))];'
-%         % for each object, when it begins its blank, then move it 
-%         % to the frame it should be in when it reappears.
-'         if (blankDuration > 0);'
-'            if (preBlank(n)) & (frame >= startBlankTime(n));'
-'               preBlank(n) = 0;'
-'               frameOffset(n) = trialShift;'
-'            end;'
-'            if (frame >= startBlankTime(n)) & (frame <= endBlankTime(n));'
-'               pointer = eraserPointer;'
-'            else;'
-'               pointer = ballPointer;'
-'            end;'
-'         else;'
-'            pointer = ballPointer;'
-'         end;'
-'         screen(''CopyWindow'', pointer, stimulus(thisFrame), imageRect, placeRect{n}, ''transparent'');'
-'      end;'
-'      if tracer;'
-'         screen(''CopyWindow'', tracerPaths, stimulus(thisFrame), [], [], ''transparent'');'
-'      end;'
-'      screen(MainWindow, ''WaitBlanking'', 1);'
-'      screen(''CopyWindow'', stimulus(thisFrame), MainWindow);'
-'      frameDuration(frame) = GetSecs - time1;'
-'      lastPlaceRect = placeRect;'
-'      frame = frame + 1;'
-'   end;'
+'  pointer = ballPointer;'
+'  while (frame <= trialFrames);'
+'     thisFrame = mod(frame - 1, 2) + 1;'
+'     lastFrame = mod(frame, 2) + 1;'
+'     if condition == 1;'
+'        frameptr = frame;'
+'     else;'
+'        frameptr = max(lastVisibleFrame, frame);'
+'     end;'
+'     time1 = GetSecs;'
+'     for n = 1:nDisks'
+'        if frame > 1;'
+'           screen(''CopyWindow'', eraserPointer, stimulus(lastFrame), imageRect, lastPlaceRect{n}, ''transparent'');'
+'        end;'
+'        placeRect{n} = [trajectory(n,1,frameptr)-imageX  trajectory(n,2,frameptr)-imageY  trajectory(n,1,frameptr)  trajectory(n,2,frameptr)];'
+'        screen(''CopyWindow'', pointer, stimulus(thisFrame), imageRect, placeRect{n}, ''transparent'');'
+'     end;'
+'     if tracer;'
+'        screen(''CopyWindow'', tracerPaths, stimulus(thisFrame), [], [], ''transparent'');'
+'     end;'
+'     screen(MainWindow, ''WaitBlanking'', 1);'
+'     screen(''CopyWindow'', stimulus(thisFrame), MainWindow);'
+'     frameDuration(frame) = GetSecs - time1;'
+'     lastPlaceRect = placeRect;'
+'     frame = frame + 1;'
+'  end;'
 };
 
 pointerNames = {'ballPointer', 'currentSelectionBall', 'unselectedBall', 'selectedCorrectBall', 'unselectedCorrectBall', 'selectedErrorBall'};
@@ -214,391 +201,451 @@ end
 eraserPointer = screen(MainWindow, 'OpenOffScreenWindow', [], imageRect);
 screen(eraserPointer, 'FillOval', gray, imageRect);
 if tracer;
-% define tracer window and stimuli
-	tracerRect = CenterRect([0 0 2 2], imageRect);
-	tracerPointer = screen(MainWindow, 'OpenOffScreenWindow', [], imageRect);
-	screen(tracerPointer, 'FillOval', black, tracerRect);
-	firstTracerRect = CenterRect([0 0 6 6], imageRect);
-	firstTracerPointer = screen(MainWindow, 'OpenOffScreenWindow', [], imageRect);
-	screen(firstTracerPointer, 'FillOval', red, firstTracerRect);
+   % define tracer window and stimuli
+   tracerRect = CenterRect([0 0 2 2], imageRect);
+   tracerPointer = screen(MainWindow, 'OpenOffScreenWindow', [], imageRect);
+   screen(tracerPointer, 'FillOval', black, tracerRect);
+   firstTracerRect = CenterRect([0 0 6 6], imageRect);
+   firstTracerPointer = screen(MainWindow, 'OpenOffScreenWindow', [], imageRect);
+   screen(firstTracerPointer, 'FillOval', red, firstTracerRect);
 end;
 
 pathsFile = practicePathsFile;
 load(pathsFile);
+tracknumber = nTargets;
 
 % instructions
 nDiskString = num2str(nDisks);
 tracknumberString = num2str(tracknumber);
+if tracknumber == 1
+   verbEnd = 's';
+   nounEnd = '';
+else
+   verbEnd = '';
+   nounEnd = 's';
+end;
 
 taskInstructionString = {
-'In this experiment, you are asked to track a number of disks moving around the screen';
-['At the beginning of each trial, you will see ', nDiskString, ' dark gray disks on a medium gray background'];
-[tracknumberString, ' of these disks will blink on and off. These are your targets.'];
-'After the targets stop blinking, all the disks will start to move around the screen.';
-['Your task is to keep track of the ', tracknumberString, ' targets as they move.'];
-};
+      'In this experiment, you are asked to keep track of some disks on the screen.';
+      ['At the beginning of each trial, you will see ', nDiskString, ' dark gray disks on a medium gray background.'];
+      [tracknumberString ' of these disks will blink on and off: These are your targets.'];
+      '';
+                   };
 
-if condition == 1 
-	gapInstructionString = {
-	'At some point during the trial, all the disks will briefly become invisible, and then reappear.';
-	};
+if tracknumber == 1
+   taskInstructionString{3} = 'One disk will blink on and off: This is your target.';
+end;
+
+if condition == 1
+   taskInstructionString{5} = ['After the target' nounEnd ' stop' verbEnd ' blinking, all the disks will start to move around the screen.'];
+   taskInstructionString{6} = 'At some point during the trial, all the disks will become invisible, during which time';
+   taskInstructionString{7} = 'they will continue moving, and then reappear and stop moving.';
 else
-	gapInstructionString = {
-	'One by one, the disks will briefly become invisible and then reappear.';
-	};
-end
+   taskInstructionString{5} = ['After the target' nounEnd ' stop' verbEnd ' blinking, the disks will remain in place for several seconds.'];
+   taskInstructionString{6} = 'At some point during the trial, all the disks will become invisible, during which time';
+   taskInstructionString{7} = 'they will move, and then reappear and stop moving.';
+end;
+
+if tracknumber == 1
+   taskInstructionString{8} = 'Your task is to keep track of the target throughout the trial.';
+else
+   taskInstructionString{8} = ['Your task is to keep track of the ' tracknumberString ' targets throughout the trial.'];
+end;
+taskInstructionString{9} = '';
+
+% if condition == 1 
+%    gapInstructionString = {
+%          'At some point during the trial, all the disks will briefly become invisible, and then reappear.';
+%                    };
+% else
+%    gapInstructionString = {
+%          'One by one, the disks will briefly become invisible and then reappear.';
+%                    };
+% end
 
 responseInstructionString = {
-'When the disks stop moving, the arrow cursor will appear.';
-'Use the mouse to click on all of the targets.';
-'The disk you have selected will be highlighted in green if you are correct';
-'and you will hear a low tone.';
-'If you click on a non-target, it will be highlighted in red';
-'and you will hear a high tone.';
-['After you have clicked ', tracknumberString, ' times, any targets you missed will blink in yellow.'];
-};
+      'When the disks reappear, the arrow cursor will appear.';
+      'Use the mouse to click on all of the targets.';
+      'If you click on a target, it will be highlighted in green';
+      'and you will hear a low tone.';
+      'If you click on a non-target, it will be highlighted in red';
+      'and you will hear a high tone.';
+      ['After you have clicked on ' tracknumberString ' disks, any targets you missed will blink in yellow.'];
+                   };
+
+if tracknumber == 1
+   responseInstructionString{2} = 'Use the mouse to click on the target.';
+   responseInstructionString{7} = 'If you select a non-target by mistake, the actual target will blink in yellow';
+end;
 
 feedbackInstructionString = {
-'After each experimental trial, you will receive feedback'
-'on your performance so far.';
-'The feedback will tell you how you did on the previous trial';
-'and how you have done on all trials for the current block.';
-['Your goal should be to maintain an overall accuracy of at least ' minimumAccuracy '.'];
-};
+      'After each experimental trial, you will receive feedback'
+      'on your performance so far.';
+      'The feedback will tell you how you did on the previous trial';
+      'and how you have done on all trials for the current block.';
+      ['Your goal should be to maintain an overall accuracy of at least ' minimumAccuracy '.'];
+                   };
+
+hidecursor;
 
 screen('CopyWindow', screenBlank, MainWindow);
 CenterCellText(MainWindow, taskInstructionString, 50);
 CenterText('press any key to continue', 0, 250);
 FlushEvents('keyDown');
 GetChar;
-screen('CopyWindow', screenBlank, MainWindow);
-CenterCellText(MainWindow, gapInstructionString, 50);
-CenterText('press any key to continue', 0, 250);
-FlushEvents('keyDown');
-GetChar;
+% screen('CopyWindow', screenBlank, MainWindow);
+% CenterCellText(MainWindow, gapInstructionString, 50);
+% CenterText('press any key to continue', 0, 250);
+% FlushEvents('keyDown');
+% GetChar;
 screen('CopyWindow', screenBlank, MainWindow);
 CenterCellText(MainWindow, responseInstructionString, 50);
 CenterText('press any key to continue', 0, 250);
 FlushEvents('keyDown');
 GetChar;
 screen('CopyWindow', screenBlank, MainWindow);
-CenterCellText(MainWindow, feedbackInstructionString, 50);
-CenterText('press any key to continue', 0, 250);
-FlushEvents('keyDown');
-GetChar;
+% CenterCellText(MainWindow, feedbackInstructionString, 50);
+% CenterText('press any key to continue', 0, 250);
+% FlushEvents('keyDown');
+% GetChar;
 
 slowFlag = 0;
 
 for block = 1:2
-	if block == 1
-		pathsFile = practicePathsFile;
-		blockMessage = ' practice';
-		blocktype = 'practice';
-		% figure out the max number of repetitions that can fit given the number of
-		% trials present in the practice path file:
-		%trialTypeList = shuffle(repmat(trialTypes, 1, floor(nTrials / nTrialTypes)));
-	else
-		pathsFile = experimentalPathsFile;
-		blockMessage = ' experimental';
-		blocktype = 'exp';
-		% Generate and shuffle list of possible trial types:
-		%trialTypeList = shuffle(repmat(trialTypes, 1, repetitions));
-	end
+   if block == 1
+      pathsFile = practicePathsFile;
+      blockMessage = ' practice';
+      blocktype = 'practice';
+      % figure out the max number of repetitions that can fit given the number of
+      % trials present in the practice path file:
+      %trialTypeList = shuffle(repmat(trialTypes, 1, floor(nTrials / nTrialTypes)));
+   else
+      pathsFile = experimentalPathsFile;
+      blockMessage = ' experimental';
+      blocktype = 'exp';
+      % Generate and shuffle list of possible trial types:
+      %trialTypeList = shuffle(repmat(trialTypes, 1, repetitions));
+   end
 
-	load(pathsFile);
+   load(pathsFile);
+   tracknumber = nTargets;
 
-	trajectory = paths{1};
+   trajectory = paths{1};
 
-	if logging;
-		fprintf(logFile, 'trialTypeList = \n');
-		fprintf(logFile, '%4.2f ', shiftFactor);
-		fprintf(logFile, '\n');
-	end;
-		
-% 	% check to make sure there are enough frames in the path file:
-% 	if trialDuration > totalMovieFrames;
-% 		clear screen;
-% 		fprintf(1,'ERROR: Trial duration exceeded duration of trajectories in paths file %s.mat\n\n', pathsFile);
-% 		return;
-% 	end;
-% 
-% 	% check to make sure there are enough trials in the paths file:
-% 	if size(trialTypeList, 2) > nTrials
-% 		clear screen;
-% 		fprintf(1, 'ERROR: Number of trials requested (%d) exceeds number of trials in paths file %s.mat (%d)\n\n',...
-% 		        size(trialTypeList, 2), pathsFile, nTrials);
-% 		return;
-% 	end;
+   if logging;
+      fprintf(logFile, 'trialTypeList = \n');
+      fprintf(logFile, '%4.2f ', shiftFactor);
+      fprintf(logFile, '\n');
+   end;
+   
+   % 	% check to make sure there are enough frames in the path file:
+   % 	if trialDuration > totalMovieFrames;
+   % 		clear screen;
+   % 		fprintf(1,'ERROR: Trial duration exceeded duration of trajectories in paths file %s.mat\n\n', pathsFile);
+   % 		return;
+   % 	end;
+   % 
+   % 	% check to make sure there are enough trials in the paths file:
+   % 	if size(trialTypeList, 2) > nTrials
+   % 		clear screen;
+   % 		fprintf(1, 'ERROR: Number of trials requested (%d) exceeds number of trials in paths file %s.mat (%d)\n\n',...
+   % 		        size(trialTypeList, 2), pathsFile, nTrials);
+   % 		return;
+   % 	end;
 
-%	nTrials = size(trialTypeList, 2);
+   %	nTrials = size(trialTypeList, 2);
 
-	screen('CopyWindow', screenBlank, MainWindow);
-	[newX newY] = CenterText(['Press any key to begin ', num2str(nTrials), blockMessage, ' trials']);
-	FlushEvents('keyDown');
-	GetChar;
+   screen('CopyWindow', screenBlank, MainWindow);
+   [newX newY] = CenterText(['Press any key to begin ', num2str(nTrials), blockMessage, ' trials']);
+   FlushEvents('keyDown');
+   GetChar;
 
-	nTracked = zeros(nTrials,1);
-	correct = 0;
+   nTracked = zeros(nTrials,1);
+   correct = 0;
+   
+   trials = 1:nTrials;
+   if randomizeTrials
+      trials = Shuffle(trials);
+   end;
 
-	for trial = 1:nTrials
-		trialString = num2str(trial);
-		trialFrames = movieFrames(trial);
-		trialShift = shiftAmount(trial);
+   trialcounter = 0;
+   for trial = trials
+      trialcounter = trialcounter + 1;
+      trialString = num2str(trialcounter);
+      trialFrames = movieFrames(trial);
+      lastVisibleFrame = blankStart(trial) - 1;
+      firstVisibleFrame = blankStart(trial) + blankDuration(trial);
+      trialShift = shiftAmount(trial);
 
-		blankWindow(1) = round(2000/predictedMovieFrameDuration); % blank comes at least 2 seconds after start of tracking
-		blankWindow(2) = trialFrames - round(1000/predictedMovieFrameDuration); % blank comes no later than 1 seconds before end of tracking 
-		
-		timestamp = datestr(now);
-		
-		if logging;
-			fprintf(logFile, 'Starting trial %d\n', trial);
-			fprintf(logFile, '  trialFactor = %4.2f\n', trialFactor);
-		end;
-		
-		% select start time for blank interval
-		startBlankTimeRange = blankWindow(2) - blankWindow(1);
-		if condition == 1
-			% set start of blank to the same frame for all disks
-			startBlankTime = ones(1, nDisks);
-			startBlankTime = startBlankTime * randi(startBlankTimeRange);
-		else
-			% generate different random starting blank frames for each disk
-			startBlankTime = randi(startBlankTimeRange, [1, nDisks]);
-		end
-		startBlankTime = blankWindow(1) + startBlankTime;
-		endBlankTime = startBlankTime + blankDuration;
-		finalFrame = trialFrames; % finalFrame is leftover from dougtrack4
-		
-		% get coordinates
-		trajectory = paths{trial};
-		startCoordinates = starts{trial};
-		
-		%present the stimuli
-		hidecursor;
-		
-		% blank both stimulus screens
-		screen('CopyWindow', screenBlank, stimulus(1)); 
-		screen('CopyWindow', screenBlank, stimulus(2)); 
-		screen('CopyWindow', screenBlank, MainWindow);
+      %blankWindow(1) = round(2000/predictedMovieFrameDuration); % blank comes at least 2 seconds after start of tracking
+      %blankWindow(2) = trialFrames - round(1000/predictedMovieFrameDuration); % blank comes no later than 1 seconds before end of tracking 
+      
+      timestamp = datestr(now);
+      
+      if logging;
+         fprintf(logFile, 'Starting trial %d\n', trial);
+         fprintf(logFile, '  trialFactor = %4.2f\n', trialFactor);
+      end;
+      
+      % % select start time for blank interval
+      % startBlankTimeRange = blankWindow(2) - blankWindow(1);
+      % if condition == 1
+         % % set start of blank to the same frame for all disks
+         % startBlankTime = ones(1, nDisks);
+         % startBlankTime = startBlankTime * randi(startBlankTimeRange);
+      % else
+         % % generate different random starting blank frames for each disk
+         % startBlankTime = randi(startBlankTimeRange, [1, nDisks]);
+      % end
+      % startBlankTime = blankWindow(1) + startBlankTime;
+      % endBlankTime = startBlankTime + blankDuration;
+      % finalFrame = trialFrames; % finalFrame is leftover from dougtrack4
+      
+      % get coordinates
+      trajectory = paths{trial};
+      if condition == 1
+         startCoordinates = starts{trial};
+      else
+         startCoordinates = trajectory(:,:,lastVisibleFrame);
+      end;
 
-		% generate tracers
-		if tracer;
-			%screen('CopyWindow', screenBlank, tracerPaths,[],[],'transparent');
-			for d = 1:nDisks;
-				for t = startBlankTime(d):endBlankTime(d);
-					screen('CopyWindow', tracerPointer, tracerPaths, imageRect, [trajectory(d,1,t)-imageX  trajectory(d,2,t)-imageY  trajectory(d,1,t)  trajectory(d,2,t)],'transparent');
-				end;
-				screen('CopyWindow', firstTracerPointer, tracerPaths, imageRect, [trajectory(d,1,startBlankTime(d))-imageX  trajectory(d,2,startBlankTime(d))-imageY  trajectory(d,1,startBlankTime(d))  trajectory(d,2,startBlankTime(d))],'transparent');
-			end;
-		end;
+      %present the stimuli
+      hidecursor;
+      
+      % blank both stimulus screens
+      screen('CopyWindow', screenBlank, stimulus(1)); 
+      screen('CopyWindow', screenBlank, stimulus(2)); 
+      screen('CopyWindow', screenBlank, MainWindow);
 
-		[newX newY] = CenterText(['Press any key to begin trial ', trialString]);
-		FlushEvents('keyDown');
-		GetChar;
-		for a = 1:nDisks
-			screen('CopyWindow', ballPointer, stimulus(2), [], [startCoordinates(a,1) - imageX startCoordinates(a,2) - imageY startCoordinates(a,1) startCoordinates(a,2)], 'transparent');
-			if a > tracknumber
-				screen('CopyWindow', ballPointer, stimulus(1), [], [startCoordinates(a,1) - imageX startCoordinates(a,2) - imageY startCoordinates(a,1) startCoordinates(a,2)], 'transparent');
-			end
-		end
-	
-		%flash the tracked balls 4 times to cue them
-		for flash = 1:9
-			screen('CopyWindow', stimulus(mod(flash,2)+1), MainWindow);
-			WaitSecs(.5);
-		end
-	
-		%clear the stimulus window
-		% 		screen('CopyWindow', screenBlank, MainWindow);
-		screen('CopyWindow', screenBlank, stimulus(1));
-		screen('CopyWindow', screenBlank, stimulus(2));
-		FlushEvents('keydown');
-		
-		% now present stimuli
-		
-		initTime = getsecs; %check the start time time
-		time1 = initTime;
-		frameDuration = zeros(trialFrames,1);
-		preBlank = ones(1,nDisks);
-		frameOffset = zeros(1,nDisks);
-		frame = 1;
-		
- 		if logging;
-			fprintf(logFile, '  Entering loop...');
-		end;
-		
-		% show the movie:	
-		priorityLevel=MaxPriority(MainWindow,'WaitBlanking');
- 		rush(loop,priorityLevel);
-		
-		if logging;
-			fprintf(logFile, 'done\n');
-		end;
-		
-        %trialDuration = GetSecs - initTime
-		averageFrameDuration = sum(frameDuration) / trialFrames * 1000
-		% 		max(frameDuration)*1000
-		% 		min(frameDuration)*1000
-		
-        % if framerate is too slow, then exit with a warning:
-        if averageFrameDuration > minFrameDuration
-            slowFlag = averageFrameDuration;
-            feedbackString = {'COMPUTER ERROR:  SLOW FRAME DURATION';
-                              ['Average frame duration = ' num2str(slowFlag)];
-                              '';
-                              'The block needs to be restarted.';
-                              'Please inform the experimenter immediately.';
-                              '';
-                              'Experimenter: Press any button to exit,';
-                              'then restart the block.'
+      % generate tracers
+      if tracer;
+         %screen('CopyWindow', screenBlank, tracerPaths,[],[],'transparent');
+         screen(tracerPaths, 'Close');
+         tracerPaths = screen(MainWindow, 'OpenOffscreenWindow', [], screenRect);
+         for d = 1:nDisks;
+            screen(tracerPaths, 'DrawLine', blue, ...
+                   trajectory(d, 1, lastVisibleFrame)-imageX/2, (trajectory(d, 2, lastVisibleFrame))-imageY/2, ...
+                   trajectory(d, 1, firstVisibleFrame)-imageX/2,      (trajectory(d, 2, firstVisibleFrame))-imageY/2);
+            screen('CopyWindow', firstTracerPointer, tracerPaths, imageRect, ...
+                   [trajectory(d, 1, lastVisibleFrame)-imageX  trajectory(d, 2, lastVisibleFrame)-imageY ...
+                   trajectory(d, 1, lastVisibleFrame)      trajectory(d, 2, lastVisibleFrame)], ...
+                   'transparent');
+         end;
+      end;
+
+      [newX newY] = CenterText(['Press any key to begin trial ', trialString]);
+      FlushEvents('keyDown');
+      GetChar;
+      for a = 1:nDisks
+         screen('CopyWindow', ballPointer, stimulus(2), [], [startCoordinates(a,1) - imageX startCoordinates(a,2) - imageY startCoordinates(a,1) startCoordinates(a,2)], 'transparent');
+         if a > tracknumber
+            screen('CopyWindow', ballPointer, stimulus(1), [], [startCoordinates(a,1) - imageX startCoordinates(a,2) - imageY startCoordinates(a,1) startCoordinates(a,2)], 'transparent');
+         end
+      end
+      
+      %flash the tracked balls 4 times to cue them
+      for flash = 1:9
+         screen('CopyWindow', stimulus(mod(flash,2)+1), MainWindow);
+         WaitSecs(.5);
+      end
+      
+      %clear the stimulus window
+      % 		screen('CopyWindow', screenBlank, MainWindow);
+      screen('CopyWindow', screenBlank, stimulus(1));
+      screen('CopyWindow', screenBlank, stimulus(2));
+      FlushEvents('keydown');
+      
+      % now present stimuli
+      
+      initTime = getsecs; %check the start time time
+      time1 = initTime;
+      frameDuration = zeros(trialFrames,1);
+      preBlank = ones(1,nDisks);
+      frameOffset = zeros(1,nDisks);
+      frame = 1;
+      
+      if logging;
+         fprintf(logFile, '  Entering loop...');
+      end;
+      
+      % show the movie:	
+      priorityLevel=MaxPriority(MainWindow,'WaitBlanking');
+      rush(loop,priorityLevel);
+      
+      if logging;
+         fprintf(logFile, 'done\n');
+      end;
+      
+      %trialDuration = GetSecs - initTime
+      averageFrameDuration = sum(frameDuration) / trialFrames * 1000
+      % 		max(frameDuration)*1000
+      % 		min(frameDuration)*1000
+      
+      % if framerate is too slow, then exit with a warning:
+      if averageFrameDuration > minFrameDuration
+         slowFlag = averageFrameDuration;
+         feedbackString = {'COMPUTER ERROR:  SLOW FRAME DURATION';
+                           ['Average frame duration = ' num2str(slowFlag)];
+                           '';
+                           'The block needs to be restarted.';
+                           'Please inform the experimenter immediately.';
+                           '';
+                           'Experimenter: Press any button to exit,';
+                           'then restart the block.'
                           };
-            screen('CopyWindow', screenBlank, MainWindow);
-            CenterCellText(MainWindow, feedbackString, 30);
-            FlushEvents('keyDown');
-            GetChar;
-            break;
-        end;
+         screen('CopyWindow', screenBlank, MainWindow);
+         CenterCellText(MainWindow, feedbackString, 30);
+         FlushEvents('keyDown');
+         GetChar;
+         break;
+      end;
 
-		% chill out
-		% screen(MainWindow, 'WaitBlanking', 10);
-		%at end of trial, check the response with a mouseclick
-		testFrame = finalFrame;
-		
-		FlushEvents(['mouseUp'],['mouseDown']);
-		ShowCursor([0]);
-		% 		screen(MainWindow, 'FillRect', darkGray);
-		locationError = ones(1, tracknumber);%everything starts as an error
-		
-		% compute center of each stimulus
-		nClicks = 0;
-		diskVector = zeros(1, nDisks);
-		
-		if logging;
-			fprintf(logFile, '  Starting response collection...');
-		end;
-				
-		while nClicks < tracknumber
-			button = 0;
-			% 			nClicks = nClicks +1;
-			
-			while button == 0
-				% redraw stimulus
-				[x, y, button] = getmouse;
-				for d = 1:nDisks
-					placeRect{d} = [trajectory(d, 1, testFrame) - imageX trajectory(d, 2, testFrame) - imageY trajectory(d, 1, testFrame) trajectory(d, 2, testFrame)];
-					if diskVector(d) == 1;
-						screen('CopyWindow', selectedCorrectBall, MainWindow, imageRect, placeRect{d});
-					elseif diskVector(d) == 2;
-						screen('CopyWindow', selectedErrorBall, MainWindow, imageRect, placeRect{d});
-					else;
-						if IsInRect(x, y, placeRect{d})
-							screen('CopyWindow', currentSelectionBall, MainWindow, imageRect, placeRect{d});
-						else
-							screen('CopyWindow', unselectedBall, MainWindow, imageRect, placeRect{d});
-						end
-					end
-				end
-				[x, y, button] = getmouse;
-				if button == 1 %if the mouse button is pressed
-					while button == 1 %wait until it is released
-						[x, y, button] = getmouse; %get the x,y coordinates of the location at which the mouse button was released
-					end
-					button = 1; %reset the button to 1 so that you can break out of the loop
-				end
-			end
-		
-			% is mouse within this rect?
-			clickedInARect = 0;
-			for d = 1:nDisks
-				% 				testFrame
-				placeRect{d} = [trajectory(d, 1, testFrame) - imageX trajectory(d, 2, testFrame) - imageY trajectory(d, 1, testFrame) trajectory(d, 2, testFrame)];
-				if IsInRect(x, y, placeRect{d})
-					if diskVector(d) == 0
-						clickedInARect = 1;
-						if d <= tracknumber
-							screen('CopyWindow', selectedCorrectBall, MainWindow, imageRect, placeRect{d});
-							snd('play', beep);
-							locationError(d) = 0;
-							diskVector(d) = 1;
-						else
-							screen('CopyWindow', selectedErrorBall, MainWindow, imageRect, placeRect{d});
-							snd('play', errbeep);
-							diskVector(d) = 2;
-						end
-					end %if diskVector(d) == 0
-				end %if IsInRect(x, y, placeRect{d})
-			end %for d = 1:nDisks
-			if clickedInARect == 1
-				nClicks = nClicks + 1;
-			end
-		
-		end % while nClicks...
-		
-		% if there were any errors, then flash the unselected correct disks:
-		if any(diskVector == 2)
-			for d = 1:nDisks
-				if d <= tracknumber
-					if diskVector(d) == 0
-						screen('CopyWindow', unselectedBall, stimulus(2), [], placeRect{d}, 'transparent');
-						screen('CopyWindow', unselectedCorrectBall, stimulus(1), [], placeRect{d}, 'transparent');
-					else
-						screen('CopyWindow', selectedCorrectBall, stimulus(2), [], placeRect{d}, 'transparent');
-						screen('CopyWindow', selectedCorrectBall, stimulus(1), [], placeRect{d}, 'transparent');
-					end
-				elseif d > tracknumber
-					if diskVector(d) == 0
-						screen('CopyWindow', ballPointer, stimulus(2), [], placeRect{d}, 'transparent');
-						screen('CopyWindow', ballPointer, stimulus(1), [], placeRect{d}, 'transparent');
-					else	
-						screen('CopyWindow', selectedErrorBall, stimulus(2), [], placeRect{d}, 'transparent');
-						screen('CopyWindow', selectedErrorBall, stimulus(1), [], placeRect{d}, 'transparent');
-					end
-				end
-			end
-			%flash the unselected correct balls 3 times
-			for flash = 1:6
-				screen('CopyWindow', stimulus(mod(flash,2)+1), MainWindow);
-				WaitSecs(.333);
-			end
-		end
-		
-		if logging;
-			fprintf(logFile, 'done\n');
-		end;
-				
-		error = max(locationError);
-		nErrors = sum(locationError);
-		% save data
-		dataFile = fopen(dataFileName, 'a');
-		count = fprintf(dataFile, formatString, subject, timestamp, practicePathsFile, experimentalPathsFile, blocktype, condition, blankDuration, trial, movementRate, shiftFactor(trial), nDisks, tracknumber, averageFrameDuration, error, nErrors);
-		fclose(dataFile);
-			
-		[newX newY] = CenterText('Press any key to continue', 0, 0, black);
-		FlushEvents('keyDown');
-		GetChar;
+      % chill out
+      % screen(MainWindow, 'WaitBlanking', 10);
+      %at end of trial, check the response with a mouseclick
+      testFrame = movieFrames(trial);
+      
+      FlushEvents(['mouseUp'],['mouseDown']);
+      ShowCursor([0]);
+      % 		screen(MainWindow, 'FillRect', darkGray);
+      locationError = ones(1, tracknumber);%everything starts as an error
+      
+      % compute center of each stimulus
+      nClicks = 0;
+      diskVector = zeros(1, nDisks);
+      
+      if logging;
+         fprintf(logFile, '  Starting response collection...');
+      end;
+      
+      while nClicks < tracknumber
+         button = 0;
+         % 			nClicks = nClicks +1;
+         
+         while button == 0
+            % redraw stimulus
+            [x, y, button] = getmouse;
+            for d = 1:nDisks
+               placeRect{d} = [trajectory(d, 1, testFrame) - imageX trajectory(d, 2, testFrame) - imageY trajectory(d, 1, testFrame) trajectory(d, 2, testFrame)];
+               if diskVector(d) == 1;
+                  screen('CopyWindow', selectedCorrectBall, MainWindow, imageRect, placeRect{d});
+               elseif diskVector(d) == 2;
+                  screen('CopyWindow', selectedErrorBall, MainWindow, imageRect, placeRect{d});
+               else;
+                  if IsInRect(x, y, placeRect{d})
+                     screen('CopyWindow', currentSelectionBall, MainWindow, imageRect, placeRect{d});
+                  else
+                     screen('CopyWindow', unselectedBall, MainWindow, imageRect, placeRect{d});
+                  end
+               end
+            end
+            [x, y, button] = getmouse;
+            if button == 1 %if the mouse button is pressed
+               while button == 1 %wait until it is released
+                  [x, y, button] = getmouse; %get the x,y coordinates of the location at which the mouse button was released
+               end
+               button = 1; %reset the button to 1 so that you can break out of the loop
+            end
+         end
+         
+         % is mouse within this rect?
+         clickedInARect = 0;
+         for d = 1:nDisks
+            % 				testFrame
+            placeRect{d} = [trajectory(d, 1, testFrame) - imageX trajectory(d, 2, testFrame) - imageY trajectory(d, 1, testFrame) trajectory(d, 2, testFrame)];
+            if IsInRect(x, y, placeRect{d})
+               if diskVector(d) == 0
+                  clickedInARect = 1;
+                  if d <= tracknumber
+                     screen('CopyWindow', selectedCorrectBall, MainWindow, imageRect, placeRect{d});
+                     snd('play', beep);
+                     locationError(d) = 0;
+                     diskVector(d) = 1;
+                  else
+                     screen('CopyWindow', selectedErrorBall, MainWindow, imageRect, placeRect{d});
+                     snd('play', errbeep);
+                     diskVector(d) = 2;
+                  end
+               end %if diskVector(d) == 0
+            end %if IsInRect(x, y, placeRect{d})
+         end %for d = 1:nDisks
+         if clickedInARect == 1
+            nClicks = nClicks + 1;
+         end
+         
+      end % while nClicks...
+      
+      % if there were any errors, then flash the unselected correct disks:
+      if any(diskVector == 2)
+         for d = 1:nDisks
+            if d <= tracknumber
+               if diskVector(d) == 0
+                  screen('CopyWindow', unselectedBall, stimulus(2), [], placeRect{d}, 'transparent');
+                  screen('CopyWindow', unselectedCorrectBall, stimulus(1), [], placeRect{d}, 'transparent');
+               else
+                  screen('CopyWindow', selectedCorrectBall, stimulus(2), [], placeRect{d}, 'transparent');
+                  screen('CopyWindow', selectedCorrectBall, stimulus(1), [], placeRect{d}, 'transparent');
+               end
+            elseif d > tracknumber
+               if diskVector(d) == 0
+                  screen('CopyWindow', ballPointer, stimulus(2), [], placeRect{d}, 'transparent');
+                  screen('CopyWindow', ballPointer, stimulus(1), [], placeRect{d}, 'transparent');
+               else	
+                  screen('CopyWindow', selectedErrorBall, stimulus(2), [], placeRect{d}, 'transparent');
+                  screen('CopyWindow', selectedErrorBall, stimulus(1), [], placeRect{d}, 'transparent');
+               end
+            end
+         end
+         %flash the unselected correct balls 3 times
+         for flash = 1:6
+            screen('CopyWindow', stimulus(mod(flash,2)+1), MainWindow);
+            WaitSecs(.333);
+         end
+      end
+      
+      if logging;
+         fprintf(logFile, 'done\n');
+      end;
+      
+      error = max(locationError);
+      nErrors = sum(locationError);
+      % save data
+      dataFile = fopen(dataFileName, 'a');
+      %header = 'sub,time,pracfile,pathfile,blocktype,cond,trialdur,blankdur,trial,line,speed,shift,ndisks,ntargets,framedur,error,nerrors\n');
+      count = fprintf(dataFile, ...
+                      '%s,%s,%s,%s,%s,%d,%d,%d,%d,%d,%d,%4.2f,%d,%d,%6.4f,%d,%d\n', ...
+                      subject, timestamp, practicePathsFile, experimentalPathsFile, blocktype, ...
+                      condition, trialFrames, blankDuration(trial), ...
+                      trialcounter, trial, movementRate(trial), shiftFactor(trial), nDisks, ...
+                      tracknumber, averageFrameDuration, error, nErrors);
+      fclose(dataFile);
+      
+      [newX newY] = CenterText('Press any key to continue', 0, 0, black);
+      FlushEvents('keyDown');
+      GetChar;
 
-		nTracked(trial) = tracknumber - nErrors;
-		correct = correct + (1 - error);
-		
-		feedbackString = {['Last Trial: ' num2str(nTracked(trial)) '/' num2str(tracknumber) ' correct'];
-						  ['Average of: ' num2str(sum(nTracked(1:trial))/trial,2) '/' num2str(tracknumber) ' correct'];
-						  ' ';
-						  ['All ' num2str(tracknumber) ' correct on ' num2str(100*correct/trial,'%1.0f%%') ' of trials'];
-						  ' ';
-						  ' ';
-						  'Press any key to continue'
-						 };
+      nTracked(trialcounter) = tracknumber - nErrors;
+      correct = correct + (1 - error);
+      
+      feedbackString = {['Last Trial: ' num2str(nTracked(trialcounter)) '/' num2str(tracknumber) ' correct'];
+                        ['Average of: ' num2str(sum(nTracked(1:trialcounter))/trialcounter,2) '/' num2str(tracknumber) ' correct'];
+                        %' ';
+                        %['All ' num2str(tracknumber) ' correct on ' num2str(100*correct/trialcounter,'%1.0f%%') ' of trials'];
+                        ' ';
+                        ' ';
+                        'Press any key to continue'
+                       };
 
-		screen('CopyWindow', screenBlank, MainWindow);
-		[newX newY] = CenterCellText(MainWindow, feedbackString, 30);
-		FlushEvents('keyDown');
-		GetChar;
-	end % trial loop
-    
-    if slowFlag > 0
-        break;
-    end;
-    
+      screen('CopyWindow', screenBlank, MainWindow);
+      [newX newY] = CenterCellText(MainWindow, feedbackString, 30);
+      FlushEvents('keyDown');
+      GetChar;
+   end % trial loop
+   
+   if slowFlag > 0
+      break;
+   end;
+   
 end % block loop
 
 if logging;
