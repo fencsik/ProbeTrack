@@ -4,25 +4,37 @@ function pathsFile = stGenerator (sInitial)
 % generates a set of trajectories for use with ShiftTrack experiments
 % Authors: David Fencsik (based on file by Todd Horowitz)
 %
-% $Id: generator.m,v 1.4 2004/01/06 16:28:56 fencsik Exp $
+% $Id: generator.m,v 1.5 2004/01/06 20:19:06 fencsik Exp $
 
 % Modified by David Fencsik
 % started  9/29/2003
 % based on tGenerator6c of  9/15/2003
-% version of  11/25/2003
+% version of  01/06/2004
 
-withinBlock = 0; % 1 = within-block design, each prefix gets R repetitions of each trial
-                 % type (not implemented); 
-                 % 0 = between-block design, each prefix gets R
-                 % repetitions of one trial type
+% Fix within-block design so certain variables can be implemented within-block or
+% between-block. Each of these variables has a WB version that, if non-empty, is
+% manipulated within-block.
+
+% Scrap this:
+% withinBlock = 0; % 1 = within-block design, each prefix gets R repetitions of each trial
+%                  % type (not implemented); 
+%                  % 0 = between-block design, each prefix gets R
+%                  % repetitions of one trial type
+
+% NOT IMPLEMENTED
 movingCue = 1; % 0 = objects are cued in first frame and not handled by this file.  
                % 1 = objects begin moving at cuingRate with cuingNoise for
                % cuingDuration, then switch to standard movement rates
+
 subjects = 1; % e.g, 1:10 [ 2 7 11] 
-trialDuration = 5;
-nDisks = 10;
-trialTypes = [0.0; -1.0; 0.0; 1.0];
-nTrialTypes = size(trialTypes,1);
+
+% Possible trial durations, in seconds
+minTrialDuration = 5;
+maxTrialDuration = 8;
+
+nDisks = 8;
+
+reappearanceOffset = [1.0];
 repetitions = 50; % one value, or one value per trial type
 practiceRepetitions = 10; 
 prefix = {'test'} %{'train';'a';'b';'c'}; 
@@ -36,10 +48,7 @@ bufferZone = 50;
 predictedMovieFrameDuration = 13.33;
 blankDurations = [0; 23; 23; 23];
 
-if withinBlock == 1
-   trialTypesMasterList = repmat(trialTypes, 1, repetitions);
-   trialTypesPracticeList = repmat(trialTypes, 1, practiceRepetitions);
-end;
+nTrialTypes = size(reappearanceOffset,1);
 
 
 %MainWindow = screen(0, 'OpenWindow', [], [], 8);
@@ -56,7 +65,7 @@ clear screen;
 %  major variables
 %frameDuration = refreshesPerFrame/hz;
 edgeZone = imageY;
-estMovieFrames = ceil(trialDuration*1000/predictedMovieFrameDuration);
+estMovieFrames = ceil(maxTrialDuration*1000/predictedMovieFrameDuration);
 fullCircle = 24;
 halfCircle = 12;
 % increment = (rate*30)*(frameDuration);
