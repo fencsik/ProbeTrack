@@ -1,6 +1,6 @@
 function shifttrack()
 
-% $Id: track.m,v 1.7 2004/02/06 20:19:45 fencsik Exp $
+% $Id: track.m,v 1.8 2004/02/09 20:13:04 fencsik Exp $
 
 % Can observers tolerate a longer gap duration if all items disappear at once?
 % constant blank duration method rather than staircase
@@ -29,6 +29,7 @@ minimumAccuracy = '60%';
 minFrameDuration = 20;
 
 tracer = 0;
+framescreen = 0;
 logging = 0;
 if logging;
    LogFileName = [ExperimentName '.log'];
@@ -46,7 +47,7 @@ prompt = {'Subject''s initials',
           'Response type (1 = full, 2 = 2AFC)'
           'Randomize trials (0 = no, 1 = yes)',
           };
-defaults = {'xxx', '0', 'test1', 'exp_1', '1', '2', '0'};
+defaults = {'xxx', '0', 'prac1', 'exp1', '1', '2', '0'};
 answer = inputdlg(prompt, 'Experimental Setup Information', 1, defaults);
 % check for cancel button-press
 if size(answer) < 1
@@ -73,7 +74,7 @@ end
 
 % other major variables
 dataFile = fopen(dataFileName, 'a');
-fprintf(dataFile,'sub,time,pracfile,pathfile,blocktype,movetype,trialdur,blankdur,trial,line,speed,shift,ndisks,ntargets,framedur,error,nerrors\n');
+fprintf(dataFile,'sub,time,pracfile,pathfile,blocktype,trialtype,movetype,trialdur,blankdur,blankstart,trial,line,speed,shift,ndisks,ntargets,framedur,error,nerrors\n');
 fclose(dataFile);
 
 
@@ -147,6 +148,9 @@ screen(stimulus(2), 'FillRect', gray);
 
 % big eraser
 screenBlank=screen(MainWindow, 'OpenOffscreenWindow',  gray, screenRect); 
+if framescreen
+   screen(screenBlank, 'FrameRect', black, [0 0 1024 768]);
+end;
 
 %make some beeps
 [beep, samplingRate] = makeBeep(650,.1);
@@ -286,10 +290,10 @@ if responseType == 2
    responseInstructionString{1} = 'Once the disks stop moving, two disks will be highlighted in white,';
    responseInstructionString{2} = 'one target and one non-target.';
    responseInstructionString{3} = 'Using the mouse, select the target from among the two highlighted disks.';
-   responseInstructionString{8} = 'If you select a non-target by mistake, the actual target will blink in yellow';
+   responseInstructionString{8} = 'If you select a non-target by mistake, the actual target will blink in yellow.';
 elseif nTargets == 1
    responseInstructionString{2} = 'Use the mouse to click on the target.';
-   responseInstructionString{8} = 'If you select a non-target by mistake, the actual target will blink in yellow';
+   responseInstructionString{8} = 'If you select a non-target by mistake, the actual target will blink in yellow.';
 end;
 
 feedbackInstructionString = {
@@ -652,11 +656,11 @@ for block = 1:2
       nErrors = sum(errorDisks);
       % save data
       dataFile = fopen(dataFileName, 'a');
-      %header = 'sub,time,pracfile,pathfile,blocktype,movetype,trialdur,blankdur,trial,line,speed,shift,ndisks,ntargets,framedur,error,nerrors\n'
+      %header = 'sub,time,pracfile,pathfile,blocktype,trialtype,movetype,trialdur,blankdur,blankstart,trial,line,speed,shift,ndisks,ntargets,framedur,error,nerrors\n'
       count = fprintf(dataFile, ...
-                      '%s,%s,%s,%s,%s,%d,%d,%d,%d,%d,%d,%4.2f,%d,%d,%6.4f,%d,%d\n', ...
+                      '%s,%s,%s,%s,%s,%d,%d,%d,%d,%d,%d,%d,%d,%4.2f,%d,%d,%6.4f,%d,%d\n', ...
                       subject, timestamp, practicePathsFile, experimentalPathsFile, blocktype, ...
-                      moveType, trialFrames, blankDuration(trial), ...
+                      trialType(trial), moveType, trialFrames, blankDuration(trial), blankStart(trial), ...
                       trialcounter, trial, movementRate(trial), shiftFactor(trial), nDisks, ...
                       nTargets, averageFrameDuration, error, nErrors);
       fclose(dataFile);
@@ -668,20 +672,22 @@ for block = 1:2
       nTracked(trialcounter) = nTargets - nErrors;
       correct = correct + (1 - error);
       
-      feedbackString = {['Last Trial: ' num2str(nTracked(trialcounter)) '/' num2str(nTargets) ' correct'];
-                        ['Average of: ' num2str(sum(nTracked(1:trialcounter))/trialcounter,2) '/' num2str(nTargets) ' correct'];
-                        %' ';
-                        %['All ' num2str(nTargets) ' correct on ' num2str(100*correct/trialcounter,'%1.0f%%') ' of trials'];
-                        ' ';
-                        ' ';
-                        'Press any key to continue'
-                       };
+      if responseType ~= 2
+         feedbackString = {['Last Trial: ' num2str(nTracked(trialcounter)) '/' num2str(nTargets) ' correct'];
+                           ['Average of: ' num2str(sum(nTracked(1:trialcounter))/trialcounter,2) '/' num2str(nTargets) ' correct'];
+         %' ';
+         %['All ' num2str(nTargets) ' correct on ' num2str(100*correct/trialcounter,'%1.0f%%') ' of trials'];
+                           ' ';
+                           ' ';
+                           'Press any key to continue'
+                          };
 
-      screen('CopyWindow', screenBlank, MainWindow);
-      [newX newY] = CenterCellText(MainWindow, feedbackString, 30);
-      FlushEvents('keyDown');
-      GetChar;
-   end % trial loop
+         screen('CopyWindow', screenBlank, MainWindow);
+         [newX newY] = CenterCellText(MainWindow, feedbackString, 30);
+         FlushEvents('keyDown');
+         GetChar;
+      end;
+   end; % trial loop
    
    if slowFlag > 0
       break;
