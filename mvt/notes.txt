@@ -1,0 +1,28 @@
+ShiftTrack Notes and Musings
+by David Fencsik
+
+$Id: notes.txt,v 1.1 2003/12/18 15:46:57 fencsik Exp $
+
+December 16, 2003:
+
+Potential follow-up studies:
+
+Present target cues during movement: i.e., Ss identify the targets
+while they're already moving, which eliminates need to switch from
+immobile to mobile targets, but still have to track subset of
+identical targets for 5 s.
+
+step up speed in ShiftTrack3 to see if changes effect of -1 = 0 > 1.
+
+Look at function of tracking with reappearance positions in the range
+[-1,1]. But we need to be careful to achieve some power here.
+
+Start putting an intervening task into the gap, or before/after the
+tracking task. 
+
+Orthogonally vary distance travelled and trajectory changes during
+blank interval. 
+
+Start playing with confusion just before disappearance: e.g., multiple
+objects cross over, post-gap distractor is closer to pre-gap target
+than the post-gap target. 
