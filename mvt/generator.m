@@ -4,7 +4,7 @@ function pathsFile = stGenerator (sInitial)
 % generates a set of trajectories for use with ShiftTrack experiments
 % Authors: David Fencsik (based on file by Todd Horowitz)
 %
-% $Id: generator.m,v 1.15 2004/02/03 20:02:49 fencsik Exp $
+% $Id: generator.m,v 1.16 2004/02/04 21:04:08 fencsik Exp $
 
 % Modified by David Fencsik
 % started  9/29/2003
@@ -31,14 +31,14 @@ nTargets = 5;
 prefix = {'mvt_'; 'pracA_'; 'pracB_'; 'pracC_'; 'pracD_'; 'exp_'};
 prefix = {'test'}; % for testing
 practrials = [10 1];
-exptrials = [2 1];
+exptrials = [1 1];
 mvttrials = [30 1];
 trialTypes = {%repmat(1, mvttrials);
               %repmat(1, practrials);
               %repmat(1, practrials);
               %repmat(1, practrials);
               %repmat(1, practrials);
-              repmat(1, exptrials)
+              repmat(2, exptrials)
              };
 movementRates = {%repmat(9, mvttrials);
                  %repmat(9, practrials);
@@ -74,7 +74,7 @@ end;
 
 bufferZone = 50;
 preBlankRect = [0 0 1024-200 768-100];
-preBlankBorder = 100;
+preBlankBorder = 80;
 
 clear screen;
 
@@ -207,8 +207,9 @@ for sub = subjects
          deathFlag = 999;
          while deathFlag > 0
             % quit if we've been going for too long:
-            if sum(kills(1:(size(kills,2)-1))) > (100*nTrials)
+            if sum(kills(1:(size(kills,2)-1))) > (200*nTrials)
                kills
+               deathFlag
                'Too many kills.'
                return;
             end;
@@ -285,10 +286,10 @@ for sub = subjects
                      deathFlag = 3;
                      kills(deathFlag) = kills(deathFlag) + 1;
                      break;
-                  elseif any(OutOfBoundsBits(newCoordinates, screenRect, preBlankBorder) > 0)
-                     deathFlag = 4;
-                     kills(deathFlag) = kills(deathFlag) + 1;
-                     break;
+                  %elseif any(OutOfBoundsBits(newCoordinates, screenRect, preBlankBorder) > 0)
+                  %   deathFlag = 4;
+                  %   kills(deathFlag) = kills(deathFlag) + 1;
+                  %   break;
                   end;
                end;
 
@@ -299,7 +300,7 @@ for sub = subjects
                   post = newCoordinates; 
                   for d = 1:nTargets
                      post(1, :) = []; % get rid of the comparison disk
-                     if any(sqrt((pre(d,1) - post(:,1)).^2 + (pre(d,2) - post(:,2)).^2) < bufferZone)
+                     if any(DistancesFromDisk(pre(d,:), post) < bufferZone) %any(sqrt((pre(d,1) - post(:,1)).^2 + (pre(d,2) - post(:,2)).^2) < bufferZone)
                         % one or more disks reappear too close to a pre-blank target location
                         deathFlag = 5;
                         kills(deathFlag) = kills(deathFlag) + 1;
@@ -315,10 +316,70 @@ for sub = subjects
                % if trialType(trial) = 2, then set the first distractor so it reappears at the same
                % location as the first target, and check to make sure it's start position
                % is far enough from all the other disks. And make sure it doesn't bounce
-               %%% ADD CODE HERE
                % Reverse code:
-               % reverse = mod(preBlankDirections + halfCircle - 1, fullCircle) + 1;
+               if blankDuration(trial) > 0 & f == blankEnd(trial) & trialType(trial) == 2
+                  % try once for each target
+                  deathFlag = 6;
+                  for t = 1:nTargets
+                     dirmod = fullCircle / 4 * Shuffle([1 -1]); % possible directions relative to target direction
+                     for d = dirmod
+                        dir = preBlankDirections(t) + d;
+                        rev = mod(dir + halfCircle - 1, fullCircle) + 1;
+                        testTraj = zeros(1, 2, f);
+                        testTraj(1, :, f) = preBlankCoordinates(t, :); % get this targets preBlankCoordinates;
+                        f2 = f-1;
+                        while f2 > 0
+                           [x y rev err bounce] = MoveOneStep (testTraj(1, :, f2+1), rev, magnitude(1), screenRect, edgeZone, fullCircle);
+                           if any(err > 0) | any(bounce > 0)
+                              break;
+                           end;
+                           testTraj(1, :, f2) = [x, y];
+                           %if f2 == blankStart(trial) - 1
+                           %   if any(DistancesFromDisk(testTraj(1, :, f2)) < buffer)
+                           f2 = f2 - 1;
+                        end;
+                        if f2 == 0
+                           % got to the end of the above loop
+                           deathFlag = 0;
+                           break;
+                        end;
+                     end; % for d = dirmod
+                     if deathFlag == 0
+                        break;
+                     end;
+                  end; % for t = 1:nTargets
+                  if deathFlag > 0
+                     % deathFlag will equal 6 or 0 here
+                     kills(deathFlag) = kills(deathFlag) + 1;
+                     break;
+                  else
+                     % set first distracter trajectory to testTraj
+                     trajectory(nTargets+1, :, 1:f) = testTraj;
+                     newCoordinates(nTargets+1, :) = trajectory(nTargets+1, :, f);
+                     direction(nTargets+1) = dir;
 
+                     % make whichever target was used above be the first target
+                     if t > 1
+                        tmp = trajectory(1, :, :);
+                        trajectory(1, :, :) = trajectory(t, :, :);
+                        trajectory(t, :, :) = tmp;
+                        newCoordinates(1, :) = trajectory(1, :, f);
+                        newCoordinates(t, :) = trajectory(t, :, f);
+                        tmpdir = direction(1);
+                        direction(1) = direction(t);
+                        direction(t) = tmpdir;
+                     end;
+                  end;
+               end; % if blankDuration(trial) > 0 & f == blankEnd(trial) & trialType(trial) == 2
+
+
+               % set preBlankCoordinates
+               if f == blankStart(trial) - 1
+                  preBlankCoordinates = newCoordinates;
+                  preBlankDirections = direction;
+               end;
+
+                  
                trajectory(:, :, f) = newCoordinates;
                % if f is between minMovieFrames and maxMovieFrames, then start checking to
                % see if the disks are far enough apart. As soon as they are, pick that as our
@@ -331,12 +392,13 @@ for sub = subjects
                      break;
                   elseif f == maxMovieFrames
                      % we're at the end and still haven't found a good end-point
-                     deathFlag = 6;
+                     deathFlag = 7;
                      kills(deathFlag) = kills(deathFlag) + 1;
                      break;
                   end;
                end;
 
+               
                %set the old coordinates (for the next frame) equal to the coordinates used for the current frame 
                oldCoordinates = newCoordinates;
                f = f + 1;
@@ -423,6 +485,21 @@ function [distances] = InterDiskDistances (coordinates)
 %%% END OF InterDiskDistances %%%
 
 
+function [distances] = DistancesFromDisk (disk, coordinates)
+   [nrow ncol] = size(coordinates);
+   if ncol ~= 2 | size(disk, 2) ~= 2
+      'ERROR: DistancesFromDisk given non-coordinate input matrix'
+      return;
+   elseif size(disk, 1) > 1
+      'ERROR: first argument to DistancesFromDisk must be coordinates of a single disk'
+      return;
+   else
+      distances = sqrt((disk(1) - coordinates(:, 1)).^2 + (disk(2) - coordinates(:, 2)).^2);
+   end;
+
+%%% END OF DistancesFromDisk %%%
+
+
 function out = OutOfBounds (coordinates, edgeRect, border)
 % Returns 1 if any coordinates are outside of the edgeRect
 % minus the border, 0 otherwise.
@@ -450,8 +527,11 @@ function [x, y, d, error, bounce] = MoveOneStep (coordinates, direction, magnitu
 % Moves all objects one step
    
    [nrow ncol] = size(coordinates);
-   if nrow ~= size(coordinates,1) | nrow ~= size(magnitude, 1) | ncol ~= 2
+   if nrow ~= size(direction,1) | nrow ~= size(magnitude, 1) | ncol ~= 2
       'ERROR: bad arguments passed to MoveOneStep'
+      coordinates
+      direction
+      magnitude
       return;
    end;
    
