@@ -3,9 +3,9 @@
 # moves experiment files to the appropriate Public directory 
 # so experimenters can access them
 # 
-# $Id: prepare.sh,v 1.5 2004/06/03 13:03:47 fencsik Exp $
+# $Id: prepare.sh,v 1.6 2004/06/22 19:19:03 fencsik Exp $
 
-PUBLIC_DIR=~/Public/Experiments/StopTrack3
+PUBLIC_DIR=~/Public/Experiments/Tracking/StopTrack/StopTrack3
 
 GENERATOR_IN=generator.m
 TRACK_IN=track.m
