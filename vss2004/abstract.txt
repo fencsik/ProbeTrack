@@ -7,29 +7,29 @@ a subset of randomly moving identical objects, even if all of the
 objects disappear for 300-400 ms (e.g., Alvarez, Wolfe, Horowitz, &
 Arsenio, VSS 01). This interval is too long for apparent motion
 mechanisms to bridge the gap. How does the visual system reacquire the
-target objects? Here we test two approaches to target
-reacquisition. According to a location-matching account, the system
-keeps track of the location of each target at the time of
-disappearance. After the gap, the closest object to each target
-location is identified as a target. According to the
-trajectory-matching account, the system takes into account the traget
-trajectorties at the time of disappearance and searches along the
-trajectory after the gap. In the experiments reported here, observers
-tracked 5 out of 10 dark gray disks moving randomly on a light gray
-background for 5 sec. At a random time during the tracking interval,
-all the objects disappeared for a 300 ms gap, then reappeared at
-various distances from their pre-gap locations. In experiment 1,
-objects appeared either at the point of disappearance (position 0) or
-at the appropriate location expected given a constant direction and
-velocity from the time of disappearance (position 1). Performance was
-superior at position 0, supporting a location-matching account. In
-experiment 2, however, we added position -1, which was as far behind
-position 0 along the trajectory as position 1 was ahead. The
-location-matching account predicts that performance should be best at
-position 0 and equal for positions -1 and 1. Instead, we found that
-position -1 produced performance superior to position 1, and not
-significantly different from position 0. This result indicates that
-the visual system takes into account the history of an object's motion
-trajectory when reacquiring targets.
+target objects? Here we test two possible explanations: According to
+the location-matching account, the system stores the location of each
+target at the time of disappearance. After the gap, the closest object
+to each target location is identified as a target. According to the
+trajectory-matching account, the system stores the target trajectories
+at the time of disappearance and searches along each trajectory after
+the gap. In the experiments reported here, observers tracked 5 out of
+10 dark gray disks moving randomly on a light gray background for 5
+sec. At a random time during the tracking interval, all the objects
+disappeared for 300 ms, then reappeared at various distances from
+their pre-gap locations. In Experiment 1, all of the objects
+reappeared either at the point of disappearance (position 0) or at the
+location expected given a constant velocity during the gap (position
+1). Performance was superior at position 0, supporting a
+location-matching account. In Experiment 2, we added position -1,
+which was as far behind position 0 along the trajectory as position 1
+was ahead. The location-matching account predicts that performance
+should be best at position 0 and equal for positions -1 and
+1. Instead, we found that position -1 produced performance superior to
+position 1, and not significantly different from position 0. This
+result indicates that the visual system takes into account the history
+of an object's motion trajectory when reacquiring targets. Generally,
+our results show that both location and trajectory information are
+used in the reacquisition of targets following a gap.
 
 Supported by NIH grant MH065576 to TSH.
