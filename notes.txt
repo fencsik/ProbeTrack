@@ -1,0 +1,120 @@
+MVT Task Notes and Musings
+by David Fencsik
+
+$Id: notes.txt,v 1.1 2004/08/12 14:23:36 fencsik Exp $
+
+December 16, 2003:
+
+Potential follow-up studies:
+
+Present target cues during movement: i.e., Ss identify the targets
+while they're already moving, which eliminates need to switch from
+immobile to mobile targets, but still have to track subset of
+identical targets for 5 s.
+
+step up speed in ShiftTrack3 to see if changes effect of -1 = 0 > 1.
+
+Look at function of tracking with reappearance positions in the range
+[-1,1]. But we need to be careful to achieve some power here.
+
+Start putting an intervening task into the gap, or before/after the
+tracking task. 
+
+Orthogonally vary distance travelled and trajectory changes during
+blank interval. 
+
+Start playing with confusion just before disappearance: e.g., multiple
+objects cross over, post-gap distractor is closer to pre-gap target
+than the post-gap target. 
+
+
+December 18, 2003:
+
+Well, what the heck do we know now? Results of ShiftTrack3 are that -1
+and 0 are approx. equivalent, ...
+
+
+January 5, 2004:
+
+The current state of affairs is that we have two hypotheses. The
+location-based matching hypothesis claims that participants match the
+post-gap objects to the nearest pre-gap targets. This hypothesis
+requires a memory system (visWM?) to store all the object locations
+from the pre-gap display, and then a little location-based matching
+following reappearance. This hypothesis predicts that observers will
+switch from a target to a non-target during a gap if the non-target is
+closer.
+
+The trajectory-matching hypothesis claims that participants keep track
+of each object's trajectory, and use the trajectory to predict where
+the objects should be when they reappear, then match post-gap objects
+based on their distance from the predicted locations. 
+
+One problem with previous studies is that people may have access to
+both mechanisms. Thus, when objects reappear at an offset of 1 (i.e.,
+at the position where they should be had they moved at a constant
+velocity before and during the gap), participants do better if they
+rely on trajectory-based matching (unless the movement is so slight
+that location-based matching is just as good), whereas reappearance
+at position 0 (i.e., the pre-gap locations) is best handled by
+location-based matching (only). Perhaps we could encourage one
+strategy over the other by using predominantly one type of
+reappearance position over the other, but save that for later.
+
+If location-based matching is really how this thing gets done, then we
+can intentionally set things up so a non-target distracter will be
+closer to a pre-gap target location than the corresponding target
+(which has moved away), and ask the subject to pick between the target
+and the non-target distracter. According to the location-based
+matching account, participants should be unable to track the target
+and always switch to the distracter.
+
+
+May 6, 2004: 
+
+I had three ideas just before VSS (* indicates not from VSS):
+
+1. ShiftTrack3 should be replicated with no movement following the
+   gap. In that experiment, the advantage of Position -1 over Position
+   1 may have occurred because in Position -1, the disk moved over
+   Position 0 300 ms after the gap. Eliminating post-gap motion will
+   remove this confound.
+2. StopTrack2 needs to be replicated with a variable tracking
+   interval. In the original experiment, trial length was fixed at 4
+   sec. Since the gap always began 300 ms prior to the final frame,
+   subjects could have anticipated the gap.
+3. ShiftTrack studies could be run with all save one item shifting
+   positions, and then test the one. This way, subjects might use one
+   set for reacquisition, and we can test how effective that is when
+   stimuli are inconsistent with their set. One difficulty with this
+   is that the odd-one-out might cue which is the target.
+4. *Extend range of targets tested in ShiftTrack and StopTrack.
+5. *Change recall method, so they only have to make one decision:
+   this makes capacity estimates easier. 
+
+
+August 12, 2004:
+
+So far, we have established that location-based matching is preferred
+(shifttrack studies), but that people can use motion information from
+one object to aid target reacquisition.
+
+There are two things that would be nice to achieve with this
+paradigm: One would be a double-dissociation between location and
+motion information; so far, we have only the single dissociation from
+eliminating motion information in the StopTrack studies. Second would
+be to determine whether people are using motion information to
+constrain their search, or whether they are actually predicting
+reappearance location.
+
+On a related topic, one hypothesis we proposed to explain why people
+were better at synchronous disappearance compared to asynchronous
+disappearance was that synchronous disappearance mimics task
+postponement, so observers might just pause the task, then resume
+it. Perhaps we should separately study asynchronous disappearance to
+find out how people maintain tracking information during a task
+without postponement mechanisms coming into play. One question we may
+be interested in, for example, is whether reappearance at position 1
+is easier to reacquire than reappearance at position 0 with
+asynchronous disappearance. 
+
