@@ -5,7 +5,7 @@
 # 
 # $LastChangedDate$
 
-EXPERIMENT=ShiftTrack9
+EXPERIMENT=StopTrack5
 PUBLIC_DIR=~/Public/Experiments/$EXPERIMENT
 
 GENERATOR_IN=generator.m
@@ -38,7 +38,9 @@ if [ $TRACK_IN -nt $PUBLIC_DIR/$TRACK_OUT ]; then
     cp -a $TRACK_IN $PUBLIC_DIR/$TRACK_OUT
 fi
 
-if [ ! -z $1 ]; then
-    echo mv $PATH_FILES $PUBLIC_DIR/
-    mv $PATH_FILES $PUBLIC_DIR/
-fi
+for f in $(/bin/ls $PATH_FILES); do
+    if [ $f -nt $PUBLIC_DIR/$f ]; then
+	echo cp -a $f $PUBLIC_DIR/
+	cp -a $f $PUBLIC_DIR/
+    fi
+done
