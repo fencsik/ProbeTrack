@@ -4,7 +4,7 @@ function pathsFile = stGenerator (sInitial)
 % generates a set of trajectories for use with ShiftTrack experiments
 % Authors: David Fencsik (based on file by Todd Horowitz)
 %
-% $Id: generator.m,v 1.16 2004/02/04 21:04:08 fencsik Exp $
+% $Id: generator.m,v 1.17 2004/02/05 18:26:21 fencsik Exp $
 
 % Modified by David Fencsik
 % started  9/29/2003
@@ -12,7 +12,8 @@ function pathsFile = stGenerator (sInitial)
 % version of  01/06/2004
 
 starttime = clock;
-   
+debug = 1;
+
 % Scrap this:
 % withinBlock = 0; % 1 = within-block design, each prefix gets R repetitions of each trial
 %                  % type (not implemented); 
@@ -55,6 +56,7 @@ blankDurations = {%repmat(0, mvttrials);
                   repmat(23, exptrials);
                  }; % 23 = 307 ms, 30 = 400 ms, 38 = 507 ms, 45 = 600 ms
 
+switchedDisk = 0;
 nBlocks = size(trialTypes,1);
 if nBlocks ~= size(movementRates,1) || nBlocks ~= size(blankDurations,1)
    'ERROR: block variables are not the same size'
@@ -150,7 +152,7 @@ for sub = subjects
       blankStart = zeros(nTrials, 1);
       blankEnd = zeros(nTrials, 1);
 
-      shiftFactor = ones(size(trialType));
+      shiftFactor = ones(size(trialType, 2), 1);
       shiftAmount = ceil((shiftFactor-1.0) .* blankDuration);
       movieFrames = ones(nTrials, 1) * maxMovieFrames;
       % blankStart should be picked randomly for each trial:
@@ -194,6 +196,10 @@ for sub = subjects
          blankStart(trial) = Randi(blankWindow(2) - blankWindow(1)) + blankWindow(1);
          blankEnd(trial) = blankStart(trial) + blankDuration(trial);
 
+         if debug
+            [movieFrames(trial),  blankStart(trial), blankEnd(trial)]
+         end;
+         
          trajectory = zeros(nDisks, 2, movieFrames(trial));
 
          % set up vectors of individual signal and noise magnitudes
@@ -203,52 +209,65 @@ for sub = subjects
 
          restarts = 0;
          badPath = 1;
+         
+         redoLocationsCounter = 0;
 
          deathFlag = 999;
          while deathFlag > 0
             % quit if we've been going for too long:
-            if sum(kills(1:(size(kills,2)-1))) > (200*nTrials)
-               kills
-               deathFlag
-               'Too many kills.'
+            if sum(kills(1:(size(kills,2)-1))) > (20*nTrials)
+               kills = [1:(size(kills, 2)); kills]
+               fprintf(1, 'Too many kills.\n');
+               fprintf(1, 'Last kill = %d\n', deathFlag);
                return;
             end;
 
             % while loop waits until a viable trajectory is generated
             deathFlag = 0;
 
-            % find starting coordinates by brute force: repeatedly select random points
-            % for each disk until it is far enough from all the others:
-            startCoordinates = zeros(nDisks, 2);
-            for d = 1:nDisks
-               replacements = 0;
-               badPlacement = 1;
+            if redoLocationsCounter > 0
+               % keep the same locations and pick new directions
+               redoLocationsCounter = redoLocationsCounter - 1;
+            else
+               % find starting coordinates by brute force: repeatedly select random points
+               % for each disk until it is far enough from all the others:
+               startCoordinates = zeros(nDisks, 2);
+               for d = 1:nDisks
+                  replacements = 0;
+                  badPlacement = 1;
 
-               while badPlacement
-                  startCoordinates(d, 1) = Randi(screenX - (2 * edgeZone)) + edgeZone;
-                  startCoordinates(d, 2) = Randi(screenY - (2 * edgeZone)) + edgeZone;
-                  if d > 1
-                     if all(InterDiskDistances(startCoordinates(1:d,:)) >= bufferZone)
-                        badPlacement = 0;
-                     else
-                        replacements = replacements + 1;
-                        if replacements > 1000
-                           break;
+                  while badPlacement
+                     startCoordinates(d, 1) = Randi(screenX - (2 * edgeZone)) + edgeZone;
+                     startCoordinates(d, 2) = Randi(screenY - (2 * edgeZone)) + edgeZone;
+                     if d > 1
+                        if all(InterDiskDistances(startCoordinates(1:d,:)) >= bufferZone)
+                           badPlacement = 0;
+                        else
+                           replacements = replacements + 1;
+                           if replacements > 1000
+                              break;
+                           end;
                         end;
+                     else
+                        badPlacement = 0;
                      end;
-                  else
-                     badPlacement = 0;
                   end;
+                  if badPlacement
+                     deathFlag = 1;
+                     kills(deathFlag) = kills(deathFlag) + 1;
+                     break;
+                  else
+                     i = size(kills,2);
+                     kills(i) = kills(i) + replacements;
+                  end;
+               end; % for d = 1:nDisks
+               if ~badPlacement
+                  %if debug
+                  %   fprintf(1, 'Picked new locations.\n');
+                  %end;
+                  redoLocationsCounter = 0;
                end;
-               if badPlacement
-                  deathFlag = 1;
-                  kills(deathFlag) = kills(deathFlag) + 1;
-                  break;
-               else
-                  i = size(kills,2);
-                  kills(i) = kills(i) + replacements;
-               end;
-            end; % for d = 1:nDisks
+            end;
 
             if deathFlag > 0
                continue;
@@ -274,26 +293,39 @@ for sub = subjects
                if any(err > 0)
                   deathFlag = 2;
                   kills(deathFlag) = kills(deathFlag) + 1;
+                  if debug
+                     fprintf(1, 'failed at step %d, frame %d\n', deathFlag, f);
+                  end;
                   break;
                end;
                
                newCoordinates = [x y];
 
 
-               % make sure disks are a mindistance apart on last visible pre-gap frame
+                % make sure disks are a mindistance apart on last visible pre-gap frame
+                if blankDuration(trial) > 0 & f == blankStart(trial) - 1
+                   if any(InterDiskDistances(newCoordinates) < bufferZone)
+                      deathFlag = 3;
+                      kills(deathFlag) = kills(deathFlag) + 1;
+                      if debug
+                         fprintf(1, 'failed at step %d, frame %d\n', deathFlag, f);
+                      end;
+                      break;
+                   %elseif any(OutOfBoundsBits(newCoordinates, screenRect, preBlankBorder) > 0)
+                   %   deathFlag = 4;
+                   %   kills(deathFlag) = kills(deathFlag) + 1;
+                   %   break;
+                   end;
+                end;
+
+
+               % set preBlankCoordinates
                if blankDuration(trial) > 0 & f == blankStart(trial) - 1
-                  if any(InterDiskDistances(newCoordinates) < bufferZone)
-                     deathFlag = 3;
-                     kills(deathFlag) = kills(deathFlag) + 1;
-                     break;
-                  %elseif any(OutOfBoundsBits(newCoordinates, screenRect, preBlankBorder) > 0)
-                  %   deathFlag = 4;
-                  %   kills(deathFlag) = kills(deathFlag) + 1;
-                  %   break;
-                  end;
+                  preBlankCoordinates = newCoordinates;
+                  preBlankDirections = direction;
                end;
 
-
+                  
                % make sure that all disks reappear at a mindistance from where the TARGETS disappeared.
                if blankDuration(trial) > 0 & f == blankEnd(trial) 
                   pre = trajectory(1:nTargets, :, blankStart(trial) - 1); 
@@ -308,6 +340,9 @@ for sub = subjects
                      end;
                   end;
                   if deathFlag > 0
+                     if debug
+                        fprintf(1, 'failed at step %d, frame %d\n', deathFlag, f);
+                     end;
                      break;
                   end;
                end;
@@ -316,11 +351,10 @@ for sub = subjects
                % if trialType(trial) = 2, then set the first distractor so it reappears at the same
                % location as the first target, and check to make sure it's start position
                % is far enough from all the other disks. And make sure it doesn't bounce
-               % Reverse code:
                if blankDuration(trial) > 0 & f == blankEnd(trial) & trialType(trial) == 2
-                  % try once for each target
                   deathFlag = 6;
-                  for t = 1:nTargets
+                  % try once for each target
+                  for t = 2:nTargets
                      dirmod = fullCircle / 4 * Shuffle([1 -1]); % possible directions relative to target direction
                      for d = dirmod
                         dir = preBlankDirections(t) + d;
@@ -331,11 +365,20 @@ for sub = subjects
                         while f2 > 0
                            [x y rev err bounce] = MoveOneStep (testTraj(1, :, f2+1), rev, magnitude(1), screenRect, edgeZone, fullCircle);
                            if any(err > 0) | any(bounce > 0)
+                              % if debug
+                              %    if any(err > 0)
+                              %       fprintf(1, 'turning error; ');
+                              %    end;
+                              %    if any(bounce >0)
+                              %       fprintf(1, 'bouncing error; ');
+                              %    end;
+                              %    %fprintf(1, '\n');
+                              % end;
                               break;
                            end;
                            testTraj(1, :, f2) = [x, y];
                            %if f2 == blankStart(trial) - 1
-                           %   if any(DistancesFromDisk(testTraj(1, :, f2)) < buffer)
+                           %   if any(DistancesFromDisk(testTraj(f2, :)) < buffer)
                            f2 = f2 - 1;
                         end;
                         if f2 == 0
@@ -351,35 +394,35 @@ for sub = subjects
                   if deathFlag > 0
                      % deathFlag will equal 6 or 0 here
                      kills(deathFlag) = kills(deathFlag) + 1;
+                     if debug
+                        fprintf(1, 'failed at step %d, frame %d, t = %d\n', deathFlag, f, t);
+                     end;
                      break;
                   else
-                     % set first distracter trajectory to testTraj
-                     trajectory(nTargets+1, :, 1:f) = testTraj;
-                     newCoordinates(nTargets+1, :) = trajectory(nTargets+1, :, f);
-                     direction(nTargets+1) = dir;
-
                      % make whichever target was used above be the first target
+                     switchedDisk = t;
                      if t > 1
                         tmp = trajectory(1, :, :);
                         trajectory(1, :, :) = trajectory(t, :, :);
                         trajectory(t, :, :) = tmp;
-                        newCoordinates(1, :) = trajectory(1, :, f);
                         newCoordinates(t, :) = trajectory(t, :, f);
                         tmpdir = direction(1);
                         direction(1) = direction(t);
                         direction(t) = tmpdir;
                      end;
+                     % set first distracter trajectory to testTraj
+                     trajectory(nTargets+1, :, 1:f) = testTraj;
+                     newCoordinates(nTargets+1, :) = trajectory(nTargets+1, :, f);
+                     direction(nTargets+1) = dir;
+                     newCoordinates(1, :) = trajectory(1, :, f)
+                     
+                     if debug
+                        fprintf(1, 'passed check 6, frame %d, kills(5:6) = [%d %d]\n', f, kills(5), kills(6));
+                     end;
                   end;
                end; % if blankDuration(trial) > 0 & f == blankEnd(trial) & trialType(trial) == 2
 
 
-               % set preBlankCoordinates
-               if f == blankStart(trial) - 1
-                  preBlankCoordinates = newCoordinates;
-                  preBlankDirections = direction;
-               end;
-
-                  
                trajectory(:, :, f) = newCoordinates;
                % if f is between minMovieFrames and maxMovieFrames, then start checking to
                % see if the disks are far enough apart. As soon as they are, pick that as our
@@ -394,6 +437,9 @@ for sub = subjects
                      % we're at the end and still haven't found a good end-point
                      deathFlag = 7;
                      kills(deathFlag) = kills(deathFlag) + 1;
+                     if debug
+                        fprintf(1, 'failed at step %d, frame %d\n', deathFlag, f);
+                     end;
                      break;
                   end;
                end;
@@ -409,12 +455,15 @@ for sub = subjects
             trajectory(:, :, (blankStart(trial)):(blankEnd(trial)-1)) = -50;
          end;
          
+         if debug & switchedDisk > 0 
+            fprintf(1, 'Switch disk 1 and %d.\n', switchedDisk); 
+         end;
          paths{trial} = trajectory;
          starts{trial} = startCoordinates;
          clear trajectory;
       end; % for trial = 1:nTrials
       kills
-      save (filename, 'paths', 'starts', 'blankStart', 'movementRate', 'blankDuration', 'nTrials', 'nDisks', 'nTargets', 'predictedMovieFrameDuration', 'movieFrames', 'shiftFactor', 'shiftAmount');
+      save (filename, 'paths', 'starts', 'blankStart', 'movementRate', 'blankDuration', 'nTrials', 'trialType', 'nDisks', 'nTargets', 'predictedMovieFrameDuration', 'movieFrames', 'shiftFactor', 'shiftAmount');
       fprintf(1, 'Finished %s.\n', filename);
       % if badPath
       %    ['ERROR: Too many restarted paths on trial ' num2str(trial)]
