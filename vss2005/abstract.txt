@@ -5,32 +5,32 @@ Fencsik, Horowitz, Place, Klieger, and Wolfe
 
 Observers can successfully track a subset of randomly moving identical
 objects in a multi-element visual tracking (MVT) task, even if all of
-the objects disappear for a 300-500 ms gap.  How observers reacquire
-targets following such a gap reveals what kinds of information they
-maintain for moving objects.  With identical objects, there are only
-two types of information available: each object's present location and
-its path of motion.  We report three sets of experiments intended to
-reveal how observers use these two type of information in MVT.  In one
-set, each object reappeared either at the same position it had
-occupied prior to the gap (no-move; the position expected if observers
-only remembered the targets' pre-gap locations), the position expected
-if each had continued moving at a constant velocity during the gap
-(move; the position expected if observers anticipated reappearance
-position based on pre-gap trajectories), or at a point as far behind
-the no-move position as the move position was ahead of it (rewind).
-We found that tracking accuracy on move and rewind conditions were
-equivalent, supporting the use of location information in target
-reacquisition.  In the second set of experiments, we compared
-performance on the same move condition with one in which none of the
-objects moved before the gap; following the gap, each object
-reappeared displaced by the same distance as in the move condition.
-Tracking performance was better with pre-gap movement than without,
-demonstrating that observers made use of motion information for some
-objects.  In the final set of experiments, we compared a condition
-where all objects disappeared simultaneously to a condition in which
-objects disappeared one at a time.  Our results indicate that two
-distinct mechanisms may be used in these two cases: one for general
-task-postponement, and the other for maintaining object continuity
-during occlusion.
+the objects disappear for a 300-500 ms offset. How observers reacquire
+targets following such an offset reveals what kinds of information
+they maintain for moving objects. With identical objects, there are
+only two types of information available: each object's present
+location and its path of motion. We report three sets of experiments
+intended to reveal how observers use these two types of information in
+MVT. In Experiment 1, objects disappeared and then reappeared at one
+of three locations: at the point of disappearance ("stay" condition"),
+at the position predicted by continued motion during the offset
+("forward"), or at the position predicted if the object had reversed
+direction during the offset ("reverse"). We found that tracking
+accuracy in the stay condition was superior to both the forward and
+reverse conditions, which were equivalent, supporting the use of
+location information in target reacquisition. In Experiment 2, the
+objects always reappeared in the forward position. In one condition,
+the objects moved before they disappeared; in the other, they remained
+stationary and simply reappeared in the forward position. Tracking
+performance was better with pre-offset movement than without,
+demonstrating that observers made use of motion information.
+Experiment 3 replicated Experiment 1, but with a condition in which
+objects disappeared one at a time. In this case, tracking accuracy in
+the forward condition, while still worse than in the stay condition,
+was now superior to that in reverse condition. These results may
+reveal two distinct mechanisms used in MVT: one for general
+task-postponement during simultaneous offset, and the other for
+maintaining object continuity during single-object disappearance or
+occlusion.
 
 Supported by NIH grant MH065576 to TSH.
