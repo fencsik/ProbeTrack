@@ -4,7 +4,7 @@ function pathsFile = stGenerator (sInitial)
 % generates a set of trajectories for use with ShiftTrack experiments
 % Authors: David Fencsik (based on file by Todd Horowitz)
 %
-% $Id: generator.m,v 1.18 2004/02/06 20:25:13 fencsik Exp $
+% $Id: generator.m,v 1.19 2004/02/09 14:03:00 fencsik Exp $
 
 % Modified by David Fencsik
 % started  9/29/2003
