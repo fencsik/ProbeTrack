@@ -1,18 +1,36 @@
-Abstract for VSS 2005
+Target Tracking During Interruption in the Multi-Element Visual
+Tracking Task
+
+Fencsik, Horowitz, Place, Klieger, and Wolfe
 
 Observers can successfully track a subset of randomly moving identical
 objects in a multi-element visual tracking (MVT) task, even if all of
 the objects disappear for a 300-500 ms gap.  By studying how observers
-reacquire targets following such a gap, we might reveal what kinds of
+reacquire targets following such a gap, we can reveal what kinds of
 information they maintain for moving objects.  With identical objects,
 there are only two types of information available: each object's
-present location and its path of motion.  We report two sets of
-experiments intended to reveal how observers use this type of
+present location and its path of motion.  We report three sets of
+experiments intended to reveal how observers use these two type of
 information in MVT.  In one set, all objects reappeared either at the
-same position they had occupied prior to the gap (the position
-expected if observers only remembered the targets' pre-gap locations),
-the position expected if each had continued moving at a constant
-velocity during the gap (the position expected if observers
-anticipated reappearance position based on pre-gap trajectories), or 
+same position they had occupied prior to the gap (no-move; the
+position expected if observers only remembered the targets' pre-gap
+locations), the position expected if each had continued moving at a
+constant velocity during the gap (move; the position expected if
+observers anticipated reappearance position based on pre-gap
+trajectories), or at a point as far behind the no-move position as the
+move position was ahead of it (rewind).  We found that performance on
+move and rewind conditions was equivalent, supporting the use of
+location information in target reacquisition.  In the second set of
+experiments, we compared performance on the same move condition with
+one in which none of the objects moved before the gap; following the
+gap, objects reappeared displaced by the same distance as in the move
+condition.  Tracking performance was better with pre-gap movement than
+without, demonstrating that observers made use of motion information
+for some objects.  In the final set of experiments, we compare a
+condition where all objects disappear simultaneously to a condition in
+which objects disappear and reappear independently.  Our results
+indicate that two distinct mechanisms may be used in these two cases:
+one for general task-postponement, and the other for maintaining
+object continuity during occlusion.
 
 Supported by NIH grant MH065576 to TSH.
