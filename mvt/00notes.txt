@@ -1,0 +1,22 @@
+~/pwd/exp/mvt/00notes.txt: Notes on MVT Experiments
+
+Author: David Fencsik
+$Version$
+
+
+List of Experiments:
+
+Note: Tracking code was moved to a CVS repository starting with
+ShiftTrack3
+
+ShiftTrack3: compare reappearance positions -1, 0, and 1.
+ShiftTrack4: same as above, but with all objects freezing upon
+	     reappearance to eliminate confound.
+ShiftTrack5: ShiftTrack3 with asynchronous disappearance.
+StopTrack1: Basic stoptrack, with moving and static conditions and
+	    tracking load conditions of 1 and 4.
+StopTrack2: StopTrack1 with tracking loads of 1-4.
+StopTrack3: static and moving tracking, 2 and 4 targets, with random
+	    trial length.
+StopTrack4: StopTrack3 with extra practice block (and all new
+	    subjects).
