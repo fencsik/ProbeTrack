@@ -4,7 +4,7 @@ function pathsFile = stGenerator (sInitial)
 % generates a set of trajectories for use with ShiftTrack experiments
 % Authors: David Fencsik (based on file by Todd Horowitz)
 %
-% $Id: generator.m,v 1.6 2004/01/07 20:15:09 fencsik Exp $
+% $Id: generator.m,v 1.7 2004/01/08 20:25:14 fencsik Exp $
 
 % Modified by David Fencsik
 % started  9/29/2003
@@ -64,10 +64,19 @@ screenRect = [0 0 screenX screenY];
 clear screen;
 
 %  major variables
-%frameDuration = refreshesPerFrame/hz;
-edgeZone = imageY;
+
+% timing variables
 maxMovieFrames = ceil(maxTrialDuration*1000/predictedMovieFrameDuration);
 minMovieFrames = ceil(minTrialDuration*1000/predictedMovieFrameDuration);
+slackDuration = maxTrialDuration - minTrialDuration
+slackFrames = ceil(slackDuration*1000/predictedMovieFrameDuration);
+
+
+%frameDuration = refreshesPerFrame/hz;
+edgeZone = imageY;
+
+
+% movement variables
 fullCircle = 24;
 halfCircle = 12;
 % increment = (rate*30)*(frameDuration);
@@ -88,34 +97,34 @@ cxy = newGrids(xdim, ydim, windowX, windowY, screenRect);
 
 for sub = subjects
    %	initTime = GetSecs;
-   kills = 0;
+   kills = [0; 0; 0];
    
-   if withinBlock == 0
-      cycles = nTrialTypes;
-   else
-      fprintf(2, 'ERROR: withinBlock != 0 not yet implemented\n');
-      return
-   end;
+%    if withinBlock == 0
+%       cycles = nTrialTypes;
+%    else
+%       fprintf(2, 'ERROR: withinBlock != 0 not yet implemented\n');
+%       return
+%    end;
    
    for i = 1:cycles
       for prac = [0 1]
-         if (withinBlock == 0)
-            filename = [prefix{i} num2str(sub)];
-            if prac == 0
-               shiftFactor = repmat(trialTypes(i), repetitions, 1);
-            else
-               shiftFactor = repmat(trialTypes(i), practiceRepetitions, 1);
-               filename = [practicePrefix filename];
-            end
-            if (size(blankDurations,1) > 1)
-               blankDuration = blankDurations(i);
-            else
-               blankDuration = blankDurations(1);
-            end;
-            shiftAmount = ceil((shiftFactor-1.0) * blankDuration);
-            nTrials = size(shiftFactor, 1);
-            movieFrames = ones(nTrials, 1) * estMovieFrames + shiftAmount;
-         end; % if (withinBlock == 0)
+         % if (withinBlock == 0)
+         %    filename = [prefix{i} num2str(sub)];
+         %    if prac == 0
+         %       shiftFactor = repmat(trialTypes(i), repetitions, 1);
+         %    else
+         %       shiftFactor = repmat(trialTypes(i), practiceRepetitions, 1);
+         %       filename = [practicePrefix filename];
+         %    end
+         %    if (size(blankDurations,1) > 1)
+         %       blankDuration = blankDurations(i);
+         %    else
+         %       blankDuration = blankDurations(1);
+         %    end;
+         %    shiftAmount = ceil((shiftFactor-1.0) * blankDuration);
+         %    nTrials = size(shiftFactor, 1);
+         %    movieFrames = ones(nTrials, 1) * estMovieFrames + shiftAmount;
+         % end; % if (withinBlock == 0)
          for trial = 1:nTrials
 
             % Procedure for new design: In which a distractor reappears in the pre-gap
@@ -144,8 +153,38 @@ for sub = subjects
             %     than a minimum distance apart, then restart at 20.
             % 90. Done.
 
+            ttype = trialType(trial)
+            
+            % Determine the first invisible blank-interval frame: The gap can occur at 
+            % least 2 seconds after the start of tracking but no later than 1 second 
+            % before the end of tracking:
+            blankInterval(trial,1) = randi((max - ...
+                                           round(2000/predictedMovieFrameDuration)
+                                           
             
             
+            
+            % blankWindow(1) = round(2000/predictedMovieFrameDuration); % blank comes at least 2 seconds after start of tracking
+            % blankWindow(2) = trialFrames - round(1000/predictedMovieFrameDuration); % blank comes no later than 1 seconds before end of tracking 
+            % 
+            % % select start time for blank interval
+            % startBlankTimeRange = blankWindow(2) - blankWindow(1);
+            % if condition == 1
+            %    % set start of blank to the same frame for all disks
+            %    startBlankTime = ones(1, nDisks);
+            %    startBlankTime = startBlankTime * randi(startBlankTimeRange);
+            % else
+            %    % generate different random starting blank frames for each disk
+            %    startBlankTime = randi(startBlankTimeRange, [1, nDisks]);
+            % end
+            % startBlankTime = blankWindow(1) + startBlankTime;
+            % endBlankTime = startBlankTime + blankDuration;
+            % finalFrame = trialFrames; % finalFrame is leftover from dougtrack4
+            % 
+            % % get coordinates
+            % trajectory = paths{trial};
+            % startCoordinates = starts{trial};
+
             % compute trajectories
             deathFlag = 999;
             while deathFlag > 0
