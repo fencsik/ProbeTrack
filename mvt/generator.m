@@ -4,7 +4,7 @@ function pathsFile = generator (sInitial)
 %%% generates a set of trajectories for use with Multiple Object Tracking experiments
 %%% Authors: David Fencsik (based on file by Todd Horowitz)
 %%%
-%%% Version: $Revision: 1.37 $ $Date: 2004/10/05 20:29:13 $ (UTC)
+%%% Version: $Revision: 1.38 $ $Date: 2004/10/06 18:39:18 $ (UTC)
 
 debug = 0;
 stopAfterNKills = 0;
@@ -21,21 +21,24 @@ nDisks = 8;
 nTargets = 4;
 asynchronous = 0; % 1 = asynchronous, 0 = synchronous
 staticReappearance = 1; % 1 = static, 0 = moving; effectively is 0 if asynchronous == 1
-%nTargets = 2;
+responseMode = 3; % 1 = full report, 2 = cue two/pick target, 3 = cue one
+normShift = 1;
+oddShift = 0;
 
-%%%%% Define blocks and independent variables %%%%%
+%%%%% Define blocks %%%%%
 prefix = {'train'; 'prac2A'; 'exp2A'; 'prac2B'; 'exp2B'; 'prac5A'; 'exp5A'; 'prac5B'; 'exp5B'};
-numTrials = {30; 9; 60; 9; 60; 9; 60; 9; 60};
+numTrialsList = {30; 9; 60; 9; 60; 9; 60; 9; 60};
 
 prefix = {'test'};
-numTrials = {2};
+numTrialsList = {2};
 
+%%%%% Define IVs %%%%%
 minListLength = 64; % 8 x 8 design
 numBlocks = length(prefix);
 for b = 1:numBlocks
-   numReps = ceil(numTrials{b} / minListLength);
+   numReps = ceil(numTrialsList{b} / minListLength);
    listLength = minListLength * numReps;
-   if listLength > numTrials{b}
+   if listLength > numTrialsList{b}
       fprintf(2, 'WARNING: Unbalanced trials in block %d\n\n', b);
    end;
    
@@ -55,12 +58,9 @@ for b = 1:numBlocks
    [probe, order] = Shuffle(probe);
    odd = odd(order);
    
-   probeDisk{b} = probe;
-   oddDisk{b}   = odd;
+   probeDiskList{b} = probe;
+   oddDiskList{b}   = odd;
 end;
-
-return;
-
 
 fprintf(2, 'Ready to generate %d block(s) for %d subject(s).\n', numBlocks, length(subjects));
 fprintf(2, 'Press any key to begin, ''q'' to exit...\n');
@@ -88,15 +88,6 @@ clear screen;
 predictedMovieFrameDuration = 13.33;
 maxMovieFrames = ceil(maxTrialDuration*1000/predictedMovieFrameDuration);
 minMovieFrames = ceil(minTrialDuration*1000/predictedMovieFrameDuration);
-%%% slackDuration = maxTrialDuration - minTrialDuration;
-%%% slackFrames = ceil(slackDuration*1000/predictedMovieFrameDuration);
-%%% blankWindowStart = round(2000/predictedMovieFrameDuration);
-%%% blankWindowEnd   = minMovieFrames - round(1000/predictedMovieFrameDuration);
-%%% if blankWindow(1) >= blankWindow(2)
-%%%    'ERROR: Negative blank window requested.'
-%%%    return;
-%%% end;
-
 
 % size/distance variables
 %MainWindow = screen(0, 'OpenWindow', [], [], 8);
@@ -134,22 +125,20 @@ windowX = 100;windowY = 100;% each cell is 125 by 125 pixels
 %%cxy = newGrids(xdim, ydim, windowX, windowY, screenRect);
 
 
-nBlocks = size(trialTypes, 1);
 badPath = 1;
 for sub = subjects
    %	initTime = GetSecs;
    restarts = 0;
    
-   for block = 1:nBlocks
-      
+   for block = 1:numBlocks
       filename = [prefix{block} num2str(sub)];
-      [trialType index] = Shuffle(trialTypes{block});
-      movementRate = movementRates{block}(index);
-      blankDuration = blankDurations{block}(index);
-      nTrials = size(trialType, 1);
+      numTrials = numTrialsList{block};
 
+      probeDisk = probeDiskList{block};
+      oddDisk = oddDiskList{block};
+      
       % determine trial length (in frames)
-      movieFrames = minMovieFrames + Randi(maxMovieFrames - (minMovieFrames-1), [nTrials,1]) - 1;
+      movieFrames = minMovieFrames + Randi(maxMovieFrames - (minMovieFrames-1), [numTrials,1]) - 1;
 
       % movement vector length
       targetMagnitude = (movementRate*30)*(predictedMovieFrameDuration)/1000;
@@ -158,7 +147,7 @@ for sub = subjects
       kills = zeros(1,10);
       badTurns = 0;
 
-      for trial = 1:nTrials
+      for trial = 1:numTrials
          % Procedure for ShiftTrack5, which implements the basic shifttrack
          % manipulations with asynchronous disappearance.
          %
@@ -173,10 +162,6 @@ for sub = subjects
          % 6. Reset each disk's position during its gap to an off-screen
          %    location.
 
-         if debug
-            [movieFrames(trial),  blankStart(trial), blankEnd(trial)]
-         end;
-         
          blankWindowStart = round(2000/predictedMovieFrameDuration);
          blankWindowEnd   = movieFrames(trial) - round(1000/predictedMovieFrameDuration);
          if asynchronous == 1
@@ -185,21 +170,25 @@ for sub = subjects
                 blankWindowStart - 1;
          else
             if staticReappearance == 1
-               % The blank interval occurs blankDuration(trial) frames before the
+               % The blank interval occurs blankDuration frames before the
                % last frame
-               blankStart = repmat(movieFrames(trial) - blankDuration(trial), [nDisks, 1]);
+               blankStart = repmat(movieFrames(trial) - blankDuration, [nDisks, 1]);
             else
                % Pick one random blank interval for all disks
                blankStart = repmat(Randi(blankWindowEnd - blankWindowStart + 1, 1) + blankWindowStart - 1, ...
                                    [nDisks, 1]);
             end;
          end;
-         blankEnd = blankStart + blankDuration(trial);
+         blankEnd = blankStart + blankDuration;
+         
+         if debug
+            [movieFrames(trial),  blankStart, blankEnd]
+         end;
          
          trajectory = zeros(nDisks, 2, movieFrames(trial));
 
          % set up vectors of individual signal and noise magnitudes
-         magnitude = ones(nDisks, 1) * targetMagnitude(trial); 
+         magnitude = ones(nDisks, 1) * targetMagnitude; 
          % noisy movement is not being used here:
          % noiseMagnitude = zeros(nDisks, 1); 
 
@@ -211,7 +200,7 @@ for sub = subjects
          deathFlag = 999;
          while deathFlag > 0
             % quit if we've been going for too long:
-            if stopAfterNKills > 0 & sum(kills(1:(size(kills,2)-1))) > (stopAfterNKills*nTrials)
+            if stopAfterNKills > 0 & sum(kills(1:(size(kills,2)-1))) > (stopAfterNKills*numTrials)
                kills = [1:(size(kills, 2)); kills]
                fprintf(1, 'Too many kills.\n');
                fprintf(1, 'Last kill = %d\n', deathFlag);
@@ -276,7 +265,7 @@ for sub = subjects
             oldCoordinates = startCoordinates;
 
             direction = Randi(fullCircle, [nDisks 1]); % initial random directions in 24 degree increments
-            magnitude = ones(nDisks, 1) * targetMagnitude(trial);
+            magnitude = ones(nDisks, 1) * targetMagnitude;
             noiseMagnitude = zeros(nDisks, 1);
 
             f = 2;
@@ -300,8 +289,8 @@ for sub = subjects
 
                % make sure disks don't bounce anywhere between the -1 and 1 positions
                % (but only check those in their blank interval
-               if blankDuration(trial) > 0 & any(f > blankStart - blankDuration(trial) & f <= blankEnd)
-                  disks = (f > blankStart - blankDuration(trial) & f <= blankEnd);
+               if blankDuration > 0 & any(f > blankStart - blankDuration & f <= blankEnd)
+                  disks = (f > blankStart - blankDuration & f <= blankEnd);
                   if any(bounce(disks) > 0)
                      deathFlag = 3;
                      kills(deathFlag) = kills(deathFlag) + 1;
@@ -313,21 +302,21 @@ for sub = subjects
                end;
 
 
-               %% % make sure disks are a mindistance apart on last visible pre-gap frame
-               %% if blankDuration(trial) > 0 & f == blankStart(trial) - 1
-               %%    if any(InterDiskDistances(newCoordinates) < bufferZone)
-               %%       deathFlag = 4;
-               %%       kills(deathFlag) = kills(deathFlag) + 1;
-               %%       if debug
-               %%          fprintf(1, 'failed at step %d, frame %d\n', deathFlag, f);
-               %%       end;
-               %%       break;
-               %%    end;
-               %% end;
+               % make sure disks are a mindistance apart on last visible pre-gap frame
+               if blankDuration > 0 & f == blankStart - 1
+                  if any(InterDiskDistances(newCoordinates) < bufferZone)
+                     deathFlag = 4;
+                     kills(deathFlag) = kills(deathFlag) + 1;
+                     if debug
+                        fprintf(1, 'failed at step %d, frame %d\n', deathFlag, f);
+                     end;
+                     break;
+                  end;
+               end;
 
 
                %% % set preBlankCoordinates
-               %% if blankDuration(trial) > 0 & f == blankStart(disk) - 1
+               %% if blankDuration > 0 & f == blankStart(disk) - 1
                %%    preBlankCoordinates = newCoordinates;
                %%    preBlankDirections = direction;
                %% end;
@@ -335,20 +324,28 @@ for sub = subjects
 
                % At the end of each disk's blank interval, adjust its reappearance
                % position according to the current trialType
-               if blankDuration(trial) > 0 & any(f == blankEnd)
+               if blankDuration > 0 & any(f == blankEnd)
                   disks = (f == blankEnd);
-                  if trialType(trial) == -1
-                     % move to position -1
-                     trajectory(disks, :, f) = trajectory(disks, :, f - (2 * blankDuration(trial)) - 1);
-                  elseif trialType(trial) == 0
-                     % move to position 0
-                     trajectory(disks, :, f) = trajectory(disks, :, f - blankDuration(trial) - 1);
-                  elseif trialType(trial) == 1
-                     % move to position 1
-                     % nothing to do
-                  else
-                     ['ERROR: unknown trial type ', num2str(trialType), ' requested.']
-                     return;
+                  for d = disks
+                     if d == oddDisk(trial)
+                        shift = oddShift;
+                     else
+                        shift = normShift;
+                     end;
+
+                     if shift == -1
+                        % move to position -1
+                        trajectory(d, :, f) = trajectory(d, :, f - (2 * blankDuration) - 1);
+                     elseif shift == 0
+                        % move to position 0
+                        trajectory(d, :, f) = trajectory(d, :, f - blankDuration - 1);
+                     elseif shift == 1
+                        % move to position 1
+                        % nothing to do
+                     else
+                        ['ERROR: unknown trial type ', num2str(trialType), ' requested.']
+                        return;
+                     end;
                   end;
                end;
 
@@ -373,25 +370,26 @@ for sub = subjects
             end; % while f <= movieFrames(trial)
          end; % while deathFlag > 0
          
-         if blankDuration(trial) > 0
+         if blankDuration > 0
             for d = 1:nDisks
                trajectory(d, :, (blankStart(d)):(blankEnd(d)-1)) = -100;
             end;
          end;
          
          paths{trial} = trajectory;
-         starts{trial} = startCoordinates;
          clear trajectory;
-      end; % for trial = 1:nTrials
+      end; % for trial = 1:numTrials
 
-      [1:(size(kills,2)); kills]
-      save (filename, 'paths', 'starts', 'blankStart', 'movementRate', 'blankDuration', 'nTrials', 'trialType', 'nDisks', 'predictedMovieFrameDuration', 'movieFrames');
-      fprintf(1, 'Finished %s.\n', filename);
-   
-   end; % for block = 1:nBlocks
+      save (filename, 'paths', 'movementRate', 'blankStart', 'blankDuration', ...
+            'nTargets', 'probeDisk', 'oddDisk', 'normShift', 'oddShift', ...
+            'asynchronous', 'responseMode', 'predictedMovieFrameDuration');
+
+      fprintf(2, '***** Finished %s *****\nKills by category:\n', filename);
+      disp([1:(size(kills,2)); kills]);
+   end; % for block = 1:numBlocks
 end; % for sub = subjects
 
-etime(clock, starttime)
+fprintf(2, '\nElapsed time = %1.2f sec\n\n', etime(clock, starttime));
 
 
 function newCoordinates = computeCoordinates(oldCoordinates, theta, magnitude)
