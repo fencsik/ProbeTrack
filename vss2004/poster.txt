@@ -1,4 +1,4 @@
-%%% $Id: poster.txt,v 1.2 2004/04/11 03:14:57 fencsik Exp $
+%%% $Id: poster.txt,v 1.3 2004/04/13 20:22:17 fencsik Exp $
 
 * Title
 
@@ -53,8 +53,8 @@ separate stimuli (Pylyshyn & Storm, 19??; etc).
 
 Performance of the MVT task is possible even if the stimuli disappear
 for a 300-400 ms gap (e.g., Alvarez, Wolfe, Horowitz, & Arsenio, 2001
-{VSS01}; ??? & Pylyshyn, VSS03). How do people remember where the
-targets were? When they resume tracking, how do they match visible
+{VSS01}; Keane & Pylyshyn, 2003 {VSS03}). How do people remember where
+the targets were? When they resume tracking, how do they match visible
 stimuli with targets in memory? Here, we test two hypotheses about the
 information retained about targets when they disappear and the
 processes used to reacquire them when they reappear.
@@ -87,12 +87,7 @@ interval.
 * Manipulations of Reappearance Location
 
 In the first two experiments, we manipulated where the stimuli
-reappeared following the gap. Each stimulus is at some point p_0 in
-the last visible pre-gap frame. If it moves with constant velocity
-during the gap (even though it's invisible), then it should reappear
-at point p_1; where that is depends on the velocity of the stimulus
-and the duration of the blank interval. In principle, the stimulus
-could actually reappear anywhere along 
+reappeared following the gap. 
 
 If participants use the pre-gap target
 locations to find targets after the gap, then tracking accuracy should
@@ -117,3 +112,18 @@ increase
 * Conclusions
 
 Directions for Future Research
+
+Refs:
+
+
+
+
+Old Stuff
+
+Each stimulus is at some point p_0 in
+the last visible pre-gap frame. If it moves with constant velocity
+during the gap (even though it's invisible), then it should reappear
+at point p_1; where that is depends on the velocity of the stimulus
+and the duration of the blank interval. In principle, the stimulus
+could actually reappear anywhere along 
+
