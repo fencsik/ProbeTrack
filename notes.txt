@@ -284,3 +284,17 @@ conditions (ShiftTrack5).
 
 Planned study: top-down influences on reacquisition strategies
 
+
+February 11, 2005:
+
+Been a while...
+
+Currently working on ShiftTrack7, which studies the influences of
+top-down influences on reacquisition strategies, and FlashTrack1,
+which looks at the effects of luminance shifts on tracking.
+
+Last night, I remembered that I need a within-subject comparison of
+asynch vs. synch performance, so let's put together ShiftTrack9 for
+this purpose.
+
+

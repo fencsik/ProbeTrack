@@ -2,6 +2,8 @@
 
 $LastChangedDate$
 
+* flashtrack1: first FlashTrack study with either one target or one
+  distractor flashing
 
 * shifttrack2: compare tracking performance across no-disappearance,
   shift 0, and shift 1 conditions, with movement speeds of 6 and 10
@@ -12,6 +14,7 @@ $LastChangedDate$
   with 2 vs. 5 targets, and static reappearance
 * shifttrack5: shifttrack3 with asynchronous disappearance
 * shifttrack6: shifttrack4 with a within-block design
+* shifttrack7: odd-one-out design
 * shifttrack8: shifttrack6 with 1 vs. 4 targets
 
 * stoptrack1: compare performance on moving and static trials with 1
