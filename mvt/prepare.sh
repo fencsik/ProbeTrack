@@ -2,16 +2,16 @@
 # prepare.sh: 
 # moves experiment files to the appropriate directory so the RAs can access them
 # 
-# $Id: prepare.sh,v 1.3 2004/05/11 16:58:44 fencsik Exp $
+# $Id: prepare.sh,v 1.4 2004/06/01 19:47:32 fencsik Exp $
 
-PUBLIC_DIR=~/Public/Experiments/ShiftTrack4
+PUBLIC_DIR=~/Public/Experiments/StopTrack3
 
 GENERATOR_IN=generator.m
 TRACK_IN=track.m
 TRAIN_IN=train.m
-GENERATOR_OUT=ShiftTrack4Gen.m
-TRACK_OUT=ShiftTrack4.m
-TRAIN_OUT=mvt.m
+GENERATOR_OUT=StopTrack3Gen.m
+TRACK_OUT=StopTrack3.m
+TRAIN_OUT=StopTrack3Train.m
 
 PATH_FILES="*.mat"
 
