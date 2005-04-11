@@ -48,7 +48,7 @@ do.stoptrackresults <- function() {
    axis(2, cex.axis=.8, lwd=axis.lwd)
    for (i in 2:1) {
       lines(x, dp[, i], col=col[i], lwd=line.lwd)
-      points(x, dp[, i], pch=pch[i], col=col[i], bg=pt.bg, lwd=pt.lwd, pt.lwd=1, cex=pt.cex)
+      points(x, dp[, i], pch=pch[i], col=col[i], bg=pt.bg, lwd=pt.lwd, cex=pt.cex)
    }
 
    ##text(3, .96, "moving", cex=1)

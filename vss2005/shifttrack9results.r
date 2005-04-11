@@ -42,7 +42,7 @@ do.shifttrack9results <- function() {
 
    lines(x, dp[, 1], col=col[1], lwd=line.lwd)
    lines(x, dp[, 2], col=col[2], lwd=line.lwd)
-   points(x, dp[, 1], pch=pch[1], col=col[1], bg=pt.bg, lwd=pt.lwd, pt.lwd=1, cex=pt.cex)
+   points(x, dp[, 1], pch=pch[1], col=col[1], bg=pt.bg, lwd=pt.lwd, cex=pt.cex)
    points(x, dp[, 2], pch=pch[2], col=col[2], bg=pt.bg, lwd=pt.lwd, cex=pt.cex)
    
    axis(1, x, c("Rewind", "No-Move", "Move"), cex.axis=.8, lwd=axis.lwd)
