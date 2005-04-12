@@ -11,13 +11,16 @@ do.shifttrack4results <- function() {
    }
    on.exit(exit.function())
 
-   col <- rep("black", 2)
-   pt.bg <- rgb(163, 195, 128, max=255)
+   col <- c(rgb(41, 51, 76, max=255), rgb(196, 229, 153, max=255))
+     ##c(rgb(65, 76, 51, max=255), rgb(196, 229, 153, max=255))
+   pt.col <- col
+   pt.bg <- col #rgb(163, 195, 128, max=255)
    pch <- c(24, 21)
-   pt.cex <- .8
+   pt.cex <- 2
    line.lwd <- 6
-   pt.lwd <- 3
+   pt.lwd <- 1
    axis.lwd <- 4
+   col.plot <- "black"#rgb(163, 195, 128, max=255)
 
    if(!file.exists(infile))  stop("cannot open file ", infile)
    load(infile)
@@ -33,22 +36,22 @@ do.shifttrack4results <- function() {
    ## dps <- .002
 
    pdf(file = pdffile, width = 8, height = 8, horiz=F, family = "Helvetica", pointsize = 30)
-   opar <- par(las=1, bty="o", pty="s", mar=c(5,4,2,2) + .1, xpd=T)#, bg=rgb(128,141,255, max=255))
+   opar <- par(las=1, bty="o", pty="s", mar=c(5,4,2,2) + .1, xpd=T,
+               col.axis=col.plot, col.lab=col.plot)#, bg=rgb(128,141,255, max=255))
 
    x <- -1:1
    plot(x, dp[, 1], type="n", axes=F, ylim=c(.6,1),
-        xlab="Reappearance Position", ylab="Proportion Correct")
+        xlab="reappearance position", ylab="")
 
-   lines(x, dp[, 1], col=col[1], lwd=line.lwd)
-   lines(x, dp[, 2], col=col[2], lwd=line.lwd)
-   points(x, dp[, 1], pch=pch[1], col=col[1], bg=pt.bg, lwd=pt.lwd, cex=pt.cex)
-   points(x, dp[, 2], pch=pch[2], col=col[2], bg=pt.bg, lwd=pt.lwd, cex=pt.cex)
-   
-   axis(1, x, c("Rewind", "No-Move", "Move"), cex.axis=.8, lwd=axis.lwd)
-   axis(2, cex.axis=.8, lwd=axis.lwd)
+   for (i in 1:2) {
+      lines(x, dp[, i], col=col[i], lwd=line.lwd)
+      points(x, dp[, i], pch=pch[i], col=pt.col[i], bg=pt.bg[i], lwd=pt.lwd, cex=pt.cex)
+   }   
+   axis(1, x, c("rewind", "no-move", "move"), cex.axis=.8, lwd=axis.lwd, col=col.plot)
+   axis(2, cex.axis=.8, lwd=axis.lwd, col=col.plot)
 
-   legend(.25, 1.1, c("2 Targets", "5 Targets"), bty="n", y.intersp=1.3,
-          pch=pch, cex=.8, pt.lwd=pt.lwd, col=col, pt.bg = pt.bg, pt.cex=pt.cex)
+   legend(.4, 1.05, c("2 targets", "5 targets"), bty="n", y.intersp=1.3, text.col=col.plot,
+          pch=pch, cex=.8, pt.lwd=pt.lwd, col=pt.col, pt.bg = pt.bg, pt.cex=pt.cex)
 }
 
 do.shifttrack4results()
