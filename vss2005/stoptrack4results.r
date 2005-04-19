@@ -40,14 +40,15 @@ do.stoptrackresults <- function() {
    dp <- tapply(dt$pcor, list(dt$ntargets, dt$movetype), mean)
 
    pdf(file = pdffile, width = 8, height = 8, horiz = F, family = "Helvetica", pointsize = 30)
-   opar <- par(las=1, pty="s", bty="n", mar=c(5,4,2,2) + .1, xpd=T,
+   opar <- par(las=1, pty="s", bty="n", mar=c(5,4,2,2) + .1, xpd=T, mgp=c(2.5, 0.8, 0.3),
                col.axis=col.plot, col.lab=col.plot)
 
    x <- as.numeric(dimnames(dp)[[1]])
    matplot(x, dp, type="n", axes=F, xlim=c(2,4), ylim=c(.6, 1),
            xlab="number of targets", ylab="")
 
-   axis(1, seq(2, max(x), by=1), cex.axis=.8, lwd=axis.lwd, col=col.plot)
+   axis(1, seq(2, max(x), by=1), labels=F, cex.axis=.8, lwd=axis.lwd, col=col.plot)
+   axis(1, x, cex.axis=.8, lwd=axis.lwd, col=col.plot)
    axis(2, seq(.6, 1, by=.1), cex.axis=.8, lwd=axis.lwd, col=col.plot)
    for (i in 2:1) {
       lines(x, dp[, i], col=col[i], lwd=line.lwd)

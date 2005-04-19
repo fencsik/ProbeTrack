@@ -36,7 +36,7 @@ do.shifttrack9results <- function() {
    ## dps <- .002
 
    pdf(file = pdffile, width = 8, height = 8, horiz=F, family = "Helvetica", pointsize = 30)
-   opar <- par(las=1, bty="o", pty="s", mar=c(5,4,2,2) + .1, xpd=NA,
+   opar <- par(las=1, pty="s", bty="n", mar=c(5,4,2,2) + .1, xpd=NA, mgp=c(2.5, 0.8, 0.3),
                col.axis=col.plot, col.lab=col.plot)#, bg=rgb(128,141,255, max=255))
 
    x <- -1:1
