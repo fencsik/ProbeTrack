@@ -298,3 +298,38 @@ asynch vs. synch performance, so let's put together ShiftTrack9 for
 this purpose.
 
 
+September 26, 2005:
+
+Once again, it's been a while...
+
+We seem to have finished of the ShiftTrack and StopTrack studies for
+the time being, at least until we get some reviews back on the
+submitted manuscript.
+
+In the meantime, I have been focusing on SpeedTrack and SpeedSearch
+studies, to see if velocity differences that aid search also aid
+tracking.  So far, we have replicated Ivry & Cohen's (1992) result in
+a search task with stimuli that move randomly and bounce off walls,
+and shown that a similar fast-moving benefit exists in MOT.  We
+should probably replicate with different set of speeds.
+
+What we really need in this direction is a good theory of what's going
+on.  I am developing a model of MOT (see below), but it's not directly
+relevant at the moment.  Generally, what we think is happening with
+the speed manipulation is that the fast-moving stimuli are more
+salient than slow-moving stimuli, which aids both tasks.  We need to
+pin our thoughts down here, though.  What we are really interested in
+is whether there is a general-purpose, "early", low-level, automatic,
+parallel extraction of a basic set of perceptual features which then
+is available to any visual task, and that we can detect the use of
+its output in a variety of perceptual tasks.
+
+I am also starting to develop a toy model of the MOT task that
+assumes people only track one object at a time, but have markers
+available to store the locations of unattended objects.  The idea is
+that an attentional process is bouncing around from one target to the
+other, encoding its present location and retaining that location.
+When it returns to a previously marked location, it can search around
+that spot, find the closest stimulus, assume it is a target, and mark
+that location.  This is a complicated process, but it doesn't require
+four independent visual indexes or FINSTs to support tracking.

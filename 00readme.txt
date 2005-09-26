@@ -2,6 +2,17 @@
 
 $LastChangedDate$
 
+Code:
+
+* Search: speedsearch
+* SpeedTrack: speedtrack
+* colortrack:
+* noahtrack:
+* repulse: flashtrack
+
+
+Experiments:
+
 * flashtrack1: first FlashTrack study with either one target or one
   distractor flashing
 
@@ -25,3 +36,23 @@ $LastChangedDate$
   targets
 * stoptrack4: replicates stoptrack3 with a new set of naive subjects
 
+* switchtrack1: one distractor reappears post-gap in a location that a
+  target had occupied prior to the gap
+
+* speedtrack01 (NIA): pilot speed-tracking study, with 4/8 targets;
+  incomplete
+* speedtrack02: first actual speed-tracking tracking study (paired
+  with speedsearch04)
+
+* speedsearch01: first conveyor belt study
+* speedsearch02 (NIA): conveyor belt study with background grid
+* speedsearch03 (NIA): conveyor belt study with vertical noise
+* speedsearch04: first study with MOT-like motion (paired with
+  speedtrack02)
+* speedsearch05 (NIA): aborted MOT-like search with limited exposure
+  duration
+* speedsearch06: MOT-like search with staircased exposure durations
+
+
+
+NIA = not in archive
