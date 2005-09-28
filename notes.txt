@@ -333,3 +333,19 @@ When it returns to a previously marked location, it can search around
 that spot, find the closest stimulus, assume it is a target, and mark
 that location.  This is a complicated process, but it doesn't require
 four independent visual indexes or FINSTs to support tracking.
+
+
+September 28, 2005:
+
+Yesterday, I had the idea (inspired by TSH's concluding paragraph to
+the OPAM2005 summary) to test whether differences in velocity lead to
+texture segmentation, and whether there is an analagous asymmetry in
+such a task.  Theoretically, this is appealing because search tasks
+depend on guidance, in addition to early perceptual processes, whereas
+texture segmentation is thought to rely only on early processes.
+Empiricially, this potentiall gives us a second confirmation of the
+asymmetry, and in a case that doesn't involve search.  As an added
+benefit, we can test between Ivry & Cohen and Rosenholtz's
+explanations: Ivry & Cohen predict that the speed asymmetry should
+show up in texture segmentation as well; Rosenholtz predicts it
+should show up only if stimuli move in multiple directions.
