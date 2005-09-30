@@ -349,3 +349,18 @@ benefit, we can test between Ivry & Cohen and Rosenholtz's
 explanations: Ivry & Cohen predict that the speed asymmetry should
 show up in texture segmentation as well; Rosenholtz predicts it
 should show up only if stimuli move in multiple directions.
+
+
+September 29, 2005:
+
+Re: texture segmentation and movement speed.  Does an asymmetry even
+make sense in this case? You are segmenting things moving at one
+speed from things moving at a different speed, so how could there be
+an asymmetry?  In order to expect one, we must assume that
+segmentation involves picking a region out of a background.  This
+suggests that we should prefer Jeremy's method of identifying the
+orientation of a patch instead of Todd's method of a 4AFC
+identification of the quadrant the patch is located in.  The former
+method requires that you pick out a target region from a distractor
+region, so an asymmetry is at least conceivable.
+
