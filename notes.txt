@@ -1,7 +1,7 @@
 Tracking Project Notes and Musings
 by David Fencsik
 
-$Id$
+$LastChangedDate$
 
 December 16, 2003:
 
@@ -364,3 +364,64 @@ identification of the quadrant the patch is located in.  The former
 method requires that you pick out a target region from a distractor
 region, so an asymmetry is at least conceivable.
 
+
+October 4, 2005:
+
+One of the chief problems that has cropped up in the speedtrack
+studies is an alternate explanation of the asymmetry in the tracking
+data.  Our preferred explanation is the "common mechanism"
+explanation, which claims that a common, early stage of perceptual
+processing enables efficient search for and tracking of fast-moving
+targets.  The troublesome alternative explanation is the
+"efficient-search" explanation, which claims that search is efficient
+for fast targets, which leads to more efficient target recovery on
+fast-target MOT trials than on slow-target MOT trials.  We know that
+fast targets among slow distractors are easier to find than slow
+targets among fast distractors based on Ivry & Cohen and our own
+findings.  So, in tracking, when subjects lose targets during the
+tracking interval and attempt to recover them, it is easier to find
+the fast targets than to find the slow targets simply because the
+search is more efficient.  The efficient-search explanation is much
+less interesting than one that claims a common stage of processing
+underlies both tracking and search.  (Note that this alternative
+hypothesis is different from the claim that the tracking task is
+easier because the stimuli are discriminable based on speed: this
+claim explains the advantage of target-fast and target-slow trials
+over the same-speed trials, but doesn't explain the advantage of
+target-fast trials over target-slow trials.)
+
+So, how do we test the two alternate explanations?  During an extended
+tracking interval, Os should, on average, lose more targets as more
+time passes.  Thus, if there is a mechanism for recovering them, then
+that mechanism should be used more frequently as the tracking interval
+is lengthened.  If the recovery mechanism is more efficient in one
+condition than in a second condition, then the difference in tracking
+accuracy between conditions should increase as tracking continues.
+According to the efficient-search explanation, then, the difference
+in accuracy between fast-target trials (with efficient target
+recovery) and slow-target trials (with inefficent target recovery)
+should increase as trial duration increases.
+
+Thus, in our next speedtrack experiment (speedtrack4), we will
+manipulate tracking interval and compare performance on fast-target,
+slow-target, and mixed trials.  (We'll drop all-slow and all-fast
+trials to simplify the design, but keep mixed in order to have a
+control condition.  Mixed trials seem a better control condition than
+all-slow and all-fast because they still have variable speed, but no
+speed-based target-distractor segregation.)  This experiment was
+TSH's idea on October 3, 2005.
+
+The main problem with this solution is that, if the common mechanism
+explanation is correct and the efficient-search explanation is
+incorrect, then we will find a null interaction between condition and
+trial duration---these are never considered very exciting.  Another
+problem is that both explanations could be correct, in which case we
+would find an interaction---the saving grace here is that the
+efficient-search explanation cannot account for differences between
+fast- and slow-target at very short tracking intervals.  However, we
+need to think of a study in which the common mechanism explanation
+predicts an effect that differs from the one predicted by the
+efficient-search explanation.  One possibility is to look for
+dual-task costs between the speed-tracking and an separate, concurrent
+search task.  Again, the problem here is that the common mechanism
+explanation predicts no effect (i.e., no dual-task interference).
