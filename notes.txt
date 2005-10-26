@@ -337,7 +337,7 @@ four independent visual indexes or FINSTs to support tracking.
 
 September 28, 2005:
 
-Yesterday, I had the idea (inspired by TSH's concluding paragraph to
+Yesterday, I had the idea (inspired by Todd's concluding paragraph to
 the OPAM2005 summary) to test whether differences in velocity lead to
 texture segmentation, and whether there is an analagous asymmetry in
 such a task.  Theoretically, this is appealing because search tasks
@@ -409,7 +409,7 @@ trials to simplify the design, but keep mixed in order to have a
 control condition.  Mixed trials seem a better control condition than
 all-slow and all-fast because they still have variable speed, but no
 speed-based target-distractor segregation.)  This experiment was
-TSH's idea on October 3, 2005.
+Todd's idea on October 3, 2005.
 
 The main problem with this solution is that, if the common mechanism
 explanation is correct and the efficient-search explanation is
@@ -425,3 +425,41 @@ efficient-search explanation.  One possibility is to look for
 dual-task costs between the speed-tracking and an separate, concurrent
 search task.  Again, the problem here is that the common mechanism
 explanation predicts no effect (i.e., no dual-task interference).
+
+
+October 26, 2005: Notes following my practice talk for OPAM
+
+We discussed some experimental ideas during and following my practice
+talk today.  Todd realized that I should have run speedtrack04---which
+looked at the speed tracking asymmetry as tracking duration
+increase---with both all-slow and all-fast conditions as controls
+(instead of the mixed condition).  This is because the efficient
+search explanation (see previous posting) predicts a growing advantage
+of slow-targets over all-slow, because in the slow-targets condition
+you can search for lost targets and recover them, whereas you cannot
+do so in the all-slow condition.  We observed no difference between
+these two conditions in the original speedtrack study, but they may
+become more apparent at longer tracking durations.
+
+Evan also suggested an alternative explanation.  It's possible that
+the fast-moving stimuli "grab" attention in all tracking conditions.
+This would make tracking easier in the fast-targets conditions, but
+would cause attention to keep getting pulled away in the slow-targets
+condition.  Note that this isn't the same as the common mechanism
+explanation, which claims that targets are more easily segregated from
+distractors when they're moving faster than when they're moving
+slower, but in both cases you're able to group by speed.  Evan
+suggested testing this by varying the number of distractors: if his
+hypothesis (which he doesn't like) is right, then accuracy should
+decline with increasing distractors in the slow-targets condition,
+but not in the fast-targets condition (where the distractors are
+readily filtered).  I need to make sure that this is a different
+prediction from what the common mechanism makes.
+
+We also discussed ways of improving the talk, mostly oriented towards
+reducing the background and demos and spending more time discussing
+all the potential pitfalls of this experimental task (e.g., Os are
+not tracking, they're just picking up the fast-moving targets at the
+end of the trial) and setting up strong expectations for the results
+we didn't get.  Unfortunately, I have to go home, so I can't write
+more on improving the talk just now...
