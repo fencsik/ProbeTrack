@@ -53,6 +53,7 @@ Experiments:
   duration
 * speedsearch06: MOT-like search with staircased exposure durations
 
-
+* winsearch1: speed-search with windows
+* winsearch2: winsearch1 with drop-shadows for depth
 
 NIA = not in archive
