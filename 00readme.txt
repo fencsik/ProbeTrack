@@ -4,7 +4,7 @@ $LastChangedDate$
 
 Code:
 
-* Search: speedsearch
+* Search: speedsearch, winsearch, and acceleration search
 * SpeedTrack: speedtrack
 * colortrack:
 * noahtrack:
