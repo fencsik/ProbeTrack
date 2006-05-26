@@ -4,11 +4,11 @@ function generator2
 % 
 % $LastChangedDate$
 
-fileName = 'StopTrack6Paths.mat';
+experiment = 'StopTrack6';
 backupFile = 'backup.mat';
 
 % basic parameters
-nPaths = 2;
+nPaths = 10;
 nDisks = 10;
 durationFlag = 1; % 1 = range of durations; 2 = discrete durations, with nPaths in each
 startsFlag = 2; % 1 = start from grid; 2 = start from random positions
@@ -30,6 +30,8 @@ diskRadius = 20; % pixels
 % initialize RNG
 rngseed = sum(100*clock);
 rand('state',rngseed);
+
+fileName = sprintf('%sPaths', experiment);
 
 % set up durations
 if durationFlag == 1
@@ -61,6 +63,10 @@ errorCodes = {'Bounced during blank', ...
               'Too close at trial end'};
 errorCount = zeros(1, nErrors);
 
+% set up progress reporting
+stopEvery = ceil(nPaths / 50);
+startTime = GetSecs;
+
 for p = 1:nPaths
    regenerateLocations = 0;
    badPath = 1;
@@ -68,9 +74,6 @@ for p = 1:nPaths
    while badPath
       badPath = 0;
       counter = counter + 1;
-      if mod(counter, 100) == 0
-         disp(errorCount);
-      end
       if regenerateLocations > 0
          regenerateLocations = regenerateLocations - 1;
          pos = lastGoodStartingPositions;
@@ -139,15 +142,28 @@ for p = 1:nPaths
    end % while badPath
    startPositions(:, :, p) = lastGoodStartingPositions;
    startVelocities(:, :, p) = lastGoodStartingVelocities;
+   
+   if mod(p, stopEvery) == 0
+      te = GetSecs - startTime;
+      teh = floor(te / 3600); tem = floor(te / 60 - teh * 60); tes = te - teh * 3600 - tem * 60;
+      tr = te * (nPaths - p) / p;
+      trh = floor(tr / 3600); trm = floor(tr / 60 - trh * 60); trs = tr - trh * 3600 - trm * 60;
+      fprintf('%4d/%-4d: Elapsed = %02d:%02d:%02.0f, Remaining = %02d:%02d:%02.0f', ...
+              p, nPaths, teh, tem, tes, trh, trm, trs);
+      fprintf('  [%5d %5d %5d]\n', errorCount);
+   end
 end % for p = 1:nPaths
 
+te = GetSecs - startTime;
+teh = floor(te / 3600); tem = floor(te / 60 - teh * 60); tes = te - teh * 3600 - tem * 60;
+fprintf('Total Elapsed Time = %02d:%02d:%02.0f\n', teh, tem, tes);
+      
 % report errors
+fprintf('\nError counts by type:\n');
 for e = 1:nErrors
    fprintf('%s : %d\n', errorCodes{e}, errorCount(e));
 end
 
-save(fileName, 'startPositions', 'startVelocities', 'pathDurations', 'blankDuration', ...
-     'velocity', 'rectDisplay', 'bufferZone', 'diskRadius', ...
+save(fileName, 'experiment', 'startPositions', 'startVelocities', 'pathDurations', 'blankDuration', ...
+     'velocity', 'rectDisplay', 'rectBoundary', 'bufferZone', 'diskRadius', ...
      'durationFlag', 'startsFlag', 'blankFlag');
-
-
