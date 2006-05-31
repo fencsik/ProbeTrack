@@ -25,10 +25,14 @@ if logging;
 end;
 
 %%% input dialog %%%
+%%% input dialog %%%
 dlgParam = {'subject'      , 'Subject initials'               , 'xxx';
-            'pathFile'     , 'Path file name'                 , 'StopTrack6Paths';
-            'nTargets'     , 'Number of Targets'              , '4';
-            'moveType'     , 'Moving? (1 = yes, 0 = no)'      , '1';
+            'pathFile'     , 'Path file name'                 , 'DurPaths';
+            'pBlock'       , 'Practice block (1 = yes)'       , '0';
+            'pTrials'      , 'Number of practice trials'      , '4';
+            'xTrials'      , 'Number of experimental trials'  , '4';
+            'nTargetsList' , 'Number of Targets'              , '2';
+            'moveTypeList' , 'Moving? (1 = yes, 0 = no)'      , '0 1';
             'correctDAC'   , 'Correct for 10-bit DAC'         , '1';
            };
 param = inputdlg(dlgParam(:, 2), ['Experiment Parameters'], 1, dlgParam(:, 3));
@@ -49,15 +53,45 @@ end
 %%% set any fixed parameters
 asynchronous = 0;
 shift = 1;
-nTrials = 2;
 
 %%% initialize RNG
 seed = sum(100*clock);
 rand('state', seed);
 
-%%% load path file and extract and check consistency
+%%% load path file, extract information, set up path order, and check consistency
 load(pathFile);
-[nDisks, n, nPaths] = size(startPositions);
+[nDisks, nCoord, nPaths] = size(startPositions);
+nTrials = pTrials + xTrials;
+if nTrials > nPaths
+   error(sprintf('path file %s cannot support %d total trials; max is %d', pathFile, nTrials, nPaths));
+end
+if durationFlag == 2  % duration levels are balanced
+   durList = unique(pathDurations);
+   nDur = length(durList);
+   pathDurations
+   % figure out how many paths per duration level
+   nPathsPerDuration = nPaths / nDur, % this should be an integer
+   if nPathsPerDuration ~= round(nPathsPerDuration)
+      error(sprintf('path file %s has unbalanced number of paths per duration'), pathFile);
+   end
+   % generate shuffled list of paths for each duration level
+   pathList = zeros(nDur, nPathsPerDuration);
+   for d = 1:nDur
+      pathList(d, :) = Shuffle(find(pathDurations == durList(d)))';
+   end
+   % set up list of possibly balanced duration levels for practice trials
+   if pTrials > 0
+      durIndexPrac = repmat(1:nDur, [1, ceil(pTrials / nDur)]);
+   end
+   % set up counters for each duration level
+   pathCounter = ones(nDur, 1);
+else % duration levels are not balanced
+   % randomize paths
+   nDur = 1;
+   pathList = randperm(nPaths);
+   pathCounter = 1;
+end
+durIndexList = 1:nDur;
 
 %%% other info
 dataFileName = sprintf('%sData.txt', experiment);
@@ -71,7 +105,7 @@ rectScreen = Screen(winMain, 'Rect');
 refreshDuration = 1 / Screen(winMain, 'FrameRate', []); % sec/frame
 rectDisplay = CenterRect(rectDisplay, rectScreen);
 
-hidecursor;
+HideCursor;
 
 %%% Define colors %%%
 colBackground    = 1;
@@ -183,60 +217,90 @@ animationLoop = {
                 };
 
 
-%%% Prepare/present instructions
-instr = cell(2, 1);
-
-if nTargets >= 0 & nTargets <= 4
-   nTargetsString = num2str(nTargets);
-else
-   error(sprintf('%d targets not supported', nTargets));
+%%% balance independent variables
+NumberOfTrials = xTrials;
+IVs = {%'probeTarget'   , 0:1;
+       'nTargets'      , nTargetsList;
+       'moveType'      , moveTypeList;
+       'durIndex'      , durIndexList;
+      };
+nVariables = size(IVs, 1);
+varLength = zeros(nVariables, 1);
+listLength = 1;
+for v = 1:nVariables
+   varLength(v) = length(IVs{v, 2});
+   listLength = listLength * varLength(v);
 end
-
-if moveType == 0
-   instr{1} = {'Instructions';
-               '';
-               'In this experiment, you need to keep track of some disks on ';
-               'the screen.  At the start of each trial, you will see 10    ';
-               ['white disks on a gray background.  ' nTargetsString ' of these disks will    '];
-               'blink on and off: these are your targets.  After the disks  ';
-               'stop blinking, the disks will stay in place for several     ';
-               'seconds. Your task is to keep track of the targets          ';
-               'throughout the trial.                                       ';
-               '';
-              };
-else
-   instr{1} = {'Instructions';
-               '';
-               'In this experiment, you need to keep track of some disks on ';
-               'the screen.  At the start of each trial, you will see 10    ';
-               ['white disks on a gray background.  ' nTargetsString ' of these disks will    '];
-               'blink on and off: these are your targets.  After the disks  ';
-               'stop blinking, all the disks will begin to move around the  ';
-               'screen.  Your task is to keep track of the targets          ';
-               'throughout the trial.                                       ';
-               '';
-              };
+nRepetitions = ceil(NumberOfTrials / listLength);
+len1 = listLength;
+len2 = 1;
+[dummy, index] = sort(rand(listLength * nRepetitions, 1)); 
+for v = 1:nVariables
+   len1 = len1 / varLength(v);
+   eval([IVs{v, 1} ' = repmat(reshape(repmat(IVs{v, 2}, len1, len2), listLength, 1), nRepetitions, 1);']);
+   eval([IVs{v, 1} ' = ' IVs{v, 1} '(index);']);
+   len2 = len2 * varLength(v);
 end
-instr{2} = {'Instructions';
-            '';
-            'Once the trial ends, the arrow cursor will appear.  Use the ';
-            'mouse to click on each of the targets.  If you click on a   ';
-            'target, it will be highlighted in green and you will hear a ';
-            'click.  If you click on a non-target, it will be highlighted';
-           ['in red and you will hear a beep.  Once you have selected ' nTargetsString '  '];
-            'disks, any targets that you missed will blink in yellow.    ';
-            '';
-            '';
-           };
-
-for a = [1 2]
-   if ~isempty(instr{a})
-      Screen(winMain, 'FillRect', colBackground);
-      CenterCellText(winMain, instr{a}, colInstructions, 30);
-      CenterText(winMain, 'Click to continue', colInstructions, 0, 250);
-      MouseWait(winMain);
-   end
+if listLength * nRepetitions ~= NumberOfTrials
+   warning('unbalanced design');
 end
+clear NumberOfTrials IVs nVariables varLength listLength nRepetitions v dummy len1 len2 index;
+
+
+% %%% Prepare/present instructions
+% instr = cell(2, 1);
+
+% if nTargets >= 1 & nTargets <= 9
+%    nTargetsString = sprintf('%d', nTargets);
+% else
+%    error(sprintf('%d targets not supported', nTargets));
+% end
+
+% if moveType == 0
+%    instr{1} = {'Instructions';
+%                '';
+%                'In this experiment, you need to keep track of some disks on ';
+%                'the screen.  At the start of each trial, you will see 10    ';
+%                ['white disks on a gray background.  ' nTargetsString ' of these disks will    '];
+%                'blink on and off: these are your targets.  After the disks  ';
+%                'stop blinking, the disks will stay in place for several     ';
+%                'seconds. Your task is to keep track of the targets          ';
+%                'throughout the trial.                                       ';
+%                '';
+%               };
+% else
+%    instr{1} = {'Instructions';
+%                '';
+%                'In this experiment, you need to keep track of some disks on ';
+%                'the screen.  At the start of each trial, you will see 10    ';
+%                ['white disks on a gray background.  ' nTargetsString ' of these disks will    '];
+%                'blink on and off: these are your targets.  After the disks  ';
+%                'stop blinking, all the disks will begin to move around the  ';
+%                'screen.  Your task is to keep track of the targets          ';
+%                'throughout the trial.                                       ';
+%                '';
+%               };
+% end
+% instr{2} = {'Instructions';
+%             '';
+%             'Once the trial ends, the arrow cursor will appear.  Use the ';
+%             'mouse to click on each of the targets.  If you click on a   ';
+%             'target, it will be highlighted in green and you will hear a ';
+%             'click.  If you click on a non-target, it will be highlighted';
+%            ['in red and you will hear a beep.  Once you have selected ' nTargetsString '  '];
+%             'disks, any targets that you missed will blink in yellow.    ';
+%             '';
+%             '';
+%            };
+
+% for a = [1 2]
+%    if ~isempty(instr{a})
+%       Screen(winMain, 'FillRect', colBackground);
+%       CenterCellText(winMain, instr{a}, colInstructions, 30);
+%       CenterText(winMain, 'Click to continue', colInstructions, 0, 250);
+%       MouseWait(winMain);
+%    end
+% end
 
 Screen(winMain, 'FillRect', colBackground);
 
@@ -252,16 +316,32 @@ for trial = 1:nTrials
    prepStart = GetSecs;
 
    %%% get trial parameters
-   prac = 0
-%    if trial > pracTrials
-%       prac = 0;
-%    else
-%       prac = 1;
-%    end
+   if trial <= pTrials
+      prac = 1;
+      trialIndex = Randi(xTrials);
+   else
+      prac = 0;
+      trialIndex = trial - pTrials;
+   end
 
-   nFrames = pathDurations(trial);
-   pos = startPositions(:, :, trial);
-   delta = startVelocities(:, :, trial);
+   %%% determine trial duration index
+   if durationFlag == 2 & prac == 1
+      idur = durIndexPrac(trial);
+   else
+      idur = durIndex(trialIndex);
+   end
+
+   if pBlock
+      prac = 1;
+   end
+
+   %%% pick trial path
+   path = pathList(idur, pathCounter(idur));
+   pathCounter(idur) = pathCounter(idur) + 1;
+   
+   nFrames = pathDurations(path);
+   pos = startPositions(:, :, path);
+   delta = startVelocities(:, :, path);
    gapOnset = nFrames - blankDuration;
    gapOffset = nFrames;
    rectStim = zeros(nDisks, 4, nFrames);
@@ -283,7 +363,7 @@ for trial = 1:nTrials
    end
 
    % If static trial, then set all pre-gap frames to be identical to the pre-gap frame
-   if moveType == 0
+   if moveType(trialIndex) == 0
       rectStim(:, :, 1:(gapOnset-2)) = repmat(rectStim(:, :, gapOnset - 1), [1, 1, gapOnset - 2]);
    end
 
@@ -311,7 +391,7 @@ for trial = 1:nTrials
    end
    for d = 1:nDisks
       Screen('CopyWindow', diskPointer(d), winDB(1), rectDisk, rectStim(d, :, 1), 'transparent');
-      if d > nTargets
+      if d > nTargets(trialIndex)
          Screen('CopyWindow', diskPointer(d), winDB(2), rectDisk, rectStim(d, :, 1), 'transparent');
       end
    end
@@ -335,8 +415,8 @@ for trial = 1:nTrials
    for d = 1:nDisks
       rectStimAdjusted(d, :) = OffsetRect(rectStim(d, :, nFrames), rectDisplay(RectLeft), rectDisplay(RectTop));
    end
-   showcursor(0);
-   while nDisksSelected < nTargets
+   ShowCursor(0);
+   while nDisksSelected < nTargets(trialIndex)
       screen('CopyWindow', winDisplayBlank, winDB(1));
       mouseOverDisk = 0;
       FlushEvents('mouseUp', 'mouseDown');
@@ -345,7 +425,7 @@ for trial = 1:nTrials
          if ~diskSelected(d) & IsInRect(x, y, rectStimAdjusted(d, :))
             Screen('CopyWindow', diskPointer(d), winDB(1), [], rectStim(d, :, nFrames), 'transparent');
             mouseOverDisk = d;
-         elseif diskSelected(d) & d <= nTargets
+         elseif diskSelected(d) & d <= nTargets(trialIndex)
             Screen('CopyWindow', winDiskCorrect, winDB(1), [], rectStim(d, :, nFrames), 'transparent');
          elseif diskSelected(d)
             Screen('CopyWindow', winDiskError, winDB(1), [], rectStim(d, :, nFrames), 'transparent');
@@ -356,7 +436,7 @@ for trial = 1:nTrials
       if mouseOverDisk > 0
          if any(button)
             nDisksSelected = nDisksSelected + 1;
-            if mouseOverDisk <= nTargets
+            if mouseOverDisk <= nTargets(trialIndex)
                diskSelected(mouseOverDisk) = 1;
                Snd('play', beepCorrect);
                Screen('CopyWindow', winDiskCorrect, winDB(1), [], rectStim(mouseOverDisk, :, nFrames), 'transparent');
@@ -377,16 +457,16 @@ for trial = 1:nTrials
             [x, y, button] = GetMouse(winMain);
          end
       end
-   end % while nDisksSelected < nTargets
-   hidecursor;
-   nCorrect = sum(diskSelected(1:nTargets));
-   allCorrect = (nCorrect == nTargets);
+   end % while nDisksSelected < nTargets(trialIndex)
+   HideCursor;
+   nCorrect = sum(diskSelected(1:nTargets(trialIndex)));
+   allCorrect = (nCorrect == nTargets(trialIndex));
    selectedString = repmat('1', [1, nDisks]);
    selectedString(find(diskSelected)) = '2';
 
    dataFile = fopen(dataFileName, 'r');
    if dataFile == -1
-      header = ['exp,sub,computer,blocktime,pathfile,prac,trial,trialtime,' ...
+      header = ['exp,sub,computer,blocktime,pathfile,path,prac,trial,trialtime,' ...
                 'nframes,refreshdur,ndisks,ntargets,blankdur,asynch,shift,move,' ...
                 'ncor,selected,meanframedur,minframedur,maxframedur'];
    else
@@ -400,28 +480,28 @@ for trial = 1:nTrials
    if ~isempty(header)
       fprintf(dataFile, '%s\n', header);
    end
-   %                  %exp  %computer   %trial         %nDisks     %shift   %ncor %framedurs
-   fprintf(dataFile, '%s,%s,%s,%f,%s,%d,%d,%s,%d,%0.4f,%d,%d,%d,%d,%d,%d,%d,%s,%0.4f,%0.4f,%0.4f\n', ...
-           experiment, subject, computer, blocktime, pathFile, prac, trial, trialtime, ...
-           nFrames, refreshDuration * 1000, nDisks, nTargets, blankDuration, ...
-           asynchronous, shift, moveType,  ...
+   %                  %exp  %computer      %trial         %nDisks     %shift   %ncor %framedurs
+   fprintf(dataFile, '%s,%s,%s,%f,%s,%d,%d,%d,%s,%d,%0.4f,%d,%d,%d,%d,%d,%d,%d,%s,%0.4f,%0.4f,%0.4f\n', ...
+           experiment, subject, computer, blocktime, pathFile, path, prac, trial, trialtime, ...
+           nFrames, refreshDuration * 1000, nDisks, nTargets(trialIndex), blankDuration, ...
+           asynchronous, shift, moveType(trialIndex),  ...
            nCorrect, selectedString, ...
            mean(actualFrameDurations) * 1000, ...
            min(actualFrameDurations) * 1000, max(actualFrameDurations) * 1000);
    fclose(dataFile);
 
-   if nCorrect < nTargets
+   if nCorrect < nTargets(trialIndex)
       for d = 1:2
          Screen('CopyWindow', winDisplayBlank, winDB(d));
       end
       for d = 1:nDisks
-         if diskSelected(d) & d <= nTargets
+         if diskSelected(d) & d <= nTargets(trialIndex)
             Screen('CopyWindow', winDiskCorrect, winDB(1), [], rectStim(d, :, nFrames), 'transparent');
             Screen('CopyWindow', winDiskCorrect, winDB(2), [], rectStim(d, :, nFrames), 'transparent');
          elseif diskSelected(d)
             Screen('CopyWindow', winDiskError, winDB(1), [], rectStim(d, :, nFrames), 'transparent');
             Screen('CopyWindow', winDiskError, winDB(2), [], rectStim(d, :, nFrames), 'transparent');
-         elseif d <= nTargets
+         elseif d <= nTargets(trialIndex)
             Screen('CopyWindow', winDisk, winDB(1), [], rectStim(d, :, nFrames), 'transparent');
             Screen('CopyWindow', winDiskIndicator, winDB(2), [], rectStim(d, :, nFrames), 'transparent');
          else
