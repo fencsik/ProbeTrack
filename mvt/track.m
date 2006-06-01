@@ -7,33 +7,15 @@ function track()
 %%%
 %%% $LastChangedDate$
 
-% min/max frame duration in ms: if average frame duration is outside of these bounds, then
-% panic and exit. The MATLAB interpreter is occassionally off and this catches it.
-% 
-% 2005-02-24: This may no longer be necessary.  The timing errors
-% could have been due to a power problem at 64 Sidney St. and seems to
-% have disappeared since that problem was fixed. (DEF)
-minFrameDuration = 11;
-maxFrameDuration = 20;
-
-%%% initiate logging%%%
-logging = 0;
-if logging;
-   LogFileName = ['track.log'];
-   logFile = fopen(LogFileName,'a');
-   fprintf(logFile, '\nStarted on %s\n', datestr(now));
-end;
-
-%%% input dialog %%%
 %%% input dialog %%%
 dlgParam = {'subject'      , 'Subject initials'               , 'xxx';
-            'pathFile'     , 'Path file name'                 , 'DurPaths';
+           %'pathFile'     , 'Path file name'                 , 'StopTrack07Paths';
             'pBlock'       , 'Practice block (1 = yes)'       , '0';
             'pTrials'      , 'Number of practice trials'      , '4';
             'xTrials'      , 'Number of experimental trials'  , '4';
             'nTargetsList' , 'Number of Targets'              , '2';
-            'moveTypeList' , 'Moving? (1 = yes, 0 = no)'      , '0 1';
-            'correctDAC'   , 'Correct for 10-bit DAC'         , '1';
+           %'moveTypeList' , 'Moving? (1 = yes, 0 = no)'      , '0 1';
+           %'correctDAC'   , 'Correct for 10-bit DAC'         , '1';
            };
 param = inputdlg(dlgParam(:, 2), ['Experiment Parameters'], 1, dlgParam(:, 3));
 if size(param) < 1
@@ -50,7 +32,13 @@ for a = 1:length(param)
    eval([dlgParam{a, 1} ' = ' str ';']);
 end
 
-%%% set any fixed parameters
+%%% set remaining parameters
+pathFile = 'StopTrack07Paths';
+moveTypeList = [0 1];
+probeTargetList = [0 1];
+correctDAC = 1;
+
+%%% set some fixed parameters
 asynchronous = 0;
 shift = 1;
 
@@ -68,9 +56,8 @@ end
 if durationFlag == 2  % duration levels are balanced
    durList = unique(pathDurations);
    nDur = length(durList);
-   pathDurations
    % figure out how many paths per duration level
-   nPathsPerDuration = nPaths / nDur, % this should be an integer
+   nPathsPerDuration = nPaths / nDur; % this should be an integer
    if nPathsPerDuration ~= round(nPathsPerDuration)
       error(sprintf('path file %s has unbalanced number of paths per duration'), pathFile);
    end
@@ -94,7 +81,7 @@ end
 durIndexList = 1:nDur;
 
 %%% other info
-dataFileName = sprintf('%sData.txt', experiment);
+dataFileName = sprintf('%sData-%s.txt', experiment, subject);
 computer = strtok(pwd, ':');
 blocktime = now;
 
@@ -205,7 +192,7 @@ animationLoop = {
    'for f = 1:nFrames;'
    '   Screen(''CopyWindow'', winDisplayBlank, winDisplay);'
    '   if f < gapOnset | f >= gapOffset;'
-   '      for d = 1:nDisks;'
+   '      for d = drawingOrder;'
    '         Screen(''CopyWindow'', diskPointer(d), winDisplay, [], rectStim(d, :, f), ''transparent'');'
    '      end;'
    '   end;'
@@ -219,7 +206,7 @@ animationLoop = {
 
 %%% balance independent variables
 NumberOfTrials = xTrials;
-IVs = {%'probeTarget'   , 0:1;
+IVs = {%'probeTarget'   , probeTargetList;
        'nTargets'      , nTargetsList;
        'moveType'      , moveTypeList;
        'durIndex'      , durIndexList;
@@ -246,6 +233,7 @@ if listLength * nRepetitions ~= NumberOfTrials
 end
 clear NumberOfTrials IVs nVariables varLength listLength nRepetitions v dummy len1 len2 index;
 
+disp([nTargets, moveType, durIndex]);
 
 % %%% Prepare/present instructions
 % instr = cell(2, 1);
@@ -304,10 +292,7 @@ clear NumberOfTrials IVs nVariables varLength listLength nRepetitions v dummy le
 
 Screen(winMain, 'FillRect', colBackground);
 
-fprintf('START PATH FILE %s\n', pathFile);
-
 for trial = 1:nTrials
-   fprintf('START TRIAL %d\n', trial);
    trialtime = datestr(now);
    
    Screen('CopyWindow', winDisplayBlank, winMain, [], rectDisplay);
@@ -338,7 +323,8 @@ for trial = 1:nTrials
    %%% pick trial path
    path = pathList(idur, pathCounter(idur));
    pathCounter(idur) = pathCounter(idur) + 1;
-   
+
+   %%% basic trial info
    nFrames = pathDurations(path);
    pos = startPositions(:, :, path);
    delta = startVelocities(:, :, path);
@@ -346,7 +332,7 @@ for trial = 1:nTrials
    gapOffset = nFrames;
    rectStim = zeros(nDisks, 4, nFrames);
 
-   % generate trajectories
+   %%% generate trajectories
    for f = 1:nFrames
 
       rectStim(:, :, f) = [pos - diskRadius, pos + diskRadius];
@@ -362,16 +348,26 @@ for trial = 1:nTrials
 
    end
 
-   % If static trial, then set all pre-gap frames to be identical to the pre-gap frame
+   %%% if static trial, then set all pre-gap frames to be identical to the pre-gap frame
    if moveType(trialIndex) == 0
       rectStim(:, :, 1:(gapOnset-2)) = repmat(rectStim(:, :, gapOnset - 1), [1, 1, gapOnset - 2]);
    end
 
-   fprintf('Trial duration   = %0.3f sec (%d frames)\n', ...
-           nFrames * refreshDuration, nFrames);
-   fprintf('Preparation time = %0.3f sec.\n', GetSecs - prepStart);
-
    diskPointer = repmat(winDisk, [nDisks, 1]);
+   drawingOrder = randperm(nDisks);
+
+   %%% Prepare cue displays
+   for d = 1:2
+      Screen('CopyWindow', winDisplayBlank, winDB(d));
+   end
+   for d = drawingOrder
+      Screen('CopyWindow', diskPointer(d), winDB(1), rectDisk, rectStim(d, :, 1), 'transparent');
+      if d > nTargets(trialIndex)
+         Screen('CopyWindow', diskPointer(d), winDB(2), rectDisk, rectStim(d, :, 1), 'transparent');
+      end
+   end
+   
+   prepDur = GetSecs - prepStart;
 
    Screen('CopyWindow', winDisplayBlank, winMain, [], rectDisplay);
    CenterText(winMain, sprintf('Click to begin trial %d of %d', trial, nTrials), colText);
@@ -381,22 +377,8 @@ for trial = 1:nTrials
    Screen(winMain, 'WaitBlanking');
    startTime = GetSecs;
    endTime = 0;
-   this = 1;
-   next = 2;
    frameDisplayTime = zeros(nFrames, 1);
-
-   %%% Prepare cue displays
-   for d = 1:2
-      Screen('CopyWindow', winDisplayBlank, winDB(d));
-   end
-   for d = 1:nDisks
-      Screen('CopyWindow', diskPointer(d), winDB(1), rectDisk, rectStim(d, :, 1), 'transparent');
-      if d > nTargets(trialIndex)
-         Screen('CopyWindow', diskPointer(d), winDB(2), rectDisk, rectStim(d, :, 1), 'transparent');
-      end
-   end
-   Screen('CopyWindow', winDB(1), winMain, [], rectDisplay);
-   WaitSecs(.5);
+   d = 0; f = 0;
 
    %%% Display animation loop
    %Rush(animationLoop, 0);
@@ -412,7 +394,7 @@ for trial = 1:nTrials
    diskSelected = zeros(nDisks, 1);
    nDisksSelected = 0;
    rectStimAdjusted = zeros(nDisks, 4);
-   for d = 1:nDisks
+   for d = drawingOrder
       rectStimAdjusted(d, :) = OffsetRect(rectStim(d, :, nFrames), rectDisplay(RectLeft), rectDisplay(RectTop));
    end
    ShowCursor(0);
@@ -421,7 +403,7 @@ for trial = 1:nTrials
       mouseOverDisk = 0;
       FlushEvents('mouseUp', 'mouseDown');
       [x, y, button] = GetMouse(winMain);
-      for d = 1:nDisks
+      for d = drawingOrder
          if ~diskSelected(d) & IsInRect(x, y, rectStimAdjusted(d, :))
             Screen('CopyWindow', diskPointer(d), winDB(1), [], rectStim(d, :, nFrames), 'transparent');
             mouseOverDisk = d;
@@ -468,7 +450,7 @@ for trial = 1:nTrials
    if dataFile == -1
       header = ['exp,sub,computer,blocktime,pathfile,path,prac,trial,trialtime,' ...
                 'nframes,refreshdur,ndisks,ntargets,blankdur,asynch,shift,move,' ...
-                'ncor,selected,meanframedur,minframedur,maxframedur'];
+                'ncor,selected,prepdur,meanframedur,minframedur,maxframedur'];
    else
       fclose(dataFile);
       header = [];
@@ -480,13 +462,13 @@ for trial = 1:nTrials
    if ~isempty(header)
       fprintf(dataFile, '%s\n', header);
    end
-   %                  %exp  %computer      %trial         %nDisks     %shift   %ncor %framedurs
-   fprintf(dataFile, '%s,%s,%s,%f,%s,%d,%d,%d,%s,%d,%0.4f,%d,%d,%d,%d,%d,%d,%d,%s,%0.4f,%0.4f,%0.4f\n', ...
+   %                  %exp  %computer      %trial         %nDisks  %asych   %ncor       %framedurs
+   fprintf(dataFile, '%s,%s,%s,%f,%s,%d,%d,%d,%s,%d,%0.3f,%d,%d,%d,%d,%d,%d,%d,%s,%0.3f,%0.3f,%0.3f,%0.3f\n', ...
            experiment, subject, computer, blocktime, pathFile, path, prac, trial, trialtime, ...
            nFrames, refreshDuration * 1000, nDisks, nTargets(trialIndex), blankDuration, ...
            asynchronous, shift, moveType(trialIndex),  ...
            nCorrect, selectedString, ...
-           mean(actualFrameDurations) * 1000, ...
+           prepDur * 1000, mean(actualFrameDurations) * 1000, ...
            min(actualFrameDurations) * 1000, max(actualFrameDurations) * 1000);
    fclose(dataFile);
 
@@ -494,7 +476,7 @@ for trial = 1:nTrials
       for d = 1:2
          Screen('CopyWindow', winDisplayBlank, winDB(d));
       end
-      for d = 1:nDisks
+      for d = drawingOrder
          if diskSelected(d) & d <= nTargets(trialIndex)
             Screen('CopyWindow', winDiskCorrect, winDB(1), [], rectStim(d, :, nFrames), 'transparent');
             Screen('CopyWindow', winDiskCorrect, winDB(2), [], rectStim(d, :, nFrames), 'transparent');
