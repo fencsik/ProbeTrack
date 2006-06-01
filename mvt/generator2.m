@@ -4,17 +4,17 @@ function generator2
 % 
 % $LastChangedDate$
 
-experiment = 'StopTrack6';
+fileName = 'StopTrack07Paths';
 backupFile = 'backup.mat';
 
 % basic parameters
-nPaths = 10;
+nPaths = 20;
 nDisks = 10;
 durationFlag = 1; % 1 = range of durations; 2 = discrete durations, with nPaths in each
 startsFlag = 2; % 1 = start from grid; 2 = start from random positions
 blankFlag = 1; % 0 = no blank; 1 = blank at end
 durationList = [150 450];
-blankDuration = 23;
+blankDuration = 23; % 23 = 300 ms; 38 = 500 ms
 
 % specify velocity in pixels/frame
 % for speed V in deg/sec, multiply by (30 pix/deg * 1/75 sec/frames)
@@ -30,8 +30,6 @@ diskRadius = 20; % pixels
 % initialize RNG
 rngseed = sum(100*clock);
 rand('state',rngseed);
-
-fileName = sprintf('%sPaths', experiment);
 
 % set up durations
 if durationFlag == 1
@@ -164,6 +162,6 @@ for e = 1:nErrors
    fprintf('%s : %d\n', errorCodes{e}, errorCount(e));
 end
 
-save(fileName, 'experiment', 'startPositions', 'startVelocities', 'pathDurations', 'blankDuration', ...
+save(fileName, 'startPositions', 'startVelocities', 'pathDurations', 'blankDuration', ...
      'velocity', 'rectDisplay', 'rectBoundary', 'bufferZone', 'diskRadius', ...
      'durationFlag', 'startsFlag', 'blankFlag');

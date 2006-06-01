@@ -7,6 +7,9 @@ function track()
 %%%
 %%% $LastChangedDate$
 
+experiment = 'StopTrack07';
+Version = '2.0';
+
 %%% input dialog %%%
 dlgParam = {'subject'      , 'Subject initials'               , 'xxx';
            %'pathFile'     , 'Path file name'                 , 'StopTrack07Paths';
@@ -37,6 +40,7 @@ pathFile = 'StopTrack07Paths';
 moveTypeList = [0 1];
 probeTargetList = [0 1];
 correctDAC = 1;
+revealTargets = 1;
 
 %%% set some fixed parameters
 asynchronous = 0;
@@ -45,6 +49,11 @@ shift = 1;
 %%% initialize RNG
 seed = sum(100*clock);
 rand('state', seed);
+
+%%% Define response keys
+respTarget = 40; % ' key (right-hand side)
+respDistractor  =  1; % a key (left-hand side)
+allowedResponses = [respTarget, respDistractor];
 
 %%% load path file, extract information, set up path order, and check consistency
 load(pathFile);
@@ -95,37 +104,37 @@ rectDisplay = CenterRect(rectDisplay, rectScreen);
 HideCursor;
 
 %%% Define colors %%%
-colBackground    = 1;
-colForeground    = 2;
-colText          = 3;
-colInstructions  = 4;
-colDisk          = 5;
-colDiskCorrect   = 6;
-colDiskError     = 7;
-colDiskIndicator = 8;
-colDiskBorder    = 9;
-colTransparent   = 10;
-colOffWhite      = 11;
-colFixation      = 12;
+colWhite = WhiteIndex(winMain);
+colBlack = BlackIndex(winMain);
+colTransparent = colWhite;
+colOffWhite = abs(colWhite - 1); % abs corrects for white being 0; abs(0 - 1) = 1, abs(255 - 1) = 254
+colRed   = 10;
+colBlue  = 11;
+colGreen = 12;
+colYellow = 13;
+colLightGray = 14;
 clut = Screen(winMain, 'GetClut');
-clut(colBackground + 1, :)    = [191 191 191];
-clut(colForeground + 1, :)    = [  0   0   0];
-clut(colText + 1, :)          = [  0   0   0];
-clut(colInstructions + 1, :)  = [  0   0   0];
-clut(colDisk + 1, :)          = [254 254 254];
-clut(colDiskCorrect + 1, :)   = [  0 255   0];
-clut(colDiskError + 1, :)     = [255   0   0];
-clut(colDiskIndicator + 1, :) = [255 255   0];
-clut(colDiskBorder + 1, :)    = [  0   0   0];
-%clut(colTransparent + 1, :)   = [255 255 255];
-clut(colOffWhite + 1, :)      = [254 254 254];
-clut(colFixation + 1, :)      = [255   0   0];
-colTransparent = WhiteIndex(winMain);
+clut(colRed + 1, :)        = [255   0   0];
+clut(colGreen + 1, :)      = [  0 255   0];
+clut(colBlue + 1, :)       = [  0   0 255];
+clut(colYellow + 1, :)     = [255 255   0];
+clut(colLightGray + 1, :)  = [191 191 191];
 if correctDAC
    LoadClut(winMain, clut*1023/255);
 else
    LoadClut(winMain, clut);
 end;
+colBackground = colLightGray;
+colForeground = colBlack;
+colText = colBlack;
+colInstructions = colBlack;
+colDisk = colOffWhite;
+colDiskCorrect = colGreen;
+colDiskError = colRed;
+colDiskIndicator = colYellow;
+colDiskProbe = colRed;
+colDiskBorder = colBlack;
+colFixation = colGreen;
 
 Screen(winMain, 'FillRect', colBackground);
 
@@ -154,11 +163,11 @@ end
 diskDiameter = diskRadius * 2;
 border = 2;
 rectDisk    = [0 0 diskDiameter diskDiameter];
-diskNames        = {'', 'Correct', 'Error', 'Indicator', 'MouseOver', 'Blank'};
-diskBackgrounds  = {'[]', '[]', '[]', '[]', 'colOffWhite', 'colTransparent'};
-diskColors       = {'colDisk', 'colDiskCorrect', 'colDiskError', 'colDiskIndicator', 'colTransparent', 'colTransparent'};
-diskBorder       = {'border', 'border', 'border', 'border', '[]', '[]'};
-diskBorderColors = {'colDiskBorder', 'colDiskBorder', 'colDiskBorder', 'colDiskBorder', 'colTransparent', 'colTransparent'};
+diskNames        = {'', 'Correct', 'Error', 'Indicator', 'MouseOver', 'Blank', 'Probe'};
+diskBackgrounds  = {'[]', '[]', '[]', '[]', 'colOffWhite', 'colTransparent', '[]'};
+diskColors       = {'colDisk', 'colDiskCorrect', 'colDiskError', 'colDiskIndicator', 'colTransparent', 'colTransparent', 'colDiskProbe'};
+diskBorder       = {'border', 'border', 'border', 'border', '[]', '[]', 'border'};
+diskBorderColors = {'colDiskBorder', 'colDiskBorder', 'colDiskBorder', 'colDiskBorder', 'colTransparent', 'colTransparent', 'colDiskBorder'};
 for d = 1:length(diskNames)
    name = sprintf('winDisk%s', diskNames{d});
    eval(sprintf('%s = Screen(winMain, ''OpenOffScreenWindow'', [], rectDisk);', name));
@@ -206,7 +215,7 @@ animationLoop = {
 
 %%% balance independent variables
 NumberOfTrials = xTrials;
-IVs = {%'probeTarget'   , probeTargetList;
+IVs = {'probeTarget'   , probeTargetList;
        'nTargets'      , nTargetsList;
        'moveType'      , moveTypeList;
        'durIndex'      , durIndexList;
@@ -221,7 +230,7 @@ end
 nRepetitions = ceil(NumberOfTrials / listLength);
 len1 = listLength;
 len2 = 1;
-[dummy, index] = sort(rand(listLength * nRepetitions, 1)); 
+[dummy, index] = sort(rand(listLength * nRepetitions, 1));
 for v = 1:nVariables
    len1 = len1 / varLength(v);
    eval([IVs{v, 1} ' = repmat(reshape(repmat(IVs{v, 2}, len1, len2), listLength, 1), nRepetitions, 1);']);
@@ -232,8 +241,6 @@ if listLength * nRepetitions ~= NumberOfTrials
    warning('unbalanced design');
 end
 clear NumberOfTrials IVs nVariables varLength listLength nRepetitions v dummy len1 len2 index;
-
-disp([nTargets, moveType, durIndex]);
 
 % %%% Prepare/present instructions
 % instr = cell(2, 1);
@@ -285,8 +292,8 @@ disp([nTargets, moveType, durIndex]);
 %    if ~isempty(instr{a})
 %       Screen(winMain, 'FillRect', colBackground);
 %       CenterCellText(winMain, instr{a}, colInstructions, 30);
-%       CenterText(winMain, 'Click to continue', colInstructions, 0, 250);
-%       MouseWait(winMain);
+%       CenterText(winMain, 'Press any key to continue', colInstructions, 0, 250);
+%       WaitForButtonPress(winMain, 1);
 %    end
 % end
 
@@ -352,6 +359,13 @@ for trial = 1:nTrials
    if moveType(trialIndex) == 0
       rectStim(:, :, 1:(gapOnset-2)) = repmat(rectStim(:, :, gapOnset - 1), [1, 1, gapOnset - 2]);
    end
+   
+   %%% pick probe
+   if probeTarget(trialIndex)
+      probeDisk = Randi(nTargets(trialIndex));
+   else
+      probeDisk = Randi(nDisks - nTargets(trialIndex)) + nTargets(trialIndex);
+   end
 
    diskPointer = repmat(winDisk, [nDisks, 1]);
    drawingOrder = randperm(nDisks);
@@ -370,8 +384,8 @@ for trial = 1:nTrials
    prepDur = GetSecs - prepStart;
 
    Screen('CopyWindow', winDisplayBlank, winMain, [], rectDisplay);
-   CenterText(winMain, sprintf('Click to begin trial %d of %d', trial, nTrials), colText);
-   MouseWait(winMain);
+   CenterText(winMain, sprintf('Press any key to begin trial %d of %d', trial, nTrials), colText);
+   WaitForButtonPress(winMain, 1);
    
    %%% Initialize some variables and pre-load some functions into memory
    Screen(winMain, 'WaitBlanking');
@@ -379,78 +393,72 @@ for trial = 1:nTrials
    endTime = 0;
    frameDisplayTime = zeros(nFrames, 1);
    d = 0; f = 0;
+   tProbeOnset = 0;
+   keyDown = 0; tResponseOnset = 0; tResponseOffset = 0; keyCode = 0;
 
    %%% Display animation loop
    %Rush(animationLoop, 0);
    Rush(animationLoop, MaxPriority(winMain, 'WaitBlanking', 'GetSecs'));
 
-   actualFrameDurations = diff(frameDisplayTime);
-
-   for d = 1:2
-      Screen('CopyWindow', winDisplayBlank, winDB(d));
+   Screen(winMain, 'WaitBlanking', 8);
+   Screen('CopyWindow', winDiskProbe, winDisplay, [], rectStim(probeDisk, :, nFrames), 'transparent');
+   Screen('CopyWindow', winDisplay, winMain, [], rectDisplay);
+   Screen(winMain, 'WaitBlanking');
+   tProbeOnset = GetSecs;
+   while 1
+      [keyDown, tResponseOnset, keyCode] = KbCheck;
+      if keyDown & any(keyCode(allowedResponses))
+         break;
+      end
    end
-
-   SetMouse(centerX, centerY, winMain);
-   diskSelected = zeros(nDisks, 1);
-   nDisksSelected = 0;
-   rectStimAdjusted = zeros(nDisks, 4);
-   for d = drawingOrder
-      rectStimAdjusted(d, :) = OffsetRect(rectStim(d, :, nFrames), rectDisplay(RectLeft), rectDisplay(RectTop));
+   while keyDown
+      keyDown = KbCheck;
    end
-   ShowCursor(0);
-   while nDisksSelected < nTargets(trialIndex)
-      screen('CopyWindow', winDisplayBlank, winDB(1));
-      mouseOverDisk = 0;
-      FlushEvents('mouseUp', 'mouseDown');
-      [x, y, button] = GetMouse(winMain);
-      for d = drawingOrder
-         if ~diskSelected(d) & IsInRect(x, y, rectStimAdjusted(d, :))
-            Screen('CopyWindow', diskPointer(d), winDB(1), [], rectStim(d, :, nFrames), 'transparent');
-            mouseOverDisk = d;
-         elseif diskSelected(d) & d <= nTargets(trialIndex)
-            Screen('CopyWindow', winDiskCorrect, winDB(1), [], rectStim(d, :, nFrames), 'transparent');
-         elseif diskSelected(d)
-            Screen('CopyWindow', winDiskError, winDB(1), [], rectStim(d, :, nFrames), 'transparent');
-         else
-            Screen('CopyWindow', diskPointer(d), winDB(1), [], rectStim(d, :, nFrames), 'transparent');
-         end
+   tResponseOffset = GetSecs;
+   
+   respRT = tResponseOnset - tProbeOnset;
+   respDur = tResponseOffset - tResponseOnset;
+   respCode = find(keyCode);
+   if length(respCode) > 1
+      respString = 'multiple';
+      respAcc = -1;
+   elseif respCode == respTarget
+      respString = 'target';
+      if probeTarget(trialIndex)
+         respAcc = 1;
+      else
+         respAcc = 0;
       end
-      if mouseOverDisk > 0
-         if any(button)
-            nDisksSelected = nDisksSelected + 1;
-            if mouseOverDisk <= nTargets(trialIndex)
-               diskSelected(mouseOverDisk) = 1;
-               Snd('play', beepCorrect);
-               Screen('CopyWindow', winDiskCorrect, winDB(1), [], rectStim(mouseOverDisk, :, nFrames), 'transparent');
-            else
-               diskSelected(mouseOverDisk) = 1;
-               Snd('play', beepError);
-               Screen('CopyWindow', winDiskError, winDB(1), [], rectStim(mouseOverDisk, :, nFrames), 'transparent');
-            end
-         else
-            Screen('CopyWindow', winDiskMouseOver, winDB(1), [], rectStim(mouseOverDisk, :, nFrames), 'transparent');
-         end
+   elseif respCode == respDistractor
+      respString = 'distractor';
+      if probeTarget(trialIndex)
+         respAcc = 0;
+      else
+         respAcc = 1;
       end
-      Screen(winMain, 'WaitBlanking');
-      Screen('CopyWindow', winDB(1), winMain, [], rectDisplay);
-      if any(button)
-         [x, y, button] = GetMouse(winMain);
-         while any(button)
-            [x, y, button] = GetMouse(winMain);
-         end
-      end
-   end % while nDisksSelected < nTargets(trialIndex)
-   HideCursor;
-   nCorrect = sum(diskSelected(1:nTargets(trialIndex)));
-   allCorrect = (nCorrect == nTargets(trialIndex));
-   selectedString = repmat('1', [1, nDisks]);
-   selectedString(find(diskSelected)) = '2';
+   else
+      respString = fprintf('%d', respCode);
+      respAcc = -1;
+   end
+   
+   if respAcc == 1
+      Snd('Play', beepCorrect);
+      feedbackString = 'CORRECT';
+      colFeedback = colBlue;
+   else
+      Snd('Play', beepError);
+      feedbackString = 'ERROR';
+      colFeedback = colRed;
+   end
+   CenterText(winMain, feedbackString, colFeedback);
+
+   frameDurations = diff(frameDisplayTime);
 
    dataFile = fopen(dataFileName, 'r');
    if dataFile == -1
-      header = ['exp,sub,computer,blocktime,pathfile,path,prac,trial,trialtime,' ...
-                'nframes,refreshdur,ndisks,ntargets,blankdur,asynch,shift,move,' ...
-                'ncor,selected,prepdur,meanframedur,minframedur,maxframedur'];
+      header = ['exp,sub,code,version,computer,blocktime,pathfile,path,prac,trial,trialtime,' ...
+                'nframes,refreshdur,ndisks,ntargets,targ,probe,blankdur,asynch,shift,move,' ...
+                'response,rt,dur,acc,prepdur,meanframedur,minframedur,maxframedur'];
    else
       fclose(dataFile);
       header = [];
@@ -462,27 +470,25 @@ for trial = 1:nTrials
    if ~isempty(header)
       fprintf(dataFile, '%s\n', header);
    end
-   %                  %exp  %computer      %trial         %nDisks  %asych   %ncor       %framedurs
-   fprintf(dataFile, '%s,%s,%s,%f,%s,%d,%d,%d,%s,%d,%0.3f,%d,%d,%d,%d,%d,%d,%d,%s,%0.3f,%0.3f,%0.3f,%0.3f\n', ...
-           experiment, subject, computer, blocktime, pathFile, path, prac, trial, trialtime, ...
-           nFrames, refreshDuration * 1000, nDisks, nTargets(trialIndex), blankDuration, ...
+   %                  %exp        %computer      %trial         %nDisks        %asynch  %response               %framedurs
+   fprintf(dataFile, '%s,%s,%s,%s,%s,%f,%s,%d,%d,%d,%s,%d,%0.3f,%d,%d,%d,%d,%d,%d,%d,%d,%s,%0.0f,%0.0f,%d,%0.3f,%0.3f,%0.3f,%0.3f\n', ...
+           experiment, subject, mfilename, Version, computer, blocktime, pathFile, path, prac, trial, trialtime, ...
+           nFrames, refreshDuration * 1000, nDisks, nTargets(trialIndex), ...
+           probeTarget(trialIndex), probeDisk, blankDuration, ...
            asynchronous, shift, moveType(trialIndex),  ...
-           nCorrect, selectedString, ...
-           prepDur * 1000, mean(actualFrameDurations) * 1000, ...
-           min(actualFrameDurations) * 1000, max(actualFrameDurations) * 1000);
+           respString, respRT * 1000, respDur * 1000, respAcc, ...
+           prepDur * 1000, mean(frameDurations) * 1000, ...
+           min(frameDurations) * 1000, max(frameDurations) * 1000);
    fclose(dataFile);
 
-   if nCorrect < nTargets(trialIndex)
+   if revealTargets & ~(nTargets(trialIndex) == 1 & probeTarget(trialIndex))
       for d = 1:2
          Screen('CopyWindow', winDisplayBlank, winDB(d));
       end
       for d = drawingOrder
-         if diskSelected(d) & d <= nTargets(trialIndex)
-            Screen('CopyWindow', winDiskCorrect, winDB(1), [], rectStim(d, :, nFrames), 'transparent');
-            Screen('CopyWindow', winDiskCorrect, winDB(2), [], rectStim(d, :, nFrames), 'transparent');
-         elseif diskSelected(d)
-            Screen('CopyWindow', winDiskError, winDB(1), [], rectStim(d, :, nFrames), 'transparent');
-            Screen('CopyWindow', winDiskError, winDB(2), [], rectStim(d, :, nFrames), 'transparent');
+         if d == probeDisk
+            Screen('CopyWindow', winDiskProbe, winDB(1), [], rectStim(d, :, nFrames), 'transparent');
+            Screen('CopyWindow', winDiskProbe, winDB(2), [], rectStim(d, :, nFrames), 'transparent');
          elseif d <= nTargets(trialIndex)
             Screen('CopyWindow', winDisk, winDB(1), [], rectStim(d, :, nFrames), 'transparent');
             Screen('CopyWindow', winDiskIndicator, winDB(2), [], rectStim(d, :, nFrames), 'transparent');
@@ -491,14 +497,17 @@ for trial = 1:nTrials
             Screen('CopyWindow', winDisk, winDB(2), [], rectStim(d, :, nFrames), 'transparent');
          end
       end
+
       for d = [1 2 1 2 1 2]
          Screen('CopyWindow', winDB(d), winMain, [], rectDisplay);
-         WaitSecs(1/3);
+         CenterText(winMain, feedbackString, colFeedback);
+         Screen(winMain, 'WaitBlanking', round(.25 / refreshDuration));
       end
    end
 
-   CenterText(winMain, 'Click to continue', colText);
-   MouseWait(winMain);
+   WaitSecs(.1);
+   CenterText(winMain, 'Press any key to continue', colText, 0, 50);
+   WaitForButtonPress(winMain, 1);
 
    Screen('CopyWindow', winDisplayBlank, winMain, [], rectDisplay);
 end
@@ -513,17 +522,36 @@ Screen('CloseAll');
 
 
 
-function MouseWait (win)
+function WaitForButtonPress (win, kbFlag)
 
-FlushEvents('mouseUp', 'mouseDown');
-[x, y, button] = GetMouse(win);
-if any(button)
+if nargin < 2
+   kbFlag = 0;
+end
+
+if kbFlag
+   % keyboard
+   FlushEvents('keyDown');
+   keyDown = KbCheck;
+   while keyDown
+      keyDown = KbCheck;
+      WaitSecs(.01);
+   end
+   while ~keyDown
+      keyDown = KbCheck;
+      WaitSecs(.01);
+   end
+else
+   % mouse press
+   FlushEvents('mouseUp', 'mouseDown');
+   [x, y, button] = GetMouse(win);
    while any(button)
       [x, y, button] = GetMouse(win);
+      WaitSecs(.01);
    end
-end
-while ~any(button)
-   [x, y, button] = GetMouse(win);
+   while ~any(button)
+      [x, y, button] = GetMouse(win);
+      WaitSecs(.01);
+   end
 end
 
 
