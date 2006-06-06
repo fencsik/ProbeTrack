@@ -3,6 +3,8 @@ by David Fencsik
 
 $LastChangedDate$
 
+----------------------------------------------------------------------
+
 December 16, 2003:
 
 Potential follow-up studies:
@@ -27,12 +29,14 @@ Start playing with confusion just before disappearance: e.g., multiple
 objects cross over, post-gap distractor is closer to pre-gap target
 than the post-gap target. 
 
+----------------------------------------------------------------------
 
 December 18, 2003:
 
 Well, what the heck do we know now? Results of ShiftTrack3 are that -1
 and 0 are approx. equivalent, ...
 
+----------------------------------------------------------------------
 
 January 5, 2004:
 
@@ -69,6 +73,7 @@ and the non-target distracter. According to the location-based
 matching account, participants should be unable to track the target
 and always switch to the distracter.
 
+----------------------------------------------------------------------
 
 May 6, 2004: 
 
@@ -92,6 +97,7 @@ I had three ideas just before VSS (* indicates not from VSS):
 5. *Change recall method, so they only have to make one decision:
    this makes capacity estimates easier. 
 
+----------------------------------------------------------------------
 
 August 12, 2004:
 
@@ -118,6 +124,7 @@ be interested in, for example, is whether reappearance at position 1
 is easier to reacquire than reappearance at position 0 with
 asynchronous disappearance. 
 
+----------------------------------------------------------------------
 
 August 13, 2004:
 
@@ -158,6 +165,7 @@ positions -1, 0, and 1. Trial duration can be fixed (but perhaps a
 bit longer, say 6 s). Block position and maybe manipulate ntargets (2
 and 4?).
 
+----------------------------------------------------------------------
 
 August 19, 2004:
 
@@ -165,6 +173,7 @@ Regarding #1 from the first list from August 13, 2004, Todd points
 out that this might be a worthwhile study to run, just to have it
 available. 
 
+----------------------------------------------------------------------
 
 August 23, 2004:
 
@@ -184,6 +193,7 @@ with increasing tracking load?
 
 What we need here are some good theories.  
 
+----------------------------------------------------------------------
 
 September 24, 2004:
 
@@ -193,6 +203,7 @@ recency or primacy effects? Can they do an N-back sorta thing where
 the only have to track the most recent N objects and drop the (N+1)th
 back each time a new one is added?
 
+----------------------------------------------------------------------
 
 September 28, 2004:
 
@@ -252,6 +263,7 @@ These are the ideas we came up with at the meeting:
     target in a cued location vs. asking whether a particular animal
     was at that location.
 
+----------------------------------------------------------------------
 
 October 21, 2004:
 
@@ -270,6 +282,7 @@ task.
 
 More to come...
 
+----------------------------------------------------------------------
 
 November 1, 2004
 
@@ -284,6 +297,7 @@ conditions (ShiftTrack5).
 
 Planned study: top-down influences on reacquisition strategies
 
+----------------------------------------------------------------------
 
 February 11, 2005:
 
@@ -297,6 +311,7 @@ Last night, I remembered that I need a within-subject comparison of
 asynch vs. synch performance, so let's put together ShiftTrack9 for
 this purpose.
 
+----------------------------------------------------------------------
 
 September 26, 2005:
 
@@ -334,6 +349,7 @@ that spot, find the closest stimulus, assume it is a target, and mark
 that location.  This is a complicated process, but it doesn't require
 four independent visual indexes or FINSTs to support tracking.
 
+----------------------------------------------------------------------
 
 September 28, 2005:
 
@@ -350,6 +366,7 @@ explanations: Ivry & Cohen predict that the speed asymmetry should
 show up in texture segmentation as well; Rosenholtz predicts it
 should show up only if stimuli move in multiple directions.
 
+----------------------------------------------------------------------
 
 September 29, 2005:
 
@@ -364,6 +381,7 @@ identification of the quadrant the patch is located in.  The former
 method requires that you pick out a target region from a distractor
 region, so an asymmetry is at least conceivable.
 
+----------------------------------------------------------------------
 
 October 4, 2005:
 
@@ -426,6 +444,39 @@ dual-task costs between the speed-tracking and an separate, concurrent
 search task.  Again, the problem here is that the common mechanism
 explanation predicts no effect (i.e., no dual-task interference).
 
+----------------------------------------------------------------------
+
+February 10, 2005:
+
+One idea to further the StopTrack studies: the reason we see motion
+information for only one object may be that the continuous updating
+necessary to maintain the moving objects is such that subject cannot
+encode more than one object's worth of velocity info.  Perhaps if we
+reduce the demand of the task--e.g., by slowing the objects down--we
+should see an increase in accuracy.  Of course, this is not a
+particularly exciting prediction: if the task gets easier,
+performance goes up.  What would be more interesting would be a
+counterintuitive prediction.
+
+----------------------------------------------------------------------
+
+June 13, 2005:
+
+From discussions with TSH: There are three future directions for the
+SpeedSearch studies.
+
+1. Increase absolute speed with a fixed absolute difference between
+   fast and slow stimuli.  See if the search ever becomes inefficient
+   (it'll be surprising if it doesn't), and whether an asymmetry ever
+   appears.
+
+2. Systematically increase the noise vector from SpeedSearch 3 and see
+   if the search ever becomes inefficient.
+
+3. Start piloting SpeedTrack (and maybe run a version of SpeedSearch
+   with random directions)
+
+----------------------------------------------------------------------
 
 October 26, 2005: Notes following my practice talk for OPAM
 
@@ -463,3 +514,27 @@ not tracking, they're just picking up the fast-moving targets at the
 end of the trial) and setting up strong expectations for the results
 we didn't get.  Unfortunately, I have to go home, so I can't write
 more on improving the talk just now...
+
+----------------------------------------------------------------------
+
+June 6, 2006:
+
+Met with TSH about progress on SpeedSearch.  Presented various ideas
+and decided we were on the right track to have a decent paper.  The
+ideas, in decreasing order of immediacy:
+
+1. finish SpeedSearch07, which fixes distractor speed and compares
+   targets going faster or slower than it
+2a. replicate SpeedSearch07 with more widely spaced speeds (e.g., 3.2
+   and 9.6 for targets, 6.4 for distractors)
+2b. use target speeds of 3.2 and 9.6, with a distractor speed that's
+   closer to the fast target speed: Ivry & Cohen make opposite
+   predictions from Ruth, in this case
+3. run the lifetime search study with good speeds and lifetime ranges,
+   probably with a background bright enough to 
+4. use a fixed target speed and use a distractor speed faster or
+   slower than it (2a/3 reversed)
+5. come up with a stimulus identification and response preparation
+   complexity manipulation
+
+Maybe there was more.  In the meantime, start writing up ProbeTrack studies.
