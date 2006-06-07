@@ -26,5 +26,30 @@ psychological mechanism that enables disengagement from the tracking
 task, followed by re-engagement and reacquisition of tracked targets.
 
 In previous work, we have demonstrated that observers can successfully
-perform a MOT task when all the stimuli disappear simultaneously for
-a brief (approximately 300 ms) gap.  
+perform a MOT task when all the stimuli disappear simultaneously for a
+brief (approximately 300 ms) gap.  Horowitz, Birnkrant, Wolfe, and
+Fencsik (in press) showed that tracking through such a gap is more
+difficult when the stimuli appear to move behind occluding surfaces
+than when they disappear suddenly, without occlusion.  This result is
+the opposite of Scholl and Pylyshyn's (1999) finding that occlusion
+cues facilitate tracking when a single object disappears.  This
+dissociation suggests that the mechanisms underlying tracking during
+simultaneous disappearance are not the same as those that subserve
+active tracking of visible objects.  In fact, Alvarez, Horowitz,
+Arsenio, DiMase, and Wolfe (2005) showed that performance of a second
+task during a gap in tracking had almost no effect on tracking
+itself. 
+
+These results indicate that there must be some mechanism that enables
+temporary postponement of the tracking task during a gap and allows
+for target reacquisition following reappearance. In a recent paper
+(Fencsik, Klieger, & Horowitz, submitted), we presented evidence that
+observers performing an MOT task may remember both an object's
+location and direction of motion prior to the gap and use either type
+of information to reacquire targets after the gap. In the present
+work, we focus on the timecourse of target reacquisition: Following
+the temporary disappearance of all tracked objects, how long does the
+visual system take to resume tracking the targets.
+
+To study the timecourse of target reacquisition, we present a series
+of experiments in which 
