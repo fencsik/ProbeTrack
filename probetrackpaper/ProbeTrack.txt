@@ -38,18 +38,50 @@ simultaneous disappearance are not the same as those that subserve
 active tracking of visible objects.  In fact, Alvarez, Horowitz,
 Arsenio, DiMase, and Wolfe (2005) showed that performance of a second
 task during a gap in tracking had almost no effect on tracking
-itself. 
+itself.
 
-These results indicate that there must be some mechanism that enables
-temporary postponement of the tracking task during a gap and allows
-for target reacquisition following reappearance. In a recent paper
-(Fencsik, Klieger, & Horowitz, submitted), we presented evidence that
-observers performing an MOT task may remember both an object's
-location and direction of motion prior to the gap and use either type
-of information to reacquire targets after the gap. In the present
-work, we focus on the timecourse of target reacquisition: Following
-the temporary disappearance of all tracked objects, how long does the
-visual system take to resume tracking the targets.
+These results indicate that there must be some mechanism separate from
+the tracking mechanism that enables temporary postponement of the
+tracking task during a gap.  information relevant to tracking is
+stored by this mechanism and is used to reacquire targets following
+reappearance. In a recent paper (Fencsik, Klieger, & Horowitz,
+submitted), we provided evidence that observers performing an MOT task
+may remember both an object's location and direction of motion prior
+to the gap; while they may use either type of information to reacquire
+targets after the gap, they seem to have more location information
+available and tend to favor using it for target reacquisition. In the
+present work, we focus on the timecourse of target reacquisition:
+Following the temporary disappearance of all tracked objects, how long
+does the visual system take to resume tracking the targets.
 
 To study the timecourse of target reacquisition, we present a series
-of experiments in which 
+of experiments using the MOT task with a gap in tracking.  Following
+the gap at a variable delay, one stimulus was probed.  Observers
+classified the probed stimulus as a tracked target or an untracked
+distractor; a target was probed on half of the trials, and a
+distractor was probed on the remaining trials.  We measured the speed
+and accuracy of responses to the probe as a function of probe onset
+latency in order to determine how long it took for observers to
+reacquire the targets.
+
+If, on a trial with a target probe, the probe onsets after target
+reacquisition has been completed for the probed target, then an
+accurate decision can be made immediately and reaction time (RT) will
+not include any time to reacquire the target.  However, if the probe
+onsets before the probed target had been reacquired, then response
+will be slowed until reacquisition of that target has been completed.
+In order to measure the minimum RT to respond to a probe, we included
+a control condition in which there was no gap.
+
+We used the results of our experiments to distinguish between two
+broad classes of hypotheses about target reacquisition.  First, one
+could propose that target reacquisition occurs in serial, such that
+targets are reacquired one at a time with some additional amount of
+time needed for each individual target.  Second, target reacquisition
+could be a parallel process, in which all targets are reacquired
+simultaneously, with no additional cost in time from each individual
+target.  In general terms, serial hypotheses would predict longer
+target reacquisition times---on the order of a hundred
+milliseconds---than would a parallel process---on the order of tens of
+milliseconds, or possibly instantaneous reacquisition.
+
