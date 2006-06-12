@@ -8,16 +8,16 @@ function track()
 %%% $LastChangedDate$
 
 experiment = 'StopTrack07';
-Version = '2.0';
+Version = '2.1';
 
 %%% input dialog %%%
 dlgParam = {'subject'      , 'Subject initials'               , 'xxx';
-           %'pathFile'     , 'Path file name'                 , 'StopTrack07Paths';
+            'pathFile'     , 'Path file name'                 , 'StopTrack07Paths';
             'pBlock'       , 'Practice block (1 = yes)'       , '0';
             'pTrials'      , 'Number of practice trials'      , '4';
             'xTrials'      , 'Number of experimental trials'  , '4';
             'nTargetsList' , 'Number of Targets'              , '2';
-           %'moveTypeList' , 'Moving? (1 = yes, 0 = no)'      , '0 1';
+            'moveTypeList' , 'Moving? (1 = yes, 0 = no)'      , '0 1';
            %'correctDAC'   , 'Correct for 10-bit DAC'         , '1';
            };
 param = inputdlg(dlgParam(:, 2), ['Experiment Parameters'], 1, dlgParam(:, 3));
@@ -36,8 +36,8 @@ for a = 1:length(param)
 end
 
 %%% set remaining parameters
-pathFile = 'StopTrack07Paths';
-moveTypeList = [0 1];
+% pathFile = 'StopTrack07Paths';
+% moveTypeList = [0 1];
 probeTargetList = [0 1];
 correctDAC = 1;
 revealTargets = 1;
@@ -45,6 +45,8 @@ revealTargets = 1;
 %%% set some fixed parameters
 asynchronous = 0;
 shift = 1;
+pauseEvery = 50;
+pauseMin = 375; % frames
 
 %%% initialize RNG
 seed = sum(100*clock);
@@ -510,6 +512,22 @@ for trial = 1:nTrials
    WaitForButtonPress(winMain, 1);
 
    Screen('CopyWindow', winDisplayBlank, winMain, [], rectDisplay);
+   
+   % pause every N trials, unless there's only one or no trials remaining
+   if mod(trial, pauseEvery) == 0 & nTrials - trial > 1
+      Screen('CopyWindow', winDisplayBlank, winMain, [], rectDisplay);
+      oldFontSize = Screen(winMain, 'TextSize', 24);
+      oldFontStyle = Screen(winMain, 'TextStyle', 1); % set to bold
+      CenterText(winMain, 'Please take a short break...', colText, 0, -50);
+      t1 = Screen(winMain, 'WaitBlanking', pauseMin);
+      CenterText(winMain, 'Press any button to continue', colText, 0, 50);
+      WaitForButtonPress(winMain, 1);
+      Screen(winMain, 'TextSize', oldFontSize);
+      Screen(winMain, 'TextStyle', oldFontStyle);
+      while KbCheck; end
+      Screen('CopyWindow', winDisplayBlank, winMain, [], rectDisplay);
+   end
+
 end
 
 Screen(winMain, 'FillRect', colBackground);
