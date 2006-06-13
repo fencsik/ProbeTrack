@@ -456,7 +456,7 @@ for trial = 1:nTrials
    if respAcc == 1
       Snd('Play', beepCorrect);
       feedbackString = 'CORRECT';
-      colFeedback = colGreen;
+      colFeedback = colBlue;
    else
       Snd('Play', beepError);
       feedbackString = 'ERROR';
@@ -498,12 +498,13 @@ for trial = 1:nTrials
          Screen('CopyWindow', winDisplayBlank, winDB(d));
       end
       for d = drawingOrder
-         if d == probeDisk
-            Screen('CopyWindow', winDiskProbe, winDB(1), [], rectStim(d, :, nFrames), 'transparent');
-            Screen('CopyWindow', winDiskIndicator, winDB(2), [], rectStim(d, :, nFrames), 'transparent');
+         if d == probeDisk & d <= nTargets(trialIndex)
+            Screen('CopyWindow', winDiskProbe, winDB(2), [], rectStim(d, :, nFrames), 'transparent');
          elseif d <= nTargets(trialIndex)
-            Screen('CopyWindow', winDisk, winDB(1), [], rectStim(d, :, nFrames), 'transparent');
-            Screen('CopyWindow', winDiskIndicator, winDB(2), [], rectStim(d, :, nFrames), 'transparent');
+            Screen('CopyWindow', winDisk, winDB(2), [], rectStim(d, :, nFrames), 'transparent');
+         elseif d == probeDisk
+            Screen('CopyWindow', winDiskProbe, winDB(1), [], rectStim(d, :, nFrames), 'transparent');
+            Screen('CopyWindow', winDiskProbe, winDB(2), [], rectStim(d, :, nFrames), 'transparent');
          else
             Screen('CopyWindow', winDisk, winDB(1), [], rectStim(d, :, nFrames), 'transparent');
             Screen('CopyWindow', winDisk, winDB(2), [], rectStim(d, :, nFrames), 'transparent');
