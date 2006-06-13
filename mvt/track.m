@@ -12,8 +12,7 @@ Version = '$Rev$';
 
 %%% input dialog %%%
 dlgParam = {'subject'      , 'Subject initials'               , 'xxx';
-            'pathFile'     , 'Path file name'                 , 'StopTrack07PathsA';
-            'pBlock'       , 'Practice block (1 = yes)'       , '0';
+            'blockType'    , 'Block type (1-6)'               , '1';
            };
 param = inputdlg(dlgParam(:, 2), ['Experiment Parameters'], 1, dlgParam(:, 3));
 if size(param) < 1
@@ -44,16 +43,56 @@ pauseEvery = 50;
 pauseMin = 375; % frames
 
 %%% block settings
-if pBlock
+if blockType == 1
+   % 1. Practice tracking 2 with no gap, motion trials
+   pTrials = 0;
+   xTrials = 10;
+   pracFlag = 1;
+   moveTypeList = 1;
+   nTargetsList = 2;
+   pathFile = 'pathNoGap50a';
+elseif blockType == 2
+   % 2. Training/baseline block with no gap, motion trials
    pTrials = 0;
    xTrials = 50;
+   pracFlag = 1;
    moveTypeList = 1;
    nTargetsList = 4;
-else
+   pathFile = 'pathNoGap50b';
+elseif blockType == 3
+   % 3. Practice tracking 2 with gap, motion trials
+   pTrials = 0;
+   xTrials = 10;
+   pracFlag = 1;
+   moveTypeList = 1;
+   nTargetsList = 2;
+   pathFile = 'pathGap50a';
+elseif blockType == 4
+   % 4. Practice tracking 2 with gap, static trials
+   pTrials = 0;
+   xTrials = 10;
+   pracFlag = 1;
+   moveTypeList = 0;
+   nTargetsList = 2;
+   pathFile = 'pathGap50b';
+elseif blockType == 5
+   % 5. First experimental block with gap, motion and static
    pTrials = 12;
    xTrials = 288;
+   pracFlag = 0;
    moveTypeList = [0 1];
    nTargetsList = [2 3 4];
+   pathFile = 'pathGap300a';
+elseif blockType == 6
+   % 6. Second experimental block with gap, motion and static
+   pTrials = 12;
+   xTrials = 288;
+   pracFlag = 0;
+   moveTypeList = [0 1];
+   nTargetsList = [2 3 4];
+   pathFile = 'pathGap300b';
+else
+   error(sprintf('blockType %d not supported', blockType));
 end
 
 %%% initialize RNG
@@ -64,6 +103,7 @@ rand('state', seed);
 Version = Version(7:length(Version)-2);
 
 %%% Define response keys
+respAbort = KbName('esc');
 respTarget = 40; % ' key (right-hand side)
 respDistractor  =  1; % a key (left-hand side)
 allowedResponses = [respTarget, respDistractor];
@@ -336,7 +376,7 @@ for trial = 1:nTrials
       idur = durIndex(trialIndex);
    end
 
-   if pBlock
+   if pracFlag
       prac = 1;
    end
 
@@ -399,6 +439,14 @@ for trial = 1:nTrials
    Screen('CopyWindow', winDisplayBlank, winMain, [], rectDisplay);
    CenterText(winMain, sprintf('Press any key to begin trial %d of %d', trial, nTrials), colText);
    WaitForButtonPress(winMain, 1);
+   
+   % check for abort
+   [keyDown, keyTime, keyCode] = KbCheck;
+   if keyCode(respAbort)
+      Screen('CloseAll');
+      ShowCursor;
+      return;
+   end
    
    %%% Initialize some variables and pre-load some functions into memory
    Screen(winMain, 'WaitBlanking');
@@ -469,8 +517,8 @@ for trial = 1:nTrials
 
    dataFile = fopen(dataFileName, 'r');
    if dataFile == -1
-      header = ['exp,sub,code,revision,computer,blocktime,pathfile,path,prac,trial,trialtime,' ...
-                'nframes,refreshdur,ndisks,ntargets,targ,probe,blankdur,asynch,shift,move,' ...
+      header = ['exp,sub,code,revision,computer,block,blocktime,pathfile,path,prac,trial,trialtime,' ...
+                'nframes,refreshdur,ndisks,ntargets,targ,probe,gapdur,asynch,shift,move,' ...
                 'response,rt,dur,acc,prepdur,meanframedur,minframedur,maxframedur'];
    else
       fclose(dataFile);
@@ -483,9 +531,10 @@ for trial = 1:nTrials
    if ~isempty(header)
       fprintf(dataFile, '%s\n', header);
    end
-   %                  %exp        %computer      %trial         %nDisks        %asynch  %response               %framedurs
-   fprintf(dataFile, '%s,%s,%s,%s,%s,%f,%s,%d,%d,%d,%s,%d,%0.3f,%d,%d,%d,%d,%d,%d,%d,%d,%s,%0.0f,%0.0f,%d,%0.3f,%0.3f,%0.3f,%0.3f\n', ...
-           experiment, subject, mfilename, Version, computer, blocktime, pathFile, path, prac, trial, trialtime, ...
+   %                  %exp        %computer         %trial         %nDisks        %asynch  %response               %framedurs
+   fprintf(dataFile, '%s,%s,%s,%s,%s,%d,%f,%s,%d,%d,%d,%s,%d,%0.3f,%d,%d,%d,%d,%d,%d,%d,%d,%s,%0.0f,%0.0f,%d,%0.3f,%0.3f,%0.3f,%0.3f\n', ...
+           experiment, subject, mfilename, Version, computer, blockType, blocktime, ...
+           pathFile, path, prac, trial, trialtime, ...
            nFrames, refreshDuration * 1000, nDisks, nTargets(trialIndex), ...
            probeTarget(trialIndex), probeDisk, blankDuration, ...
            asynchronous, shift, moveType(trialIndex),  ...
