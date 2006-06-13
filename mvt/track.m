@@ -33,7 +33,6 @@ end
 %%% set remaining parameters
 % pathFile = 'StopTrack07Paths';
 % moveTypeList = [0 1];
-nTargetsList = [2 3 4];
 probeTargetList = [0 1];
 correctDAC = 0;
 revealTargets = 1;
@@ -49,10 +48,12 @@ if pBlock
    pTrials = 0;
    xTrials = 50;
    moveTypeList = 1;
+   nTargetsList = 4;
 else
    pTrials = 12;
    xTrials = 288;
    moveTypeList = [0 1];
+   nTargetsList = [2 3 4];
 end
 
 %%% initialize RNG
