@@ -85,3 +85,85 @@ target reacquisition times---on the order of a hundred
 milliseconds---than would a parallel process---on the order of tens of
 milliseconds, or possibly instantaneous reacquisition.
 
+Discuss comparison with baseline (no-gap) condition
+
+
+General Methods
+
+
+Experiment 1
+
+In Experiment 1, we introduce the basic methodology and observe that
+target reacquisition occurs quite rapidly, in 80 ms or less. In this
+experiment, the volunteers ranged in age from ??-?? (mean?; gender
+distribution). Initially, observers performed 50 trials with no gap,
+followed by 200 trials with a gap (see the General Methods for more
+details).  During the trials with a gap, the probe onset either 0, 80,
+320, or 1280 ms (0, 6, 24, or 96 frames) after the stimuli
+reappeared. Probe onset delay was randomized within block.  This
+design resulted in 50 trials per level of probe delay (25 target probe
+and 25 distractor probe).
+
+Figure 1A shows average RT for correct responses as a function of
+probe delay separately for probe-target and probe-distractor
+trials. The main effect of probe type was reliable, with shorter RTs
+to target probes (MEAN) than distractor probes (MEAN); F-TEST. The
+main effect of probe delay was also probably reliable, but I don't
+know because I have no data; F-TEST. XXX Do planned pairwise
+comparisons for each successive probe delay for each probe type
+XXX. The dashed horizontal lines indicate baseline performance on each
+probe type from the no-gap trials, and the error bars indicate 95%
+confidence intervals for the repeated measures comparison of each
+data-point from the no-gap RT (Masson & Loftus, 2003).  Clearly, only
+the values at 0 ms are reliably different from baseline; at 0 ms, p <
+.XXX, otherwise, p > .XXX.
+
+Figure 1B plots sensitivity to the probe's identity as target or
+distractor, measured using d' (MacMillan & Creelman, 2005), as a
+function of probe delay. XXX Are there any reliable effects here? XXX
+Again, the error bars indicate 95% confidence intervals based on the
+comparisons between each point and baseline sensitivity. Performance
+with a gap was reliably below performance without a gap at all probe
+delays.
+
+This shows us that response time hits baseline levels within 80 ms of
+stimulus reappearance. However, accuracy remains low across probe
+delays.  This is okay, because it merely indicates that they didn't
+recover all targets, but it suggests that at least some of the RTs
+come from guesses, which could be problemmatical.
+
+Experiment 2
+
+In Experiment 2, we expanded the range of probe delays to investigate
+the timecourse of target reacquisition more carefully. Observers
+ranged in age from ??-?? (mean ?; N females, 8-N males).  Observers
+performed 50 trials with no gap, followed by XXX 250 or 300 XXX trials
+with a gap.  During trials with a gap, the probe onset either 0, 40,
+80, 120, 160, or 1280 ms (0, 3, 6, 9, 12, or 96 frames) after the
+stimuli reappeared. Probe onset delay was randomized within block.
+This design resulted in 50 trials per level of probe delay (25 target
+probe and 25 distractor probe).
+
+Figure 2A shows average RT for correct responses as a function of
+probe delay separately for probe-target and probe-distractor
+trials. The main effect of probe type was reliable, with shorter RTs
+to target probes (MEAN) than distractor probes (MEAN); F-TEST. The
+main effect of probe delay was also reliable in all likelihood, but I
+haven't got the analysis yet; F-TEST. XXX Do planned pairwise
+comparisons XXX. Again, the horizontal lines indicate baseline
+performance from the no-gap trials, and the error bars show the 95%
+confidence intervals for the comparison between the RTs from the gap
+trials and the average RT from the no-gap trials.  Only the values at
+0 ms are reliable different from baseline; at 0 ms, p < .XXX,
+otherwise, p > .XXX.
+
+XXX What's the story in the accuracy data?  Probably the same as for
+Experiment 1. XXX
+
+These results confirm and extend the findings from Experiment
+1. RT to the probe was lengthened only when the probe onset
+concurrently with stimulus reappearance, and returned to baseline
+levels immediately after reappearance. The present results suggest
+that targets are reacquired within 40 ms of reappearance. This finding
+is consistent with the hypothesis that targets are reacquired rapidly,
+most likely in parallel.
