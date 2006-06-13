@@ -512,6 +512,8 @@ for trial = 1:nTrials
          end
       end
 
+      Screen(winMain, 'WaitBlanking', round(.5 / refreshDuration));
+
       for d = [1 2 1 2 1 2]
          Screen('CopyWindow', winDB(d), winMain, [], rectDisplay);
          CenterText(winMain, feedbackString, colFeedback);
