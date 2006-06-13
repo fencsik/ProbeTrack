@@ -5,10 +5,10 @@
 # 
 # $LastChangedDate$
 
-EXPERIMENT=StopTrack5
+EXPERIMENT=StopTrack07
 PUBLIC_DIR=~/Public/Experiments/$EXPERIMENT
 
-GENERATOR_IN=generator.m
+GENERATOR_IN=generator2.m
 TRACK_IN=track.m
 GENERATOR_OUT=${EXPERIMENT}Gen.m
 TRACK_OUT=${EXPERIMENT}.m

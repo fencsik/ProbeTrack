@@ -4,11 +4,11 @@ function generator2
 % 
 % $LastChangedDate$
 
-fileName = 'StopTrack07Paths';
+fileName = 'StopTrack07PathsB';
 backupFile = 'backup.mat';
 
 % basic parameters
-nPaths = 20;
+nPaths = 300;
 nDisks = 10;
 durationFlag = 1; % 1 = range of durations; 2 = discrete durations, with nPaths in each
 startsFlag = 2; % 1 = start from grid; 2 = start from random positions

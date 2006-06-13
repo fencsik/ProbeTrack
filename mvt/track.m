@@ -8,17 +8,12 @@ function track()
 %%% $LastChangedDate$
 
 experiment = 'StopTrack07';
-Version = '2.1';
+Version = '$Rev$';
 
 %%% input dialog %%%
 dlgParam = {'subject'      , 'Subject initials'               , 'xxx';
-            'pathFile'     , 'Path file name'                 , 'StopTrack07Paths';
+            'pathFile'     , 'Path file name'                 , 'StopTrack07PathsA';
             'pBlock'       , 'Practice block (1 = yes)'       , '0';
-            'pTrials'      , 'Number of practice trials'      , '4';
-            'xTrials'      , 'Number of experimental trials'  , '4';
-            'nTargetsList' , 'Number of Targets'              , '2';
-            'moveTypeList' , 'Moving? (1 = yes, 0 = no)'      , '0 1';
-           %'correctDAC'   , 'Correct for 10-bit DAC'         , '1';
            };
 param = inputdlg(dlgParam(:, 2), ['Experiment Parameters'], 1, dlgParam(:, 3));
 if size(param) < 1
@@ -38,8 +33,9 @@ end
 %%% set remaining parameters
 % pathFile = 'StopTrack07Paths';
 % moveTypeList = [0 1];
+nTargetsList = [2 3 4];
 probeTargetList = [0 1];
-correctDAC = 1;
+correctDAC = 0;
 revealTargets = 1;
 
 %%% set some fixed parameters
@@ -48,9 +44,23 @@ shift = 1;
 pauseEvery = 50;
 pauseMin = 375; % frames
 
+%%% block settings
+if pBlock
+   pTrials = 0;
+   xTrials = 50;
+   moveTypeList = 1;
+else
+   pTrials = 12;
+   xTrials = 288;
+   moveTypeList = [0 1];
+end
+
 %%% initialize RNG
 seed = sum(100*clock);
 rand('state', seed);
+
+%%% fix up Version string (this removes the extra characters from SVN)
+Version = Version(7:length(Version)-2);
 
 %%% Define response keys
 respTarget = 40; % ' key (right-hand side)
@@ -409,7 +419,7 @@ for trial = 1:nTrials
    tProbeOnset = GetSecs;
    while 1
       [keyDown, tResponseOnset, keyCode] = KbCheck;
-      if keyDown & any(keyCode(allowedResponses))
+      if keyDown
          break;
       end
    end
@@ -446,7 +456,7 @@ for trial = 1:nTrials
    if respAcc == 1
       Snd('Play', beepCorrect);
       feedbackString = 'CORRECT';
-      colFeedback = colBlue;
+      colFeedback = colGreen;
    else
       Snd('Play', beepError);
       feedbackString = 'ERROR';
@@ -458,7 +468,7 @@ for trial = 1:nTrials
 
    dataFile = fopen(dataFileName, 'r');
    if dataFile == -1
-      header = ['exp,sub,code,version,computer,blocktime,pathfile,path,prac,trial,trialtime,' ...
+      header = ['exp,sub,code,revision,computer,blocktime,pathfile,path,prac,trial,trialtime,' ...
                 'nframes,refreshdur,ndisks,ntargets,targ,probe,blankdur,asynch,shift,move,' ...
                 'response,rt,dur,acc,prepdur,meanframedur,minframedur,maxframedur'];
    else
@@ -490,7 +500,7 @@ for trial = 1:nTrials
       for d = drawingOrder
          if d == probeDisk
             Screen('CopyWindow', winDiskProbe, winDB(1), [], rectStim(d, :, nFrames), 'transparent');
-            Screen('CopyWindow', winDiskProbe, winDB(2), [], rectStim(d, :, nFrames), 'transparent');
+            Screen('CopyWindow', winDiskIndicator, winDB(2), [], rectStim(d, :, nFrames), 'transparent');
          elseif d <= nTargets(trialIndex)
             Screen('CopyWindow', winDisk, winDB(1), [], rectStim(d, :, nFrames), 'transparent');
             Screen('CopyWindow', winDiskIndicator, winDB(2), [], rectStim(d, :, nFrames), 'transparent');
@@ -503,7 +513,7 @@ for trial = 1:nTrials
       for d = [1 2 1 2 1 2]
          Screen('CopyWindow', winDB(d), winMain, [], rectDisplay);
          CenterText(winMain, feedbackString, colFeedback);
-         Screen(winMain, 'WaitBlanking', round(.25 / refreshDuration));
+         Screen(winMain, 'WaitBlanking', round(.2 / refreshDuration));
       end
    end
 
