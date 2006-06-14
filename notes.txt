@@ -299,6 +299,20 @@ Planned study: top-down influences on reacquisition strategies
 
 ----------------------------------------------------------------------
 
+February 10, 2005:
+
+One idea to further the StopTrack studies: the reason we see motion
+information for only one object may be that the continuous updating
+necessary to maintain the moving objects is such that subject cannot
+encode more than one object's worth of velocity info.  Perhaps if we
+reduce the demand of the task--e.g., by slowing the objects down--we
+should see an increase in accuracy.  Of course, this is not a
+particularly exciting prediction: if the task gets easier,
+performance goes up.  What would be more interesting would be a
+counterintuitive prediction.
+
+----------------------------------------------------------------------
+
 February 11, 2005:
 
 Been a while...
@@ -310,6 +324,24 @@ which looks at the effects of luminance shifts on tracking.
 Last night, I remembered that I need a within-subject comparison of
 asynch vs. synch performance, so let's put together ShiftTrack9 for
 this purpose.
+
+----------------------------------------------------------------------
+
+June 13, 2005:
+
+From discussions with TSH: There are three future directions for the
+SpeedSearch studies.
+
+1. Increase absolute speed with a fixed absolute difference between
+   fast and slow stimuli.  See if the search ever becomes inefficient
+   (it'll be surprising if it doesn't), and whether an asymmetry ever
+   appears.
+
+2. Systematically increase the noise vector from SpeedSearch 3 and see
+   if the search ever becomes inefficient.
+
+3. Start piloting SpeedTrack (and maybe run a version of SpeedSearch
+   with random directions)
 
 ----------------------------------------------------------------------
 
@@ -443,38 +475,6 @@ efficient-search explanation.  One possibility is to look for
 dual-task costs between the speed-tracking and an separate, concurrent
 search task.  Again, the problem here is that the common mechanism
 explanation predicts no effect (i.e., no dual-task interference).
-
-----------------------------------------------------------------------
-
-February 10, 2005:
-
-One idea to further the StopTrack studies: the reason we see motion
-information for only one object may be that the continuous updating
-necessary to maintain the moving objects is such that subject cannot
-encode more than one object's worth of velocity info.  Perhaps if we
-reduce the demand of the task--e.g., by slowing the objects down--we
-should see an increase in accuracy.  Of course, this is not a
-particularly exciting prediction: if the task gets easier,
-performance goes up.  What would be more interesting would be a
-counterintuitive prediction.
-
-----------------------------------------------------------------------
-
-June 13, 2005:
-
-From discussions with TSH: There are three future directions for the
-SpeedSearch studies.
-
-1. Increase absolute speed with a fixed absolute difference between
-   fast and slow stimuli.  See if the search ever becomes inefficient
-   (it'll be surprising if it doesn't), and whether an asymmetry ever
-   appears.
-
-2. Systematically increase the noise vector from SpeedSearch 3 and see
-   if the search ever becomes inefficient.
-
-3. Start piloting SpeedTrack (and maybe run a version of SpeedSearch
-   with random directions)
 
 ----------------------------------------------------------------------
 

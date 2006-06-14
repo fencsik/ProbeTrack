@@ -43,15 +43,26 @@ Experiments:
   incomplete
 * speedtrack02: first actual speed-tracking tracking study (paired
   with speedsearch04)
+* speedtrack03 (NIA): attempt at speed-tracking study with different
+  speeds (6.4 and 9.6, instead of 3.2 and 6.4), but tracking portion
+  was aborted with 3 subjects and only the search portion was run, but
+  with a limited exposure duration (paired with SpeedSearch07, but not
+  the speedsearch07 in the repository)
+* speedtrack04 (NIA): manipulated tracking interval duration to look
+  for interaction between dur and target-speed
 
 * speedsearch01: first conveyor belt study
-* speedsearch02 (NIA): conveyor belt study with background grid
-* speedsearch03 (NIA): conveyor belt study with vertical noise
+* speedsearch02: conveyor belt study with background grid
+* speedsearch03: conveyor belt study with vertical noise
 * speedsearch04: first study with MOT-like motion (paired with
   speedtrack02)
 * speedsearch05 (NIA): aborted MOT-like search with limited exposure
   duration
 * speedsearch06: MOT-like search with staircased exposure durations
+* speedsearch07: conveyor belt study with fixed distractor speed (not
+  quite complete)
+* speedsearch08: conveyor belt study with fixed distractor speed and
+  within-block design
 
 * winsearch1: speed-search with windows
 * winsearch2: winsearch1 with drop-shadows for depth
