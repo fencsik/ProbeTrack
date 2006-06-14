@@ -625,10 +625,10 @@ end
 ShowCursor;
 Screen('CloseAll');
 
-indexAcc = blockAcc >= 0 & (1:nTrials) > pTrials;
-indexRT = indexAcc & blockAcc == 1;
+indexAcc = blockAcc' >= 0 & (1:nTrials) > pTrials;
+indexRT = indexAcc & blockAcc' == 1;
 fprintf('avg pcor  = %0.000f\navg rtcor = %0.3f s\n', ...
-        mean(blockAcc(indexAcc)), mean(rt(indexRT)));
+        mean(blockAcc(indexAcc)), mean(blockRT(indexRT)));
 
 
 function WaitForButtonPress (win, kbFlag)
