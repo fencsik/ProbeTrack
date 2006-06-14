@@ -91,6 +91,14 @@ elseif blockType == 6
    moveTypeList = [0 1];
    nTargetsList = [2 3 4];
    pathFile = 'pathGap300b';
+elseif blockType < 0
+   % testing block
+   pTrials = 0;
+   xTrials = 4;
+   pracFlag = 1;
+   moveTypeList = [0 1];
+   nTargetsList = 2;
+   pathFile = 'pathGap50a';
 else
    error(sprintf('blockType %d not supported', blockType));
 end
@@ -442,7 +450,8 @@ for trial = 1:nTrials
    Screen('CopyWindow', winDisplayBlank, winMain, [], rectDisplay);
    CenterText(winMain, sprintf('Press any key to begin trial %d of %d', trial, nTrials), colText);
    WaitForButtonPress(winMain, 1);
-   
+   while KbCheck; end
+
    % check for abort
    [keyDown, keyTime, keyCode] = KbCheck;
    if keyCode(respAbort)
@@ -501,7 +510,7 @@ for trial = 1:nTrials
          respAcc = 1;
       end
    else
-      respString = fprintf('%d', respCode);
+      respString = sprintf('%d', respCode);
       respAcc = -1;
    end
    
@@ -578,6 +587,7 @@ for trial = 1:nTrials
    WaitSecs(.1);
    CenterText(winMain, 'Press any key to continue', colText, 0, 50);
    WaitForButtonPress(winMain, 1);
+   while KbCheck; end
 
    Screen('CopyWindow', winDisplayBlank, winMain, [], rectDisplay);
    
@@ -603,11 +613,22 @@ mesg = {'Block Finished';
         sprintf('You were correct on %0.0f%% of the trials.', 100 * mean(blockAcc(blockAcc >= 0)));
         'Please inform the experimenter.'};
 CenterCellText(winMain, mesg, colInstructions, 80);
-FlushEvents('keyDown');
-GetChar;
+while KbCheck; end
+while 1
+   [keyDown, keyTime, keyCode] = KbCheck;
+   if keyDown & keyCode(respAbort)
+      while KbCheck; end
+      break;
+   end
+end
 
+ShowCursor;
 Screen('CloseAll');
 
+indexAcc = blockAcc >= 0 & (1:nTrials) > pTrials;
+indexRT = indexAcc & blockAcc == 1;
+fprintf('avg pcor  = %0.000f\navg rtcor = %0.3f s\n', ...
+        mean(blockAcc(indexAcc)), mean(rt(indexRT)));
 
 
 function WaitForButtonPress (win, kbFlag)
