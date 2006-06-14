@@ -352,6 +352,9 @@ clear NumberOfTrials IVs nVariables varLength listLength nRepetitions v dummy le
 
 Screen(winMain, 'FillRect', colBackground);
 
+blockAcc = zeros(nTrials, 1);
+blockRT = zeros(nTrials, 1);
+
 for trial = 1:nTrials
    trialtime = datestr(now);
    
@@ -513,6 +516,8 @@ for trial = 1:nTrials
    end
    CenterText(winMain, feedbackString, colFeedback);
 
+   blockAcc(trial) = respAcc;
+   blockRT(trial) = respRT;
    frameDurations = diff(frameDisplayTime);
 
    dataFile = fopen(dataFileName, 'r');
@@ -594,8 +599,10 @@ for trial = 1:nTrials
 end
 
 Screen(winMain, 'FillRect', colBackground);
-mesg = {'Block is complete.'; 'Please inform the experimenter.'};
-CenterCellText(winMain, mesg, colInstructions, 40);
+mesg = {'Block Finished';
+        sprintf('You were correct on %0.0f%% of the trials.', 100 * mean(blockAcc(blockAcc >= 0)));
+        'Please inform the experimenter.'};
+CenterCellText(winMain, mesg, colInstructions, 80);
 FlushEvents('keyDown');
 GetChar;
 
