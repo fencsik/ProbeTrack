@@ -35,6 +35,8 @@ Experiments:
 * stoptrack3: stoptrack1 with random trial durations and 2 or 4
   targets
 * stoptrack4: replicates stoptrack3 with a new set of naive subjects
+* stoptrack5 (NIA): stoptrack4 (?) with a fixation point, and
+  instructions to either fixate it or move eyes freely (incomplete)
 
 * switchtrack1: one distractor reappears post-gap in a location that a
   target had occupied prior to the gap
