@@ -7,7 +7,7 @@ function track()
 %%%
 %%% $LastChangedDate$
 
-experiment = 'StopTrack07';
+experiment = 'StopTrack06';
 Version = '$Rev$';
 
 %%% input dialog %%%
