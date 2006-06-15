@@ -37,6 +37,9 @@ Experiments:
 * stoptrack4: replicates stoptrack3 with a new set of naive subjects
 * stoptrack5 (NIA): stoptrack4 (?) with a fixation point, and
   instructions to either fixate it or move eyes freely (incomplete)
+* stoptrack6: stoptrack with probe-one response instead of click-all,
+  within-block manipulation of preview type and load, and loads of 2,
+  3, and 4 targets
 
 * switchtrack1: one distractor reappears post-gap in a location that a
   target had occupied prior to the gap
