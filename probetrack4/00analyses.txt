@@ -2,7 +2,11 @@
 
 $LastChangedDate$
 
-* fig0101.r: plot correct RT by probe delay separated by number of
-  targets
+* fig0101: plot correct RT by probe delay separated by number of
+  targets and probe type
+- fig0102: plot accuracy by probe delay separated by number of targets
+  and probe type
+* fig0103: plot correct RT by probe delay separated by number of targets
+- fig0104: plot accuracy by probe delay separated by number of targets
 
 (* = complete, - = incomplete)
