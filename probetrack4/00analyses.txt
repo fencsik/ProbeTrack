@@ -1,0 +1,8 @@
+00analyses.txt
+
+$LastChangedDate$
+
+* fig0101.r: plot correct RT by probe delay separated by number of
+  targets
+
+(* = complete, - = incomplete)
