@@ -13,15 +13,21 @@ do.fig0103 <- function () {
 
    if (!file.exists(infile)) stop("cannot open input file ", infile);
    load(infile);
+   data01$ntargets <- as.numeric(as.character(data01$ntargets));
+   data01$soa <- as.numeric(as.character(data01$soa));
 
    ## extract relevant data
-   dt <- data01[data01$gapDuration > 0 & data01$acc == 1, ];
-   dtg <- apply(tapply(dt$rt, list(dt$soa, dt$nTargets, dt$sub), mean),
-                1:2, mean, na.rm = T);
-   errg <- NULL;
+   dtg <- with(data01[data01$gapdur != "0", ],
+               tapply(rt.cor, list(soa, ntargets), mean, na.rm = TRUE));
+   errg <- with(data01[data01$gapdur != "0", ],
+                tapply(rt.cor, list(soa, ntargets),
+                       function(x) sqrt(var(x, na.rm = TRUE) / length(x))));
+   dtng <- with(data01[data01$gapdur == "0", ],
+                tapply(rt.cor, list(soa, ntargets), mean, na.rm = TRUE));
+
    x <- as.numeric(dimnames(dtg)[[1]]) * 1000 / 75;
 
-   ### settings
+   ## settings
    ylim <- c(500, 1000);
    cond.names <- dimnames(dtg)[[2]];
    nCond <- length(cond.names);
@@ -35,18 +41,19 @@ do.fig0103 <- function () {
 
    matplot(x, dtg, type = "n", bty = "n",
            ylim = ylim, axes = F,
-           xlab = "Probe delay (ms)", ylab = "Reaction time (ms)", main = "ProbeTrack4/3B");
+           xlab = "Probe delay (ms)", ylab = "Probe RT (ms)",
+           main = "ProbeTrack4/3B");
    axis(1, x);
    axis(2);
 
    lastIndex <- dim(dtg)[1];
    for (n in dimnames(dtg)[[2]]) {
-      lines(x, dtg[, n], type = "o",
-            col = col[n], pch = pch[n], lty = 1, lwd = 3, cex = 1.5, bg = "white");
       if (!is.null(errg)) {
          arrows(x, dtg[, n] - errg[, n], x, dtg[, n] + errg[, n],
-                length = .05, angle = 90, code = 4, lwd = 3);
+                length = .05, angle = 90, code = 3, lwd = 1, col = col[n], lty = 1);
       }
+      lines(x, dtg[, n], type = "o",
+            col = col[n], pch = pch[n], lty = 1, lwd = 3, cex = 1.5, bg = "white");
       text(x[lastIndex] + xinch(.2), dtg[lastIndex, n], sprintf("%s targets", n),
            col = col[n], cex = .7, adj = 0);
    }

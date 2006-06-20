@@ -28,8 +28,6 @@ do.fig0101 <- function () {
 
    x <- as.numeric(dimnames(dtg)[[1]]) * 1000 / 75;
 
-   print(dtg);
-
    ## settings
    ylim <- c(500, 1000);
    cond.names <- dimnames(dtg)[[2]];
