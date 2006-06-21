@@ -1,0 +1,22 @@
+Subjects jia, mz, and wms have 50 trials marked as block 1,
+gapDuration 0, whereas the other subjects have 5 such trials.
+
+These three subjects have no trials marked as block 2, gapDuration 0,
+whereas the other subjects have 50 such trials.
+
+These three subjects have five fewer trials total (270) than all the
+other subjects (275). 
+
+It seems that, for these three subjects, we are missing 5 block-1
+trials for gapDuration 0.  This seems to be no big loss, give that
+these trials were just for practice, anyway.
+
+I went in and changed the original data files for these three subjects
+so that their gapDuration 0 trials are marked as block 2, for
+consistency.
+
+This is necessary because I filter out data based on block number,
+assuming that block 1 trials are practice and block 2 trials are
+experimental.
+
+-- David Fencsik, 2006-06-21
