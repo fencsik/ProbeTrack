@@ -627,7 +627,7 @@ Screen('CloseAll');
 
 indexAcc = blockAcc' >= 0 & (1:nTrials) > pTrials;
 indexRT = indexAcc & blockAcc' == 1;
-fprintf('avg pcor  = %0.000f\navg rtcor = %0.3f s\n', ...
+fprintf('avg pcor  = %0.3f\navg rtcor = %0.3f s\n', ...
         mean(blockAcc(indexAcc)), mean(blockRT(indexRT)));
 
 
