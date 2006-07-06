@@ -4,7 +4,8 @@
 
 do.fig0102 <- function () {
    infile <- "data01.rda";
-   pdffile <- "fig0102.pdf";
+   outfile <- "fig0102.pdf";
+   thisfile <- "fig0102.r";
    exit.function <- function () {
       if (exists("opar")) par(opar);
       if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
@@ -12,6 +13,12 @@ do.fig0102 <- function () {
    on.exit(exit.function());
 
    if (!file.exists(infile)) stop("cannot open input file ", infile);
+   if (file.exists(outfile) &&
+       file.info(outfile)$mtime > file.info(thisfile)$mtime &&
+       file.info(outfile)$mtime > file.info(infile)$mtime) {
+      warning("Output file is up to date, no action taken");
+      return(NULL);
+   }
    load(infile);
    data01$soa <- as.numeric(as.character(data01$soa));
 
@@ -33,7 +40,7 @@ do.fig0102 <- function () {
    col <- rainbow(nCond);                               names(col) <- cond.names;
    pch <- c(21, 22, 23, 24, 16, 15, 17, 18)[1:nCond];   names(pch) <- cond.names;
 
-   pdf(pdffile, width = 6, height = 6, pointsize = 12);
+   pdf(outfile, width = 6, height = 6, pointsize = 12);
    opar <- par(mfrow = c(1, 1), las = 1, pty = "m", cex.axis = .6,
                xpd = NA, bg = "white");
 

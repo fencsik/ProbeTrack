@@ -4,7 +4,13 @@
 
 refresh.all <- function()
 {
+   exit.function <- function () {
+      if (exists("op")) options(op);
+   }
+   on.exit(exit.function());
    cat("\nRefreshing files in", getwd(), "\n");
+
+   op <- options(warn = 1);
 
    ## refresh data files
    for (fname in list.files(pattern="^data[0-9]+.r$")) {

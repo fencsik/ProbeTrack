@@ -11,6 +11,7 @@ do.data01 <- function () {
    if (file.exists(outfile) &&
        file.info(outfile)$mtime > file.info(thisfile)$mtime &&
        file.info(outfile)$mtime > file.info(infile)$mtime) {
+      warning("Output file is up to date, no action taken");
       return(NULL);
    }
    dt <- read.csv(infile);
