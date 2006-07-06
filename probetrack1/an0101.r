@@ -16,13 +16,30 @@ do.an0101 <- function () {
    if (file.exists(outfile) &&
        file.info(outfile)$mtime > file.info(thisfile)$mtime &&
        file.info(outfile)$mtime > file.info(infile)$mtime) {
-      return(NULL);
+      warning("Output file is up to date, no action taken");
+      invisible(NULL);
    }
    load(infile);
 
    sink(outfile);
-   cat("ANOVA on RT as a function of probe type and probe delay\n");
+   cat("ANOVA on correct RT as a function of probe type and probe delay\n");
+   cat("  gap trials only, subject with missing data eliminated\n");
    print(summary(aov(rt.cor ~ target * soa + Error(sub / (target * soa)),
+                     data01[data01$gapdur == "10" & data01$sub != "nw",])));
+   cat("\n\n\n");
+   cat("ANOVA on all RT as a function of probe type and probe delay\n");
+   cat("  gap trials only\n");
+   print(summary(aov(rt.all ~ target * soa + Error(sub / (target * soa)),
+                     data01[data01$gapdur == "10",])));
+   cat("\n\n\n");
+   cat("ANOVA on correct RT as a function of probe type and probe delay\n");
+   cat("  no-gap trials only\n");
+   print(summary(aov(rt.cor ~ target * soa + Error(sub / (target * soa)),
+                     data01[data01$gapdur == "0" & data01$sub != "nw",])));
+   cat("\n\n\n");
+   cat("ANOVA on all RT as a function of probe type and probe delay\n");
+   cat("  no-gap trials only\n");
+   print(summary(aov(rt.all ~ target * soa + Error(sub / (target * soa)),
                      data01[data01$gapdur == "0",])));
 }
 
