@@ -87,11 +87,13 @@ milliseconds, or possibly instantaneous reacquisition.
 
 Discuss comparison with baseline (no-gap) condition
 
+rule out apparent motion
+
 
 General Methods
 
 
-Experiment 1
+Experiment 1 (ProbeTrack1)
 
 In Experiment 1, we introduce the basic methodology and observe that
 target reacquisition occurs quite rapidly, in 80 ms or less. In this
@@ -132,7 +134,8 @@ delays.  This is okay, because it merely indicates that they didn't
 recover all targets, but it suggests that at least some of the RTs
 come from guesses, which could be problemmatical.
 
-Experiment 2
+
+Experiment 2 (ProbeTrack2)
 
 In Experiment 2, we expanded the range of probe delays to investigate
 the timecourse of target reacquisition more carefully. Observers
@@ -167,3 +170,45 @@ levels immediately after reappearance. The present results suggest
 that targets are reacquired within 40 ms of reappearance. This finding
 is consistent with the hypothesis that targets are reacquired rapidly,
 most likely in parallel.
+
+
+Experiment 3 (ProbeTrack3)
+
+In Experiment 3, we generalize our findings from the earlier
+experiments to a wider range of gap durations.  In the first two
+experiments, the stimuli disappeared for a gap of 133 ms on every
+trial.  In Experiment 3, we added trial blocks with gap durations of
+307 ms and 507 ms.
+
+Beyond simply generalizing the results from the previous experiments,
+Experiment 3 allows us to test an alternative hypothesis, that the
+performance with a short gap does not require task postponement.  If
+this were the case, then participants would not lose the targets
+during the gap and would not have to reacquire them after it.
+According to this hypothesis, then, the finding in previous
+experiments that post-gap RTs equalled no-gap RTs at short probe
+delays is uninteresting.  However, at longer gap durations, observers
+do seem to postpone the tracking task, storing information about it in
+a separate mechanism until the stimuli reappear (Alvarez, et al.,
+2005).  Thus, the alternative hypothesis predicts that it should take
+longer after the gap for RT to return to baseline levels on trials
+with larger gap durations---that is, the RT by probe delay functions
+observed in Experiments 1 and 2 should be shifted to the right at the
+longer gap durations in Experiment 3.
+
+However, if a 133 ms gap is long enough to require postponement of the
+tracking task, then there should be no difference in RT across gap
+durations.  This will confirm our previous findings, that target
+reacquisition seems to completed very rapidly following the gap.
+
+Speed-accuracy tradeoff: RT is same across gap durations, but accuracy
+declines with gap duration.  Suggests that a speed-accuracy tradeoff
+may be masking increasing RT.  This claim predicts that RT is speeded
+because of fast-guesses, which in turn predicts not only that
+incorrect responses should be faster than correct responses, but that
+the difference between correct and incorrect RTs should increase with
+gap duration.
+
+The procedure was identical to 
+
+Experiment 4 (ProbeTrack4/3B and ProbeTrack5/3C)
