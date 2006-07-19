@@ -1,0 +1,10 @@
+00analyses.txt: list of analyses
+
+Version: $Id$
+
+- an01.r: creates a table showing which subject has been in which	
+	  experiment.
+
+
+* complete
+- incomplete
