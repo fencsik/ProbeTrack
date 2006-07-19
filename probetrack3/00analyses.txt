@@ -13,11 +13,11 @@ $LastChangedDate$
 - an0104: t-tests comparing accuracy on gap trials at each probe delay
   to accuracy on no-gap trials
 
-* fig0101: plot correct RT by probe delay separated by number of
-  targets and probe type
-- fig0102: plot accuracy by probe delay separated by number of targets
+* fig0101: plot correct RT by probe delay separated by gap duration
   and probe type
-- fig0103: plot correct RT by probe delay separated by number of targets
+- fig0102: plot accuracy by probe delay separated by gap duration and
+  probe type
+* fig0103: plot correct RT by probe delay separated by gap duration
 - fig0104: plot accuracy by probe delay separated by number of targets
 
 (* = complete, - = incomplete)
