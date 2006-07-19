@@ -17,8 +17,8 @@ do.data01 <- function () {
    dt <- read.csv(infile);
 
    ## remove bad subjects:
-   ## 1. remove wms based on SSP's lab book (lots of bad keypresses)
-   dt <- dt[dt$identifier != "wms", ];
+   ## 1. remove nw based on SSP's lab book
+   dt <- dt[dt$identifier != "nw", ];
    dt$sub <- factor(dt$identifier);
 
    ## remove practice blocks, bad keypresses, and negative RTs (which should
