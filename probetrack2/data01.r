@@ -8,11 +8,9 @@ do.data01 <- function () {
    thisfile <- "data01.r";
 
    if (!file.exists(infile)) stop("cannot open file ", infile);
-   if (file.exists(outfile) &&
-       file.info(outfile)$mtime > file.info(thisfile)$mtime &&
-       file.info(outfile)$mtime > file.info(infile)$mtime) {
+   if (IsFileUpToDate(outfile, c(thisfile, infile))) {
       warning("Output file is up to date, no action taken");
-      return(NULL);
+      return(invisible(NULL));
    }
    dt <- read.csv(infile);
 

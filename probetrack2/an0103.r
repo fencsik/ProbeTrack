@@ -7,6 +7,7 @@ do.an0103 <- function () {
    thisfile <- "an0103.r";
    infile <- "data01.rda";
    outfile <- "an0103.txt";
+   rdafile <- "an0103.rda";
 
    exit.function <- function () {
       while (sink.number() > 0) sink();
@@ -14,11 +15,9 @@ do.an0103 <- function () {
    on.exit(exit.function());
 
    if (!file.exists(infile)) stop("cannot open input file ", infile);
-   if (file.exists(outfile) &&
-       file.info(outfile)$mtime > file.info(thisfile)$mtime &&
-       file.info(outfile)$mtime > file.info(infile)$mtime) {
+   if (IsFileUpToDate(outfile, c(thisfile, infile))) {
       warning("Output file is up to date, no action taken");
-      invisible(NULL);
+      return(invisible(NULL));
    }
    load(infile);
    data01$soa <- as.numeric(as.character(data01$soa)) * 1000 / 75;
@@ -28,14 +27,15 @@ do.an0103 <- function () {
    d.nogap <- with(data01[data01$gapdur == "0",],
                    tapply(rt.cor, list(sub, target), mean));
 
-   results <- array(dim = c(dim(d.gap)[2], dim(d.gap)[3], 2),
-                    dimnames = list(dimnames(d.gap)[[2]], c("0", "1"), c("t", "p")));
+   results <- array(dim = c(dim(d.gap)[2], dim(d.gap)[3], 3),
+                    dimnames = list(dimnames(d.gap)[[2]], c("0", "1"), c("t", "p", "ci")));
 
    for (target in dimnames(d.gap)[[3]]) {
       for (soa in dimnames(d.gap)[[2]]) {
          g <- t.test(d.gap[, soa, target], d.nogap[, target], paired = T, var.equal = T);
          results[soa, target, "t"] <- round(g$statistic, 2);
          results[soa, target, "p"] <- round(g$p.value, 3);
+         results[soa, target, "ci"] <- diff(as.numeric(g$conf.int)) / 2;
       }
    }
 
@@ -47,6 +47,9 @@ do.an0103 <- function () {
        "corresponding to probe-distractor trials and 1 to probe-target",
        "trials.\n"), sep = "\n");
    print(results);
+
+   an0103 <- results;
+   save(an0103, file = rdafile);
 }
 
 do.an0103();
