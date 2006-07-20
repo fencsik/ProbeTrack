@@ -15,11 +15,9 @@ do.an0104 <- function () {
    on.exit(exit.function());
 
    if (!file.exists(infile)) stop("cannot open input file ", infile);
-   if (file.exists(outfile) &&
-       file.info(outfile)$mtime > file.info(thisfile)$mtime &&
-       file.info(outfile)$mtime > file.info(infile)$mtime) {
+   if (IsFileUpToDate(outfile, c(thisfile, infile))) {
       warning("Output file is up to date, no action taken");
-      invisible(NULL);
+      return(invisible(NULL));
    }
    load(infile);
    data01$soa <- as.numeric(as.character(data01$soa)) * 1000 / 75;
