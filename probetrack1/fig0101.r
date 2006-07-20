@@ -6,6 +6,7 @@ do.fig0101 <- function () {
    infile <- "data01.rda";
    outfile <- "fig0101.pdf";
    thisfile <- "fig0101.r";
+   errfile <- "an0103.rda";
    exit.function <- function () {
       if (exists("opar")) par(opar);
       if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
@@ -13,9 +14,7 @@ do.fig0101 <- function () {
    on.exit(exit.function());
 
    if (!file.exists(infile)) stop("cannot open input file ", infile);
-   if (file.exists(outfile) &&
-       file.info(outfile)$mtime > file.info(thisfile)$mtime &&
-       file.info(outfile)$mtime > file.info(infile)$mtime) {
+   if (IsFileUpToDate(outfile, c(infile, thisfile, errfile))) {
       warning("Output file is up to date, no action taken");
       return(NULL);
    }
@@ -25,9 +24,14 @@ do.fig0101 <- function () {
    ## extract relevant data
    dtg <- with(data01[data01$gapdur != "0", ],
                tapply(rt.cor, list(soa, target), mean, na.rm = TRUE));
-   errg <- with(data01[data01$gapdur != "0", ],
-                tapply(rt.cor, list(soa, target),
-                       function(x) sqrt(var(x, na.rm = TRUE) / length(x))));
+   if (file.exists(errfile)) {
+      load(errfile);
+      errg <- an0103[, , "ci"];
+   } else {
+      errg <- with(data01[data01$gapdur != "0", ],
+                   tapply(rt.cor, list(soa, target),
+                          function(x) qt(.975, length(x) - 1) * sqrt(var(x, na.rm = TRUE) / length(x))));
+   }
    dtng <- with(data01[data01$gapdur == "0", ],
                 tapply(rt.cor, list(soa, target), mean, na.rm = TRUE));
 
