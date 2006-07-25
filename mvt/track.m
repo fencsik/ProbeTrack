@@ -7,12 +7,12 @@ function track()
 %%%
 %%% $LastChangedDate$
 
-experiment = 'StopTrack06';
+experiment = 'GetMovingPilot01';
 Version = '$Rev$';
 
 %%% input dialog %%%
 dlgParam = {'subject'      , 'Subject initials'               , 'xxx';
-            'blockType'    , 'Block type (1-6)'               , '1';
+            'blockType'    , 'Block type (1-6)'               , '3';
            };
 param = inputdlg(dlgParam(:, 2), ['Experiment Parameters'], 1, dlgParam(:, 3));
 if size(param) < 1
@@ -33,7 +33,7 @@ end
 % pathFile = 'StopTrack07Paths';
 % moveTypeList = [0 1];
 probeTargetList = [0 1];
-correctDAC = 0;
+correctDAC = 1;
 revealTargets = 1;
 
 %%% set some fixed parameters
@@ -41,12 +41,13 @@ asynchronous = 0;
 shift = 1;
 pauseEvery = 50;
 pauseMin = 375; % frames
+durFixed = 30; % frames
 
 %%% block settings
 if blockType == 1
    % 1. Practice tracking 2 with no gap, motion trials
    pTrials = 0;
-   xTrials = 10;
+   xTrials = 20;
    pracFlag = 1;
    moveTypeList = 1;
    nTargetsList = 2;
@@ -62,7 +63,7 @@ elseif blockType == 2
 elseif blockType == 3
    % 3. Practice tracking 2 with gap, motion trials
    pTrials = 0;
-   xTrials = 10;
+   xTrials = 20;
    pracFlag = 1;
    moveTypeList = 1;
    nTargetsList = 2;
@@ -102,6 +103,13 @@ elseif blockType < 0
 else
    error(sprintf('blockType %d not supported', blockType));
 end
+
+pTrials = 0;
+xTrials = 12;
+pracFlag = 1;
+moveTypeList = 1;
+nTargetsList = 2;
+pathFile = 'pathShort';
 
 %%% initialize RNG
 seed = sum(100*clock);
@@ -250,7 +258,6 @@ end
 %%% 3. Pause
 %%% 4. Tracking interval
 animationLoop = {
-   'startTime = GetSecs;'
    'Screen(''CopyWindow'', winDB(1), winMain, [], rectDisplay);'
    'Screen(winMain, ''WaitBlanking'', round(.5 / refreshDuration));'
    'for f = [2 1 2 1 2 1 2 1];'
@@ -258,7 +265,9 @@ animationLoop = {
    '   Screen(winMain, ''WaitBlanking'', round(1/3 / refreshDuration));'
    'end;'
    'Screen(''CopyWindow'', winDB(1), winMain, [], rectDisplay);'
-   'Screen(winMain, ''WaitBlanking'', round(.25 / refreshDuration));'
+   'Screen(winMain, ''WaitBlanking'');'
+   'startTime = GetSecs;'
+   'Screen(winMain, ''WaitBlanking'', durFixed - 1);'
    'for f = 1:nFrames;'
    '   Screen(''CopyWindow'', winDisplayBlank, winDisplay);'
    '   if f < gapOnset | f >= gapOffset;'
@@ -402,6 +411,13 @@ for trial = 1:nTrials
    gapOnset = nFrames - blankDuration;
    gapOffset = nFrames;
    rectStim = zeros(nDisks, 4, nFrames);
+   
+   if gapOnset <= 1
+      Screen('CloseAll');
+      ShowCursor;
+      error(sprintf('gap duration of %0.0f frames requested on a trial with %0.0f frames', ...
+                    blankDuration, nFrames));
+   end
 
    %%% generate trajectories
    for f = 1:nFrames
@@ -528,12 +544,14 @@ for trial = 1:nTrials
    blockAcc(trial) = respAcc;
    blockRT(trial) = respRT;
    frameDurations = diff(frameDisplayTime);
+   preGapDuration = frameDisplayTime(gapOnset) - startTime;
+   gapDuration = frameDisplayTime(gapOffset - 1) - frameDisplayTime(gapOnset);
 
    dataFile = fopen(dataFileName, 'r');
    if dataFile == -1
       header = ['exp,sub,code,revision,computer,block,blocktime,pathfile,path,prac,trial,trialtime,' ...
                 'nframes,refreshdur,ndisks,ntargets,targ,probe,gapdur,asynch,shift,move,' ...
-                'response,rt,dur,acc,prepdur,meanframedur,minframedur,maxframedur'];
+                'response,rt,dur,acc,prepdur,pregapdurobs,gapdurobs,meanframedur,minframedur,maxframedur'];
    else
       fclose(dataFile);
       header = [];
@@ -545,16 +563,16 @@ for trial = 1:nTrials
    if ~isempty(header)
       fprintf(dataFile, '%s\n', header);
    end
-   %                  %exp        %computer         %trial         %nDisks        %asynch  %response               %framedurs
-   fprintf(dataFile, '%s,%s,%s,%s,%s,%d,%f,%s,%d,%d,%d,%s,%d,%0.3f,%d,%d,%d,%d,%d,%d,%d,%d,%s,%0.0f,%0.0f,%d,%0.3f,%0.3f,%0.3f,%0.3f\n', ...
+   %                  %exp        %computer         %trial         %nDisks        %asynch  %response                           %framedurs
+   fprintf(dataFile, '%s,%s,%s,%s,%s,%d,%f,%s,%d,%d,%d,%s,%d,%0.3f,%d,%d,%d,%d,%d,%d,%d,%d,%s,%0.0f,%0.0f,%d,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f\n', ...
            experiment, subject, mfilename, Version, computer, blockType, blocktime, ...
            pathFile, path, prac, trial, trialtime, ...
            nFrames, refreshDuration * 1000, nDisks, nTargets(trialIndex), ...
            probeTarget(trialIndex), probeDisk, blankDuration, ...
            asynchronous, shift, moveType(trialIndex),  ...
            respString, respRT * 1000, respDur * 1000, respAcc, ...
-           prepDur * 1000, mean(frameDurations) * 1000, ...
-           min(frameDurations) * 1000, max(frameDurations) * 1000);
+           prepDur * 1000, preGapDuration * 1000, gapDuration * 1000, ...
+           mean(frameDurations) * 1000, min(frameDurations) * 1000, max(frameDurations) * 1000);
    fclose(dataFile);
 
    if revealTargets & ~(nTargets(trialIndex) == 1 & probeTarget(trialIndex))

@@ -4,16 +4,16 @@ function generator2
 % 
 % $LastChangedDate$
 
-fileName = 'pathGap50b';
+fileName = 'pathShort';
 backupFile = 'backup.mat';
 
 % basic parameters
-nPaths = 50;
+nPaths = 12;
 nDisks = 10;
-durationFlag = 1; % 1 = range of durations; 2 = discrete durations, with nPaths in each
+durationFlag = 2; % 1 = range of durations; 2 = discrete durations, with nPaths in each
 startsFlag = 2; % 1 = start from grid; 2 = start from random positions
 blankFlag = 1; % 0 = no blank; 1 = blank at end
-durationList = [150 450];
+durationList = [25 29 33];
 blankDuration = 23; % 23 = 300 ms; 38 = 500 ms
 
 % specify velocity in pixels/frame
