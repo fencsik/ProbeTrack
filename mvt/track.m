@@ -7,7 +7,7 @@ function track()
 %%%
 %%% $LastChangedDate$
 
-experiment = 'GetMovingPilot01';
+experiment = 'GetMoving01';
 Version = '$Rev$';
 
 %%% input dialog %%%
