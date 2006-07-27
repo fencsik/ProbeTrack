@@ -12,7 +12,7 @@ Version = '$Rev$';
 
 %%% input dialog %%%
 dlgParam = {'subject'      , 'Subject initials'               , 'xxx';
-            'blockType'    , 'Block type (1-6)'               , '3';
+            'blockType'    , 'Block type (1-7)'               , '1';
            };
 param = inputdlg(dlgParam(:, 2), ['Experiment Parameters'], 1, dlgParam(:, 3));
 if size(param) < 1
@@ -33,7 +33,7 @@ end
 % pathFile = 'StopTrack07Paths';
 % moveTypeList = [0 1];
 probeTargetList = [0 1];
-correctDAC = 1;
+correctDAC = 0;
 revealTargets = 1;
 
 %%% set some fixed parameters
