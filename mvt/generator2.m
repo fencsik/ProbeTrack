@@ -4,7 +4,7 @@ function generator2
 % 
 % $LastChangedDate$
 
-fileName = 'pathShort';
+fileName = 'pathExp30';
 backupFile = 'backup.mat';
 
 % basic parameters

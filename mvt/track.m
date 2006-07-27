@@ -51,7 +51,7 @@ if blockType == 1
    pracFlag = 1;
    moveTypeList = 1;
    nTargetsList = 2;
-   pathFile = 'pathNoGap50a';
+   pathFile = 'pathNoGap30';
 elseif blockType == 2
    % 2. Training/baseline block with no gap, motion trials
    pTrials = 0;
@@ -59,7 +59,7 @@ elseif blockType == 2
    pracFlag = 1;
    moveTypeList = 1;
    nTargetsList = 4;
-   pathFile = 'pathNoGap50b';
+   pathFile = 'pathNoGap50';
 elseif blockType == 3
    % 3. Practice tracking 2 with gap, motion trials
    pTrials = 0;
@@ -67,49 +67,50 @@ elseif blockType == 3
    pracFlag = 1;
    moveTypeList = 1;
    nTargetsList = 2;
-   pathFile = 'pathGap50a';
+   pathFile = 'pathGap30a';
 elseif blockType == 4
    % 4. Practice tracking 2 with gap, static trials
    pTrials = 0;
-   xTrials = 10;
+   xTrials = 20;
    pracFlag = 1;
    moveTypeList = 0;
    nTargetsList = 2;
-   pathFile = 'pathGap50b';
+   pathFile = 'pathGap30b';
 elseif blockType == 5
+   % 5. Practice with experimental task
+   pTrials = 0;
+   xTrials = 20;
+   pracFlag = 0;
+   moveTypeList = 1;
+   nTargetsList = [2 4];
+   pathFile = 'pathExp30';
+elseif blockType == 6
    % 5. First experimental block with gap, motion and static
    pTrials = 12;
    xTrials = 288;
    pracFlag = 0;
-   moveTypeList = [0 1];
-   nTargetsList = [2 3 4];
-   pathFile = 'pathGap300a';
-elseif blockType == 6
+   moveTypeList = 1;
+   nTargetsList = [2 4];
+   pathFile = 'pathExp300a';
+elseif blockType == 7
    % 6. Second experimental block with gap, motion and static
    pTrials = 12;
    xTrials = 288;
    pracFlag = 0;
-   moveTypeList = [0 1];
-   nTargetsList = [2 3 4];
-   pathFile = 'pathGap300b';
+   moveTypeList = 1;
+   nTargetsList = [2 4];
+   pathFile = 'pathExp300b';
 elseif blockType < 0
    % testing block
    pTrials = 0;
-   xTrials = 4;
+   xTrials = 12;
    pracFlag = 1;
-   moveTypeList = [0 1];
+   moveTypeList = 1;
    nTargetsList = 2;
-   pathFile = 'pathGap50a';
+   pathFile = 'pathExp30';
 else
    error(sprintf('blockType %d not supported', blockType));
 end
-
-pTrials = 0;
-xTrials = 12;
-pracFlag = 1;
-moveTypeList = 1;
-nTargetsList = 2;
-pathFile = 'pathShort';
 
 %%% initialize RNG
 seed = sum(100*clock);
@@ -544,14 +545,14 @@ for trial = 1:nTrials
    blockAcc(trial) = respAcc;
    blockRT(trial) = respRT;
    frameDurations = diff(frameDisplayTime);
-   preGapDuration = frameDisplayTime(gapOnset) - startTime;
+   motionDuration = frameDisplayTime(gapOnset) - frameDisplayTime(2);
    gapDuration = frameDisplayTime(gapOffset - 1) - frameDisplayTime(gapOnset);
 
    dataFile = fopen(dataFileName, 'r');
    if dataFile == -1
       header = ['exp,sub,code,revision,computer,block,blocktime,pathfile,path,prac,trial,trialtime,' ...
                 'nframes,refreshdur,ndisks,ntargets,targ,probe,gapdur,asynch,shift,move,' ...
-                'response,rt,dur,acc,prepdur,pregapdurobs,gapdurobs,meanframedur,minframedur,maxframedur'];
+                'response,rt,dur,acc,prepdur,motiondurobs,gapdurobs,meanframedur,minframedur,maxframedur'];
    else
       fclose(dataFile);
       header = [];
@@ -571,7 +572,7 @@ for trial = 1:nTrials
            probeTarget(trialIndex), probeDisk, blankDuration, ...
            asynchronous, shift, moveType(trialIndex),  ...
            respString, respRT * 1000, respDur * 1000, respAcc, ...
-           prepDur * 1000, preGapDuration * 1000, gapDuration * 1000, ...
+           prepDur * 1000, motionDuration * 1000, gapDuration * 1000, ...
            mean(frameDurations) * 1000, min(frameDurations) * 1000, max(frameDurations) * 1000);
    fclose(dataFile);
 
