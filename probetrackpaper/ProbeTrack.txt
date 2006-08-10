@@ -138,14 +138,14 @@ come from guesses, which could be problemmatical.
 Experiment 2 (ProbeTrack2)
 
 In Experiment 2, we expanded the range of probe delays to investigate
-the timecourse of target reacquisition more carefully. Observers
-ranged in age from ??-?? (mean ?; N females, 8-N males).  Observers
-performed 50 trials with no gap, followed by XXX 250 or 300 XXX trials
-with a gap.  During trials with a gap, the probe onset either 0, 40,
-80, 120, 160, or 1280 ms (0, 3, 6, 9, 12, or 96 frames) after the
-stimuli reappeared. Probe onset delay was randomized within block.
-This design resulted in 50 trials per level of probe delay (25 target
-probe and 25 distractor probe).
+the timecourse of target reacquisition more carefully. Observers, one
+of whom had participated in Experiment 1, ranged in age from ??-??
+(mean ?; N females, 8-N males).  Observers performed 50 trials with no
+gap, followed by XXX 250 or 300 XXX trials with a gap.  During trials
+with a gap, the probe onset either 0, 40, 80, 120, 160, or 1280 ms (0,
+3, 6, 9, 12, or 96 frames) after the stimuli reappeared. Probe onset
+delay was randomized within block.  This design resulted in 50 trials
+per level of probe delay (25 target probe and 25 distractor probe).
 
 Figure 2A shows average RT for correct responses as a function of
 probe delay separately for probe-target and probe-distractor
@@ -201,14 +201,36 @@ tracking task, then there should be no difference in RT across gap
 durations.  This will confirm our previous findings, that target
 reacquisition seems to completed very rapidly following the gap.
 
-Speed-accuracy tradeoff: RT is same across gap durations, but accuracy
-declines with gap duration.  Suggests that a speed-accuracy tradeoff
-may be masking increasing RT.  This claim predicts that RT is speeded
-because of fast-guesses, which in turn predicts not only that
-incorrect responses should be faster than correct responses, but that
-the difference between correct and incorrect RTs should increase with
-gap duration.
+The procedure was based on Experiment 2.  The observers included two
+volunteers who had participated in the earlier experiments and six
+naive volunteers.  They ranged in age from ??-?? (mean ?; N females,
+8-N males).  Observers performed a block of 50 trials with no gap,
+followed by three blocks of 400 trials each with gap durations of 133,
+307, or 507 ms (10, 23, or 38 frames, respectively).  The order of the
+different gap durations was counterbalanced across subjects.
 
-The procedure was identical to 
+Figure ?? shows RT as a function of probe delay.  XXX F-TEST and
+t-TESTS XXX
+
+One potential concern is that a speed-accuracy tradeoff may have
+contaminated the results of Experiment 2.  While RT was not reliably
+affected by gap duration, accuracy did declined with gap duration.  Thus,
+there is a possibility that observered decrease their accuracy in
+order to maintain consistent RTs across gap durations.  This
+possibility is testable.  If it is true, then observers must have
+maintained RT by guessing before they were certain of their response,
+so incorrect responses  should be faster than correct responses, and
+this difference should increase with gap duration.  XXX Plot this and
+test it XXX
+
+These results clearly reject the alternate hypothesis described above.
+Observers were no less efficient recovering targets after a 300 ms or
+500 ms gap than they were after a 133 ms gap, suggesting that the
+mechanisms used for target recovery are the same across gap durations.
+Given that 500 ms gaps are known to require task postponement (Alvarez
+et al., 2005; Horowitz et al., in press), we may conclude that all of
+the experiments involved postponement of the tracking task during the
+gap, followed by target recovery after the gap.
+
 
 Experiment 4 (ProbeTrack4/3B and ProbeTrack5/3C)
