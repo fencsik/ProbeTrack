@@ -234,3 +234,49 @@ gap, followed by target recovery after the gap.
 
 
 Experiment 4 (ProbeTrack4/3B and ProbeTrack5/3C)
+
+In Experiment 4, we test whether targets are recovered one-at-a-time
+(i.e., by a serial process) or all-at-once (i.e., parallel).  To
+accomplish this, we varied the tracking load from one to four targets.
+If target recovery is a serial process, then it should take longer to
+recover all the targets as the tracking load increases.  This will be
+apparent at the shortest probe delays as a systematic increase in
+response time with tracking load, as it takes longer, on average, to
+recover the targets and determine whether or not the probed stimulus
+was a target.  However, if target recovery occurs in parallel, there
+should be no systematic relationship between tracking load and
+response time.
+
+Given that four targets may be recovered within 40 ms, we do not
+expect to observe any effects beyond the 0 ms probe delay.  We collect
+data from multiple probe delays, but our analysis of the relationship
+between response time and tracking load focuses only on the 0 ms probe
+delay.
+
+Experiment 4 actually consisted of two sub-experiments.  Experiment 4a
+allowed us to estimate baseline performance at each tracking load with
+no gap, and Experiment 4b manipulated probe delay following a gap of
+307 ms (23 frames).  Experiment 4a included 8 naive volunteers; their
+age ranged from ??-??  (mean ??; ?? females).  Experiment 4b included
+8 volunteers, with 4 of them having participated in previous
+experiments (not including Experiment 4a); their age ranged from ??-??
+(mean ??; ?? females).  At the beginning of each experiment, observers
+performed 50 trials with no gap.  In Experiment 4a, they then
+performed four trial blocks, each with 200 trials at one of the four
+tracking loads.  In Experiment 4b, observers also performed four
+blocks, one at each tracking load, but each block included four probe
+delays (0, 80, 320, and 1280 ms) randomly mixed within the block.
+
+Overall, the effects of probe delay on accuracy and RT were similar to
+the previous experiments and will not be discussed further.  Figure ??
+plots RT as a function of tracking load for Experiments 4a and 4b.  We
+conducted a repeated measures ANOVA investigating RT as a function of
+tracking load and found blah blah 
+
+These results are inconsistent with a serial process, which would
+predict a systematic relationship between RT and tracking load.
+Instead, they support the hypothesis that target recovery occurs in
+parllel, with all targets recovered simultaneously.
+
+
+Discussion
