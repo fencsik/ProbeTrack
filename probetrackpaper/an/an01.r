@@ -6,8 +6,14 @@ do.an01 <- function() {
    infiles <- c("../../probetrack1/data01.rda",
                 "../../probetrack2/data01.rda",
                 "../../probetrack3/data01.rda",
-                "../../probetrack4/data01.rda");
+                "../../probetrack4/data01.rda",
+                "../../probetrack5/data01.rda");
    outfile <- "an01out.txt"
+
+   exit.function <- function () {
+      while (sink.number() > 0) sink();
+   }
+   on.exit(exit.function());
 
    ## extract experiment names from infile paths
    nexp <- length(infiles)
@@ -53,8 +59,6 @@ do.an01 <- function() {
    }
 
    print(out2)
-
-   sink()
 }
 
 do.an01()
