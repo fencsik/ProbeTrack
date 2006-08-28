@@ -41,11 +41,11 @@ do.an0104 <- function () {
 
    sink(outfile);
    cat(c("Paired t-tests comparing accuracy between gap and no-gap trials",
-       "at each probe delay.  The first array lists the t-statistics, and",
-       "the second is the corresponding p-values.  In each array, the rows",
-       "indicate probe delay and columns indicate probe type with 0",
-       "corresponding to probe-distractor trials and 1 to probe-target",
-       "trials.\n"), sep = "\n");
+         "at each probe delay.  The first array lists the t-statistics, the",
+         "second the corresponding p-values, and the third 95% CIs.  In each",
+         "array, the rows indicate probe delay and the columns indicate probe",
+         "type with 0 corresponding to probe-distractor trials and 1 to",
+         "probe-target trials.\n"), sep = "\n");
    print(results);
 
    an0104 <- results;
