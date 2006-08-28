@@ -21,12 +21,15 @@ $LastChangedDate$
 
 ----------------------------------------------------------------------
 
-- data02: compute d' from data01, and aggregate it by subject, gap
+* data02: compute d' from data01, and aggregate it by subject, gap
   duration, number of targets, and probe delay
 
-- an0201: anova on d' as a function of probe delay
-- an0202: t-tests comparing d' on gap trials at each probe delay to d'
+* an0201: anova on d' as a function of probe delay
+* an0202: t-tests comparing d' on gap trials at each probe delay to d'
   on no-gap trials
+
+* fig0201: plot d' as a function of probe delay, separately for gap
+  and no-gap trials
 
 ----------------------------------------------------------------------
 
