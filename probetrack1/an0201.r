@@ -24,12 +24,6 @@ do.an0201 <- function () {
    cat("  gap trials only\n");
    print(summary(aov(dprime ~ soa + Error(sub / soa),
                      data02[data02$gapdur == "10",])));
-
-   cat("\n\n\n");
-   cat("ANOVA on d' as a function of probe delay\n");
-   cat("  no-gap trials only\n");
-   print(summary(aov(dprime ~ soa + Error(sub / soa),
-                     data02[data02$gapdur == "0",])));
 }
 
 do.an0201();

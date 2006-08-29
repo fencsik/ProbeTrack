@@ -22,7 +22,8 @@ $LastChangedDate$
 ----------------------------------------------------------------------
 
 * data02: compute d' from data01, and aggregate it by subject, gap
-  duration, number of targets, and probe delay
+  duration, number of targets, and probe delay (no-gap trials need to
+  be collapsed across soa)
 
 * an0201: anova on d' as a function of probe delay
 * an0202: t-tests comparing d' on gap trials at each probe delay to d'
