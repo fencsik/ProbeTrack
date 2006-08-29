@@ -16,6 +16,18 @@ Experiments:
 * flashtrack1: first FlashTrack study with either one target or one
   distractor flashing
 
+* probetrack1: basic probetrack experiment--track 4 out of 8 with SOAs
+  of 0, 80, 160, 320, and 1280 ms--with a 133 ms gap
+* probetrack2: added more SOAs to probetrack1--0, 40, 80, 120, 160,
+  and 1280 ms
+* probetrack3: added multiple gap durations--133, 307, and 507 ms--and
+  more SOAs--0, 40, 80, 120, 160, 320, 960, and 1280 ms--to
+  probetrack1
+* probetrack4: probetrack1 with 307 ms gaps, SOAs of 0, 80, 320, and
+  1280 ms, tracking 1, 2, 3, or 4 targets out of 8 disks
+* probetrack5: control for probetrack4 without gaps to estimate
+  baseline performance at each level of tracking load
+
 * shifttrack2: compare tracking performance across no-disappearance,
   shift 0, and shift 1 conditions, with movement speeds of 6 and 10
   degrees/second with 5 targets
