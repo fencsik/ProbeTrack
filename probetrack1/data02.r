@@ -68,5 +68,5 @@ do.data02 <- function () {
    invisible(data02);
 }
 
-do.data02();
+print(system.time(do.data02()));
 rm(do.data02);
