@@ -2,12 +2,15 @@
 
 $LastChangedDate$
 
-* data01: generates table of accuracy and RT statistics separated by
-  subjects, gap duration, number of targets, probe type, and probe
-  delay
+----------------------------------------------------------------------
 
-- an0101: anova on RT as a function of probe delay and probe type
-- an0102: anova on accuracy as a function of probe delay and probe type
+* data01: aggregate accuracy and RT statistics by subject, gap
+  duration, probe type, number of targets, and probe delay
+
+- an0101: anova on RT as a function of probe delay, gap duration, and
+  probe type
+- an0102: anova on accuracy as a function of probe delay, gap
+  duration, and probe type
 - an0103: t-tests comparing RT on gap trials at each probe delay to RT
   on no-gap trials
 - an0104: t-tests comparing accuracy on gap trials at each probe delay
@@ -18,6 +21,35 @@ $LastChangedDate$
 - fig0102: plot accuracy by probe delay separated by gap duration and
   probe type
 * fig0103: plot correct RT by probe delay separated by gap duration
-- fig0104: plot accuracy by probe delay separated by number of targets
+
+----------------------------------------------------------------------
+
+- data02: compute d' from data01, and aggregate it by subject, gap
+  duration, number of targets, and probe delay (no-gap trials need to
+  be collapsed across soa)
+
+- an0201: anova on d' as a function of probe delay
+- an0202: t-tests comparing d' on gap trials at each probe delay to d'
+  on no-gap trials
+
+- fig0201: plot d' as a function of probe delay, separately for gap
+  and no-gap trials
+
+----------------------------------------------------------------------
+
+- data03: aggregate accuracy and RT statistics by subject, gap
+  duration, number of targets, and probe delay
+
+- an0301: anova on RT as a function of probe delay
+- an0302: anova on accuracy as a function of probe delay
+- an0303: t-tests comparing RT on gap trials at each probe delay to RT
+  on no-gap trials
+- an0304: t-tests comparing accuracy on gap trials at each probe delay
+  to accuracy on no-gap trials
+
+- fig0301: plot correct RT by probe delay separated by gap duration
+- fig0302: plot accuracy by probe delay separated by gap duration
+
+----------------------------------------------------------------------
 
 (* = complete, - = incomplete)

@@ -33,7 +33,8 @@ do.data01 <- function () {
    factors <- list(sub = dt$sub, gapdur = dt$gapDuration, target = dt$target, ntargets = dt$nTargets, soa = dt$SOA);
    data01 <- aggregate(dt$acc, factors, length);
    names(data01)[names(data01) == "x"] <- "nobs";
-   data01$pcor <- aggregate(dt$acc, factors, mean)$x;
+   data01$ncor <- aggregate(dt$acc, factors, sum)$x;
+   data01$pcor <- data01$ncor / data01$nobs;
 
    rt.cor <- rt.all <- rep(NA, dim(data01)[1]);
    for (i in 1:dim(data01)[1]) {
