@@ -30,18 +30,6 @@ do.an0101 <- function () {
    cat("  gap trials only\n");
    print(summary(aov(rt.all ~ target * soa + Error(sub / (target * soa)),
                      data01[data01$gapdur == "10",])));
-
-   cat("\n\n\n");
-   cat("ANOVA on correct RT as a function of probe type and probe delay\n");
-   cat("  no-gap trials only\n");
-   print(summary(aov(rt.cor ~ target * soa + Error(sub / (target * soa)),
-                     data01[data01$gapdur == "0",])));
-
-   cat("\n\n\n");
-   cat("ANOVA on all RT as a function of probe type and probe delay\n");
-   cat("  no-gap trials only\n");
-   print(summary(aov(rt.all ~ target * soa + Error(sub / (target * soa)),
-                     data01[data01$gapdur == "0",])));
 }
 
 do.an0101();

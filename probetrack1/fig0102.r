@@ -33,7 +33,7 @@ do.fig0102 <- function () {
                           function(x) qt(.975, length(x) - 1) * sqrt(var(x, na.rm = TRUE) / length(x))));
    }
    dtng <- with(data01[data01$gapdur == "0", ],
-                tapply(pcor, list(soa, target), mean, na.rm = TRUE));
+                tapply(pcor, list(target), mean, na.rm = TRUE));
 
    x <- as.numeric(dimnames(dtg)[[1]]) * 1000 / 75;
 
@@ -62,7 +62,7 @@ do.fig0102 <- function () {
       }
       lines(x, dtg[, targ], type = "o",
             col = col[targ], pch = pch[targ], lty = 1, lwd = 3, cex = 1.5, bg = "white");
-      lines(range(x), rep(mean(dtng[, targ]), 2), type = "l",
+      lines(x, rep(dtng[targ], length(x)), type = "l",
             col = col[targ], lty = 2, lwd = 3);
 ###       text(x[lastIndex] + xinch(.2), dtg[lastIndex, n, targ], sprintf("%s targets", n),
 ###            col = col[targ], cex = .7, adj = 0);
