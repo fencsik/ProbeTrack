@@ -281,21 +281,27 @@ parllel, with all targets recovered simultaneously.
 
 Discussion
 
-The results of these experiments show that recovery of moving targets
+The experiments presented above show that recovery of moving targets
 after a brief disappearance occurs rapidly and in parallel.  By 40 ms
-after the tracked stimuli reappeared, observers were able to
-distinguish targets from distractors as quickly as if the stimuli had
-never disappeared, suggesting that the tracking mechanisms were in the
-same state they had been in prior to disappearance.
+after the tracked stimuli reappeared, observers could distinguish
+targets from distractors as quickly as if the stimuli had never
+disappeared, suggesting that the tracking mechanisms were in the same
+state they had been in prior to disappearance.
 
-Task Switching
-
-Why is there so little cost here and such a great cost in Rubinstein
-et al. and other papers?  (1) Because this isn't a whole task switch,
-just a postponement, and (2) it only requires postponing visual
-information, not S-R mappings and motor preparation.  Similar to rapid
-resumption.
-
-
+We propose that these findings generally indicate that any visual
+information stored off-line during task postponement will be available
+again rapidly after the task is resumed.  This differs from other
+findings of task-switching costs that last for several hundred
+milliseconds when people must switch from one task to another (e.g.,
+Allport, Styles, & Hsieh, 1994; Rogers & Monsell, 1995; Rubinstein,
+Meyer, & Evans, 2001; see Monsell, 2003, for a recent review).  To
+perform those tasks successfully, all the processes relevant to
+performing one task---including all the knowledge relevant to the
+stimuli, stimulus-response mappings, and response preparation---must
+be removed from memory and replaced with those of a different task.
+The present results suggest that the cost of reloading the visual
+information relevant to one task is quite small.  It may be other
+aspects of a task, or the act of unloading another task from memory,
+that imposes the higher switching costs observed in other studies.
 
 Apply them to driving and other applied tasks
