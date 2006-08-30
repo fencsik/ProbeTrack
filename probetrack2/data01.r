@@ -27,6 +27,7 @@ do.data01 <- function () {
    dt$target <- 2 - dt$probeType; # probeType == 1 -> target; probeType == 2 -> distractor
    dt$acc <- 1 - dt$error;
    dt$rt <- dt$RT;
+   dt[dt$gapDuration == 0, "SOA"] <- 0; # set SOA to 0 on no-gap trials
 
    factors <- list(sub = dt$sub, gapdur = dt$gapDuration, target = dt$target, ntargets = dt$nTargets, soa = dt$SOA);
    data01 <- aggregate(dt$acc, factors, length);

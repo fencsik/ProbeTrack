@@ -15,15 +15,6 @@ do.data02 <- function () {
    }
    dt <- load(infile);
 
-   ## equate all no-gap SOAs, since there is no underlying difference between
-   ## them, and then sum together all the cell counts (summing will have no
-   ## effect on gap trials, but will combine no-gap trials together
-   ## appropriately)
-   data01$soa <- as.numeric(as.character(data01$soa));
-   data01[data01$gapdur == "0", "soa"] <- 0;
-   data01 <- with(data01, aggregate(data.frame(nobs = nobs, ncor = ncor),
-                                    list(sub = sub, gapdur = gapdur, target = target, ntargets = ntargets, soa = soa), sum));
-
    ## split data
    targ <- data01$target;
    index <- names(data01) != "target";
