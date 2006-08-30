@@ -280,3 +280,22 @@ parllel, with all targets recovered simultaneously.
 
 
 Discussion
+
+The results of these experiments show that recovery of moving targets
+after a brief disappearance occurs rapidly and in parallel.  By 40 ms
+after the tracked stimuli reappeared, observers were able to
+distinguish targets from distractors as quickly as if the stimuli had
+never disappeared, suggesting that the tracking mechanisms were in the
+same state they had been in prior to disappearance.
+
+Task Switching
+
+Why is there so little cost here and such a great cost in Rubinstein
+et al. and other papers?  (1) Because this isn't a whole task switch,
+just a postponement, and (2) it only requires postponing visual
+information, not S-R mappings and motor preparation.  Similar to rapid
+resumption.
+
+
+
+Apply them to driving and other applied tasks
