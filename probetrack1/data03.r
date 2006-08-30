@@ -26,6 +26,7 @@ do.data03 <- function () {
    ## rename and recode variables
    dt$acc <- 1 - dt$error;
    dt$rt <- dt$RT;
+   dt[dt$gapDuration == 0, "SOA"] <- 0;
 
    factors <- list(sub = dt$sub, gapdur = dt$gapDuration, ntargets = dt$nTargets, soa = dt$SOA);
    data03 <- aggregate(dt$acc, factors, length);
