@@ -32,10 +32,8 @@ do.fig0302 <- function () {
                    tapply(rt.cor, list(soa),
                           function(x) qt(.975, length(x) - 1) * sqrt(var(x, na.rm = TRUE) / length(x))));
    }
-   dtng <- with(data03[data03$gapdur == "0", ],
-                tapply(pcor, list(soa), mean, na.rm = TRUE));
-
    x <- as.numeric(dimnames(dtg)[[1]]) * 1000 / 75;
+   dtng <- rep(mean(data03[data03$gapdur == "0", "pcor"]), length(x));
 
    ## settings
    ylim <- c(.5, 1);
@@ -54,7 +52,7 @@ do.fig0302 <- function () {
       arrows(x, dtg - errg, x, dtg + errg,
              length = .05, angle = 90, code = 3, lwd = 1, col = 1, lty = 1);
    }
-   lines(range(x), rep(mean(dtng), 2), type = "l",
+   lines(x, dtng, type = "l",
          col = 1, lty = 2, lwd = 3);
    lines(x, dtg, type = "o",
          col = 1, pch = 21, lty = 1, lwd = 3, cex = 1.5, bg = "white");
