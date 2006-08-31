@@ -37,15 +37,16 @@ $LastChangedDate$
 
 ----------------------------------------------------------------------
 
-- data03: aggregate accuracy and RT statistics by subject, gap
+* data03: aggregate accuracy and RT statistics by subject, gap
   duration, number of targets, and probe delay
 
-- an0301: anova on RT as a function of probe delay
-- an0302: anova on accuracy as a function of probe delay
-- an0303: t-tests comparing RT on gap trials at each probe delay to RT
-  on no-gap trials
-- an0304: t-tests comparing accuracy on gap trials at each probe delay
-  to accuracy on no-gap trials
+* an0301: anova on RT as a function of probe delay and gap duration
+* an0302: anova on accuracy as a function of probe delay and gap
+  duration
+* an0303: t-tests comparing RT on gap trials at each probe delay and
+  gap duration to RT on no-gap trials
+* an0304: t-tests comparing accuracy on gap trials at each probe delay
+  and gap duration to accuracy on no-gap trials
 
 - fig0301: plot correct RT by probe delay separated by gap duration
 - fig0302: plot accuracy by probe delay separated by gap duration
