@@ -11,10 +11,10 @@ $LastChangedDate$
   probe type
 * an0102: anova on accuracy as a function of probe delay, gap
   duration, and probe type
-* an0103: t-tests comparing RT on gap trials at each probe delay to RT
-  on no-gap trials
+* an0103: t-tests comparing RT on gap trials at each probe delay and
+  gap duration to qRT on no-gap trials
 * an0104: t-tests comparing accuracy on gap trials at each probe delay
-  to accuracy on no-gap trials
+  and gap duration to accuracy on no-gap trials
 
 * fig0101: plot correct RT by probe delay separated by gap duration
   and probe type
@@ -24,16 +24,16 @@ $LastChangedDate$
 
 ----------------------------------------------------------------------
 
-- data02: compute d' from data01, and aggregate it by subject, gap
-  duration, number of targets, and probe delay (no-gap trials need to
-  be collapsed across soa)
+* data02: compute d' from data01, and aggregate it by subject, gap
+  duration, number of targets, and probe delay
 
-- an0201: anova on d' as a function of probe delay
-- an0202: t-tests comparing d' on gap trials at each probe delay to d'
-  on no-gap trials
+* an0201: anova on d' as a function of probe delay and gap duration on
+  gap trials
+* an0202: t-tests comparing d' on gap trials at each probe delay and
+  non-zero gap duration to d' on no-gap trials
 
-- fig0201: plot d' as a function of probe delay, separately for gap
-  and no-gap trials
+* fig0201: plot d' as a function of probe delay, separated by gap
+  duration
 
 ----------------------------------------------------------------------
 
