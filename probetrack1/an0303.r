@@ -15,7 +15,7 @@ do.an0303 <- function () {
    on.exit(exit.function());
 
    if (!file.exists(infile)) stop("cannot open input file ", infile);
-   if (IsFileUpToDate(outfile, c(thisfile, infile))) {
+   if (IsFileUpToDate(c(rdafile, outfile), c(thisfile, infile))) {
       warning("Output file is up to date, no action taken");
       return(invisible(NULL));
    }
