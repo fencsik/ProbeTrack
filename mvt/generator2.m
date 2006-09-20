@@ -4,16 +4,16 @@ function generator2
 % 
 % $LastChangedDate$
 
-fileName = 'pathExp30';
+fileName = 'pathExp300a';
 backupFile = 'backup.mat';
 
 % basic parameters
-nPaths = 12;
+nPaths = 60;
 nDisks = 10;
 durationFlag = 2; % 1 = range of durations; 2 = discrete durations, with nPaths in each
 startsFlag = 2; % 1 = start from grid; 2 = start from random positions
 blankFlag = 1; % 0 = no blank; 1 = blank at end
-durationList = [25 29 33];
+durationList = [225 25 26 29 33];
 blankDuration = 23; % 23 = 300 ms; 38 = 500 ms
 
 % specify velocity in pixels/frame
