@@ -7,7 +7,7 @@ function track()
 %%%
 %%% $LastChangedDate$
 
-experiment = 'GetMoving01';
+experiment = 'GetMoving02';
 Version = '$Rev$';
 
 %%% input dialog %%%
@@ -79,26 +79,26 @@ elseif blockType == 4
 elseif blockType == 5
    % 5. Practice with experimental task
    pTrials = 0;
-   xTrials = 20;
-   pracFlag = 0;
+   xTrials = 30;
+   pracFlag = 1;
    moveTypeList = 1;
-   nTargetsList = [2 4];
+   nTargetsList = 4;
    pathFile = 'pathExp30';
 elseif blockType == 6
-   % 5. First experimental block with gap, motion and static
-   pTrials = 12;
-   xTrials = 288;
+   % 6. Experimental block 1 (gap, variation in preview duration)
+   pTrials = 0;
+   xTrials = 300;
    pracFlag = 0;
    moveTypeList = 1;
-   nTargetsList = [2 4];
+   nTargetsList = 4;
    pathFile = 'pathExp300a';
 elseif blockType == 7
-   % 6. Second experimental block with gap, motion and static
-   pTrials = 12;
-   xTrials = 288;
+   % 7. Experimental block 2 (same as above)
+   pTrials = 0;
+   xTrials = 300;
    pracFlag = 0;
    moveTypeList = 1;
-   nTargetsList = [2 4];
+   nTargetsList = 4;
    pathFile = 'pathExp300b';
 elseif blockType < 0
    % testing block

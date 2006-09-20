@@ -5,7 +5,7 @@
 # 
 # $LastChangedDate$
 
-EXPERIMENT=GetMoving01
+EXPERIMENT=GetMoving02
 PUBLIC_DIR=~/Public/Experiments/$EXPERIMENT
 FILES="track.m generator2.m *.mat"
 
