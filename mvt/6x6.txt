@@ -1,6 +1,0 @@
-a b c d e f
-b c f a d e
-c f b e a d
-d e a b f c
-e a d f c b
-f d e c b a
