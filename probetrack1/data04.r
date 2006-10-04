@@ -59,13 +59,12 @@ do.data04 <- function () {
       }
    }
 
-   p0 <- c(5, 6, 0);
+   p0 <- c(5, 5, 0);
    names(p0) <- c("slope", "threshold", "baseline");
 
    for (sub in Subjects) {
       for (gd in GapDurations) {
          for (nt in NTargets) {
-            cat(sub, gd, nt, "\n");
             data.index <- data$sub == sub & data$gapdur == gd & data$ntargets == nt;
             fit.index <- fit$sub == sub & fit$gapdur == gd & fit$ntargets == nt;
             x <- data[data.index, "soa"];
