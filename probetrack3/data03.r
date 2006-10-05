@@ -18,7 +18,9 @@ do.data03 <- function () {
 
    ## remove bad subjects:
    ## 1. remove tjo based on SSP's lab book (not listed in the lab book)
+   ## 2. optionally remove jtd and rsh  because the weibull fits are weird
    dt <- dt[dt$identifier != "tjo", ];
+   ##dt <- dt[dt$identifier != "tjo" & dt$identifier != "jtd" & dt$identifier != "rsh", ];
    dt$sub <- factor(dt$identifier);
 
    ## remove practice blocks, bad keypresses, and negative RTs (which should
