@@ -59,7 +59,7 @@ $LastChangedDate$
   subjects
 o fig0403: plot RT as a function of probe delay, plotting the baseline
   as an error region
-o fig0404: scatter-plot of weibull baseline against zero-gap RT for
+* fig0404: scatter-plot of weibull baseline against zero-gap RT for
   each subject
 
 ----------------------------------------------------------------------
