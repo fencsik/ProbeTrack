@@ -20,6 +20,9 @@ do.data04 <- function () {
    }
    load(infile);
 
+   ## optionally remove ssf and wz because their weibull fits are weird
+   ##data03 <- data03[data03$sub != "ssf" & data03$sub != "wz", ];
+
    ## set-up data matrix
    data03$sub <- as.character(data03$sub);
    data03$gapdur <- as.numeric(as.character(data03$gapdur));

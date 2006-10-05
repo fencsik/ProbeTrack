@@ -16,7 +16,9 @@ do.data03 <- function () {
 
    ## remove bad subjects:
    ## 1. remove nw based on SSP's lab book
+   ## 2. optionally remove ssf and wz because their weibull fits are weird
    dt <- dt[dt$identifier != "nw", ];
+   ##dt <- dt[dt$identifier != "nw" & dt$identifier != "ssf" & dt$identifier != "wz", ];
    dt$sub <- factor(dt$identifier);
 
    ## remove practice blocks, bad keypresses, and negative RTs (which should
