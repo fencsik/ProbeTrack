@@ -23,13 +23,31 @@ do.fig0402 <- function () {
    weibull <- data04$weibull;
 
    dt <- with(data04$data, tapply(rt.cor, list(soa, gapdur, ntargets), mean));
-   pred <- with(data04$data, tapply(rt.pred, list(soa, gapdur, ntargets), mean));
-   baseline <- with(data04$fit, tapply(baseline, list(gapdur, ntargets), mean));
-   fit <- with(data04$fit, aggregate(data.frame(slope = slope, threshold = threshold,
-                                                baseline = baseline, asymptote = asymptote),
-                                     list(gapdur = gapdur, ntargets = ntargets), mean));
+
+   ## gather parameters for weibull fits
+   attach(data04$fit);
+   factors <- list(sub, gapdur, ntargets);
+   slope <- tapply(slope, factors, mean);
+   threshold <- tapply(threshold, factors, mean);
+   baseline <- tapply(baseline, factors, mean);
+   asymptote <- tapply(asymptote, factors, mean);
+   detach();
+
+   ## fit weibull to each subject in each condition
+   Subjects <- dimnames(slope)[[1]];
    predx <- seq(0, 100, by = 1);
-   ##predy <- array(dim = c(length(predx
+   predy <- array(dim = c(length(Subjects), length(predx), dim(slope)[2], dim(slope)[3]),
+                  dimnames = list(Subjects, 1:length(predx), dimnames(slope)[[2]], dimnames(slope)[[3]]));
+   for (sub in dimnames(predy)[[1]]) {
+      for (gd in dimnames(predy)[[3]]) {
+         for (nt in dimnames(predy)[[4]]) {
+            predy[sub, , gd, nt] <- weibull(predx, slope[sub, gd, nt], threshold[sub, gd, nt],
+                                            baseline[sub, gd, nt], asymptote[sub, gd, nt]);
+         }
+      }
+   }
+   predy <- apply(predy, 2:4, mean);
+   baseline <- apply(baseline, 2:3, mean);
 
    if (!file.exists(errfile)) stop("cannot open error file ", errfile);
    load(errfile);
@@ -43,12 +61,7 @@ do.fig0402 <- function () {
    opar <- par(mfrow = c(1, 1), las = 1, pty = "m", cex.axis = .6,
                xpd = NA, bg = "white");
 
-   ## set up color matrix
    ylim <- c(500, 1000);
-   col <- as.character(with(data04$data, tapply(rt.cor, list(gapdur, ntargets), mean)));
-   col <- matrix(rainbow(length(gapdurList) * length(ntargetsList)),
-                 nrow = length(gapdurList), ncol = length(ntargetsList),
-                 dimnames = list(gapdurList, ntargetsList));
 
    plot(x, dt[, 1, 1], type = "n", bty = "n",
         axes = F, ylim = ylim,
@@ -57,15 +70,14 @@ do.fig0402 <- function () {
    axis(2);
    for (gd in gapdurList) {
       for (nt in ntargetsList) {
-         index <- fit$gapdur == gd & fit$ntargets == nt;
          abline(h = baseline[gd, nt], xpd = F,
-               col = col[gd, nt], lwd = 2, lty = 3);
-         lines(x, pred[, gd, nt], type = "o",
-               col = col[gd, nt], bg = "white", pch = 4, cex = 1.5, lwd = 3, lty = 2);
+               col = 1, lwd = 2, lty = 3);
+         lines(predx, predy[, gd, nt], type = "l",
+               col = 1, lwd = 2, lty = 1);
          arrows(x, dt[, gd, nt] - ci, x, dt[, gd, nt] + ci,
-                length = .05, angle = 90, code = 3, lwd = 1, col = col[gd, nt], lty = 1);
-         lines(x, dt[, gd, nt], type = "o",
-               col = col[gd, nt], bg = "white", pch = 21, cex = 1.5, lwd = 3, lty = 1);
+                length = .05, angle = 90, code = 3, lwd = 1, col = 1, lty = 1);
+         points(x, dt[, gd, nt], type = "p",
+               col = 1, bg = "white", pch = 21, cex = 1.5, lwd = 3);
       }
    }
 }
