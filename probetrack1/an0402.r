@@ -25,9 +25,6 @@ do.an0402 <- function () {
    dt$gapdur <- as.numeric(as.character(dt$gapdur));
    dt$ntargets <- as.numeric(as.character(dt$ntargets));
    dt$soa <- as.numeric(as.character(dt$soa)) * 1000 / 75;
-   dt <- dt[dt$sub != "ssf", ];
-   data04$fit <- data04$fit[data04$fit$sub != "ssf", ];
-   data04$fit$sub <- factor(data04$fit$sub);
 
    baseline <- with(data04$fit, tapply(baseline, list(sub, gapdur, ntargets), mean));
    dp <- with(dt, tapply(rt.cor, list(sub, soa, gapdur, ntargets), mean));
