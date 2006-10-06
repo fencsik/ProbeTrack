@@ -40,7 +40,7 @@ do.fig0401 <- function () {
    counter <- 0;
    for (sub in subList) {
       plot(x, dt[, sub, , ], type = "n", bty = "n",
-           axes = F,
+           axes = F, ylim = c(500, 1200),
            xlab = "", ylab = "", main = paste("ProbeTrack1", sub));
       axis(1, x, x * 1000 / 75);
       axis(2);
@@ -56,9 +56,9 @@ do.fig0401 <- function () {
             lines(i <- seq(0, 100, by = .1),
                   weibull(i, fit[index, "slope"], fit[index, "threshold"],
                           fit[index, "baseline"], fit[index, "asymptote"]),
-                          lty = 1, lwd = 2, col = col[gd, nt]);
+                          lty = 1, lwd = 3, col = col[gd, nt]);
             points(x, dt[, sub, gd, nt],
-                   col = col[gd, nt], bg = "white", pch = 21, cex = 2.0);
+                   col = col[gd, nt], bg = "white", pch = 21, cex = 1.5, lwd = 3);
             counter <- counter + 1;
          }
       }
