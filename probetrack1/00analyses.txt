@@ -52,9 +52,9 @@ $LastChangedDate$
 
 * fig0301: plot correct RT by probe delay separated by gap duration
 * fig0302: plot accuracy by probe delay separated by gap duration
-o fig0303: plot correct RT by probe delay separated by gap duration,
+* fig0303: plot correct RT by probe delay separated by gap duration,
   separately for each subject
-o fig0304: plot accuracy by probe delay separated by gap duration,
+* fig0304: plot accuracy by probe delay separated by gap duration,
   separately for each subject
 
 ----------------------------------------------------------------------
