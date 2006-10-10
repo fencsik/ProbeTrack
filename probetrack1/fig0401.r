@@ -36,11 +36,14 @@ do.fig0401 <- function () {
    col <- matrix(rainbow(length(gapdurList) * length(ntargetsList)),
                  nrow = length(gapdurList), ncol = length(ntargetsList),
                  dimnames = list(gapdurList, ntargetsList));
+   ## other settings
+   ylim.range <- 300;
 
    counter <- 0;
    for (sub in subList) {
+      ylim <- c((mid <- mean(dt[, sub, , ])) - ylim.range/2, mid + ylim.range/2);
       plot(x, dt[, sub, , ], type = "n", bty = "n",
-           axes = F, ylim = c(500, 1200),
+           axes = F, ylim = ylim,
            xlab = "", ylab = "", main = paste("ProbeTrack1", sub));
       axis(1, x, x * 1000 / 75);
       axis(2);

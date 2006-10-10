@@ -1,12 +1,12 @@
-### fig0202.r: plot d' as a function of probe delay, separated by gap duration,
+### fig0303.r: plot correct RT by probe delay separated by gap duration,
 ### separately for each subject
 ###
 ### $LastChangedDate$
 
-do.fig0202 <- function () {
-   infile <- "data02.rda";
-   outfile <- "fig0202.pdf";
-   thisfile <- "fig0202.r";
+do.fig0303 <- function () {
+   infile <- "data03.rda";
+   outfile <- "fig0303.pdf";
+   thisfile <- "fig0303.r";
    exit.function <- function () {
       if (exists("opar")) par(opar);
       if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
@@ -18,17 +18,17 @@ do.fig0202 <- function () {
       return(invisible(NULL));
    }
    load(infile);
-   data02$soa <- as.numeric(as.character(data02$soa));
-   data02$gapdur <- as.numeric(as.character(data02$gapdur));
+   data03$soa <- as.numeric(as.character(data03$soa));
+   data03$gapdur <- as.numeric(as.character(data03$gapdur));
 
    ## extract relevant data
-   dtg <- with(data02[data02$gapdur != "0", ],
-               tapply(dprime, list(soa, sub, gapdur, ntargets), mean, na.rm = TRUE));
+   dtg <- with(data03[data03$gapdur != "0", ],
+               tapply(rt.cor, list(soa, sub, gapdur, ntargets), mean, na.rm = TRUE));
    x <- as.numeric(dimnames(dtg)[[1]]);
-   dtng <- with(data02[data02$gapdur == "0",], tapply(dprime, list(sub, ntargets), mean));
+   dtng <- with(data03[data03$gapdur == "0",], tapply(rt.cor, list(sub, ntargets), mean));
 
    ## settings
-   ylim.range <- 4;
+   ylim.range <- 300;
 
    pdf(outfile, width = 9.5, height = 7, pointsize = 12);
    opar <- par(mfrow = c(2, 2), las = 1, pty = "m", cex.axis = .6,
@@ -45,7 +45,7 @@ do.fig0202 <- function () {
             axis(1, x, x * 1000 / 75);
             axis(2);
             if (counter %% 4 >= 2) title(xlab = "Probe delay (ms)");
-            if (counter %% 2 == 0) title(ylab = "d'");
+            if (counter %% 2 == 0) title(ylab = "Probe RT (ms)");
 
             lines(x, rep(dtng[sub, nt], length(x)), type = "l",
                   col = 1, lty = 2, lwd = 3);
@@ -62,5 +62,5 @@ do.fig0202 <- function () {
    }
 }
 
-do.fig0202();
-rm(do.fig0202);
+do.fig0303();
+rm(do.fig0303);
