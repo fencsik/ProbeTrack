@@ -18,6 +18,10 @@ $LastChangedDate$
   and probe type
 * fig0102: plot accuracy by probe delay separated by gap duration and
   probe type
+* fig0103: plot correct RT by probe delay separated by gap duration
+  and probe type, separately for each subject
+* fig0104: plot accuracy by probe delay separated by gap duration
+  and probe type, separately for each subject
 
 ----------------------------------------------------------------------
 
@@ -29,8 +33,10 @@ $LastChangedDate$
 * an0202: t-tests comparing d' on gap trials at each probe delay to d'
   on no-gap trials
 
-* fig0201: plot d' as a function of probe delay, separately for gap
-  and no-gap trials
+* fig0201: plot d' as a function of probe delay, separated by gap
+  duration
+* fig0202: plot d' as a function of probe delay, separated by gap
+  duration, separately for each subject
 
 ----------------------------------------------------------------------
 
@@ -46,6 +52,10 @@ $LastChangedDate$
 
 * fig0301: plot correct RT by probe delay separated by gap duration
 * fig0302: plot accuracy by probe delay separated by gap duration
+* fig0303: plot correct RT by probe delay separated by gap duration,
+  separately for each subject
+* fig0304: plot accuracy by probe delay separated by gap duration,
+  separately for each subject
 
 ----------------------------------------------------------------------
 

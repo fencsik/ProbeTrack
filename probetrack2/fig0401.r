@@ -36,11 +36,14 @@ do.fig0401 <- function () {
    col <- matrix(rainbow(length(gapdurList) * length(ntargetsList)),
                  nrow = length(gapdurList), ncol = length(ntargetsList),
                  dimnames = list(gapdurList, ntargetsList));
+   ## other settings
+   ylim.range <- 300;
 
    counter <- 0;
    for (sub in subList) {
+      ylim <- c((mid <- mean(dt[, sub, , ])) - ylim.range/2, mid + ylim.range/2);
       plot(x, dt[, sub, , ], type = "n", bty = "n",
-           axes = F,
+           axes = F, ylim = ylim,
            xlab = "", ylab = "", main = paste("ProbeTrack2", sub));
       axis(1, x, x * 1000 / 75);
       axis(2);
@@ -56,9 +59,9 @@ do.fig0401 <- function () {
             lines(i <- seq(0, 100, by = .1),
                   weibull(i, fit[index, "slope"], fit[index, "threshold"],
                           fit[index, "baseline"], fit[index, "asymptote"]),
-                          lty = 1, lwd = 2, col = col[gd, nt]);
+                          lty = 1, lwd = 3, col = col[gd, nt]);
             points(x, dt[, sub, gd, nt],
-                   col = col[gd, nt], bg = "white", pch = 21, cex = 2.0);
+                   col = col[gd, nt], bg = "white", pch = 21, cex = 1.5, lwd = 3);
             counter <- counter + 1;
          }
       }
