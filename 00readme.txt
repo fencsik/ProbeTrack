@@ -16,6 +16,13 @@ Experiments:
 * flashtrack1: first FlashTrack study with either one target or one
   distractor flashing
 
+* getmoving01: follow-up on stoptrack studies; how much pre-gap motion
+  information is enough to encode direction of motion?
+* getmoving02: replication of getmoving01 with more pre-gap durations;
+  stopped early because only 4 targets were used, which made analysis
+  difficult
+* getmoving03: replication of getmoving01 with more pre-gap durations
+
 * probetrack1: basic probetrack experiment--track 4 out of 8 with SOAs
   of 0, 80, 160, 320, and 1280 ms--with a 133 ms gap
 * probetrack2: added more SOAs to probetrack1--0, 40, 80, 120, 160,
