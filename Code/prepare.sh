@@ -5,9 +5,9 @@
 # 
 # $LastChangedDate$
 
-EXPERIMENT=GetMoving03
+EXPERIMENT=SpeedSearch10
 PUBLIC_DIR=~/Public/Experiments/$EXPERIMENT
-FILES="track.m generator2.m *.mat"
+FILES="SearchTorusX.m"
 
 # make sure public directory exists
 if [ ! -d $PUBLIC_DIR ]; then
