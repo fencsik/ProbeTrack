@@ -1,3 +1,67 @@
+Rapid recovery of moving targets following task disruption
+
+David E. Fencsik, Skyler S. Place, and Todd S. Horowitz
+
+Driving an automobile involves simultaneously performing a variety of
+tasks: the driver must maintain control of the vehicle, react to
+traffic signals, plan a route, and often carry out these tasks while
+also listening to music or carrying on conversations with passengers.
+However, all these tasks are secondary to the basic need to monitor
+the environment, a continuously shifting collection of lanes,
+sidewalks, traffic signs, pedestrians, and other vehicles.  In order
+to successfully maneuver through traffic, we must have cognitive
+mechanisms that can keep track of a set of moving objects, focusing on
+those that are most important and ignoring the rest, and accomodate
+brief disruptions from other tasks.  In the present paper, we focus
+on the ability of the tracking mechanisms to recover from disruption.
+
+[The previous paragraph could start out by talking about tracking as
+fundamental to driving, then talk about the need to deal with
+distraction.]
+
+One way to study tracking mechanisms in the laboratory is through the
+multiple object tracking (MOT) task (Pylyshyn & Storm, 1988).  During
+a trial in a typical MOT study, observers are asked to keep track of a
+subset of stimuli ("targets") as they move independently around a
+display.  After several seconds of tracking, all stimuli stop, and the
+observer indicates whether or not a probed stimulus was a target; both
+the accuracy and latency of each response may be measured as dependent
+variables.
+
+In most versions of the MOT task, all the stimuli are identical
+(except during the initial target-cuing phase and the final probe
+phase), so observers can only distinguish targets from distractors by
+following each stimulus' trajectory during the trial.  While identical
+stimuli may seem unrealistically impoverished (after all, cars may be
+distinguished by multiple features, including size, color, and model),
+this task does allow us to ask fundamental questions about the
+mechanisms used to track moving objects, such how many objects one can
+track (Pylyshyn & Storm, 1988), what kinds of information may be
+maintained for tracked objects (Fencsik, Klieger, & Horowitz, in
+press; Horowitz et al., in press; Oksama & Hyona, 2004), how tracking
+mechanisms cope with object disappearance (Horowitz, Birnkrant,
+Fencsik, Tran, & Wolfe, 2006; Keane & Pylyshyn, 2006; Scholl &
+Pylyshyn, 1999), and what kinds of secondary tasks interfere with
+tracking (Alvarez, Horowitz, Arsenio, DiMase, & Wolfe, 2005).
+
+Two previous findings from MOT-based studies are most relevant here.
+First, that observers can typically track around 4-5 targets out of
+8-10 total objects (Pylyshyn & Storm, 1988).  This demonstrates that
+there is a mechanism capable of tracking multiple moving objects
+without relying on visible distinguishing characteristics.  Second,
+that observers can track successfully even if the tracked stimuli
+disappear briefly (Fencsik et al., in press; Horowitz et al., 2006;
+Keane & Pylyshyn, 2006; Scholl & Pylyshyn, 1999).  This demonstrates
+that mechanisms exist to maintain information relevant to the tracking
+task when target stimuli disappear, then resume tracking once they
+reappear.
+
+Next...differences it types of disappearance and evidence of different
+mechanisms to support each.
+
+Then...how do we recover from disruption?  Bring in evidence from
+task-switching studies.
+
 The present paper focuses on how the visual system deals with the
 temporary disappearance of moving objects. People can continue to
 track objects that disappear briefly behind occluding surfaces. Scholl
