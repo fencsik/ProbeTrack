@@ -30,8 +30,8 @@ do.fig0303 <- function () {
    ## settings
    ylim.range <- 300;
 
-   pdf(outfile, width = 9.5, height = 7, pointsize = 12);
-   opar <- par(mfrow = c(2, 2), las = 1, pty = "m", cex.axis = .6,
+   pdf(outfile, width = 18, height = 8, pointsize = 12);
+   opar <- par(mfrow = c(2, 4), las = 1, pty = "m", cex.axis = .6,
                xpd = NA, bg = "white");
 
    counter <- 0;
@@ -44,14 +44,14 @@ do.fig0303 <- function () {
                     xlab = "", ylab = "", main = sprintf("ProbeTrack2 %s (Gap %s, %s targets)", sub, gd, nt));
             axis(1, x, x * 1000 / 75);
             axis(2);
-            if (counter %% 4 >= 2) title(xlab = "Probe delay (ms)");
-            if (counter %% 2 == 0) title(ylab = "Probe RT (ms)");
+            if (counter %% 8 >= 3) title(xlab = "Probe delay (ms)");
+            if (counter %% 4 == 0) title(ylab = "Probe RT (ms)");
 
             lines(x, rep(dtng[sub, nt], length(x)), type = "l",
                   col = 1, lty = 2, lwd = 3);
             lines(x, dtg[, sub, gd, nt], type = "o",
                   col = 1, pch = 21, lty = 1, lwd = 3, cex = 1.5, bg = "white");
-            if (counter %% 4 == 0) {
+            if (counter %% 8 == 1) {
                legend(min(x) + xinch(3), min(ylim) - yinch(.6), c("gap", "no gap"),
                       lty = 1:2, lwd = 2,
                       bty = "n", ncol = 2, y.intersp = 1.3);
