@@ -27,8 +27,8 @@ do.fig0401 <- function () {
    gapdurList <- dimnames(dt)[[3]];
    ntargetsList <- dimnames(dt)[[4]];
 
-   pdf(outfile, width = 9.5, height = 7, pointsize = 12);
-   opar <- par(mfrow = c(2, 2), las = 1, pty = "m", cex.axis = .6,
+   pdf(outfile, width = 18, height = 8, pointsize = 12);
+   opar <- par(mfrow = c(2, 4), las = 1, pty = "m", cex.axis = .6,
                xpd = NA, bg = "white");
 
    ## set up color matrix
@@ -47,10 +47,10 @@ do.fig0401 <- function () {
            xlab = "", ylab = "", main = paste("ProbeTrack1", sub));
       axis(1, x, x * 1000 / 75);
       axis(2);
-      if (counter %% 4 >= 2) {
+      if (counter %% 8 >= 3) {
          title(xlab = "Probe delay (ms)");
       }
-      if (counter %% 2 == 0) {
+      if (counter %% 4 == 0) {
          title(ylab = "Probe RT (ms)");
       }
       for (gd in gapdurList) {
