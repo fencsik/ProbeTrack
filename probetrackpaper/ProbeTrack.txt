@@ -31,18 +31,18 @@ variables.
 In most versions of the MOT task, all the stimuli are identical
 (except during the initial target-cuing phase and the final probe
 phase), so observers can only distinguish targets from distractors by
-following each stimulus' trajectory during the trial.  While identical
+following each stimulus' trajectory during the trial.  Identical
 stimuli may seem unrealistically impoverished (after all, cars may be
-distinguished by multiple features, including size, color, and model),
-this task does allow us to ask fundamental questions about the
-mechanisms used to track moving objects, such how many objects one can
-track (Pylyshyn & Storm, 1988), what kinds of information may be
-maintained for tracked objects (Fencsik, Klieger, & Horowitz, in
-press; Horowitz et al., in press; Oksama & Hyona, 2004), how tracking
-mechanisms cope with object disappearance (Horowitz, Birnkrant,
-Fencsik, Tran, & Wolfe, 2006; Keane & Pylyshyn, 2006; Scholl &
-Pylyshyn, 1999), and what kinds of secondary tasks interfere with
-tracking (Alvarez, Horowitz, Arsenio, DiMase, & Wolfe, 2005).
+distinguished by multiple features, including size, color, and shape),
+However, this task does allow us to ask fundamental questions about
+the mechanisms used to track moving objects, such how many objects an
+observer can track (Pylyshyn & Storm, 1988), what kinds of information
+may be maintained for tracked objects (Fencsik, Klieger, & Horowitz,
+in press), how tracking mechanisms cope with object disappearance
+(Horowitz, Birnkrant, Fencsik, Tran, & Wolfe, 2006; Keane & Pylyshyn,
+2006; Scholl & Pylyshyn, 1999), and what kinds of secondary tasks
+interfere with tracking (Alvarez, Horowitz, Arsenio, DiMase, & Wolfe,
+2005).
 
 Two previous findings from MOT-based studies are most relevant here.
 First, that observers can typically track around 4-5 targets out of
