@@ -88,7 +88,9 @@ Experiments:
 * speedsearch08: conveyor belt study with fixed distractor speed and
   within-block design
 
-* winsearch1: speed-search with windows
-* winsearch2: winsearch1 with drop-shadows for depth
+* winsearch01: speed-search with windows
+* winsearch02: winsearch01 with drop-shadows for depth
+* winsearch03: winsearch02 with fixed distractor speed and multiple
+  target speeds
 
 NIA = not in archive
