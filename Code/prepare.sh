@@ -5,9 +5,9 @@
 # 
 # $LastChangedDate$
 
-EXPERIMENT=SpeedSearch10
+EXPERIMENT=WinSearch03
 PUBLIC_DIR=~/Public/Experiments/$EXPERIMENT
-FILES="SearchTorusX.m"
+FILES="winSearch.m winShadow.bmp"
 
 # make sure public directory exists
 if [ ! -d $PUBLIC_DIR ]; then
