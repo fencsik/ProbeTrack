@@ -87,6 +87,10 @@ Experiments:
   quite complete)
 * speedsearch08: conveyor belt study with fixed distractor speed and
   within-block design
+* speedsearch09: conveyor belt study with fixed distractor speed and
+  a target speed intermediate between distractor and fast target
+* speedsearch10: conveyor belt study with small differences between
+  speeds to see if that leads to a slope effect
 
 * winsearch01: speed-search with windows
 * winsearch02: winsearch01 with drop-shadows for depth
