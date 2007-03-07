@@ -44,7 +44,7 @@ do.fig0501 <- function () {
       ylim <- c((mid <- mean(dt[, sub, , ])) - ylim.range/2, mid + ylim.range/2);
       plot(x, dt[, sub, , ], type = "n", bty = "n",
            axes = F, ylim = ylim,
-           xlab = "", ylab = "", main = paste("ProbeTrack1", sub));
+           xlab = "", ylab = "", main = paste("ProbeTrack2", sub));
       axis(1, x, x * 1000 / 75);
       axis(2);
       if (counter %% 8 >= 3) {

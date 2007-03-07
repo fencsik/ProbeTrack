@@ -38,7 +38,7 @@ do.fig0504 <- function () {
          plot(control[Subjects, nt], baseline[Subjects, gd, nt], type = "n",
               xlim = ylim, ylim = ylim, bty = "o",
               xlab = "Gap 0 RT (ms)", ylab = "Estimated baseline from fitted Weibull (ms)",
-              main = sprintf("Probetrack1 - Gap %s - %s targets", gd, nt));
+              main = sprintf("Probetrack2 - Gap %s - %s targets", gd, nt));
          text(control[, nt], baseline[, gd, nt], dimnames(control)[[1]], cex = 1);
       }
    }

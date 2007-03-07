@@ -65,7 +65,7 @@ do.fig0502 <- function () {
 
    plot(x, dt[, 1, 1], type = "n", bty = "n",
         axes = F, ylim = ylim,
-        xlab = "Probe delay (ms)", ylab = "Probe RT (ms)", main = "ProbeTrack1");
+        xlab = "Probe delay (ms)", ylab = "Probe RT (ms)", main = "ProbeTrack2");
    axis(1, x, x * 1000 / 75);
    axis(2);
    for (gd in gapdurList) {
