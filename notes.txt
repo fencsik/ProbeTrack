@@ -531,10 +531,28 @@ ideas, in decreasing order of immediacy:
    closer to the fast target speed: Ivry & Cohen make opposite
    predictions from Ruth, in this case
 3. run the lifetime search study with good speeds and lifetime ranges,
-   probably with a background bright enough to 
+   probably with a background bright enough to hide motion trails
 4. use a fixed target speed and use a distractor speed faster or
    slower than it (2a/3 reversed)
 5. come up with a stimulus identification and response preparation
    complexity manipulation
 
 Maybe there was more.  In the meantime, start writing up ProbeTrack studies.
+
+
+----------------------------------------------------------------------
+
+March 7, 2007:
+
+Regarding ProbeTrack
+
+A couple ideas for fixing analysis problems:
+
+1. try fitting weibull to just target-probe trials (instead of data
+   collapsed across probe-type)
+
+   2007-03-07: tried this and didn't get much difference
+
+2. try fitting weibull to averaged data, then comparing each subject
+   to the estimated baseline
+
