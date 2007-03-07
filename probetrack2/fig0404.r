@@ -25,6 +25,7 @@ do.fig0404 <- function () {
 
    load(infile.baseline);
    baseline <- with(data04$fit, tapply(baseline, list(sub, gapdur, ntargets), mean));
+   Subjects <- dimnames(baseline)[[1]];
 
    ylim <- c(400, 1000);
 
@@ -33,7 +34,7 @@ do.fig0404 <- function () {
                xpd = NA, bg = "white");
    for (gd in dimnames(baseline)[[2]]) {
       for (nt in dimnames(baseline)[[3]]) {
-         plot(control[, nt], baseline[, gd, nt], type = "n",
+         plot(control[Subjects, nt], baseline[Subjects, gd, nt], type = "n",
               xlim = ylim, ylim = ylim, bty = "o",
               xlab = "Gap 0 RT (ms)", ylab = "Estimated baseline from fitted Weibull (ms)",
               main = sprintf("Probetrack2 - Gap %s - %s targets", gd, nt));
