@@ -556,3 +556,6 @@ A couple ideas for fixing analysis problems:
 2. try fitting weibull to averaged data, then comparing each subject
    to the estimated baseline
 
+   2007-03-12: this won't work, dummy: while the average fit is quite
+   clean, each individual subject is quite far from the average.
+
