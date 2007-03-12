@@ -88,5 +88,17 @@ o fig0503: plot RT as a function of probe delay, plotting the baseline
 * fig0504: scatter-plot of weibull baseline against zero-gap RT for
   each subject
 
+----------------------------------------------------------------------
+
+* data06: fit weibull cdf to RT by probe delay function, averaged
+  across subjects, from data03
+
+* an0601: generate table of parameters of weibull for each subject
+* an0602: test RT at each probe delay against the baseline
+
+* fig0601: plot fit of weibull against observed data for each subject
+* fig0602: plot fit of weibull against observed data, averaged across
+  subjects
+
 
 (* = complete, o = incomplete)
