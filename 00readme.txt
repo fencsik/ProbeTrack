@@ -13,6 +13,10 @@ Code:
 
 Experiments:
 
+* driftsearch01: next twist on speed search studies, where subjects
+  search among moving gratings; compared fast/slow asymmetry for
+  oscillating vs. unidirectional gratings
+
 * flashtrack1: first FlashTrack study with either one target or one
   distractor flashing
 
