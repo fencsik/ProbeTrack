@@ -559,3 +559,39 @@ A couple ideas for fixing analysis problems:
    2007-03-12: this won't work, dummy: while the average fit is quite
    clean, each individual subject is quite far from the average.
 
+----------------------------------------------------------------------
+
+March 16, 2007:
+
+Ideas on DriftSearch studies:
+
+This is basically no different from the original speedsearch studies,
+although the layout of the stimuli may help counteract the global
+motion effect observed in those studies.  However, the design of the
+current study improves on the previous designs by comparing the
+oscillating condition of Ivry & Cohen with a unidirectional motion
+condition for which Ivry & Cohen's predictions differ from those of
+Rosenholtz.  This could probably be implemented with the original
+speedsearch stimuli.
+
+The current version includes slow- and fast-target conditions in both
+oscillating and unidirectional motion conditions.  Here are some
+potential controls:
+
+1. The oscillation has a fixed amplitude, which means that
+   faster-moving stimuli oscillate at higher frequently than
+   slower-moving stimuli.  Ivry & Cohen argue that this confound is
+   not driving the observed asymmetry, but they also control for it,
+   which I should do as well.  This may be accomplished by fixing the
+   oscillation frequency, or by randomizing it over a range such that
+   the range of amplitudes for slow and fast stimuli overlap.
+
+2. Another potential confound is that the oscillating stimuli both
+   oscillate and move in different directions.  Replace the
+   oscillating condition with a condition in which objects move in
+   both directions.
+
+3. Fixed direction provides more time with motion signal than
+   oscillatory, so limit exposure duration and see if the asymmetry is
+   still absent.
+
