@@ -595,3 +595,4 @@ potential controls:
    oscillatory, so limit exposure duration and see if the asymmetry is
    still absent.
 
+# 1 is probably of peripheral concern, so focus on 2 and 3.

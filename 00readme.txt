@@ -16,6 +16,8 @@ Experiments:
 * driftsearch01: next twist on speed search studies, where subjects
   search among moving gratings; compared fast/slow asymmetry for
   oscillating vs. unidirectional gratings
+* driftsearch02: control study with oscillating motion replaced with
+  each stimulus moving in a random direction (balanced across stimuli)
 
 * flashtrack1: first FlashTrack study with either one target or one
   distractor flashing
