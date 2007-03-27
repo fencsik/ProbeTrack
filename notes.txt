@@ -595,4 +595,38 @@ potential controls:
    oscillatory, so limit exposure duration and see if the asymmetry is
    still absent.
 
-# 1 is probably of peripheral concern, so focus on 2 and 3.
+# 1 is probably of peripheral concern, so focus on 2 and 3.  Of
+# course, 2 solves 3
+
+----------------------------------------------------------------------
+
+March 27, 2007:
+
+Further Thoughts on DriftSearch
+
+A difference between unidirectional and multidirectional motion is
+that common direction/speed may be readily grouped.  If this is the
+case, then Ivry & Cohen's proposal may still be correct, but the easy
+grouping afforded by unidirectional motion overrides the difficulty of
+detecting a slower-moving object.  So, we need to think of a way to
+break up this easy grouping.
+
+One strategy is for the distractors move at multiple speeds, but with
+a factor of two, at minimum separating the distractor speeds from the
+target speed (e.g., target moves at 1 pixel/frame, distractors move at
+2, 3, and 4 pixels/frame).  This is an imperfect control, since the
+distractors could still be grouped, but it couldn't be as simple a
+process as one that could group distractors moving at a common speed.
+Perhaps try this with slow targets moving at 3 pixels/frame, fast
+distractors at 6, 7, and 8 pixels/frame, and fast targets moving at 6
+pixels/frame, slow distractors at 1, 2, and 3 pixels/frame.  (Todd
+points out that we only need two distractor speeds.)
+
+Another strategy is to try to find relative speeds at which search for
+unidirectional slow targets becomes inefficient.  If speed detection
+follows the Weber rule, then 1 vs. 2 should be equivalent to 4 vs. 8,
+and 7 vs. 8 should be much harder.  In principle, it may be that, with
+smaller proportional differences in speed, there may actually be a
+slope for detecting targets with unidirectional motion.  This one has
+the advantage that it actually tests Rosenholtz's hypothesis, and has
+the potential to disprove it.
