@@ -15,7 +15,7 @@ do.data01 <- function () {
    dt <- read.csv(infile);
 
    ## remove bad subjects:
-   ## 1. remove nw based on SSP's lab book
+   ## 1. remove nw based on SSP's lab book (very low accuracy)
    dt <- dt[dt$identifier != "nw", ];
    dt$sub <- factor(dt$identifier);
 

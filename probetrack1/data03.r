@@ -15,9 +15,11 @@ do.data03 <- function () {
    dt <- read.csv(infile);
 
    ## remove bad subjects:
-   ## 1. remove nw based on SSP's lab book
+   ## 1. remove nw based on SSP's lab book (very low accuracy)
    ## 2. optionally remove ssf and wz because their weibull fits are weird
    dt <- dt[dt$identifier != "nw", ];
+   ##dt <- dt[dt$identifier != "nw" & dt$identifier != "wz", ];
+   ##dt <- dt[dt$identifier != "nw" & dt$identifier != "ssf", ];
    ##dt <- dt[dt$identifier != "nw" & dt$identifier != "ssf" & dt$identifier != "wz", ];
    dt$sub <- factor(dt$identifier);
 
