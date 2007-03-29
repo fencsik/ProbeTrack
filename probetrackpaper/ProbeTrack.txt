@@ -19,7 +19,7 @@ on the ability of the tracking mechanisms to recover from disruption.
 fundamental to driving, then talk about the need to deal with
 distraction.]
 
-One way to study tracking mechanisms in the laboratory is through the
+Tracking mechanisms have been studied in the laboratory through the
 multiple object tracking (MOT) task (Pylyshyn & Storm, 1988).  During
 a trial in a typical MOT study, observers are asked to keep track of a
 subset of stimuli ("targets") as they move independently around a
@@ -28,95 +28,30 @@ observer indicates whether or not a probed stimulus was a target; both
 the accuracy and latency of each response may be measured as dependent
 variables.
 
-In most versions of the MOT task, all the stimuli are identical
-(except during the initial target-cuing phase and the final probe
-phase), so observers can only distinguish targets from distractors by
-following each stimulus' trajectory during the trial.  Identical
-stimuli may seem unrealistically impoverished (after all, cars may be
-distinguished by multiple features, including size, color, and shape),
-However, this task does allow us to ask fundamental questions about
-the mechanisms used to track moving objects, such how many objects an
-observer can track (Pylyshyn & Storm, 1988), what kinds of information
-may be maintained for tracked objects (Fencsik, Klieger, & Horowitz,
-in press), how tracking mechanisms cope with object disappearance
-(Horowitz, Birnkrant, Fencsik, Tran, & Wolfe, 2006; Keane & Pylyshyn,
-2006; Scholl & Pylyshyn, 1999), and what kinds of secondary tasks
-interfere with tracking (Alvarez, Horowitz, Arsenio, DiMase, & Wolfe,
-2005).
-
 Two previous findings from MOT-based studies are most relevant here.
 First, that observers can typically track around 4-5 targets out of
 8-10 total objects (Pylyshyn & Storm, 1988).  This demonstrates that
 there is a mechanism capable of tracking multiple moving objects
-without relying on visible distinguishing characteristics.  Second,
-that observers can track successfully even if the tracked stimuli
+without maintaining gaze on them.
+
+Second, observers can track successfully even if the tracked stimuli
 disappear briefly (Fencsik et al., in press; Horowitz et al., 2006;
-Keane & Pylyshyn, 2006; Scholl & Pylyshyn, 1999).  This demonstrates
-that mechanisms exist to maintain information relevant to the tracking
-task when target stimuli disappear, then resume tracking once they
-reappear.
-
-Next...differences it types of disappearance and evidence of different
-mechanisms to support each.
-
-Then...how do we recover from disruption?  Bring in evidence from
-task-switching studies.
-
-The present paper focuses on how the visual system deals with the
-temporary disappearance of moving objects. People can continue to
-track objects that disappear briefly behind occluding surfaces. Scholl
-and Pylyshyn (1999) demonstrated this using a multiple object tracking
-(MOT) task, in which participants track a subset of identical,
-independently moving objects. Accuracy on the task was unaffected on
-trials when tracked objects moved behind occluding surfaces, as
-compared to trials without occlusion. However, when objects
-spontaneously disappeared and then reappeared without occlusion cues,
-but for the same amount of time as on occlusion trials, accuracy was
-substantially decreased compared to the other trials. It appears that
-the visual system assumes that an occluded object still exists and
-therefore continues to track it, while an object that spontaneously
-disappears must no longer exist and ceases to track it (see also
-Scholl & Feigenson, 2004).
-
-On the face of it, this is an entirely reasonable assumption: in the
-real world, when you are gazing at an object, the only way it can
-disappear is through occlusion. Based on the findings of Scholl and
-Pylyshyn (1999), it appears that the visual system continues to track
-such objects. However, objects can also disappear when gaze is shifted
-temporarily, in which case all tracked objects will disappear, then
-reappear, simultaneously. Given that a shift in gaze may mean that a
-new set of stimuli need to be tracked, there should be some
-psychological mechanism that enables disengagement from the tracking
-task, followed by re-engagement and reacquisition of tracked targets.
-
-In previous work, we have demonstrated that observers can successfully
-perform a MOT task when all the stimuli disappear simultaneously for a
-brief (approximately 300 ms) gap.  Horowitz, Birnkrant, Wolfe, and
-Fencsik (in press) showed that tracking through such a gap is more
-difficult when the stimuli appear to move behind occluding surfaces
-than when they disappear suddenly, without occlusion.  This result is
-the opposite of Scholl and Pylyshyn's (1999) finding that occlusion
-cues facilitate tracking when a single object disappears.  This
-dissociation suggests that the mechanisms underlying tracking during
-simultaneous disappearance are not the same as those that subserve
-active tracking of visible objects.  In fact, Alvarez, Horowitz,
-Arsenio, DiMase, and Wolfe (2005) showed that performance of a second
-task during a gap in tracking had almost no effect on tracking
-itself.
-
-These results indicate that there must be some mechanism separate from
-the tracking mechanism that enables temporary postponement of the
-tracking task during a gap.  information relevant to tracking is
+Keane & Pylyshyn, 2006; Scholl & Pylyshyn, 1999).  In fact, tracking
+performance is no worse when interrupted with a brief blank interval
+of some duration than when interrupted by another visually demanding
+task for an equivalent duration.  These results indicate that there
+must be some mechanism separate from the tracking mechanism that
+enables temporary postponement of the tracking task during
+disappearance or disruption.  Information relevant to tracking is
 stored by this mechanism and is used to reacquire targets following
-reappearance. In a recent paper (Fencsik, Klieger, & Horowitz,
-submitted), we provided evidence that observers performing an MOT task
-may remember both an object's location and direction of motion prior
-to the gap; while they may use either type of information to reacquire
-targets after the gap, they seem to have more location information
-available and tend to favor using it for target reacquisition. In the
-present work, we focus on the timecourse of target reacquisition:
-Following the temporary disappearance of all tracked objects, how long
-does the visual system take to resume tracking the targets.
+reappearance.
+
+
+
+In the present work, we focus on the timecourse of target
+reacquisition: Following the temporary disappearance of all tracked
+objects, how long does the visual system take to resume tracking the
+targets.
 
 To study the timecourse of target reacquisition, we present a series
 of experiments using the MOT task with a gap in tracking.  Following
@@ -369,3 +304,64 @@ aspects of a task, or the act of unloading another task from memory,
 that imposes the higher switching costs observed in other studies.
 
 Apply them to driving and other applied tasks
+
+
+
+Cutting-room floor:
+
+The present paper focuses on how the visual system deals with the
+temporary disappearance of moving objects. People can continue to
+track objects that disappear briefly behind occluding surfaces. Scholl
+and Pylyshyn (1999) demonstrated this using a multiple object tracking
+(MOT) task, in which participants track a subset of identical,
+independently moving objects. Accuracy on the task was unaffected on
+trials when tracked objects moved behind occluding surfaces, as
+compared to trials without occlusion. However, when objects
+spontaneously disappeared and then reappeared without occlusion cues,
+but for the same amount of time as on occlusion trials, accuracy was
+substantially decreased compared to the other trials. It appears that
+the visual system assumes that an occluded object still exists and
+therefore continues to track it, while an object that spontaneously
+disappears must no longer exist and ceases to track it (see also
+Scholl & Feigenson, 2004).
+
+On the face of it, this is an entirely reasonable assumption: in the
+real world, when you are gazing at an object, the only way it can
+disappear is through occlusion. Based on the findings of Scholl and
+Pylyshyn (1999), it appears that the visual system continues to track
+such objects. However, objects can also disappear when gaze is shifted
+temporarily, in which case all tracked objects will disappear, then
+reappear, simultaneously. Given that a shift in gaze may mean that a
+new set of stimuli need to be tracked, there should be some
+psychological mechanism that enables disengagement from the tracking
+task, followed by re-engagement and reacquisition of tracked targets.
+
+In previous work, we have demonstrated that observers can successfully
+perform a MOT task when all the stimuli disappear simultaneously for a
+brief (approximately 300 ms) gap.  Horowitz, Birnkrant, Wolfe, and
+Fencsik (in press) showed that tracking through such a gap is more
+difficult when the stimuli appear to move behind occluding surfaces
+than when they disappear suddenly, without occlusion.  This result is
+the opposite of Scholl and Pylyshyn's (1999) finding that occlusion
+cues facilitate tracking when a single object disappears.  This
+dissociation suggests that the mechanisms underlying tracking during
+simultaneous disappearance are not the same as those that subserve
+active tracking of visible objects.  In fact, Alvarez, Horowitz,
+Arsenio, DiMase, and Wolfe (2005) showed that performance of a second
+task during a gap in tracking had almost no effect on tracking
+itself.
+
+These results indicate that there must be some mechanism separate from
+the tracking mechanism that enables temporary postponement of the
+tracking task during a gap.  Information relevant to tracking is
+stored by this mechanism and is used to reacquire targets following
+reappearance. In a recent paper (Fencsik, Klieger, & Horowitz,
+submitted), we provided evidence that observers performing an MOT task
+may remember both an object's location and direction of motion prior
+to the gap; while they may use either type of information to reacquire
+targets after the gap, they seem to have more location information
+available and tend to favor using it for target reacquisition. In the
+present work, we focus on the timecourse of target reacquisition:
+Following the temporary disappearance of all tracked objects, how long
+does the visual system take to resume tracking the targets.
+
