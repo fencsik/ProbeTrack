@@ -20,7 +20,7 @@ do.fig0401 <- function () {
    load(infile);
    weibull <- data04$weibull;
    fit <- data04$fit;
-   dt <- with(data04$data, tapply(rt.cor, list(soa, sub, gapdur, ntargets), mean));
+   dt <- with(data04$data, tapply(rt, list(soa, sub, gapdur, ntargets), mean));
 
    x <- as.numeric(dimnames(dt)[[1]]);
    subList <- dimnames(dt)[[2]];
@@ -32,7 +32,7 @@ do.fig0401 <- function () {
                xpd = NA, bg = "white");
 
    ## set up color matrix
-   col <- as.character(with(data04$data, tapply(rt.cor, list(gapdur, ntargets), mean)));
+   col <- as.character(with(data04$data, tapply(rt, list(gapdur, ntargets), mean)));
    col <- matrix(rainbow(length(gapdurList) * length(ntargetsList)),
                  nrow = length(gapdurList), ncol = length(ntargetsList),
                  dimnames = list(gapdurList, ntargetsList));
@@ -45,7 +45,7 @@ do.fig0401 <- function () {
       plot(x, dt[, sub, , ], type = "n", bty = "n",
            axes = F, ylim = ylim,
            xlab = "", ylab = "", main = paste("ProbeTrack1", sub));
-      axis(1, x, x * 1000 / 75);
+      axis(1, x);
       axis(2);
       if (counter %% 8 >= 3) {
          title(xlab = "Probe delay (ms)");
@@ -56,10 +56,12 @@ do.fig0401 <- function () {
       for (gd in gapdurList) {
          for (nt in ntargetsList) {
             index <- fit$sub == sub & fit$gapdur == gd & fit$ntargets == nt;
-            lines(i <- seq(0, 100, by = .1),
+            lines(i <- seq(min(x), max(x), by = .1),
                   weibull(i, fit[index, "slope"], fit[index, "threshold"],
                           fit[index, "baseline"], fit[index, "asymptote"]),
                           lty = 1, lwd = 3, col = col[gd, nt]);
+            abline(h = fit[index, "baseline"], xpd = F,
+                   lty = 2, col = col[gd, nt], lwd = 2);
             points(x, dt[, sub, gd, nt],
                    col = col[gd, nt], bg = "white", pch = 21, cex = 1.5, lwd = 3);
             counter <- counter + 1;

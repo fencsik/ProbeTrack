@@ -20,7 +20,7 @@ do.an0304 <- function () {
       return(invisible(NULL));
    }
    load(infile);
-   data03$soa <- as.numeric(as.character(data03$soa)) * 1000 / 75;
+   data03$soa <- as.numeric(as.character(data03$soa));
 
    d.gap <- with(data03[data03$gapdur == "10",],
                  tapply(pcor, list(sub, soa), mean));

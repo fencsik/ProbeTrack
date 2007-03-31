@@ -29,11 +29,12 @@ do.data06 <- function () {
    data03$ntargets <- as.numeric(as.character(data03$ntargets));
    data03$soa <- as.numeric(as.character(data03$soa));
    data03 <- data03[data03$gapdur > 0, ];
+   rownames(data03) <- seq_len(dim(data03)[1]);
    data <- data03;
-   data$rt.pred <- numeric(length(data$rt.cor));
+   data$rt.pred <- numeric(length(data$rt));
 
    # collapse across subjects
-   dt <- with(data, aggregate(data.frame(rt.cor = rt.cor),
+   dt <- with(data, aggregate(data.frame(rt = rt),
                               list(soa = soa, gapdur = gapdur, ntargets = ntargets), mean));
    dt$soa <- as.numeric(as.character(dt$soa));
    dt$gapdur <- as.numeric(as.character(dt$gapdur));
@@ -78,7 +79,7 @@ do.data06 <- function () {
          dt.index <- dt$gapdur == gd & dt$ntargets == nt;
          print(dt.index)
          x <- dt[dt.index, "soa"];
-         y <- dt[dt.index, "rt.cor"];
+         y <- dt[dt.index, "rt"];
          p0["baseline"] <- min(y);
          asymptote <- max(y);
          out <- nlm(GoodnessOfFit, p0, print.level = 0, asymptote = asymptote);

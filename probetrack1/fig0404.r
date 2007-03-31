@@ -21,7 +21,7 @@ do.fig0404 <- function () {
    load(infile.control);
    data03$gapdur <- as.numeric(as.character(data03$gapdur));
    data03$ntargets <- as.numeric(as.character(data03$ntargets));
-   control <- with(data03[data03$gapdur == "0", ], tapply(rt.cor, list(sub, ntargets), mean));
+   control <- with(data03[data03$gapdur == "0", ], tapply(rt, list(sub, ntargets), mean));
 
    load(infile.baseline);
    baseline <- with(data04$fit, tapply(baseline, list(sub, gapdur, ntargets), mean));

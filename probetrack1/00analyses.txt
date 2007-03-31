@@ -63,6 +63,8 @@ $LastChangedDate$
 
 * an0401: generate table of parameters of weibull for each subject
 * an0402: test RT at each probe delay against the baseline
+* an0403: table reporting probe delay at which fitted weibull equals
+  estimated  baseline
 
 * fig0401: plot fit of weibull against observed data for each subject
 * fig0402: plot fit of weibull against observed data, averaged across
