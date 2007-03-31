@@ -23,9 +23,9 @@ do.fig0303 <- function () {
 
    ## extract relevant data
    dtg <- with(data03[data03$gapdur != "0", ],
-               tapply(rt.cor, list(soa, sub, gapdur, ntargets), mean, na.rm = TRUE));
+               tapply(rt, list(soa, sub, gapdur, ntargets), mean, na.rm = TRUE));
    x <- as.numeric(dimnames(dtg)[[1]]);
-   dtng <- with(data03[data03$gapdur == "0",], tapply(rt.cor, list(sub, ntargets), mean));
+   dtng <- with(data03[data03$gapdur == "0",], tapply(rt, list(sub, ntargets), mean));
 
    ## settings
    ylim.range <- 300;
@@ -42,7 +42,7 @@ do.fig0303 <- function () {
             plot(x, dtg[, sub, gd, nt], type = "n", bty = "n",
                     ylim = ylim, axes = F,
                     xlab = "", ylab = "", main = sprintf("ProbeTrack1 %s (Gap %s, %s targets)", sub, gd, nt));
-            axis(1, x, x * 1000 / 75);
+            axis(1, x);
             axis(2);
             if (counter %% 8 >= 3) title(xlab = "Probe delay (ms)");
             if (counter %% 4 == 0) title(ylab = "Probe RT (ms)");
@@ -52,7 +52,7 @@ do.fig0303 <- function () {
             lines(x, dtg[, sub, gd, nt], type = "o",
                   col = 1, pch = 21, lty = 1, lwd = 3, cex = 1.5, bg = "white");
             if (counter %% 8 == 1) {
-               legend(min(x) + xinch(3), min(ylim) - yinch(.6), c("gap", "no gap"),
+               legend("bottomleft", c("gap", "no gap"), inset = c(0.9, -.25),
                       lty = 1:2, lwd = 2,
                       bty = "n", ncol = 2, y.intersp = 1.3);
             }

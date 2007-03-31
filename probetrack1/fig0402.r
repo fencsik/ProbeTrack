@@ -22,7 +22,7 @@ do.fig0402 <- function () {
    load(infile);
    weibull <- data04$weibull;
 
-   dt <- with(data04$data, tapply(rt.cor, list(soa, gapdur, ntargets), mean));
+   dt <- with(data04$data, tapply(rt, list(soa, gapdur, ntargets), mean));
 
    ## gather parameters for weibull fits
    attach(data04$fit);
@@ -66,7 +66,7 @@ do.fig0402 <- function () {
    plot(x, dt[, 1, 1], type = "n", bty = "n",
         axes = F, ylim = ylim,
         xlab = "Probe delay (ms)", ylab = "Probe RT (ms)", main = "ProbeTrack1");
-   axis(1, x, x * 1000 / 75);
+   axis(1, x);
    axis(2);
    for (gd in gapdurList) {
       for (nt in ntargetsList) {
