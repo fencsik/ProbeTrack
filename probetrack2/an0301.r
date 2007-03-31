@@ -22,7 +22,7 @@ do.an0301 <- function () {
    sink(outfile);
    cat("ANOVA on correct RT as a function of probe delay\n");
    cat("  gap trials only\n");
-   print(summary(aov(rt.cor ~ soa + Error(sub / soa),
+   print(summary(aov(rt ~ soa + Error(sub / soa),
                      data03[data03$gapdur == "10",])));
 
    cat("\n\n\n");

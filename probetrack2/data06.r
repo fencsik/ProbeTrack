@@ -1,11 +1,11 @@
-### data04.r: fit weibull cdf to RT by probe delay functions from data03
+### data06.r: fit weibull cdf to RT by probe delay functions from data03
 ###
 ### $LastChangedDate$
 
-do.data04 <- function () {
-   thisfile <- "data04.r";
+do.data06 <- function () {
+   thisfile <- "data06.r";
    infile <- "data03.rda";
-   outfile <- "data04.rda";
+   outfile <- "data06.rda";
 
    exit.function <- function () {
       if (exists("old.opt")) options(old.opt);
@@ -20,8 +20,8 @@ do.data04 <- function () {
    }
    load(infile);
 
-   ## optionally remove ssf because the weibull fit is weird
-   ##data03 <- data03[data03$sub != "ssf", ];
+   ## optionally remove ssf and wz because their weibull fits are weird
+   ##data03 <- data03[data03$sub != "ssf" & data03$sub != "wz", ];
 
    ## set-up data matrix
    data03$sub <- as.character(data03$sub);
@@ -32,6 +32,14 @@ do.data04 <- function () {
    rownames(data03) <- seq_len(dim(data03)[1]);
    data <- data03;
    data$rt.pred <- numeric(length(data$rt));
+
+   # collapse across subjects
+   dt <- with(data, aggregate(data.frame(rt = rt),
+                              list(soa = soa, gapdur = gapdur, ntargets = ntargets), mean));
+   dt$soa <- as.numeric(as.character(dt$soa));
+   dt$gapdur <- as.numeric(as.character(dt$gapdur));
+   dt$ntargets <- as.numeric(as.character(dt$ntargets));
+   print(dt)
 
    ## extract IVs
    Subjects <- as.character(sort(unique(data$sub)));
@@ -63,21 +71,23 @@ do.data04 <- function () {
       }
    }
 
-   p0 <- c(5, 50, 0);
+   p0 <- c(5, 5, 0);
    names(p0) <- c("slope", "threshold", "baseline");
 
-   for (sub in Subjects) {
-      for (gd in GapDurations) {
-         for (nt in NTargets) {
+   for (gd in GapDurations) {
+      for (nt in NTargets) {
+         dt.index <- dt$gapdur == gd & dt$ntargets == nt;
+         print(dt.index)
+         x <- dt[dt.index, "soa"];
+         y <- dt[dt.index, "rt"];
+         p0["baseline"] <- min(y);
+         asymptote <- max(y);
+         out <- nlm(GoodnessOfFit, p0, print.level = 0, asymptote = asymptote);
+         p <- out$estimate;
+         yhat <- weibull(x, p[1], p[2], p[3], asymptote);
+         for (sub in Subjects) {
             data.index <- data$sub == sub & data$gapdur == gd & data$ntargets == nt;
             fit.index <- fit$sub == sub & fit$gapdur == gd & fit$ntargets == nt;
-            x <- data[data.index, "soa"];
-            y <- data[data.index, "rt"];
-            p0["baseline"] <- min(y);
-            asymptote <- max(y);
-            out <- nlm(GoodnessOfFit, p0, print.level = 0, asymptote = asymptote);
-            p <- out$estimate;
-            yhat <- weibull(x, p[1], p[2], p[3], asymptote);
             data[data.index, "rt.pred"] <- yhat;
             fit[fit.index, fit.columns] <- c(p, asymptote, out$iterations, out$code,
                                              GoodnessOfFit(p, asymptote),
@@ -88,9 +98,9 @@ do.data04 <- function () {
       }
    }
 
-   data04 <- list(data = data, fit = data.frame(fit), weibull = weibull);
-   save(data04, file=outfile);
+   data06 <- list(data = data, fit = data.frame(fit), weibull = weibull);
+   save(data06, file=outfile);
 }
 
-print(system.time(do.data04(), TRUE));
-rm(do.data04);
+print(system.time(do.data06(), TRUE));
+rm(do.data06);

@@ -1,11 +1,11 @@
-### fig0401.r: plot fit of weibull against observed data for each subject
+### fig0601.r: plot fit of weibull against observed data for each subject
 ###
 ### $LastChangedDate$
 
-do.fig0401 <- function () {
-   infile <- "data04.rda";
-   outfile <- "fig0401.pdf";
-   thisfile <- "fig0401.r";
+do.fig0601 <- function () {
+   infile <- "data06.rda";
+   outfile <- "fig0601.pdf";
+   thisfile <- "fig0601.r";
    exit.function <- function () {
       if (exists("opar")) par(opar);
       if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
@@ -18,9 +18,9 @@ do.fig0401 <- function () {
       return(invisible(NULL));
    }
    load(infile);
-   weibull <- data04$weibull;
-   fit <- data04$fit;
-   dt <- with(data04$data, tapply(rt, list(soa, sub, gapdur, ntargets), mean));
+   weibull <- data06$weibull;
+   fit <- data06$fit;
+   dt <- with(data06$data, tapply(rt, list(soa, sub, gapdur, ntargets), mean));
 
    x <- as.numeric(dimnames(dt)[[1]]);
    subList <- dimnames(dt)[[2]];
@@ -32,7 +32,7 @@ do.fig0401 <- function () {
                xpd = NA, bg = "white");
 
    ## set up color matrix
-   col <- as.character(with(data04$data, tapply(rt, list(gapdur, ntargets), mean)));
+   col <- as.character(with(data06$data, tapply(rt, list(gapdur, ntargets), mean)));
    col <- matrix(rainbow(length(gapdurList) * length(ntargetsList)),
                  nrow = length(gapdurList), ncol = length(ntargetsList),
                  dimnames = list(gapdurList, ntargetsList));
@@ -44,7 +44,7 @@ do.fig0401 <- function () {
       ylim <- c((mid <- mean(dt[, sub, , ])) - ylim.range/2, mid + ylim.range/2);
       plot(x, dt[, sub, , ], type = "n", bty = "n",
            axes = F, ylim = ylim,
-           xlab = "", ylab = "", main = paste("ProbeTrack2", sub));
+           xlab = "", ylab = "", main = paste("ProbeTrack1", sub));
       axis(1, x);
       axis(2);
       if (counter %% 8 >= 3) {
@@ -56,12 +56,10 @@ do.fig0401 <- function () {
       for (gd in gapdurList) {
          for (nt in ntargetsList) {
             index <- fit$sub == sub & fit$gapdur == gd & fit$ntargets == nt;
-            lines(i <- seq(min(x), max(x), by = .1),
+            lines(i <- seq(0, max(x), by = .1),
                   weibull(i, fit[index, "slope"], fit[index, "threshold"],
                           fit[index, "baseline"], fit[index, "asymptote"]),
                           lty = 1, lwd = 3, col = col[gd, nt]);
-            abline(h = fit[index, "baseline"], xpd = F,
-                   lty = 2, col = col[gd, nt], lwd = 2);
             points(x, dt[, sub, gd, nt],
                    col = col[gd, nt], bg = "white", pch = 21, cex = 1.5, lwd = 3);
             counter <- counter + 1;
@@ -70,5 +68,5 @@ do.fig0401 <- function () {
    }
 }
 
-do.fig0401();
-rm(do.fig0401);
+do.fig0601();
+rm(do.fig0601);

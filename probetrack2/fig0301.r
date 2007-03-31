@@ -23,17 +23,17 @@ do.fig0301 <- function () {
 
    ## extract relevant data
    dtg <- with(data03[data03$gapdur != "0", ],
-               tapply(rt.cor, list(soa), mean, na.rm = TRUE));
+               tapply(rt, list(soa), mean, na.rm = TRUE));
    if (file.exists(errfile)) {
       load(errfile);
       errg <- an0303[, "ci"];
    } else {
       errg <- with(data03[data03$gapdur != "0", ],
-                   tapply(rt.cor, list(soa),
+                   tapply(rt, list(soa),
                           function(x) qt(.975, length(x) - 1) * sqrt(var(x, na.rm = TRUE) / length(x))));
    }
-   x <- as.numeric(dimnames(dtg)[[1]]) * 1000 / 75;
-   dtng <- rep(mean(data03[data03$gapdur == "0", "rt.cor"], na.rm = F), length(x));
+   x <- as.numeric(dimnames(dtg)[[1]]);
+   dtng <- rep(mean(data03[data03$gapdur == "0", "rt"], na.rm = F), length(x));
 
    ## settings
    ylim <- c(500, 1000);

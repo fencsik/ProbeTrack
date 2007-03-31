@@ -22,7 +22,7 @@ do.fig0504 <- function () {
    data01$gapdur <- as.numeric(as.character(data01$gapdur));
    data01$ntargets <- as.numeric(as.character(data01$ntargets));
    control <- with(data01[data01$gapdur == "0" & data01$target == "1", ],
-                   tapply(rt.cor, list(sub, ntargets), mean));
+                   tapply(rt, list(sub, ntargets), mean));
 
    load(infile.baseline);
    baseline <- with(data05$fit, tapply(baseline, list(sub, gapdur, ntargets), mean));

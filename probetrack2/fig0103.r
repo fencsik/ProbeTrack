@@ -21,11 +21,11 @@ do.fig0103 <- function () {
 
    ## extract relevant data
    dtg <- with(data01[data01$gapdur != "0", ],
-               tapply(rt.cor, list(soa, target, sub), mean, na.rm = TRUE));
+               tapply(rt, list(soa, target, sub), mean, na.rm = TRUE));
    dtng <- with(data01[data01$gapdur == "0", ],
-                tapply(rt.cor, list(target, sub), mean, na.rm = T));
+                tapply(rt, list(target, sub), mean, na.rm = T));
 
-   x <- as.numeric(dimnames(dtg)[[1]]) * 1000 / 75;
+   x <- as.numeric(dimnames(dtg)[[1]]);
 
    ## settings
    ylim <- c(500, 1200);
@@ -58,10 +58,10 @@ do.fig0103 <- function () {
          lines(x, rep(dtng[targ, sub], length(x)), type = "l",
                col = col[targ], lty = 2, lwd = 3);
          if (counter %% 4 == 0) {
-            legend(min(x) + xinch(2.5), min(ylim) - yinch(.5), c("gap", "no gap"),
+            legend("bottomright", c("gap", "no gap"), inset = c(-.1,-.55),
                    lty = 1:2, lwd = 3,
                    bty = "n", y.intersp = 1.3);
-            legend(min(x) + xinch(4), min(ylim) - yinch(.5), c("probe distractor", "probe target"),
+            legend("bottomright", c("probe distractor", "probe target"), inset = c(-.6,-.55),
                    col = col[as.character(0:1)], pch = pch[as.character(0:1)],
                    lty = 1, lwd = 3, pt.bg = "white", pt.cex = 1.5,
                    bty = "n", y.intersp = 1.3);

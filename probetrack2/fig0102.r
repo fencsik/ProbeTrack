@@ -29,13 +29,13 @@ do.fig0102 <- function () {
       errg <- an0104[, , "ci"];
    } else {
       errg <- with(data01[data01$gapdur != "0", ],
-                   tapply(rt.cor, list(soa, target),
+                   tapply(pcor, list(soa, target),
                           function(x) qt(.975, length(x) - 1) * sqrt(var(x, na.rm = TRUE) / length(x))));
    }
    dtng <- with(data01[data01$gapdur == "0", ],
                 tapply(pcor, list(target), mean, na.rm = TRUE));
 
-   x <- as.numeric(dimnames(dtg)[[1]]) * 1000 / 75;
+   x <- as.numeric(dimnames(dtg)[[1]]);
 
    ## settings
    ylim <- c(.5, 1);
@@ -66,11 +66,11 @@ do.fig0102 <- function () {
             col = col[targ], lty = 2, lwd = 3);
 ###       text(x[lastIndex] + xinch(.2), dtg[lastIndex, n, targ], sprintf("%s targets", n),
 ###            col = col[targ], cex = .7, adj = 0);
-      legend(max(x) - xinch(2), max(ylim) + yinch(.25), c("probe distractor", "probe target"),
+      legend("bottomright", c("probe distractor", "probe target"), inset = c(.1, 0),
              col = col[as.character(0:1)], pch = pch[as.character(0:1)],
              lty = 1, lwd = 3, pt.bg = "white", pt.cex = 1.5,
              bty = "n", y.intersp = 1.3);
-      legend(max(x) - xinch(3.5), max(ylim) + yinch(.25), c("gap", "no gap"),
+      legend("bottomleft", c("gap", "no gap"), inset = c(.1, 0),
              lty = 1:2, lwd = 3,
              bty = "n", y.intersp = 1.3);
    }

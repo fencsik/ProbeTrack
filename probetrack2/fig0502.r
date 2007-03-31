@@ -22,7 +22,7 @@ do.fig0502 <- function () {
    load(infile);
    weibull <- data05$weibull;
 
-   dt <- with(data05$data, tapply(rt.cor, list(soa, gapdur, ntargets), mean));
+   dt <- with(data05$data, tapply(rt, list(soa, gapdur, ntargets), mean));
 
    ## gather parameters for weibull fits
    attach(data05$fit);
@@ -35,7 +35,7 @@ do.fig0502 <- function () {
 
    ## fit weibull to each subject in each condition
    Subjects <- dimnames(slope)[[1]];
-   predx <- seq(0, 100, by = 1);
+   predx <- seq(0, 1300, by = 1);
    predy <- array(dim = c(length(Subjects), length(predx), dim(slope)[2], dim(slope)[3]),
                   dimnames = list(Subjects, 1:length(predx), dimnames(slope)[[2]], dimnames(slope)[[3]]));
    for (sub in dimnames(predy)[[1]]) {
@@ -66,7 +66,7 @@ do.fig0502 <- function () {
    plot(x, dt[, 1, 1], type = "n", bty = "n",
         axes = F, ylim = ylim,
         xlab = "Probe delay (ms)", ylab = "Probe RT (ms)", main = "ProbeTrack2");
-   axis(1, x, x * 1000 / 75);
+   axis(1, x);
    axis(2);
    for (gd in gapdurList) {
       for (nt in ntargetsList) {

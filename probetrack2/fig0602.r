@@ -1,13 +1,13 @@
-### fig0402.r: plot fit of weibull against observed data, averaged across
+### fig0602.r: plot fit of weibull against observed data, averaged across
 ### subjects
 ###
 ### $LastChangedDate$
 
-do.fig0402 <- function () {
-   infile <- "data04.rda";
-   outfile <- "fig0402.pdf";
-   errfile <- "an0402.rda";
-   thisfile <- "fig0402.r";
+do.fig0602 <- function () {
+   infile <- "data06.rda";
+   outfile <- "fig0602.pdf";
+   errfile <- "an0602.rda";
+   thisfile <- "fig0602.r";
    exit.function <- function () {
       if (exists("opar")) par(opar);
       if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
@@ -20,12 +20,12 @@ do.fig0402 <- function () {
       return(invisible(NULL));
    }
    load(infile);
-   weibull <- data04$weibull;
+   weibull <- data06$weibull;
 
-   dt <- with(data04$data, tapply(rt, list(soa, gapdur, ntargets), mean));
+   dt <- with(data06$data, tapply(rt, list(soa, gapdur, ntargets), mean));
 
    ## gather parameters for weibull fits
-   attach(data04$fit);
+   attach(data06$fit);
    factors <- list(sub, gapdur, ntargets);
    slope <- tapply(slope, factors, mean);
    threshold <- tapply(threshold, factors, mean);
@@ -35,7 +35,7 @@ do.fig0402 <- function () {
 
    ## fit weibull to each subject in each condition
    Subjects <- dimnames(slope)[[1]];
-   predx <- seq(0, 100, by = 1);
+   predx <- seq(0, 1300, by = 1);
    predy <- array(dim = c(length(Subjects), length(predx), dim(slope)[2], dim(slope)[3]),
                   dimnames = list(Subjects, 1:length(predx), dimnames(slope)[[2]], dimnames(slope)[[3]]));
    for (sub in dimnames(predy)[[1]]) {
@@ -51,7 +51,7 @@ do.fig0402 <- function () {
 
    if (!file.exists(errfile)) stop("cannot open error file ", errfile);
    load(errfile);
-   ci <- an0402[, , , "ci"];
+   ci <- an0602[, , , "ci"];
 
    x <- as.numeric(dimnames(dt)[[1]]);
    gapdurList <- dimnames(dt)[[2]];
@@ -65,7 +65,7 @@ do.fig0402 <- function () {
 
    plot(x, dt[, 1, 1], type = "n", bty = "n",
         axes = F, ylim = ylim,
-        xlab = "Probe delay (ms)", ylab = "Probe RT (ms)", main = "ProbeTrack2");
+        xlab = "Probe delay (ms)", ylab = "Probe RT (ms)", main = "ProbeTrack1");
    axis(1, x);
    axis(2);
    for (gd in gapdurList) {
@@ -82,5 +82,5 @@ do.fig0402 <- function () {
    }
 }
 
-do.fig0402();
-rm(do.fig0402);
+do.fig0602();
+rm(do.fig0602);

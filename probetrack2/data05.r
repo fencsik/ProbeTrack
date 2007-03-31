@@ -30,8 +30,9 @@ do.data05 <- function () {
    data01$ntargets <- as.numeric(as.character(data01$ntargets));
    data01$soa <- as.numeric(as.character(data01$soa));
    data01 <- data01[data01$gapdur > 0 & data01$target == 1, ];
+   rownames(data01) <- seq_len(dim(data01)[1]);
    data <- data01;
-   data$rt.pred <- numeric(length(data$rt.cor));
+   data$rt.pred <- numeric(length(data$rt));
 
    ## extract IVs
    Subjects <- as.character(sort(unique(data$sub)));
@@ -63,7 +64,7 @@ do.data05 <- function () {
       }
    }
 
-   p0 <- c(5, 5, 0);
+   p0 <- c(5, 50, 0);
    names(p0) <- c("slope", "threshold", "baseline");
 
    for (sub in Subjects) {
@@ -72,7 +73,7 @@ do.data05 <- function () {
             data.index <- data$sub == sub & data$gapdur == gd & data$ntargets == nt;
             fit.index <- fit$sub == sub & fit$gapdur == gd & fit$ntargets == nt;
             x <- data[data.index, "soa"];
-            y <- data[data.index, "rt.cor"];
+            y <- data[data.index, "rt"];
             p0["baseline"] <- min(y);
             asymptote <- max(y);
             out <- nlm(GoodnessOfFit, p0, print.level = 0, asymptote = asymptote);
