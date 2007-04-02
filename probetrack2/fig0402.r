@@ -35,7 +35,7 @@ do.fig0402 <- function () {
 
    ## fit weibull to each subject in each condition
    Subjects <- dimnames(slope)[[1]];
-   predx <- seq(0, 100, by = 1);
+   predx <- seq(0, 1300, by = 1);
    predy <- array(dim = c(length(Subjects), length(predx), dim(slope)[2], dim(slope)[3]),
                   dimnames = list(Subjects, 1:length(predx), dimnames(slope)[[2]], dimnames(slope)[[3]]));
    for (sub in dimnames(predy)[[1]]) {

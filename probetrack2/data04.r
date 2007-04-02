@@ -20,8 +20,8 @@ do.data04 <- function () {
    }
    load(infile);
 
-   ## optionally remove ssf because the weibull fit is weird
-   ##data03 <- data03[data03$sub != "ssf", ];
+   ## optionally remove el and ssf because of poor performance
+   data03 <- data03[data03$sub != "el" & data03$sub != "ssf", ];
 
    ## set-up data matrix
    data03$sub <- as.character(data03$sub);
