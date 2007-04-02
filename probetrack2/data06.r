@@ -71,7 +71,7 @@ do.data06 <- function () {
       }
    }
 
-   p0 <- c(5, 5, 0);
+   p0 <- c(25, 50, 0);
    names(p0) <- c("slope", "threshold", "baseline");
 
    for (gd in GapDurations) {

@@ -17,6 +17,8 @@ do.data03 <- function () {
    ## remove bad subjects:
    ## 1. optionally remove ssf because the weibull fit is weird
    ##dt <- dt[dt$sub != "ssf", ];
+   ## 2. or remove ssf and el because of poor performance
+   ##dt <- dt[dt$sub != "ssf" & dt$sub != "el", ];
    dt$sub <- factor(dt$sub);
 
    ## remove practice blocks, bad keypresses, and negative RTs (which should
