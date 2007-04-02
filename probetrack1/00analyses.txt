@@ -60,6 +60,8 @@ $LastChangedDate$
 ----------------------------------------------------------------------
 
 * data04: fit weibull cdf to RT by probe delay function from data03
+* weibullTest04: tests fit of weibull under various starting parameter
+  values
 
 * an0401: generate table of parameters of weibull for each subject
 * an0402: test RT at each probe delay against the baseline
@@ -94,6 +96,8 @@ o fig0503: plot RT as a function of probe delay, plotting the baseline
 
 * data06: fit weibull cdf to RT by probe delay function, averaged
   across subjects, from data03
+* weibullTest06: tests fit of weibull under various starting parameter
+  values
 
 * an0601: generate table of parameters of weibull for each subject
 * an0602: test RT at each probe delay against the baseline
