@@ -18,6 +18,8 @@ Experiments:
   oscillating vs. unidirectional gratings
 * driftsearch02: control study with oscillating motion replaced with
   each stimulus moving in a random direction (balanced across stimuli)
+* driftsearch03: control study, in which grouping is broken up by
+  using heterogeneous distractor speeds
 
 * flashtrack1: first FlashTrack study with either one target or one
   distractor flashing
