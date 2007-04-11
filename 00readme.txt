@@ -19,7 +19,10 @@ Experiments:
 * driftsearch02: control study with oscillating motion replaced with
   each stimulus moving in a random direction (balanced across stimuli)
 * driftsearch03: control study, in which grouping is broken up by
-  using heterogeneous distractor speeds
+  using heterogeneous distractor speeds (aborted after 4 subjects and
+  replaced by driftsearch04)
+* driftsearch04: same as driftsearch03, but with a different set of
+  comparison conditions
 
 * flashtrack1: first FlashTrack study with either one target or one
   distractor flashing
