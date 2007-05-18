@@ -23,6 +23,8 @@ Experiments:
   replaced by driftsearch04)
 * driftsearch04: same as driftsearch03, but with a different set of
   comparison conditions
+* driftsearch05: test unidirectional motion at different levels of
+  speed
 
 * flashtrack1: first FlashTrack study with either one target or one
   distractor flashing
