@@ -630,3 +630,29 @@ smaller proportional differences in speed, there may actually be a
 slope for detecting targets with unidirectional motion.  This one has
 the advantage that it actually tests Rosenholtz's hypothesis, and has
 the potential to disprove it.
+
+----------------------------------------------------------------------
+
+May 18, 2007:
+
+More ideas on ProbeTrack:
+
+Fit a model that actually implements our theory about what is
+occurring: that is, one which assumes that there is a delay of X ms
+before tracking resumes.  Thus, RT reflects a baseline response time
+plus the time required to reacquire the targets after the stimuli
+reappear.  This leads to a formula like
+
+RT = t + max(r - soa, 0)
+
+where RT is the observed reaction time, t is the baseline response
+time, r is the reacquisition time, and soa is the SOA.
+
+----------------------------------------------------------------------
+
+May 21, 2007:
+
+Even better is a version of the above with distribution assumptions,
+such that t (base RT) follows a gamma distributions with parameters
+alpha and beta and r (reacquisition time) follows an exponential
+distribution with parameter tau (or lambda).
