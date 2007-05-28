@@ -106,5 +106,17 @@ o fig0503: plot RT as a function of probe delay, plotting the baseline
 * fig0602: plot fit of weibull against observed data, averaged across
   subjects
 
+----------------------------------------------------------------------
+
+* data07: fit reacquire-time model to RT by probe delay functions from
+  data03
+
+* an0701: generate table of parameters of fitted model for each subject
+
+* fig0701: plot fit of model against observed data for each subject
+
+----------------------------------------------------------------------
+
+* pre01: plot model functions for reacquire-time model
 
 (* = complete, o = incomplete)
