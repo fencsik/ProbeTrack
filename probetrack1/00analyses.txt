@@ -114,6 +114,8 @@ o fig0503: plot RT as a function of probe delay, plotting the baseline
 * an0701: generate table of parameters of fitted model for each subject
 
 * fig0701: plot fit of model against observed data for each subject
+* fig0702: plot fit of model against observed data, averaged across
+  subjects
 
 ----------------------------------------------------------------------
 
