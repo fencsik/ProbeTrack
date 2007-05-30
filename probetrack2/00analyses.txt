@@ -119,4 +119,26 @@ o an0703: table reporting probe delay at which fitted weibulls reach
 
 * fig0701: plot of fitted weibull and observed data
 
+----------------------------------------------------------------------
+
+* data08: fit reacquire-time model to RT by probe delay functions from
+  data03
+
+* an0801: generate table of parameters of fitted model for each subject
+
+* fig0801: plot fit of model against observed data for each subject
+* fig0802: plot fit of model against observed data, averaged across
+  subjects
+
+----------------------------------------------------------------------
+
+* data09: fit reacquire-time model to RT by probe delay functions from
+  data03, averaged across subjects
+
+* an0901: generate table of parameters of fitted model for each subject
+
+* fig0901: plot fit of model against observed data
+
+----------------------------------------------------------------------
+
 (* = complete, o = incomplete)
