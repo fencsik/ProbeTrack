@@ -31,6 +31,13 @@ do.an0801 <- function () {
    print(cbind(category, round(dt[, c("rtime", "baseRT")], 3)));
 
    cat("\n\n\n");
+   cat("Average rtime, with 95% confidence intervals\n");
+   y <- dt[, "rtime"];
+   ci <- qt(.975, length(y)) * sqrt(var(y) / length(y));
+   cat(sprintf("%0.2f +/- %0.2f (%0.2f, %0.2f)", mean(y), ci,
+                 mean(y) - ci, mean(y) + ci));
+
+   cat("\n\n\n");
    cat("Fitting output and goodness-of-fit statistics\n");
    print(cbind(category, round(dt[, c("iter", "code", "sse", "rmse", "r.sq", "chisq")], 3)));
 }
