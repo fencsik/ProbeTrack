@@ -6,7 +6,6 @@
 do.fig0702 <- function () {
    infile <- "data07.rda";
    outfile <- "fig0702.pdf";
-   errfile <- "an0702.rda";
    thisfile <- "fig0702.r";
    exit.function <- function () {
       if (exists("opar")) par(opar);
@@ -15,7 +14,7 @@ do.fig0702 <- function () {
    on.exit(exit.function());
 
    if (!file.exists(infile)) stop("cannot open input file ", infile);
-   if (IsFileUpToDate(outfile, c(infile, thisfile, errfile))) {
+   if (IsFileUpToDate(outfile, c(infile, thisfile))) {
       warning("Output file is up to date, no action taken");
       return(invisible(NULL));
    }
@@ -46,10 +45,6 @@ do.fig0702 <- function () {
    predy <- apply(predy, 2:4, mean);
    baseRT <- apply(baseRT, 2:3, mean);
 
-###    if (!file.exists(errfile)) stop("cannot open error file ", errfile);
-###    load(errfile);
-###    ci <- an0702[, , , "ci"];
-
    x <- as.numeric(dimnames(dt)[[1]]);
    gapdurList <- dimnames(dt)[[2]];
    ntargetsList <- dimnames(dt)[[3]];
@@ -71,8 +66,6 @@ do.fig0702 <- function () {
                col = 1, lwd = 2, lty = 3);
          lines(predx, predy[, gd, nt], type = "l",
                col = 1, lwd = 2, lty = 1);
-###          arrows(x, dt[, gd, nt] - ci, x, dt[, gd, nt] + ci,
-###                 length = .05, angle = 90, code = 3, lwd = 1, col = 1, lty = 1);
          points(x, dt[, gd, nt], type = "p",
                col = 1, bg = "white", pch = 21, cex = 1.5, lwd = 3);
       }
