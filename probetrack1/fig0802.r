@@ -1,12 +1,12 @@
-### fig0702.r: plot fit of model against observed data, averaged across
+### fig0802.r: plot fit of model against observed data, averaged across
 ### subjects
 ###
 ### $LastChangedDate$
 
-do.fig0702 <- function () {
-   infile <- "data07.rda";
-   outfile <- "fig0702.pdf";
-   thisfile <- "fig0702.r";
+do.fig0802 <- function () {
+   infile <- "data08.rda";
+   outfile <- "fig0802.pdf";
+   thisfile <- "fig0802.r";
    exit.function <- function () {
       if (exists("opar")) par(opar);
       if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
@@ -19,12 +19,12 @@ do.fig0702 <- function () {
       return(invisible(NULL));
    }
    load(infile);
-   model <- data07$model;
+   model <- data08$model;
 
-   dt <- with(data07$data, tapply(rt, list(soa, gapdur, ntargets), mean));
+   dt <- with(data08$data, tapply(rt, list(soa, gapdur, ntargets), mean));
 
    ## gather parameters for model fits
-   attach(data07$fit);
+   attach(data08$fit);
    factors <- list(sub, gapdur, ntargets);
    rtime <- tapply(rtime, factors, mean);
    baseRT <- tapply(baseRT, factors, mean);
@@ -72,5 +72,5 @@ do.fig0702 <- function () {
    }
 }
 
-do.fig0702();
-rm(do.fig0702);
+do.fig0802();
+rm(do.fig0802);

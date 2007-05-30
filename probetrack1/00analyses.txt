@@ -108,13 +108,13 @@ o fig0503: plot RT as a function of probe delay, plotting the baseline
 
 ----------------------------------------------------------------------
 
-* data07: fit reacquire-time model to RT by probe delay functions from
+* data08: fit reacquire-time model to RT by probe delay functions from
   data03
 
-* an0701: generate table of parameters of fitted model for each subject
+* an0801: generate table of parameters of fitted model for each subject
 
-* fig0701: plot fit of model against observed data for each subject
-* fig0702: plot fit of model against observed data, averaged across
+* fig0801: plot fit of model against observed data for each subject
+* fig0802: plot fit of model against observed data, averaged across
   subjects
 
 ----------------------------------------------------------------------

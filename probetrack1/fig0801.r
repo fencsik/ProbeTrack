@@ -1,11 +1,11 @@
-### fig0701.r: plot fit of model against observed data for each subject
+### fig0801.r: plot fit of model against observed data for each subject
 ###
 ### $LastChangedDate$
 
-do.fig0701 <- function () {
-   infile <- "data07.rda";
-   outfile <- "fig0701.pdf";
-   thisfile <- "fig0701.r";
+do.fig0801 <- function () {
+   infile <- "data08.rda";
+   outfile <- "fig0801.pdf";
+   thisfile <- "fig0801.r";
    exit.function <- function () {
       if (exists("opar")) par(opar);
       if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
@@ -18,9 +18,9 @@ do.fig0701 <- function () {
       return(invisible(NULL));
    }
    load(infile);
-   model <- data07$model;
-   fit <- data07$fit;
-   dt <- with(data07$data, tapply(rt, list(soa, sub, gapdur, ntargets), mean));
+   model <- data08$model;
+   fit <- data08$fit;
+   dt <- with(data08$data, tapply(rt, list(soa, sub, gapdur, ntargets), mean));
 
    x <- as.numeric(dimnames(dt)[[1]]);
    subList <- dimnames(dt)[[2]];
@@ -32,7 +32,7 @@ do.fig0701 <- function () {
                xpd = NA, bg = "white");
 
    ## set up color matrix
-   col <- as.character(with(data07$data, tapply(rt, list(gapdur, ntargets), mean)));
+   col <- as.character(with(data08$data, tapply(rt, list(gapdur, ntargets), mean)));
    col <- matrix(rainbow(length(gapdurList) * length(ntargetsList)),
                  nrow = length(gapdurList), ncol = length(ntargetsList),
                  dimnames = list(gapdurList, ntargetsList));
@@ -69,5 +69,5 @@ do.fig0701 <- function () {
    }
 }
 
-do.fig0701();
-rm(do.fig0701);
+do.fig0801();
+rm(do.fig0801);

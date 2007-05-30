@@ -1,12 +1,12 @@
-### data07.r: fit reacquire-time model to RT by probe delay functions from
+### data08.r: fit reacquire-time model to RT by probe delay functions from
 ### data03
 ###
 ### $LastChangedDate$
 
-do.data07 <- function () {
-   thisfile <- "data07.r";
+do.data08 <- function () {
+   thisfile <- "data08.r";
    infile <- "data03.rda";
-   outfile <- "data07.rda";
+   outfile <- "data08.rda";
 
    exit.function <- function () {
       if (exists("old.opt")) options(old.opt);
@@ -84,9 +84,9 @@ do.data07 <- function () {
       }
    }
 
-   data07 <- list(data = data, fit = data.frame(fit), model = reacquire.model);
-   save(data07, file=outfile);
+   data08 <- list(data = data, fit = data.frame(fit), model = reacquire.model);
+   save(data08, file=outfile);
 }
 
-print(system.time(do.data07(), TRUE));
-rm(do.data07);
+print(system.time(do.data08(), TRUE));
+rm(do.data08);
