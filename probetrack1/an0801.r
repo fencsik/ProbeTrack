@@ -33,7 +33,7 @@ do.an0801 <- function () {
    cat("\n\n\n");
    cat("Average rtime, with 95% confidence intervals\n");
    y <- dt[, "rtime"];
-   ci <- qt(.975, length(y)) * sqrt(var(y) / length(y));
+   ci <- qt(.975, length(y) - 1) * sqrt(var(y) / length(y));
    cat(sprintf("%0.2f +/- %0.2f (%0.2f, %0.2f)", mean(y), ci,
                  mean(y) - ci, mean(y) + ci));
 
