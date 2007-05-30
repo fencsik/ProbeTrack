@@ -1,11 +1,11 @@
-### an0801: generate table of parameters of fitted model for each subject
+### an0901: generate table of parameters of fitted model for each subject
 ###
 ### $LastChangedDate$
 
-do.an0801 <- function () {
-   thisfile <- "an0801.r";
-   infile <- "data08.rda";
-   outfile <- "an0801.txt";
+do.an0901 <- function () {
+   thisfile <- "an0901.r";
+   infile <- "data09.rda";
+   outfile <- "an0901.txt";
 
    exit.function <- function () {
       while (sink.number() > 0) sink();
@@ -19,7 +19,7 @@ do.an0801 <- function () {
    }
    load(infile);
 
-   dt <- data08$fit;
+   dt <- data09$fit;
    dt$sub <- as.character(dt$sub);
    dt$gapdur <- as.numeric(as.character(dt$gapdur));
    dt$ntargets <- as.numeric(as.character(dt$ntargets));
@@ -35,5 +35,5 @@ do.an0801 <- function () {
    print(cbind(category, round(dt[, c("iter", "code", "sse", "rmse", "r.sq", "chisq")], 3)));
 }
 
-do.an0801();
-rm(do.an0801);
+do.an0901();
+rm(do.an0901);

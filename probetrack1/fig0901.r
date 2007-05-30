@@ -1,11 +1,11 @@
-### fig0801.r: plot fit of model against observed data
+### fig0901.r: plot fit of model against observed data
 ###
 ### $LastChangedDate$
 
-do.fig0801 <- function () {
-   infile <- "data08.rda";
-   outfile <- "fig0801.pdf";
-   thisfile <- "fig0801.r";
+do.fig0901 <- function () {
+   infile <- "data09.rda";
+   outfile <- "fig0901.pdf";
+   thisfile <- "fig0901.r";
    exit.function <- function () {
       if (exists("opar")) par(opar);
       if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
@@ -18,12 +18,12 @@ do.fig0801 <- function () {
       return(invisible(NULL));
    }
    load(infile);
-   model <- data08$model;
+   model <- data09$model;
 
-   dt <- with(data08$data, tapply(rt, list(soa, gapdur, ntargets), mean));
+   dt <- with(data09$data, tapply(rt, list(soa, gapdur, ntargets), mean));
 
    ## gather parameters for model fits
-   attach(data08$fit);
+   attach(data09$fit);
    factors <- list(sub, gapdur, ntargets);
    rtime <- tapply(rtime, factors, mean);
    baseRT <- tapply(baseRT, factors, mean);
@@ -71,5 +71,5 @@ do.fig0801 <- function () {
    }
 }
 
-do.fig0801();
-rm(do.fig0801);
+do.fig0901();
+rm(do.fig0901);
