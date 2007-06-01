@@ -20,7 +20,7 @@ do.an0104 <- function () {
       return(invisible(NULL));
    }
    load(infile);
-   data01$soa <- as.numeric(as.character(data01$soa)) * 1000 / 75;
+   data01$soa <- as.numeric(as.character(data01$soa));
    data01$gapdur <- round(as.numeric(as.character(data01$gapdur)) * 1000 / 75, 0);
 
    d.gap <- with(data01[data01$gapdur != 0,],

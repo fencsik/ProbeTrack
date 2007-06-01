@@ -20,13 +20,13 @@ do.an0103 <- function () {
       return(invisible(NULL));
    }
    load(infile);
-   data01$soa <- as.numeric(as.character(data01$soa)) * 1000 / 75;
+   data01$soa <- as.numeric(as.character(data01$soa));
    data01$gapdur <- round(as.numeric(as.character(data01$gapdur)) * 1000 / 75, 0);
 
-   d.gap <- with(data01[data01$gapdur != 0,],
-                 tapply(rt.cor, list(sub, soa, target, gapdur), mean));
-   d.nogap <- with(data01[data01$gapdur == 0,],
-                   tapply(rt.cor, list(sub, target), mean));
+   d.gap <- with(data01[data01$gapdur != "0",],
+                 tapply(rt, list(sub, soa, target, gapdur), mean));
+   d.nogap <- with(data01[data01$gapdur == "0",],
+                   tapply(rt, list(sub, target), mean));
 
    results <- array(dim = c(dim(d.gap)[2], dim(d.gap)[3], dim(d.gap)[4], 3),
                     dimnames = list(dimnames(d.gap)[[2]], dimnames(d.gap)[[3]], dimnames(d.gap)[[4]], c("t", "p", "ci")));

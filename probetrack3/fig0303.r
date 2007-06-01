@@ -23,8 +23,8 @@ do.fig0303 <- function () {
 
    ## extract relevant data
    dtg <- with(data03[data03$gapdur != "0", ],
-               tapply(rt.cor, list(soa, sub, gapdur, ntargets), mean, na.rm = TRUE));
-   dtng <- with(data03[data03$gapdur == "0",], tapply(rt.cor, list(sub, ntargets), mean));
+               tapply(rt, list(soa, sub, gapdur, ntargets), mean, na.rm = TRUE));
+   dtng <- with(data03[data03$gapdur == "0",], tapply(rt, list(sub, ntargets), mean));
 
    x <- as.numeric(dimnames(dtg)[[1]]);
    subList <- dimnames(dtg)[[2]];
@@ -52,7 +52,7 @@ do.fig0303 <- function () {
                  ylim = ylim, axes = F,
                  xlab = "", ylab = "", main = sprintf("ProbeTrack3 %s", sub));
 
-         axis(1, x, x * 1000 / 75);
+         axis(1, x);
          axis(2);
          if (counter %% 4 >= 2) title(xlab = "Probe delay (ms)");
          if (counter %% 2 == 0) title(ylab = "Probe RT (ms)");
@@ -63,10 +63,18 @@ do.fig0303 <- function () {
          for (gd in gapdurList) {
             lines(x, dtg[, sub, gd, nt], type = "o",
                   col = col[gd, nt], pch = pch[gd, nt], lty = 1, lwd = 3, cex = 1.5, bg = "white");
+###=======
+##                   col = 1, pch = 21, lty = 1, lwd = 3, cex = 1.5, bg = "white");
+##             if (counter %% 8 == 1) {
+##                legend("bottomleft", c("gap", "no gap"), inset = c(0.9, -.25),
+##                       lty = 1:2, lwd = 2,
+##                       bty = "n", ncol = 2, y.intersp = 1.3);
+##             }
+##             counter <- counter + 1;
+###>>>>>>> .merge-right.r1148
          }
          if (counter %% 4 == 0) {
-            legend(min(x) + xinch(2), min(ylim) - yinch(.6),
-                   sprintf("Gap %s", c("0", gapdurList)),
+            legend("bottomleft", sprintf("Gap %s", c("0", gapdurList)), inset = c(0.65, -.45),
                    lty = c(2, rep(1, length(gapdurList))), lwd = 2, col = c(1, col[gapdurList,]),
                    bty = "n", ncol = length(gapdurList) + 1, y.intersp = 1.3);
          }

@@ -24,10 +24,10 @@ do.an0402 <- function () {
    dt$sub <- as.character(dt$sub);
    dt$gapdur <- as.numeric(as.character(dt$gapdur));
    dt$ntargets <- as.numeric(as.character(dt$ntargets));
-   dt$soa <- as.numeric(as.character(dt$soa)) * 1000 / 75;
+   dt$soa <- as.numeric(as.character(dt$soa));
 
    baseline <- with(data04$fit, tapply(baseline, list(sub, gapdur, ntargets), mean));
-   dp <- with(dt, tapply(rt.cor, list(sub, soa, gapdur, ntargets), mean));
+   dp <- with(dt, tapply(rt, list(sub, soa, gapdur, ntargets), mean));
    dn <- dimnames(dp);
    results <- array(dim = c(dim(dp)[2:4], 3),
                     dimnames = list(dn[[2]], dn[[3]], dn[[4]], c("t", "p", "ci")));

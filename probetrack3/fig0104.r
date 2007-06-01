@@ -27,10 +27,10 @@ do.fig0104 <- function () {
    dtng <- with(data01[data01$gapdur == "0", ],
                 tapply(pcor, list(target, sub), mean, na.rm = T));
 
-   x <- as.numeric(dimnames(dtg)[[1]]) * 1000 / 75;
+   x <- as.numeric(dimnames(dtg)[[1]]);
 
    ## settings
-   ylim <- c(.5, 1);
+   ylim <- c(.3, 1);
    cond.names <- dimnames(dtg)[[2]];
    nCond <- length(cond.names);
    col <- rainbow(nCond);                               names(col) <- cond.names;
@@ -56,10 +56,10 @@ do.fig0104 <- function () {
             lines(x, rep(dtng[targ, sub], length(x)), type = "l",
                   col = col[targ], lty = 2, lwd = 3);
             if (counter %% 3 < 2) {
-               legend(min(x) + xinch(2), min(ylim) - yinch(.4), c("gap", "no gap"),
+               legend("bottomleft", c("gap", "no gap"), inset=c(.3, -.4),
                       lty = 1:2, lwd = 2,
                       bty = "n", y.intersp = 1.3);
-               legend(min(x) + xinch(3), min(ylim) - yinch(.4), c("probe distractor", "probe target"),
+               legend("bottomleft", c("probe distractor", "probe target"), inset=c(.6, -.4),
                       col = col[as.character(0:1)], pch = pch[as.character(0:1)],
                       lty = 1, lwd = 2, pt.bg = "white", pt.cex = 1.5,
                       bty = "n", y.intersp = 1.3);

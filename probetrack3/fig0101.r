@@ -25,13 +25,13 @@ do.fig0101 <- function () {
 
    ## extract relevant data
    dt <- with(data01,
-              tapply(rt.cor, list(soa, target, gapdur), mean, na.rm = TRUE));
+              tapply(rt, list(soa, target, gapdur), mean, na.rm = TRUE));
    if (file.exists(errfile)) {
       load(errfile);
       errg <- an0103[, , , "ci"];
    } else {
       errg <- with(data01[data01$gapdur != "0", ],
-                   tapply(rt.cor, list(soa, target, gapdur),
+                   tapply(rt, list(soa, target, gapdur),
                           function(x) qt(.975, length(x) - 1) * sqrt(var(x, na.rm = TRUE) / length(x))));
    }
 
@@ -41,7 +41,7 @@ do.fig0101 <- function () {
       dt[index, targ, "0"] <- dt[!index, targ, "0"][1];
    }
 
-   x <- as.numeric(dimnames(dt)[[1]]) * 1000 / 75;
+   x <- as.numeric(dimnames(dt)[[1]]);
 
    ## settings
    ylim <- c(500, 1000);
@@ -74,7 +74,7 @@ do.fig0101 <- function () {
          lines(x, dt[, targ, gd], type = "o",
                col = col[gd], pch = pch[gd], lty = lty[gd], lwd = 3, cex = 1.5, bg = "white");
       }
-      legend(max(x) - xinch(2), max(ylim), paste(cond.names, "ms Gap"),
+      legend("top", paste(cond.names, "ms Gap"),
              col = col, pch = pch,
              lty = lty, lwd = 3, pt.bg = "white", pt.cex = 1.5,
              bty = "n", y.intersp = 1.3, cex = .8);

@@ -20,7 +20,7 @@ do.fig0401 <- function () {
    load(infile);
    weibull <- data04$weibull;
    fit <- data04$fit;
-   dt <- with(data04$data, tapply(rt.cor, list(soa, sub, gapdur, ntargets), mean));
+   dt <- with(data04$data, tapply(rt, list(soa, sub, gapdur, ntargets), mean));
 
    x <- as.numeric(dimnames(dt)[[1]]);
    subList <- dimnames(dt)[[2]];
@@ -31,7 +31,7 @@ do.fig0401 <- function () {
    opar <- par(mfrow = c(2, 2), las = 1, pty = "m", cex.axis = .6,
                xpd = NA, bg = "white");
 
-   ## settings
+   ## set up color matrix
    col <- matrix(rainbow(length(gapdurList) * length(ntargetsList)),
                  nrow = length(gapdurList), ncol = length(ntargetsList),
                  dimnames = list(gapdurList, ntargetsList));
@@ -47,7 +47,7 @@ do.fig0401 <- function () {
               axes = F, ylim = ylim,
               xlab = "", ylab = "", main = paste("ProbeTrack3", sub));
 
-      axis(1, x, x * 1000 / 75);
+      axis(1, x);
       axis(2);
       if (counter %% 4 >= 2) title(xlab = "Probe delay (ms)");
       if (counter %% 2 == 0) title(ylab = "Probe RT (ms)");
@@ -55,17 +55,18 @@ do.fig0401 <- function () {
       for (gd in gapdurList) {
          for (nt in ntargetsList) {
             index <- fit$sub == sub & fit$gapdur == gd & fit$ntargets == nt;
-            lines(i <- seq(0, 100, by = .1),
+            lines(i <- seq(min(x), max(x), by = .1),
                   weibull(i, fit[index, "slope"], fit[index, "threshold"],
                           fit[index, "baseline"], fit[index, "asymptote"]),
                           lty = 1, lwd = 3, col = col[gd, nt]);
+            abline(h = fit[index, "baseline"], xpd = F,
+                   lty = 2, col = col[gd, nt], lwd = 2);
             points(x, dt[, sub, gd, nt],
                    col = col[gd, nt], bg = "white", pch = pch[gd, nt], cex = 1.5, lwd = 3);
          }
       }
       if (counter %% 4 == 0) {
-         legend(min(x) + xinch(2.5), min(ylim) - yinch(.6),
-                sprintf("Gap %s", dimnames(col)[[1]]),
+         legend("bottomleft", sprintf("Gap %s", dimnames(col)[[1]]), inset = c(0.75, -.45),
                 lwd = 3, lty = 1, col = col,
                 bty = "n", ncol = 4);
       }

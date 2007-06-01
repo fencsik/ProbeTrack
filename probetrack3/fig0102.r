@@ -40,8 +40,7 @@ do.fig0102 <- function () {
       index <- is.na(dt[, targ, "0"]);
       dt[index, targ, "0"] <- dt[!index, targ, "0"][1];
    }
-
-   x <- as.numeric(dimnames(dt)[[1]]) * 1000 / 75;
+   x <- as.numeric(dimnames(dt)[[1]]);
 
    ## settings
    ylim <- c(0, 1);
@@ -74,7 +73,7 @@ do.fig0102 <- function () {
          lines(x, dt[, targ, gd], type = "o",
                col = col[gd], pch = pch[gd], lty = lty[gd], lwd = 3, cex = 1.5, bg = "white");
       }
-      legend(max(x) - xinch(2), max(ylim), paste(cond.names, "ms Gap"),
+      legend("bottom", paste(cond.names, "ms Gap"),
              col = col, pch = pch,
              lty = lty, lwd = 3, pt.bg = "white", pt.cex = 1.5,
              bty = "n", y.intersp = 1.3, cex = .8);

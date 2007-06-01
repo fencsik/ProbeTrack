@@ -19,35 +19,30 @@ do.data03 <- function () {
    ## remove bad subjects:
    ## 1. remove tjo based on SSP's lab book (not listed in the lab book)
    ## 2. optionally remove jtd and rsh  because the weibull fits are weird
-   dt <- dt[dt$identifier != "tjo", ];
-   ##dt <- dt[dt$identifier != "tjo" & dt$identifier != "jtd" & dt$identifier != "rsh", ];
-   dt$sub <- factor(dt$identifier);
+   dt <- dt[dt$sub != "tjo", ];
+   ##dt <- dt[dt$sub != "tjo" & dt$sub != "jtd" & dt$sub != "rsh", ];
+   dt$sub <- factor(dt$sub);
 
    ## remove practice blocks, bad keypresses, and negative RTs (which should
    ## just indicate bad key presses)
-   dt <- dt[dt$block == 2 & dt$wrongKeyFlag == 0 & !is.na(dt$RT) & dt$RT > 0, ];
+   dt <- dt[dt$block == 2 & dt$badkey == 0 & !is.na(dt$rt) & dt$rt > 0, ];
 
    ## rename and recode variables
    dt$acc <- 1 - dt$error;
-   dt$rt <- dt$RT;
-   dt[dt$gapDuration == 0, "SOA"] <- 0; # set SOA to 0 on no-gap trials
+   dt$soa <- dt$soa * 1000 / 75; # convert to ms
+   dt$soa[dt$gapdur == 0] <- 0; # set SOA to 0 on no-gap trials
 
-   factors <- list(sub = dt$sub, gapdur = dt$gapDuration, ntargets = dt$nTargets, soa = dt$SOA);
-   data03 <- aggregate(dt$acc, factors, length);
-   names(data03)[names(data03) == "x"] <- "nobs";
-   data03$ncor <- aggregate(dt$acc, factors, sum)$x;
+   ## extract factors for all trials and for all correct trials
+   dt2 <- dt[dt$acc == 1, ];
+   factorsA <- with(dt, list(soa=soa, ntargets=ntargets, gapdur=gapdur, sub=sub));
+   factorsC <- with(dt2, list(soa=soa, ntargets=ntargets, gapdur=gapdur, sub=sub));
+
+   ## collapse across the factors
+   data03 <- aggregate(data.frame(nobs = dt$acc), factorsA, length);
+   data03$ncor <- aggregate(dt$acc, factorsA, sum)$x;
    data03$pcor <- data03$ncor / data03$nobs;
-
-   rt.cor <- rt.all <- rep(NA, dim(data03)[1]);
-   for (i in 1:dim(data03)[1]) {
-      index <- (dt$sub == data03$sub[i] & dt$gapDuration == data03$gapdur[i] &
-                dt$nTargets == data03$ntargets[i] & dt$SOA == data03$soa[i]);
-      if (any(index)) rt.all[i] <- mean(dt[index, "RT"]);
-      index <- index & dt$acc == 1;
-      if (any(index)) rt.cor[i] <- mean(dt[index, "RT"]);
-   }
-   data03$rt.all <- rt.all;
-   data03$rt.cor <- rt.cor;
+   data03$rt <- aggregate(dt2$rt, factorsC, mean)$x;
+   data03$rt.all <- aggregate(dt$rt, factorsA, mean)$x;
 
    save(data03, file=outfile)
    invisible(data03)

@@ -24,13 +24,13 @@ do.fig0301 <- function () {
 
    ## extract relevant data
    dt <- with(data03,
-              tapply(rt.cor, list(soa, gapdur), mean, na.rm = TRUE));
+              tapply(rt, list(soa, gapdur), mean, na.rm = TRUE));
    if (file.exists(errfile)) {
       load(errfile);
       errg <- an0303[, , "ci"];
    } else {
       errg <- with(data03[data03$gapdur != "0", ],
-                   tapply(rt.cor, list(soa, gapdur),
+                   tapply(rt, list(soa, gapdur),
                           function(x) qt(.975, length(x) - 1) * sqrt(var(x, na.rm = TRUE) / length(x))));
    }
 
@@ -38,7 +38,7 @@ do.fig0301 <- function () {
    index <- is.na(dt[, "0"]);
    dt[index, "0"] <- dt[!index, "0"][1];
 
-   x <- as.numeric(dimnames(dt)[[1]]) * 1000 / 75;
+   x <- as.numeric(dimnames(dt)[[1]]);
 
    ## settings
    ylim <- c(500, 1000);
