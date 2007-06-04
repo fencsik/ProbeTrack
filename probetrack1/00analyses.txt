@@ -137,7 +137,7 @@ o fig0503: plot RT as a function of probe delay, plotting the baseline
 
 * fig1001: plot average median RT by probe delay, separately for gap
   and no-gap trials
-o fig1002: same as fig1001, but with error bars based on the repeated
+* fig1002: same as fig1001, but with error bars based on the repeated
   measures ANOVA
 * fig1003: same as fig1001, but separately for each subject
 
