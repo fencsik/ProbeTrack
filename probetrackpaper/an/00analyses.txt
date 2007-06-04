@@ -2,9 +2,12 @@
 
 Version: $Id$
 
-- an01.r: creates a table showing which subject has been in which	
+* an01.r: creates a table showing which subject has been in which	
 	  experiment.
+
+* pb1.r: plots results (RT and d') for ProbeTrack1
+* pb2.r: same for ProbeTrack2
 
 
 * complete
-- incomplete
+o incomplete
