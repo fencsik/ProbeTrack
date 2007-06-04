@@ -66,7 +66,9 @@ do.pb1 <- function () {
       rt.pred[sub, ] <- model.rt(predx, rtime[sub], baseRT[sub]);
    }
    rt.pred <- apply(rt.pred, 2, mean);
-   ##rt.pred <- model.rt(predx, 83.10956, 724.9738);
+
+   ## or just compute based on average parameters
+   rt.pred <- model.rt(predx, 83.10956, 724.9738);
 
    ## open pdf file
    pdf(outfile, width = 8, height = 6, pointsize = 12);
