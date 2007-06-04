@@ -141,4 +141,30 @@ o an0703: table reporting probe delay at which fitted weibulls reach
 
 ----------------------------------------------------------------------
 
+* data10: aggregate median correct RT by subject, gap duration, number
+  of targets, and probe delay
+
+* an1001: anova on RT as a function of probe delay
+* an1002: t-tests comparing RT on gap trials at each probe delay to RT
+  on no-gap trials
+
+* fig1001: plot average median RT by probe delay, separately for gap
+  and no-gap trials
+* fig1002: same as fig1001, but with error bars based on the repeated
+  measures ANOVA
+* fig1003: same as fig1001, but separately for each subject
+
+----------------------------------------------------------------------
+
+* data11: fit reacquire-time model to RT by probe delay functions from
+  data10
+
+* an1101: generate table of parameters of fitted model for each subject
+
+* fig1101: plot fit of model against observed data for each subject
+* fig1102: plot fit of model against observed data, averaged across
+  subjects
+
+----------------------------------------------------------------------
+
 (* = complete, o = incomplete)
