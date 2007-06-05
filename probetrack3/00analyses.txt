@@ -77,4 +77,29 @@ o fig0403: plot RT as a function of probe delay, plotting the baseline
 
 ----------------------------------------------------------------------
 
-(* = complete, - = incomplete)
+* data10: aggregate median correct RT by subject, gap duration, number
+  of targets, and probe delay
+
+* an1001: anova on RT as a function of probe delay and gap duration
+o an1002: t-tests comparing RT on gap trials at each probe delay to RT
+  on no-gap trials
+
+o fig1001: plot average median RT by probe delay and gap duration
+o fig1002: same as fig1001, but with error bars based on the repeated
+  measures ANOVA
+o fig1003: same as fig1001, but separately for each subject
+
+----------------------------------------------------------------------
+
+o data11: fit reacquire-time model to RT by probe delay functions from
+  data10
+
+o an1101: generate table of parameters of fitted model for each subject
+
+o fig1101: plot fit of model against observed data for each subject
+o fig1102: plot fit of model against observed data, averaged across
+  subjects
+
+----------------------------------------------------------------------
+
+(* = complete, o = incomplete)
