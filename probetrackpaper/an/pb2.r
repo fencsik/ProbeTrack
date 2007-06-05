@@ -14,7 +14,6 @@ do.pb2 <- function () {
    on.exit(exit.function());
 
    ## hard code error values for RT and d'
-   nsub <- length(unique(data11$sub));
    err.rt <- sqrt(1256 / 8) * qt(.975, 28);
    err.dp <- sqrt(0.1914 / 8) * qt(.975, 28);
 
@@ -53,7 +52,7 @@ do.pb2 <- function () {
    dp <- (with(data.dp, tapply(dprime, list(soa), mean)) - ylim.dp[1]) /
       diff(ylim.dp) * diff(ylim.rt) * p.ylim.dp + ylim.rt[1];
    showx <- as.numeric(dimnames(rt)[[1]]);
-   plotx <- showx; plotx[plotx == 1280] <- 640;
+   plotx <- showx; plotx[plotx == 1280] <- 500;
 
    ## compute model for RT data
    Subjects <- sort(unique(as.character(data.rt$sub)));
@@ -72,7 +71,7 @@ do.pb2 <- function () {
 
    ## open pdf file
    pdf(outfile, width = 8, height = 6, pointsize = 12);
-   opar <- par(mfrow = c(1, 1), las = 1, pty = "m", cex.axis = .6,
+   opar <- par(mfrow = c(1, 1), las = 1, pty = "s", cex.axis = .6,
                mar = c(5, 4, 2, 4), xpd = NA, bg = "white");
 
    ## prepare plotting area
@@ -92,7 +91,11 @@ do.pb2 <- function () {
           length = .05, angle = 90, code = 3, lwd = 2, col = 1, lty = 1);
    lines(plotx, dp, type = "o",
          lwd = 3, lty = 2, pch = 15, cex = 1.5);
-   ##legend("upperleft", 
+
+   ## add breaks to x-axis
+   if (require("plotrix")) {
+      axis.break(axis = 1, breakpos = mean(c(320, 500)), style = "slash", brw = 0.02);
+   }
 }
 
 do.pb2();
