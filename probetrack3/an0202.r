@@ -21,7 +21,7 @@ do.an0202 <- function () {
    }
    load(infile);
    data02$soa <- as.numeric(as.character(data02$soa));
-   data02$gapdur <- round(as.numeric(as.character(data02$gapdur)) * 1000 / 75, 0);
+   data02$gapdur <- as.numeric(as.character(data02$gapdur));
 
    d.gap <- with(data02[data02$gapdur != 0,],
                  tapply(dprime, list(sub, soa, gapdur), mean));

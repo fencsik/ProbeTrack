@@ -28,8 +28,9 @@ do.data01 <- function () {
    ## rename and recode variables
    dt$target <- 2 - dt$probeType; # probeType == 1 -> target; probeType == 2 -> distractor
    dt$acc <- 1 - dt$error;
-   dt$soa[dt$gapdur == 0] <- 0; # set SOA to 0 on no-gap trials
    dt$soa <- dt$soa * 1000 / 75; # convert to ms
+   dt$gapdur <- round(dt$gapdur * 1000 / 75);
+   dt$soa[dt$gapdur == 0] <- 0; # set SOA to 0 on no-gap trials
 
    ## extract factors for all trials and for all correct trials
    dt2 <- dt[dt$acc == 1, ];

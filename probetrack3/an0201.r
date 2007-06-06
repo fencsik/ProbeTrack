@@ -24,6 +24,21 @@ do.an0201 <- function () {
    cat("  gap trials only\n");
    print(summary(aov(dprime ~ soa * gapdur + Error(sub / (soa * gapdur)),
                      data02[data02$gapdur != "0",])));
+
+   for (gd in levels(data02$gapdur)) {
+      if (gd == "0") next;
+      cat("\n\n\n");
+      cat(sprintf("ANOVA on d' as a function of probe delay at gap duration %s\n", gd));
+      print(summary(aov(dprime ~ soa + Error(sub / (soa)),
+                        data02[data02$gapdur == gd,])));
+   }
+
+   for (s in as.character(sort(as.numeric(levels(data02$soa))))) {
+      cat("\n\n\n");
+      cat(sprintf("ANOVA on RT as a function of gap duration at SOA = %s\n", s));
+      print(summary(aov(dprime ~ gapdur + Error(sub / (gapdur)),
+                        data02[data02$gapdur != "0" & data02$soa == s,])));
+   }
 }
 
 do.an0201();

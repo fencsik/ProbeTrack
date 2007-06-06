@@ -20,7 +20,7 @@ do.fig0201 <- function () {
    }
    load(infile);
    data02$soa <- as.numeric(as.character(data02$soa));
-   data02$gapdur <- round(as.numeric(as.character(data02$gapdur)) * 1000 / 75, 0);
+   data02$gapdur <- as.numeric(as.character(data02$gapdur));
 
    ## extract relevant data
    dt <- with(data02, tapply(dprime, list(soa, gapdur), mean, na.rm = TRUE));
@@ -37,7 +37,7 @@ do.fig0201 <- function () {
    index <- is.na(dt[, "0"]);
    dt[index, "0"] <- dt[!index, "0"][1];
 
-   x <- as.numeric(dimnames(dt)[[1]]) * 1000 / 75;
+   x <- as.numeric(dimnames(dt)[[1]]);
 
    ## settings
    ylim <- c(0, 4);

@@ -69,7 +69,7 @@ do.fig0402 <- function () {
               axes = F, ylim = ylim,
               xlab = "Probe delay (ms)", ylab = "Probe RT (ms)",
               main = sprintf("ProbeTrack3 - Gap %s - %s targets", gd, nt));
-         axis(1, x, x * 1000 / 75);
+         axis(1, x);
          axis(2);
          abline(h = baseline[gd, nt], xpd = F,
                col = 1, lwd = 2, lty = 3);

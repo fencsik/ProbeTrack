@@ -52,7 +52,7 @@ do.fig0202 <- function () {
                  ylim = ylim, axes = F,
                  xlab = "", ylab = "", main = sprintf("ProbeTrack3 %s", sub));
 
-         axis(1, x, x * 1000 / 75);
+         axis(1, x);
          axis(2);
          if (counter %% 4 >= 2) title(xlab = "Probe delay (ms)");
          if (counter %% 2 == 0) title(ylab = "d'");
