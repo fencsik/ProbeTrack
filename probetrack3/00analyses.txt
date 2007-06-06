@@ -91,13 +91,13 @@ o fig1003: same as fig1001, but separately for each subject
 
 ----------------------------------------------------------------------
 
-o data11: fit reacquire-time model to RT by probe delay functions from
+* data11: fit reacquire-time model to RT by probe delay functions from
   data10
 
-o an1101: generate table of parameters of fitted model for each subject
+* an1101: generate table of parameters of fitted model for each subject
 
 o fig1101: plot fit of model against observed data for each subject
-o fig1102: plot fit of model against observed data, averaged across
+* fig1102: plot fit of model against observed data, averaged across
   subjects
 
 ----------------------------------------------------------------------
