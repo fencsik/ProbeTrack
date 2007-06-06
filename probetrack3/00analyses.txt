@@ -81,10 +81,10 @@ o fig0403: plot RT as a function of probe delay, plotting the baseline
   of targets, and probe delay
 
 * an1001: anova on RT as a function of probe delay and gap duration
-o an1002: t-tests comparing RT on gap trials at each probe delay to RT
+* an1002: t-tests comparing RT on gap trials at each probe delay to RT
   on no-gap trials
 
-o fig1001: plot average median RT by probe delay and gap duration
+* fig1001: plot average median RT by probe delay and gap duration
 o fig1002: same as fig1001, but with error bars based on the repeated
   measures ANOVA
 o fig1003: same as fig1001, but separately for each subject
