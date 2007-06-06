@@ -21,7 +21,7 @@ do.fig0302 <- function () {
    }
    load(infile);
    data03$soa <- as.numeric(as.character(data03$soa));
-   data03$gapdur <- round(as.numeric(as.character(data03$gapdur)) * 1000 / 75, 0);
+   data03$gapdur <- as.numeric(as.character(data03$gapdur));
 
    ## extract relevant data
    dt <- with(data03,
@@ -39,7 +39,7 @@ do.fig0302 <- function () {
    index <- is.na(dt[, "0"]);
    dt[index, "0"] <- dt[!index, "0"][1];
 
-   x <- as.numeric(dimnames(dt)[[1]]) * 1000 / 75;
+   x <- as.numeric(dimnames(dt)[[1]]);
 
    ## settings
    ylim <- c(0, 1);
@@ -69,7 +69,7 @@ do.fig0302 <- function () {
       lines(x, dt[, gd], type = "o",
             col = col[gd], pch = pch[gd], lty = lty[gd], lwd = 3, cex = 1.5, bg = "white");
    }
-   legend("topright", paste(cond.names, "ms Gap"),
+   legend("bottomright", paste(cond.names, "ms Gap"),
           col = col, pch = pch,
           lty = lty, lwd = 3, pt.bg = "white", pt.cex = 1.5,
           bty = "n", y.intersp = 1.3, cex = .8);
