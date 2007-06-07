@@ -39,6 +39,8 @@ $LastChangedDate$
   duration
 * fig0202: plot d' as a function of probe delay, separated by gap
   duration, separately for each subject
+* fig0203: same as fig0201, but with 95% CIs based on the within
+  subject error for gap duration
 
 ----------------------------------------------------------------------
 
@@ -85,18 +87,21 @@ o fig0403: plot RT as a function of probe delay, plotting the baseline
   on no-gap trials
 
 * fig1001: plot average median RT by probe delay and gap duration
-o fig1002: same as fig1001, but with error bars based on the repeated
+* fig1002: same as fig1001, but with error bars based on the repeated
   measures ANOVA
 o fig1003: same as fig1001, but separately for each subject
 
 ----------------------------------------------------------------------
 
 * data11: fit reacquire-time model to RT by probe delay functions from
-  data10
+  data10, assuming separate reacquisition times
 
-* an1101: generate table of parameters of fitted model for each subject
+* an1101: generate table of parameters of fitted model for each
+  subject
+* an1102: anova to test differences among parameters as a function of
+  gap duration
 
-o fig1101: plot fit of model against observed data for each subject
+* fig1101: plot fit of model against observed data for each subject
 * fig1102: plot fit of model against observed data, averaged across
   subjects
 
