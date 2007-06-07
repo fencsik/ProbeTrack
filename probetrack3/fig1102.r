@@ -49,26 +49,31 @@ do.fig1102 <- function () {
    gapdurList <- dimnames(dt)[[2]];
    ntargetsList <- dimnames(dt)[[3]];
 
+   ## plot settings
+   condNames <- gapdurList;
+   nCond <- length(condNames);
+   col <- rainbow(nCond); names(col) <- condNames;
+   pch <- c(21, 23, 24);  names(pch) <- condNames;
+
    pdf(outfile, width = 6, height = 6, pointsize = 12);
    opar <- par(mfrow = c(1, 1), las = 1, pty = "m", cex.axis = .6,
                xpd = NA, bg = "white");
 
    ylim <- c(500, 800);
 
+   matplot(x, dt[, , 1], type = "n", bty = "n",
+        axes = F, ylim = ylim,
+        xlab = "Probe delay (ms)", ylab = "Probe RT (ms)", main = "ProbeTrack1");
    for (gd in gapdurList) {
-      plot(x, dt[, gd, 1], type = "n", bty = "n",
-           axes = F, ylim = ylim,
-           xlab = "Probe delay (ms)", ylab = "Probe RT (ms)", main = "ProbeTrack1");
       axis(1, x);
       axis(2);
-      text(diff(range(x)) / 2 + min(x), diff(ylim) * .9 + ylim[1], sprintf("%s ms gap", gd));
       for (nt in ntargetsList) {
          abline(h = baseRT[gd, nt], xpd = F,
-               col = 1, lwd = 2, lty = 3);
+               col = col[gd], lwd = 2, lty = 3);
          lines(predx, predy[, gd, nt], type = "l",
-               col = 1, lwd = 2, lty = 1);
+               col = col[gd], lwd = 2, lty = 1);
          points(x, dt[, gd, nt], type = "p",
-               col = 1, bg = "white", pch = 21, cex = 1.5, lwd = 3);
+               col = col[gd], bg = "transparent", pch = 21, cex = 1.5, lwd = 3);
       }
    }
 }
