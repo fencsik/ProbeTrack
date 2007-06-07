@@ -53,11 +53,11 @@ do.data11 <- function () {
 
    GoodnessOfFit <- function(p) {
       ## parameters: (1) rtime, (2) baseRT
-###      if (p[1] > 0 && p[2] > 0 && abs(p[3] - min(y)) < min(y) / 2) {
-      sum( (y - reacquire.model(x, rtime = p[1], baseRT = p[2])) ^ 2 );
-###      } else {
-###         10^12;
-###      }
+      if (p[1] > 0 && p[2] > 0) {
+         sum( (y - reacquire.model(x, rtime = p[1], baseRT = p[2])) ^ 2 );
+      } else {
+         10^12;
+      }
    }
 
    p0 <- c(40, 500);
@@ -71,7 +71,7 @@ do.data11 <- function () {
             x <- data[data.index, "soa"];
             y <- data[data.index, "rt"];
             p0["baseRT"] <- min(y);
-            out <- nlm(GoodnessOfFit, p0, print.level = 0);
+            out <- nlm(GoodnessOfFit, p0, print.level = 0, steptol = .1);
             p <- out$estimate;
             yhat <- reacquire.model(x, p[1], p[2]);
             data[data.index, "rt.pred"] <- yhat;
