@@ -20,4 +20,22 @@ o fig0104: plot accuracy by probe delay separated by number of targets
 
 ----------------------------------------------------------------------
 
+* data02: compute d' from data01, and aggregate it by subject, gap
+  duration, # targets, and probe delay
+
+* an0201: anova on d' as a function of probe delay and # targets
+o an0202: t-tests comparing d' on gap trials at each probe delay to d'
+  on no-gap trials
+
+* fig0201: plot d' as a function of probe delay, separated by #
+  targets
+o fig0202: plot d' as a function of probe delay, separated by #
+  targets, separately for each subject
+
+o fig0203: plot d' as a function of # targets, separated by probe
+  delay
+o fig0204: fig0203 separately for each subject
+
+----------------------------------------------------------------------
+
 (* = complete, o = incomplete)
