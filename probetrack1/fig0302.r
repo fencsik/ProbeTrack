@@ -32,7 +32,7 @@ do.fig0302 <- function () {
                    tapply(rt.cor, list(soa),
                           function(x) qt(.975, length(x) - 1) * sqrt(var(x, na.rm = TRUE) / length(x))));
    }
-   x <- as.numeric(dimnames(dtg)[[1]]) * 1000 / 75;
+   x <- as.numeric(dimnames(dtg)[[1]]);
    dtng <- rep(mean(data03[data03$gapdur == "0", "pcor"]), length(x));
 
    ## settings

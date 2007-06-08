@@ -42,7 +42,7 @@ do.fig0202 <- function () {
             plot(x, dtg[, sub, gd, nt], type = "n", bty = "n",
                     ylim = ylim, axes = F,
                     xlab = "", ylab = "", main = sprintf("ProbeTrack1 %s (Gap %s, %s targets)", sub, gd, nt));
-            axis(1, x, x * 1000 / 75);
+            axis(1, x);
             axis(2);
             if (counter %% 4 >= 2) title(xlab = "Probe delay (ms)");
             if (counter %% 2 == 0) title(ylab = "d'");

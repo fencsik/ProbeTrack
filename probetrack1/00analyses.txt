@@ -37,6 +37,8 @@ $LastChangedDate$
   duration
 * fig0202: plot d' as a function of probe delay, separated by gap
   duration, separately for each subject
+* fig0203: same as fig0201, but with error bars based on MSE from
+  an0201
 
 ----------------------------------------------------------------------
 
