@@ -18,12 +18,12 @@ do.fig0103 <- function () {
 
    ## extract relevant data
    dtg <- with(data01[data01$gapdur != "0", ],
-               tapply(rt.cor, list(soa, ntargets), mean, na.rm = TRUE));
+               tapply(rt, list(soa, ntargets), mean, na.rm = TRUE));
    errg <- with(data01[data01$gapdur != "0", ],
-                tapply(rt.cor, list(soa, ntargets),
+                tapply(rt, list(soa, ntargets),
                        function(x) sqrt(var(x, na.rm = TRUE) / length(x))));
    dtng <- with(data01[data01$gapdur == "0", ],
-                tapply(rt.cor, list(soa, ntargets), mean, na.rm = TRUE));
+                tapply(rt, list(soa, ntargets), mean, na.rm = TRUE));
 
    x <- as.numeric(dimnames(dtg)[[1]]) * 1000 / 75;
 
