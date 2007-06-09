@@ -7,7 +7,6 @@ do.fig0203 <- function () {
    infile <- "data02.rda";
    outfile <- "fig0203.pdf";
    thisfile <- "fig0203.r";
-   errfile <- "an0202.rda";
    exit.function <- function () {
       if (exists("opar")) par(opar);
       if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
@@ -15,7 +14,7 @@ do.fig0203 <- function () {
    on.exit(exit.function());
 
    if (!file.exists(infile)) stop("cannot open input file ", infile);
-   if (IsFileUpToDate(outfile, c(infile, thisfile, errfile))) {
+   if (IsFileUpToDate(outfile, c(infile, thisfile))) {
       warning("Output file is up to date, no action taken");
       return(invisible(NULL));
    }
