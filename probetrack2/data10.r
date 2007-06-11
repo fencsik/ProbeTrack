@@ -38,6 +38,7 @@ do.data10 <- function () {
 
    ## collapse across the factors
    data10 <- aggregate(data.frame(rt = dt2$rt), factorsC, median);
+   data10$nobs <- aggregate(data.frame(rt = dt2$rt), factorsC, length)$rt;
 
    save(data10, file=outfile)
    invisible(data10)
