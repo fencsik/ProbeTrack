@@ -21,7 +21,7 @@ do.an01 <- function() {
 
    ## extract experiment names from infile paths
    nexp <- length(infiles)
-   splits <- strsplit(infiles, "\/")
+   splits <- strsplit(infiles, "/")
    exp.names <- character(nexp)
    sublist <- NULL
    explist <- NULL
