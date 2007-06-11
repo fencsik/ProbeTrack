@@ -1,12 +1,11 @@
-### fig0201.r: plot d' by probe delay separated by number of targets, with 95%
-### CIs based on the within subject error for the number of targets
+### fig1001.r: plot average median RT by probe delay, separated by # targets
 ###
 ### $LastChangedDate$
 
-do.fig0201 <- function () {
-   infile <- "data02.rda";
-   outfile <- "fig0201.pdf";
-   thisfile <- "fig0201.r";
+do.fig1001 <- function () {
+   infile <- "data10.rda";
+   outfile <- "fig1001.pdf";
+   thisfile <- "fig1001.r";
    exit.function <- function () {
       if (exists("opar")) par(opar);
       if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
@@ -19,24 +18,24 @@ do.fig0201 <- function () {
       return(invisible(NULL));
    }
    load(infile);
-   data02$soa <- as.numeric(as.character(data02$soa));
-   data02$ntargets <- as.numeric(as.character(data02$ntargets));
-   data02$gapdur <- as.numeric(as.character(data02$gapdur));
-   data02 <- data02[data02$gapdur > 0, ];
+   data10$soa <- as.numeric(as.character(data10$soa));
+   data10$ntargets <- as.numeric(as.character(data10$ntargets));
+   data10$gapdur <- as.numeric(as.character(data10$gapdur));
+   data10 <- data10[data10$gapdur > 0, ];
 
    ## extract relevant data
-   dt <- with(data02, tapply(dprime, list(soa, ntargets), mean, na.rm = TRUE));
+   dt <- with(data10, tapply(rt, list(soa, ntargets), mean, na.rm = TRUE));
    x <- as.numeric(dimnames(dt)[[1]]);
 
    ## CIs based on MSE from ntargets main effect
-   errg <- sqrt(.4555 / 8) * qt(.975, 21);
+   errg <- sqrt(19414 / 8) * qt(.975, 21);
    ## CIs based on MSE from average of ntargets effects at each SOA
-   ##errg <- sqrt(mean(c(.5587, .5028, .3407, .4254)) / 8) * qt(.975, 21);
+   ##errg <- sqrt(mean(c(10014, 6608, 5813, 10025)) / 8) * qt(.975, 21);
    ## CIs based on MSE of soa main effect
-   ##errg <- sqrt(.3308 / 8) * qt(.975, 21);
+   ##errg <- sqrt(5015 / 8) * qt(.975, 21);
 
    ## settings
-   ylim <- c(0, 4);
+   ylim <- c(500, 1000);
    cond.names <- dimnames(dt)[[2]];
    nCond <- length(cond.names);
    col <- rainbow(nCond);                               names(col) <- cond.names;
@@ -49,7 +48,7 @@ do.fig0201 <- function () {
 
    matplot(x, dt, type = "n", bty = "n",
            ylim = ylim, axes = F,
-           xlab = "Probe delay (ms)", ylab = "d'", main = "ProbeTrack4");
+           xlab = "Probe delay (ms)", ylab = "Correct median reaction time (ms)", main = "ProbeTrack4");
    axis(1, x);
    axis(2);
 
@@ -67,5 +66,5 @@ do.fig0201 <- function () {
           bty = "n", ncol = 1, y.intersp = 1.3, cex = .8);
 }
 
-do.fig0201();
-rm(do.fig0201);
+do.fig1001();
+rm(do.fig1001);

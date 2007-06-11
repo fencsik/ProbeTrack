@@ -38,4 +38,17 @@ o fig0204: fig0203 separately for each subject
 
 ----------------------------------------------------------------------
 
+* data10: aggregate median correct RT by subject, gap duration, #
+  targets, and probe delay
+
+* an1001: anova on RT as a function of probe delay and # targets
+o an1002: t-tests comparing RT on gap trials at each probe delay to RT
+  on no-gap trials
+
+* fig1001: plot average median RT by probe delay, separated by #
+  targets
+o fig1002: same as fig1001, but separately for each subject
+
+----------------------------------------------------------------------
+
 (* = complete, o = incomplete)
