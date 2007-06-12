@@ -51,4 +51,16 @@ o fig1002: same as fig1001, but separately for each subject
 
 ----------------------------------------------------------------------
 
+* data12.r: fit reacquire-time model to RT by probe delay functions
+  from data10, collapsing across gap durations
+
+* an1201: generate table of parameters of fitted model for each
+  subject
+
+* fig1201: plot fit of model against observed data for each subject
+* fig1202: plot fit of model against observed data, averaged across
+  subjects
+
+----------------------------------------------------------------------
+
 (* = complete, o = incomplete)
