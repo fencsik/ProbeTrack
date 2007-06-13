@@ -1,4 +1,4 @@
-function probeTrack3b()
+function ProbeTrack
 
 % get RT response to MVT task with gap
 % how long does it take to recover targets?
@@ -11,15 +11,15 @@ function probeTrack3b()
 %					    also changed program name and file output to reflect 2nd experiment.
 %				2/4    - adjusted SOA defaults for ProbeTrack3 requirements.
 %					    also changed program name and file output to reflect 3rd experiment.	
-               
 
-% to do:
-% 3- , data saving, 
+% $LastChangedDate$
 
 % declare global variables
 global MainWindow display
 global screenRect displayRect objectRect
 global white black midGray darkgray yellow red
+
+experiment = 'ProbeTrack6';
 
 % define rects
 screenRect = [0 0 1024 768];
@@ -40,22 +40,21 @@ objectRect = [0 0 objectSize objectSize];
 % postProbeDuration = 60; % period of motion after appearance of probe
 
 keys = [KbName('''')  KbName('a')]; % response key assignments
-% get user input
-prompt = {'Subject identifier', 'practice trials', 'experimental trials', 'number of objects', 'number of targets', 'cue duration (frames)', 'gap duration', 'SOAs', 'gap onset range (frames)', 'post-probe duration'};
-defaults = {'dummy', '5', '50', '8', '4', '60', '23', '0 6 24 96', '60 180', '60'};
 
-answer = inputdlg(prompt, 'experiment setup info', 1, defaults);
-% now decode answer
-[identifier, practiceTrials, experimentalTrials, nObjects, nTargets, cueDuration, gapDuration, SOAlist, gapOnsetRange, postProbeDuration] = deal(answer{:});
-practiceTrials = str2num(practiceTrials);
-experimentalTrials = str2num(experimentalTrials);
-nObjects = str2num(nObjects);
-nTargets = str2num(nTargets);
-cueDuration = str2num(cueDuration);
-gapDuration = str2num(gapDuration);
-SOAlist = str2num(SOAlist);
-gapOnsetRange = str2num(gapOnsetRange);
-postProbeDuration = str2num(postProbeDuration);
+% get user input
+[identifier, practiceTrials, experimentalTrials, nObjects, nTargets, ...
+ cueDuration, gapDuration, SOAlist, gapOnsetRange, postProbeDuration] = ...
+   DialogBox('Experiment Parameters', ...
+             'Subject identifier'       , 'xxx', ...
+             'practice trials'          , '10', ...
+             'experimental trials'      , '120', ...
+             'number of objects'        , '8', ...
+             'number of targets'        , '4', ...
+             'cue duration (frames)'    , '60', ...
+             'gap duration'             , '23', ...
+             'SOAs'                     , '0 3 6 12', ...
+             'gap onset range (frames)' , '60 180', ...
+             'post-probe duration'      , '60');
 
 % define colors
 midGray = [128 128 128];
@@ -81,14 +80,17 @@ cueingColors = trackingColors;
 cueingColors(1:nTargets, :) = repmat(yellow, nTargets, 1);
 gapColors = repmat(midGray, nObjects, 1);
 
+% miscellaneous setup
+dataFileName = [experiment, 'Data-', identifier, '.txt'];
+rand('state', 100 * sum(clock));
 
 % setup data file
 % format for data output
 headerFormatString	=	'%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s,%s,%s,%s \n';
 dataFormatString = 		'%s,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d, %d,%d,%d \n';
-if exist('probeTrack3bData', 'file') == 0
-	dataFile = fopen('probeTrack3BData', 'a');
-	fprintf(dataFile, headerFormatString, 'identifier', 'hz',  'nObjects', 'nTargets', 'cueDuration', 'gapDuration', 'SOA', 'min_gapOnset', 'max_gapOnset', 'postProbeDuration', 'block', 'trial', 'gapOnset', 'probeType', 'error', 'wrongKeyFlag', 'RT');
+if exist(dataFileName, 'file') == 0
+	dataFile = fopen(dataFileName, 'a');
+	fprintf(dataFile, headerFormatString, 'sub', 'hz',  'nobjects', 'ntargets', 'cuedur', 'gapdur', 'soa', 'min_gapOnset', 'max_gapOnset', 'postProbeDuration', 'block', 'trial', 'gapOnset', 'probeType', 'error', 'badkey', 'rt');
 	fclose(dataFile);
 end
 
@@ -136,10 +138,36 @@ for block = 1:2
 	end
 
 	% set trial variables for the block
+        ivs = {'SOA'        , SOAlist;
+               'probeType'  , 1:2;
+              };
+
+        nVariables = size(ivs, 1);
+        varLength = zeros(nVariables, 1);
+        listLength = 1;
+        for v = 1:nVariables
+           varLength(v) = length(ivs{v, 2});
+           listLength = listLength * varLength(v);
+        end
+        nRepetitions = ceil(nTrials / listLength);
+        len1 = listLength;
+        len2 = 1;
+        [dummy, index] = sort(rand(listLength * nRepetitions, 1)); 
+        for v = 1:nVariables
+           len1 = len1 / varLength(v);
+           eval([ivs{v, 1} ' = repmat(reshape(repmat(ivs{v, 2}, len1, len2), listLength, 1), nRepetitions, 1);']);
+           eval([ivs{v, 1} ' = ' ivs{v, 1} '(index);']);
+           len2 = len2 * varLength(v);
+        end
+        clear dummy len1 len2 index ivs varLength;
+
+        if listLength * nRepetitions ~= nTrials
+           warning('unbalanced design');
+        end
+        
+        % set any remaining randomized variables
 	gapOnsetTime = randi(gapOnsetRange(2) - gapOnsetRange(1), [nTrials, 1]) + gapOnsetRange(1); % sets random gap duration for all trials
-	SOA = SOAlist(randi(length(SOAlist), [nTrials, 1])); % randomly selects SOA for each trial
-	probeType = randi(2, [nTrials, 1]); % randomly selects whether to probe target or distractor on each trial
-	
+        
 	screen(MainWindow, 'FillRect', midGray);
 	CenterText(['Press any key to start ', num2str(nTrials), ' ', message, ' trials']);
 	FlushEvents('keyDown');
@@ -244,7 +272,7 @@ for block = 1:2
 		WaitSecs(1);
 		
 		% save data
-		dataFile = fopen('probeTrack3bData', 'a');
+		dataFile = fopen(dataFileName, 'a');
 		fprintf(dataFile, dataFormatString, identifier, hz,  nObjects, nTargets, cueDuration, gapDuration, SOA(trial), gapOnsetRange(1), gapOnsetRange(2), postProbeDuration, block, trial, gapOnsetTime(trial), probeType(trial), error, wrongKeyFlag, RT);
 		fclose(dataFile);
 		
@@ -254,6 +282,7 @@ end % end block loop
 % now clean up and go home
 screen(MainWindow, 'FillRect', midGray);
 CenterText('Thank you for participating!');
+CenterText('Please inform the experimenter that you are done.', 0, 120);
 FlushEvents('keyDown');
 GetChar;
 clear screen;
@@ -269,3 +298,233 @@ for object = 1:nObjects
 	placeRect = CenterRectOnPoint(objectRect, coordinates(object, 1), coordinates(object, 2));
 	screen(window, 'FillOval', diskColors(object, :), placeRect);
 end
+
+
+function varargout = DialogBox (title, varargin)
+
+n = (nargin - 1);
+if nargout ~= n / 2
+   error('input and output arguments must match');
+end
+prompt = varargin(1:2:n);
+defaults = varargin(2:2:n);
+param = inputdlg(prompt, title, 1, defaults);
+if isempty(param)
+   varargout = {};
+   return;
+end
+varargout = cell(1, nargout);
+for i = 1:length(param)
+   p = param{i};
+   n = [];
+   if ~exist(p), n = str2num(p); end
+   if isempty(n)
+      varargout{i} = p;
+   else
+      varargout{i} = n;
+   end
+end
+
+
+function [newX, newY] = CenterText (message, xoffset, yoffset, color, window)
+% print a text string centered on the screen
+% syntax [newX, newY] = CenterText (message, [xoffset], [yoffset], [color], [window])
+% if you want the text offset from center, use xoffset and yoffset
+% if window is not specified, prints to MainWindow, which must be a global in the calling function
+% 2/23/2000 accepts color option
+% 4/23/2002 can now print to offscreen windows
+
+global screenX
+global screenY
+global MainWindow
+
+switch nargin
+case 1
+	xoffset=0;
+	yoffset=0;
+	color = [];
+	window = MainWindow;
+case 2
+	yoffset=0;
+	color = [];
+	window = MainWindow;
+case 3
+	color = [];
+	window = MainWindow;
+case 4
+	window = MainWindow;
+end
+
+windowRect = screen(window, 'Rect');
+width = screen(window, 'TextWidth', message);
+[newX, newY] = screen(window, 'DrawText', message, ((windowRect(3)/2)-(width/2))+xoffset, (windowRect(4)/2)+yoffset, color);
+
+
+function [newX, newY] = CenterCellText(window, messages, spacing, color)
+
+% prints a cell array of text strings centered on the screen
+% syntax [newX, newY] = CenterCellText(window, messages, [spacing], [color])
+% messages is a cell array of lines of text
+% spacing governs the distance between lines of text, in pixels
+% default spacing is 20 pixels
+% added color option 1/17/2003; only does one color for the whole thing
+% fixed number of options bug 01/24/2003
+
+defaultSpacing = 20;
+switch nargin
+case 0
+	error('CenterCellText requires at least two arguments!');
+case 1
+	error('CenterCellText requires at least two arguments!');
+case 2
+	spacing = defaultSpacing;
+	color = [];
+case 3
+	color = [];
+end
+
+lines = length (messages);
+	
+% find the middle line
+middleLine = round(lines/2);
+
+yOffset = spacing*((1:lines)-middleLine);
+for y = 1:lines
+	[newX, newY] = CenterText(messages{y}, 0, yOffset(y), color, window);
+end
+
+
+function trajectories = makeTrajectories(nObjects, nFrames, objectSize)
+
+global screenRect displayRect
+
+% generates MVT trajectories
+% given the number of objects and frames, returns positions for each object for each frame
+% code adapted from Jen Dimase's motPictMem, Justin Junge
+% started 9/10/2004
+% current 9/14/2004
+
+%  Creates target Locations.
+
+% coordinate system
+centx = round(screenRect(3)/2);
+centy = round(screenRect(4)/2);
+cellSize = round(displayRect(3:4)/7); % size of initial position grid cell
+
+[fieldRect, xOffset, yOffset] = CenterRect(displayRect, screenRect);
+
+x = 0:6;
+xloc = xOffset + cellSize(1) * x;
+yloc = yOffset + cellSize(2) * x;
+
+[gridy, gridx] = meshgrid(yloc, xloc);
+
+shufflegrid = randperm(49);
+shufflegrid = shufflegrid(1:nObjects);
+trajectories(:, 1, 1) = gridx(shufflegrid(:));
+trajectories(:, 2, 1) = gridy(shufflegrid(:));
+
+% motion parameters
+repulsionPower = 10000; % not sure where the value comes from
+inertia = 1;
+pathchange = 1.5;		                           %	Determines Degree of Change on Motion Paths
+forcefieldDistance = 1.5 * objectSize;	% 1.5 = Item Repulsion only occurs within a field around each shape 25% the size of the shape. 
+
+initMotion = [-4:4] * pathchange;
+frameMotion = [-2:2] * inertia;
+rXmove = initMotion(randi(9, [1, nObjects]));
+rYmove = initMotion(randi(9, [1, nObjects]));
+
+for frame = 2:nFrames
+	
+	aa = frame-1;
+	
+	% Repulsion 
+	repel = ones(nObjects, 2) * 0.00001;
+	
+	for object=1:nObjects;
+		thisLocation = repmat(trajectories(object, :, aa), nObjects, 1); % creates nObjects X 2 array of object object's coordinates
+		distances  = thisLocation - trajectories(:, :, aa);
+		absoluteDistances = abs(distances);
+		% 		i = find((absoluteDistance(1) < forcefieldDistance) & (absoluteDistance(2) < forcefieldDistance));
+		
+		for qq=1:nObjects;
+			if qq ~= object
+				distance = trajectories(object, :, aa) - trajectories(qq, :, aa);
+				absoluteDistance = abs(distance);
+				if (absoluteDistance(1) < forcefieldDistance) & (absoluteDistance(2) < forcefieldDistance)
+					if distance(1) ~= 0 & distance(2) ~= 0
+						addrepel = 1./((distance.^2) .* sign(distance));
+						repel(object, :) = repel(object, :) + repulsionPower * addrepel;
+					end
+				end
+			end
+		end
+	end
+
+	rXchange = frameMotion(randi(5, [1, nObjects]));
+	rYchange = frameMotion(randi(5, [1, nObjects]));
+	newrm = [-1 1];
+
+	% X Trajectories
+	
+	for object = 1:nObjects
+		
+		rXmove(object) = rXmove(object) + rXchange(object) + repel(object, 1);										% Makes change to X motion
+		
+		% floor and ceiling
+		
+		if rXmove(object)==0;
+			rXmove(object) = newrm(randi(2));
+		end
+	
+		if rXmove(object) > 4*pathchange
+			rXmove(object) = 4*pathchange;
+		end
+		if rXmove(object) < -4*pathchange
+			rXmove(object) = -4*pathchange;
+		end
+	
+		trajectories(object, 1, frame) = (trajectories(object, 1, aa) + rXmove(object));
+		
+		if trajectories(object, 1, frame) >= (fieldRect(3) - objectSize); 		% Bounces off right
+			trajectories(object, 1, frame) = (fieldRect(3) - objectSize);
+			rXmove(object) = -(4*rXmove(object));	
+		end			
+		if  trajectories(object, 1, frame) <= fieldRect(1);					% Bounces off left
+			trajectories(object, 1, frame) = fieldRect(1);
+			rXmove(object) = -(4*rXmove(object));											
+		end	
+	end
+
+	% Y Trajectories
+	for object = 1:nObjects
+				
+		rYmove(object) = rYmove(object) + rYchange(object) + repel(object, 2);										% Makes change to Y motion
+		
+		if rYmove(object)==0;
+			rYmove(object) = newrm(randi(2));
+		end
+		
+		if rYmove(object) > 4*pathchange
+			rYmove(object) = 4*pathchange;
+		end
+		if rYmove(object) < -4*pathchange
+			rYmove(object) = -4*pathchange;
+		end
+	
+		trajectories(object, 2, frame) = (trajectories(object, 2, aa) + rYmove(object));							
+		if trajectories(object, 2, frame) >= (fieldRect(4) - objectSize);													% Bounces off Bottom
+			trajectories(object, 2, frame) = (fieldRect(4) - objectSize);
+			rYmove(object) = -(4*rYmove(object));	
+		end
+	
+		if 	trajectories(object, 2, frame) <= fieldRect(2);																% Bounces off Top
+			trajectories(object, 2, frame) = fieldRect(2);
+			rYmove(object) = -(4*rYmove(object));									
+		end
+	end
+	d(frame, :) = sqrt(rXmove.^2 + rYmove.^2);
+	
+end
+% mean(d)
