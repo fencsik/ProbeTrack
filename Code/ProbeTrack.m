@@ -86,8 +86,8 @@ rand('state', 100 * sum(clock));
 
 % setup data file
 % format for data output
-headerFormatString	=	'%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s \n';
-dataFormatString = 		'%s,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d \n';
+headerFormatString	=	'%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n';
+dataFormatString = 		'%s,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n';
 if exist(dataFileName, 'file') == 0
 	dataFile = fopen(dataFileName, 'a');
 	fprintf(dataFile, headerFormatString, 'sub', 'hz',  'nobjects', 'ntargets', 'cuedur', 'gapdur', 'soa', 'min_gapOnset', 'max_gapOnset', 'postProbeDuration', 'block', 'trial', 'gapOnset', 'probeType', 'error', 'badkey', 'rt');
