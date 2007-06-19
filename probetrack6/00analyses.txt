@@ -29,8 +29,7 @@ o an0202: t-tests comparing d' on gap trials at each probe delay to d'
 
 * fig0201: plot d' as a function of probe delay, separated by #
   targets
-o fig0202: plot d' as a function of probe delay, separated by #
-  targets, separately for each subject
+* fig0202: fig0201, separately for each subject
 
 * fig0203: plot d' as a function of # targets, separated by probe
   delay
