@@ -5,9 +5,7 @@
 do.an01 <- function() {
    infiles <- c("../../probetrack1/data01.rda",
                 "../../probetrack2/data01.rda",
-                "../../probetrack3/data01.rda",
-                "../../probetrack4/data01.rda",
-                "../../probetrack5/data01.rda");
+                "../../probetrack3/data01.rda");
    demofile <- "demographics.txt";
    outfile <- "an01out.txt"
 
@@ -39,10 +37,17 @@ do.an01 <- function() {
    subs <- sort(unique(sublist));
    nsubs <- length(subs);
 
-   if (nsubs != dim(dg)[1]) {
+   if (nsubs > dim(dg)[1]) {
       stop(demofile, " has ", dim(dg)[1], " subjects, but there are ",
-           nsubs,", subjects across all the experiments");
+           nsubs, " subjects across all the experiments");
    }
+
+   index <- rep(FALSE, dim(dg)[1]);
+   for (sub in subs) {
+      index[dg$Subject == sub] <- TRUE;
+   }
+   dg <- dg[index, ];
+   print(dg);
 
    output <- matrix(0, nrow=nsubs, ncol=nexp+1, dimnames = list(subs, c(exp.names, "count")));
 
