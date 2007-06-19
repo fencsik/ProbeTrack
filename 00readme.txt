@@ -25,6 +25,8 @@ Experiments:
   comparison conditions
 * driftsearch05: test unidirectional motion at different levels of
   speed
+* driftsearch05b: replication of driftsearch05 with different levels
+  of speed
 
 * flashtrack1: first FlashTrack study with either one target or one
   distractor flashing
