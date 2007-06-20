@@ -11,6 +11,9 @@ o an0101: ANOVA of correct RT as a function of probe delay, number of
   targets, and probe type
 o an0102: same as an0101, but for accuracy
 
+* an0110: generate table of average accuracy as a function of set size
+  and gap duration for each subject
+
 * fig0101: plot correct RT by probe delay separated by number of
   targets and probe type
 * fig0102: plot accuracy by probe delay separated by number of targets
