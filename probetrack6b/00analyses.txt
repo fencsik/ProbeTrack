@@ -1,0 +1,77 @@
+00analyses.txt
+
+$LastChangedDate$
+
+----------------------------------------------------------------------
+
+* data01: aggregate accuracy and RT statistics by subject, gap
+  duration, probe type, number of targets, and probe delay
+
+o an0101: ANOVA of correct RT as a function of probe delay, number of
+  targets, and probe type
+o an0102: same as an0101, but for accuracy
+
+* an0110: generate table of average accuracy as a function of set size
+  and gap duration for each subject
+
+* fig0101: plot correct RT by probe delay separated by number of
+  targets and probe type
+* fig0102: plot accuracy by probe delay separated by number of targets
+  and probe type
+* fig0103: plot correct RT by probe delay separated by number of targets
+* fig0104: plot accuracy by probe delay separated by number of targets
+
+* fig0105: fig0101, separately for each subject
+* fig0106: fig0102, separately for each subject
+* fig0107: fig0103, separately for each subject
+* fig0108: fig0104, separately for each subject
+
+----------------------------------------------------------------------
+
+* data02: compute d' from data01, and aggregate it by subject, gap
+  duration, # targets, and probe delay
+
+* an0201: anova on d' as a function of probe delay and # targets
+o an0202: t-tests comparing d' on gap trials at each probe delay to d'
+  on no-gap trials
+
+* fig0201: plot d' as a function of probe delay, separated by #
+  targets
+* fig0202: fig0201, separately for each subject
+
+* fig0203: plot d' as a function of # targets, separated by probe
+  delay
+o fig0204: fig0203 separately for each subject
+
+----------------------------------------------------------------------
+
+* data10: aggregate median correct RT by subject, gap duration, #
+  targets, and probe delay
+
+* an1001: anova on RT as a function of probe delay and # targets
+o an1002: t-tests comparing RT on gap trials at each probe delay to RT
+  on no-gap trials
+
+* fig1001: plot average median RT by probe delay, separated by #
+  targets
+o fig1002: same as fig1001, but separately for each subject
+
+o fig1003: plot average median RT by # targets, separated by probe
+  delay
+o fig1004: fig1003 separately for each subject
+
+----------------------------------------------------------------------
+
+o data12.r: fit reacquire-time model to RT by probe delay functions
+  from data10, collapsing across gap durations
+
+o an1201: generate table of parameters of fitted model for each
+  subject
+
+o fig1201: plot fit of model against observed data for each subject
+o fig1202: plot fit of model against observed data, averaged across
+  subjects
+
+----------------------------------------------------------------------
+
+(* = complete, o = incomplete)
