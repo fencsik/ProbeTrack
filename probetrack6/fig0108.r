@@ -1,12 +1,12 @@
-### fig0107.r: plot correct RT by probe delay separated by number of targets,
+### fig0108.r: plot accuracy by probe delay separated by number of targets,
 ### separately for each subject
 ###
 ### $LastChangedDate$
 
-do.fig0107 <- function () {
+do.fig0108 <- function () {
    infile <- "data01.rda";
-   outfile <- "fig0107.pdf";
-   thisfile <- "fig0107.r";
+   outfile <- "fig0108.pdf";
+   thisfile <- "fig0108.r";
    exit.function <- function () {
       if (exists("opar")) par(opar);
       if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
@@ -26,11 +26,11 @@ do.fig0107 <- function () {
    data01 <- data01[data01$gapdur > 0, ];
 
    ## extract relevant data
-   dt <- with(data01, tapply(rt, list(soa, ntargets, sub), mean, na.rm = TRUE));
+   dt <- with(data01, tapply(pcor, list(soa, ntargets, sub), mean, na.rm = TRUE));
    x <- as.numeric(dimnames(dt)[[1]]);
 
    ## settings
-   ylim <- c(500, 1000);
+   ylim <- c(0.5, 1.0);
    cond.names <- dimnames(dt)[[2]];
    nCond <- length(cond.names);
    col <- rainbow(nCond);                               names(col) <- cond.names;
@@ -48,7 +48,7 @@ do.fig0107 <- function () {
               xlab = "", ylab = "", main = paste("ProbeTrack6", sub));
       axis(1, x);
       axis(2);
-      if (counter %% 2 == 0) title(ylab = "Probe RT (ms)");
+      if (counter %% 2 == 0) title(ylab = "Proportion correct");
       if (counter %% 4 >= 2) title(xlab = "Probe delay (ms)");
 
       for (n in dimnames(dt)[[2]]) {
@@ -65,5 +65,5 @@ do.fig0107 <- function () {
    }
 }
 
-do.fig0107();
-rm(do.fig0107);
+do.fig0108();
+rm(do.fig0108);

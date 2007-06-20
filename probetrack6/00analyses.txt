@@ -19,9 +19,9 @@ o an0102: same as an0101, but for accuracy
 * fig0104: plot accuracy by probe delay separated by number of targets
 
 * fig0105: fig0101, separately for each subject
-o fig0106: fig0102, separately for each subject
+* fig0106: fig0102, separately for each subject
 * fig0107: fig0103, separately for each subject
-o fig0108: fig0104, separately for each subject
+* fig0108: fig0104, separately for each subject
 
 ----------------------------------------------------------------------
 
