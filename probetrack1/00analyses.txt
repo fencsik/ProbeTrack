@@ -14,6 +14,9 @@ $LastChangedDate$
 * an0104: t-tests comparing accuracy on gap trials at each probe delay
   to accuracy on no-gap trials
 
+* an0110: generate table of average accuracy as a function of gap
+  duration for each subject
+
 * fig0101: plot correct RT by probe delay separated by gap duration
   and probe type
 * fig0102: plot accuracy by probe delay separated by gap duration and
