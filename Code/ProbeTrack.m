@@ -19,7 +19,7 @@ global MainWindow display
 global screenRect displayRect objectRect
 global white black midGray darkgray yellow red
 
-experiment = 'ProbeTrack6';
+experiment = 'ProbeTrack6b';
 
 % define rects
 screenRect = [0 0 1024 768];
@@ -51,8 +51,8 @@ keys = [KbName('''')  KbName('a')]; % response key assignments
              'number of objects'        , '8', ...
              'number of targets'        , '4', ...
              'cue duration (frames)'    , '60', ...
-             'gap duration'             , '23', ...
-             'SOAs'                     , '0 3 6 12', ...
+             'gap duration'             , '10', ...
+             'SOAs'                     , '0 3 6 96', ...
              'gap onset range (frames)' , '60 180', ...
              'post-probe duration'      , '60');
 
@@ -176,7 +176,11 @@ for block = 1:2
 	% trial routine
 	screen(MainWindow, 'FillRect', midGray);
 	CenterText('configuring trial...', 0, 0);
-	
+
+        % variables for storing RT and accuracy across trials
+        blockRT = zeros(nTrials, 1);
+        blockAcc = zeros(nTrials, 1);
+
 	for trial = 1:nTrials
 		trialDuration = gapOnsetTime(trial) + gapDuration + SOA(trial) + postProbeDuration; % duration of trial in frames
 		trajectories = makeTrajectories(nObjects, trialDuration, objectSize); % gets item positions for all frames
@@ -250,7 +254,11 @@ for block = 1:2
 			end
 			screen('CopyWindow', display, MainWindow);
 		end
-		RT = round((responseTime - probeOnsetTime) * 1000); % RT in ms
+                if responseTime > 0
+                   RT = round((responseTime - probeOnsetTime) * 1000); % RT in ms
+                else
+                   RT = 0;
+                end
 		
 		% now classify response
 		
@@ -271,13 +279,25 @@ for block = 1:2
 		screen(MainWindow, 'FillRect', midGray);
 		CenterText([feedback, ' - RT = ', num2str(RT), ' ms']);
 		WaitSecs(1);
-		
+
 		% save data
 		dataFile = fopen(dataFileName, 'a');
 		fprintf(dataFile, dataFormatString, identifier, hz,  nObjects, nTargets, cueDuration, gapDuration, SOA(trial), gapOnsetRange(1), gapOnsetRange(2), postProbeDuration, block, trial, gapOnsetTime(trial), probeType(trial), error, wrongKeyFlag, RT);
 		fclose(dataFile);
-		
+
+                % store trial info
+                blockRT(trial) = RT;
+                blockAcc(trial) = 1 - error;
+                if wrongKeyFlag
+                   blockAcc(trial) = -1;
+                end
 	end % end trial loop
+
+        % output performance summary
+        fprintf('\nBlock %d', block);
+        fprintf('\npcor  = %0.4f', mean(blockAcc(blockAcc >= 0)));
+        fprintf('\nrtcor = %0.1f ms\n', mean(blockRT(blockAcc > 0)));
+
 end % end block loop
 
 % now clean up and go home
