@@ -1,9 +1,11 @@
-### refresh.r: refresh all data and analysis files in the current directory
+### refresh.r: refresh all plotting files
 ###
 ### $LastChangedDate$
 
 refresh.all <- function()
 {
+   infiles <- c("pb1.r",
+                "pb2.r");
    thisfile <- "refresh.r";
    exit.function <- function () {
       if (exists("op")) options(op);
@@ -13,12 +15,10 @@ refresh.all <- function()
 
    op <- options(warn = 1);
 
-   ## refresh all *.r files
-   for (fname in list.files(pattern="^.*\.r$")) {
-      if (fname == thisfile) next;
-      if (!file.exists(fname)) stop("File ", fname, " disappeared");
+   ## refresh listed files
+   for (fname in infiles) {
+      if (!file.exists(fname)) stop("File ", fname, " not found");
       cat("Refreshing", fname, "\n");
-      flush.console();
       source(fname);
    }
    
