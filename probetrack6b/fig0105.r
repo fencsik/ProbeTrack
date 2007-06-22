@@ -47,7 +47,7 @@ do.fig0105 <- function () {
          probe <- ifelse(targ == "1", "Target", "Distractor");
          matplot(x, dt[,,targ,sub], type = "n", bty = "n",
                  ylim = ylim, axes = F,
-                 main = paste("ProbeTrack6", sub), xlab = "", ylab = "");
+                 main = paste("ProbeTrack6b", sub), xlab = "", ylab = "");
          axis(1, x);
          axis(2);
          if (counter %% 2 == 0) title(ylab = "Reaction time (ms)");

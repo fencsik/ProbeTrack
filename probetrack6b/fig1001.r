@@ -49,7 +49,7 @@ do.fig1001 <- function () {
 
    matplot(x, dt, type = "n", bty = "n",
            ylim = ylim, axes = F,
-           xlab = "Probe delay (ms)", ylab = "Correct median reaction time (ms)", main = "ProbeTrack6");
+           xlab = "Probe delay (ms)", ylab = "Correct median reaction time (ms)", main = "ProbeTrack6b");
    axis(1, x);
    axis(2);
 

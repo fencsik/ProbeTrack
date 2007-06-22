@@ -49,7 +49,7 @@ do.fig0203 <- function () {
 
    matplot(x, dt, type = "n", bty = "n",
            ylim = ylim, axes = F,
-           xlab = "Number of targets", ylab = "d'", main = "ProbeTrack6");
+           xlab = "Number of targets", ylab = "d'", main = "ProbeTrack6b");
    axis(1, x);
    axis(2);
 

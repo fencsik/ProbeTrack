@@ -53,7 +53,7 @@ do.fig0102 <- function () {
       probe <- ifelse(targ == "1", "Target", "Distractor");
       matplot(x, dt[,,targ], type = "n", bty = "n",
               ylim = ylim, axes = F,
-              main = "ProbeTrack6",
+              main = "ProbeTrack6b",
               xlab = sprintf("%s probe delay (ms)", probe), 
               ylab = "");
       axis(1, x);

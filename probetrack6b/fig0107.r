@@ -45,7 +45,7 @@ do.fig0107 <- function () {
    for (sub in dimnames(dt)[[3]]) {
       matplot(x, dt[, , sub], type = "n", bty = "n",
               ylim = ylim, axes = F,
-              xlab = "", ylab = "", main = paste("ProbeTrack6", sub));
+              xlab = "", ylab = "", main = paste("ProbeTrack6b", sub));
       axis(1, x);
       axis(2);
       if (counter %% 2 == 0) title(ylab = "Probe RT (ms)");

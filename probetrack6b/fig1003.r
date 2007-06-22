@@ -50,7 +50,7 @@ do.fig1003 <- function () {
 
    matplot(x, dt, type = "n", bty = "n",
            ylim = ylim, axes = F,
-           xlab = "Number of targets", ylab = "Reaction time (ms)", main = "ProbeTrack6");
+           xlab = "Number of targets", ylab = "Reaction time (ms)", main = "ProbeTrack6b");
    axis(1, x);
    axis(2);
 
