@@ -52,6 +52,9 @@ o an0202: t-tests comparing d' on gap trials at each probe delay to d'
 o an1002: t-tests comparing RT on gap trials at each probe delay to RT
   on no-gap trials
 
+* an1003: anova on RT as a function of probe delay and tracking load,
+  eliminating 1-target condition
+
 * fig1001: plot average median RT by probe delay, separated by #
   targets
 * fig1002: same as fig1001, but separately for each subject
