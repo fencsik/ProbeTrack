@@ -58,7 +58,7 @@ o an1002: t-tests comparing RT on gap trials at each probe delay to RT
 
 * fig1003: plot average median RT by # targets, separated by probe
   delay
-o fig1004: fig1003 separately for each subject
+* fig1004: fig1003 separately for each subject
 
 ----------------------------------------------------------------------
 

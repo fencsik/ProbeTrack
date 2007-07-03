@@ -28,16 +28,15 @@ do.fig1003 <- function () {
    dt <- with(data10, tapply(rt, list(ntargets, soa), mean, na.rm = TRUE));
    x <- as.numeric(dimnames(dt)[[1]]);
 
-   ## CIs based on MSE of soa main effect
-   errg <- sqrt(.3308 / 8) * qt(.975, 14);
    ## CIs based on MSE from ntargets main effect
-   ##errg <- sqrt(.4555 / 8) * qt(.975, 14);
+   errg <- sqrt(5641 / 8) * qt(.975, 21);
    ## CIs based on MSE from average of ntargets effects at each SOA
-   ##errg <- sqrt(mean(c(.5587, .5028, .3407, .4254)) / 8) * qt(.975, 14);
-   errg <- NULL;
+   ##errg <- sqrt(mean(c(3346, 2208, 1239, 1644)) / 8) * qt(.975, 21);
+   ## CIs based on MSE of soa main effect
+   ##errg <- sqrt(1233 / 8) * qt(.975, 21);
 
    ## settings
-   ylim <- c(500, 1000);
+   ylim <- c(450, 750);
    cond.names <- dimnames(dt)[[2]];
    nCond <- length(cond.names);
    col <- rainbow(nCond);                               names(col) <- cond.names;

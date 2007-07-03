@@ -20,6 +20,9 @@ do.an1001 <- function () {
    }
    load(infile);
 
+   data10 <- data10[data10$gapdur != "0", ];
+   data10$gapdur <- factor(data10$gapdur);
+
    sink(outfile);
    cat("ANOVA on median correct RT as a function of probe delay and tracking load\n");
    cat("  gap trials only\n");
@@ -38,7 +41,7 @@ do.an1001 <- function () {
       cat("\n\n\n");
       cat(sprintf("ANOVA on RT as a function of tracking load at SOA = %s\n", s));
       print(summary(aov(rt ~ ntargets + Error(sub / (ntargets)),
-                        data10[data10$ntargets != "0" & data10$soa == s,])));
+                        data10[data10$soa == s,])));
    }
 }
 
