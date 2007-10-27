@@ -50,7 +50,9 @@ Experiments:
 * probetrack5: control for probetrack4 without gaps to estimate
   baseline performance at each level of tracking load
 * probetrack6: replicates probetrack4 with more trials per cell and
-  SOAs of 0, 40, 80, and 160 ms
+  SOAs of 0, 40, 80, and 160 ms (didn't work; need longer SOA)
+* probetrack6b: replicates probetrack4 with more trials per cell and
+  SOAs of 0, 40, 80, and 1280 ms
 
 * shifttrack2: compare tracking performance across no-disappearance,
   shift 0, and shift 1 conditions, with movement speeds of 6 and 10
