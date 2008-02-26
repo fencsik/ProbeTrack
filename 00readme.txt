@@ -22,11 +22,14 @@ Experiments:
   using heterogeneous distractor speeds (aborted after 4 subjects and
   replaced by driftsearch04)
 * driftsearch04: same as driftsearch03, but with a different set of
-  comparison conditions
+  comparison conditions (driftsearch04b was used for most
+  participants, and just had different grating frequency)
 * driftsearch05: test unidirectional motion at different levels of
   speed
 * driftsearch05b: replication of driftsearch05 with different levels
   of speed
+* driftsearch05c: sub-set of driftsearch05b with just one speed and
+  only the slow-target condition (why did we run this?)
 
 * flashtrack1: first FlashTrack study with either one target or one
   distractor flashing
