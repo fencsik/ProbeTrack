@@ -656,3 +656,54 @@ Even better is a version of the above with distribution assumptions,
 such that t (base RT) follows a gamma distributions with parameters
 alpha and beta and r (reacquisition time) follows an exponential
 distribution with parameter tau (or lambda).
+
+----------------------------------------------------------------------
+
+July 23, 2008:
+
+Revisiting GetMoving (the following is a summary written for MVW to
+include in his lab book):
+
+The GetMoving studies used a multiple-object tracking (MOT) task to
+investigate the extraction of motion information from a set of
+stimuli.  The purpose was to follow-up on the StopTrack studies, which
+investigated how people recovered targets in an MOT task when all the
+stimuli disappeared for a brief gap.  In the StopTrack studies, we
+found that people recover targets better following the gap when there
+is motion information before the gap than when all stimuli remain
+still before the gap.  The conclusion was that participants can use
+motion information to recover targets, contradicting Keene and
+Pylyshyn (2006).
+
+The GetMoving studies are intended to investigate just how much motion
+information people need to use it to recover targets after a gap.
+Brief summaries of the studies completed so far are below:
+
+* GetMoving01 compared performance with 2 or 4 targets with 0, 4, or 8
+  frames (approx. 0, 53, or 106 ms) of motion preceding the gap (gap
+  was about 293 ms).  16 participants were completed, with 4 dropped
+  due to poor performance (<70% correct) in an early baseline block (1
+  additional participant failed to complete the study).  The results
+  are that d' improves between 0 and 4 frames, then remains unchanged
+  between 4 and 8 frames.  This suggests that a mere 4 frames of
+  motion is enough to extract motion trajectories and anticipate
+  post-gap reappearance positions.
+* GetMoving02 compared performance with motion durations of 0, 1, 4,
+  8, or 200 frames.  Only 5 participants were completed, at which
+  point it was realized that no reliable effects were emerging.
+  Participants always tracked 4 targets, and there may be no advantage
+  to pre-gap motion with 4 targets.  Future studies need smaller
+  tracking loads (e.g., 2 targets).
+* GetMoving03 was just GetMoving02 with an additional 2-target
+  condition.  11 participants were completed, and one had to be
+  dropped for poor performance (2 additional participants failed to
+  complete the study).  The results are that d' improves between 1 and
+  4 frames of motion, and is consistent between 0 and 1 frames, and
+  between 4-200 frames (one small problem is that there is no reliable
+  difference between 1 and 200 frames).  This is, in essence,
+  consistent with the findings of GetMoving01.
+
+Future studies should not mix motion durations of different orders of
+magnitude (i.e., less that 10 frames and 200 or more frames is bad).
+Perhaps a baseline block with around 200 frames of motion, and later
+blocks with 0-4 frames of motion to see where the shift occurs.
