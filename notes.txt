@@ -707,3 +707,26 @@ Future studies should not mix motion durations of different orders of
 magnitude (i.e., less that 10 frames and 200 or more frames is bad).
 Perhaps a baseline block with around 200 frames of motion, and later
 blocks with 0-4 frames of motion to see where the shift occurs.
+
+----------------------------------------------------------------------
+
+July 25, 2008:
+
+Revisiting Probetrack.
+
+I am revisiting the paper, and am surprised by how complete it is.  It
+is a pretty compressed draft, and I think the big decision must be
+between trying to continue compressing it (which would require some
+extensive thinking/work on the figures, since there's a lot of
+graphical info) or to expand it into a JEP/P&P style paper.
+
+The paper seems mostly done.  Exp 4 needs to be revised for
+Probetrack6b (instead of Probetrack4/3B and Probetrack5/3C), and the
+discussion needs to be fleshed out.
+
+Steps:
+1. Complete/clean-up Probetrack6b analyses.
+2. Re-write Exp 4 section.
+3. Complete the discussion.
+4. Add a paragraph describing the method in general terms.
+5. Convert to MSWord and send to TSH.

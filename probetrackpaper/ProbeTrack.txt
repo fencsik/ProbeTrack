@@ -32,16 +32,16 @@ there is a mechanism capable of tracking multiple moving objects
 without maintaining gaze on them.
 
 Observers can track successfully even if the tracked stimuli disappear
-briefly (Fencsik et al., in press; Horowitz et al., 2006; Keane &
-Pylyshyn, 2006; Scholl & Pylyshyn, 1999).  In fact, tracking
-performance is no worse when interrupted with a brief blank interval
-of some duration than when interrupted by another visually demanding
-task for an equivalent duration (Alvarez et al., 2005).  These results
-indicate that there must be some mechanism separate from the tracking
-mechanism that enables temporary postponement of the tracking task
-during disappearance or disruption.  Information relevant to tracking
-is stored by this mechanism and is used to reacquire targets following
-reappearance.
+briefly (Alvarez et al., 2005; Fencsik et al., 2007; Horowitz et al.,
+2006; Keane & Pylyshyn, 2006; Scholl & Pylyshyn, 1999).  In fact,
+tracking performance is no worse when interrupted with a brief blank
+interval of some duration than when interrupted by another visually
+demanding task for an equivalent duration (Alvarez et al., 2005).
+These results indicate that there must be some mechanism separate from
+the tracking mechanism that enables temporary postponement of the
+tracking task during disappearance or disruption.  Information
+relevant to tracking is stored by this mechanism and is used to
+reacquire targets following reappearance.
 
 In the present work, we focus on the timecourse of target
 reacquisition: Following the temporary disappearance of all tracked
@@ -77,13 +77,11 @@ target reacquisition times---on the order of a hundred
 milliseconds---than would a parallel process---on the order of tens of
 milliseconds, or possibly instantaneous reacquisition.
 
-Discuss comparison with baseline (no-gap) condition
+rule out apparent motion?
 
-rule out apparent motion
+Paragraph on general method
 
-
-General Methods
-
+Paragraph or less on model
 
 In Experiment 1, we introduce the basic methodology and observe that
 target reacquisition occurs quite rapidly.  Observers responded to
@@ -153,7 +151,6 @@ enable tracking through a 307- or 507-ms gap also function during a
 fit the model to the data from each observer collapsed across gap
 duration.  The average estimated reacquisition time was 44 ms, with a
 95% CI spanning 23--65 ms.
-
 
 Experiment 4 (ProbeTrack4/3B and ProbeTrack5/3C)
 
@@ -291,8 +288,26 @@ does the visual system take to resume tracking the targets.
 
 References
 
+Allport, Styles, & Hsieh (1994)
+
 Alvarez et al. (2005)
+
+Fencsik et al. (2007)
+
+Horowitz et al. (2006)
+
+Keane & Pylyshyn (2006)
 
 MacMillan & Creelman (2005)
 
 Masson & Loftus (2003)
+
+Monsell (2003)
+
+Pylyshyn & Storm (1988)
+
+Rogers & Monsell (1995)
+
+Rubinstein, Meyer, & Evans (2001)
+
+Scholl & Pylyshyn (1999)
