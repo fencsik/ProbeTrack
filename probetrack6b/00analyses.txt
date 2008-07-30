@@ -2,6 +2,8 @@
 
 $LastChangedDate$
 
+* data00.r: clean up raw data file
+
 ----------------------------------------------------------------------
 
 * data01: aggregate accuracy and RT statistics by subject, gap
