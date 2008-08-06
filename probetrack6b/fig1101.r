@@ -1,88 +1,71 @@
-### fig1101.r: plot fit of model against observed data for each subject
+### fig1101.r: plot observed and predicted RT as a function of probe delay,
+### separated by tracking load, separately for each subject
 ###
 ### $LastChangedDate$
 
-do.fig1101 <- function () {
-   infile <- "data11.rda";
-   outfile <- "fig1101.pdf";
-   thisfile <- "fig1101.r";
-   exit.function <- function () {
-      if (exists("opar")) par(opar);
-      if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
-   }
-   on.exit(exit.function());
+f.fig1101 <- function () {
+    infile <- "data11.rda";
+    outfile <- "fig1101.pdf";
+    thisfile <- "fig1101.r";
+    exit.function <- function () {
+        if (exists("opar")) par(opar);
+        if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
+    }
+    on.exit(exit.function());
 
-   if (!file.exists(infile)) stop("cannot open input file ", infile);
-   if (IsFileUpToDate(outfile, c(infile, thisfile))) {
-      warning("Output file is up to date, no action taken");
-      return(invisible(NULL));
-   }
-   load(infile);
-   model <- data11$model;
+    if (!file.exists(infile)) stop("cannot open input file ", infile);
+    if (IsFileUpToDate(outfile, c(infile, thisfile))) {
+        warning("Output file is up to date, no action taken");
+        return(invisible(NULL));
+    }
+    load(infile);
 
-   dt <- with(data11$data, tapply(rt, list(sub, soa, gapdur, ntargets), mean));
+    obse <- with(data11$data, tapply(obs, list(soa, ntargets, sub), mean));
+    rtime <- with(data11$parameters, tapply(rtime, list(ntargets, sub), mean));
+    baseRT <- with(data11$parameters, tapply(baseRT, list(ntargets, sub), mean));
+    x <- as.numeric(dimnames(obse)[[1]]);
+    x.fit <- 0:max(x);
+    pred <- array(NA, dim = c(length(x.fit), dim(obse)[2]),
+                  dimnames = list(as.character(x.fit), dimnames(obse)[[2]]));
 
-   ## gather parameters for model fits
-   attach(data11$fit);
-   factors <- list(sub, gapdur, ntargets);
-   rtime <- tapply(rtime, factors, mean);
-   baseRT <- tapply(baseRT, factors, mean);
-   detach();
+    ## plot settings
+    condNames <- dimnames(obse)[[2]];
+    nCond <- length(condNames);
+    col <- rainbow(nCond, v = .75); names(col) <- condNames;
+    lwd <- c(1, 1);
+    lty <- c(3, 2);
+    ylim <- c(300, 1000);
+    pt.bg <- rep("white", 2);
+    pch <- c(21, 4);
 
-   ## fit model to each subject in each condition
-   Subjects <- dimnames(rtime)[[1]];
-   predx <- seq(0, 1280, by = 1);
-   predy <- array(dim = c(length(Subjects), length(predx), dim(rtime)[2], dim(rtime)[3]),
-                  dimnames = list(Subjects, 1:length(predx), dimnames(rtime)[[2]], dimnames(rtime)[[3]]));
-   for (sub in dimnames(predy)[[1]]) {
-      for (gd in dimnames(predy)[[3]]) {
-         for (nt in dimnames(predy)[[4]]) {
-            predy[sub, , gd, nt] <- model(predx, rtime[sub, gd, nt], baseRT[sub, gd, nt]);
-         }
-      }
-   }
+    pdf(outfile, width = 8, height = 8, pointsize = 12);
+    opar <- par(mfrow = c(2, 2), las = 1, pty = "m", cex.axis = .6,
+                xpd = NA, bg = "white");
 
-   x <- as.numeric(dimnames(dt)[[2]]);
-   gapdurList <- dimnames(dt)[[3]];
-   ntargetsList <- dimnames(dt)[[4]];
-
-   ## plot settings
-   condNames <- ntargetsList;
-   nCond <- length(condNames);
-   col <- rainbow(nCond, v = .75); names(col) <- condNames;
-   pch <- c(21, 22, 23, 24);  names(pch) <- condNames;
-
-   pdf(outfile, width = 8, height = 8, pointsize = 12);
-   opar <- par(mfrow = c(2, 2), las = 1, pty = "m", cex.axis = .6,
-               xpd = NA, bg = "white");
-
-   ylim <- c(300, 1000);
-
-   counter <- 0;
-   for (sub in Subjects) {
-      matplot(x, dt[sub, , 1, ], type = "n", bty = "n",
-              axes = F, #ylim = ylim,
-              xlab = "Probe delay (ms)", ylab = "Probe RT (ms)",
-              main = sprintf("ProbeTrack1 - %s", sub));
-      for (nt in ntargetsList) {
-         axis(1, x);
-         axis(2);
-         for (gd in gapdurList) {
-            abline(h = baseRT[sub, gd, nt], xpd = F,
-                   col = col[nt], lwd = 2, lty = 3);
-            lines(predx, predy[sub, , gd, nt], type = "l",
-                  col = col[nt], lwd = 2, lty = 1);
-            points(x, dt[sub, , gd, nt], type = "p",
-                   col = col[nt], bg = "transparent", pch = pch[nt], cex = 1.5, lwd = 2);
-         }
-      }
-      if (counter %% 4 == 0) {
-         legend("bottomright", sprintf("%s targets", ntargetsList), inset = c(-.4, -.45),
-                bty = "n", col = col, lwd = 2, ncol = 1);
-      }
-      counter <- counter + 1;
-   }
+    counter <- 0;
+    for (sub in dimnames(obse)[[3]]) {
+        matplot(x, obse[, , sub], type = "p", bty = "n",
+                axes = F, cex = .75, #ylim = ylim,
+                col = col, lty = lty[1], lwd = lwd[1], pch = pch[1], bg = pt.bg,
+                xlab = "", ylab = "", main = sprintf("ProbeTrack6 - %s", sub));
+        for (nt in dimnames(obse)[[2]]) {
+            pred[, nt] <- data11$model(x.fit, rtime[nt, sub], baseRT[nt, sub]);
+        }
+        matlines(x.fit, pred,
+                 col = col, lty = lty[2], lwd = lwd[2], pch = pch[2]);
+        ## matlines(x, pred[, , sub], type = "o",
+        ##          col = col, lty = lty[2], lwd = lwd[2], pch = pch[2]);
+        axis(1, x);
+        axis(2);
+        if (counter %% 4 > 1) title(xlab = "Probe delay (ms)");
+        if (counter %% 2 == 0) title(ylab = "Probe RT (ms)");
+        if (counter %% 4 == 0) {
+            legend("bottomright", sprintf("%s targets", condNames), inset = c(-.4, -.45),
+                   bty = "n", col = col, lwd = 2, ncol = 1);
+        }
+        counter <- counter + 1;
+    }
 }
 
-do.fig1101();
-rm(do.fig1101);
+f.fig1101();
+rm(f.fig1101);

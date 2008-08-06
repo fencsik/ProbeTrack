@@ -81,16 +81,4 @@ o an1002: t-tests comparing RT on gap trials at each probe delay to RT
 
 ----------------------------------------------------------------------
 
-o data12.r: fit reacquire-time model to RT by probe delay functions
-  from data10, collapsing across gap durations
-
-o an1201: generate table of parameters of fitted model for each
-  subject
-
-o fig1201: plot fit of model against observed data for each subject
-o fig1202: plot fit of model against observed data, averaged across
-  subjects
-
-----------------------------------------------------------------------
-
 (* = complete, o = incomplete)
