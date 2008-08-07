@@ -79,6 +79,21 @@ o an1002: t-tests comparing RT on gap trials at each probe delay to RT
   delay, separated by tracking load, for each subject
 * fig1102: same as fig1101, but averaged across subjects
 
+o fig1103: plot observed and predicted RT as a function of tracking
+  load, separated by probe delay, for each subject
+o fig1104: same as fig1103, but averaged across subjects
+
+----------------------------------------------------------------------
+
+* data12: compute RT by tracking load intercepts and slopes for each
+  probe delay, gap duration, and subject; from data10
+
+* an1201: anova to test differences among slopes as a function of
+  probe delay
+
+o fig1201: plot best-fit lines against actual data separately for each
+  subject
+
 ----------------------------------------------------------------------
 
 (* = complete, o = incomplete)

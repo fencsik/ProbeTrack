@@ -50,7 +50,7 @@ f.an1102 <- function () {
             print(summary(aov(baseRT ~ ntargets + Error(sub / ntargets),
                               data = p,
                               subset = (p$ntargets == ntargetsList[i] |
-                                        p$ntargets == ntargetsList[j], ))));
+                                        p$ntargets == ntargetsList[j]))));
         }
     }
 }
