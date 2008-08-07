@@ -73,11 +73,11 @@ o an1002: t-tests comparing RT on gap trials at each probe delay to RT
 * an1101: generate table of parameters of fitted model for each
   subject
 * an1102: anova to test differences among parameters as a function of
-  gap duration
+  tracking load
 
-* fig1101: plot fit of model against observed data for each subject
-* fig1102: plot fit of model against observed data, averaged across
-  subjects
+* fig1101: plot observed and predicted RT as a function of probe
+  delay, separated by tracking load, for each subject
+* fig1102: same as fig1101, but averaged across subjects
 
 ----------------------------------------------------------------------
 

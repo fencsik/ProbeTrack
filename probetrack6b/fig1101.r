@@ -32,11 +32,11 @@ f.fig1101 <- function () {
     condNames <- dimnames(obse)[[2]];
     nCond <- length(condNames);
     col <- rainbow(nCond, v = .75); names(col) <- condNames;
+    pch <- c(21, 18, 3, 4);
     lwd <- c(1, 1);
     lty <- c(3, 2);
     ylim <- c(300, 1000);
     pt.bg <- rep("white", 2);
-    pch <- c(21, 4);
 
     pdf(outfile, width = 8, height = 8, pointsize = 12);
     opar <- par(mfrow = c(2, 2), las = 1, pty = "m", cex.axis = .6,
@@ -46,13 +46,13 @@ f.fig1101 <- function () {
     for (sub in dimnames(obse)[[3]]) {
         matplot(x, obse[, , sub], type = "p", bty = "n",
                 axes = F, cex = .75, #ylim = ylim,
-                col = col, lty = lty[1], lwd = lwd[1], pch = pch[1], bg = pt.bg,
+                col = col, pch = pch, lty = lty[1], lwd = lwd[1], bg = pt.bg,
                 xlab = "", ylab = "", main = sprintf("ProbeTrack6 - %s", sub));
         for (nt in dimnames(obse)[[2]]) {
             pred[, nt] <- data11$model(x.fit, rtime[nt, sub], baseRT[nt, sub]);
         }
         matlines(x.fit, pred,
-                 col = col, lty = lty[2], lwd = lwd[2], pch = pch[2]);
+                 col = col, lty = lty[2], lwd = lwd[2]);
         ## matlines(x, pred[, , sub], type = "o",
         ##          col = col, lty = lty[2], lwd = lwd[2], pch = pch[2]);
         axis(1, x);

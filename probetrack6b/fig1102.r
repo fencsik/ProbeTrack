@@ -1,85 +1,79 @@
-### fig1102.r: plot fit of model against observed data, averaged across
-### subjects
+### fig1102.r: plot observed and predicted RT as a function of probe delay,
+### separated by tracking load, averaged across subjects.
 ###
 ### $LastChangedDate$
 
-do.fig1102 <- function () {
-   infile <- "data11.rda";
-   outfile <- "fig1102.pdf";
-   thisfile <- "fig1102.r";
-   exit.function <- function () {
-      if (exists("opar")) par(opar);
-      if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
-   }
-   on.exit(exit.function());
+f.fig1102 <- function () {
+    infile <- "data11.rda";
+    outfile <- "fig1102.pdf";
+    thisfile <- "fig1102.r";
+    exit.function <- function () {
+        if (exists("opar")) par(opar);
+        if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
+    }
+    on.exit(exit.function());
 
-   if (!file.exists(infile)) stop("cannot open input file ", infile);
-   if (IsFileUpToDate(outfile, c(infile, thisfile))) {
-      warning("Output file is up to date, no action taken");
-      return(invisible(NULL));
-   }
-   load(infile);
-   model <- data11$model;
+    if (!file.exists(infile)) stop("cannot open input file ", infile);
+    if (IsFileUpToDate(outfile, c(infile, thisfile))) {
+        warning("Output file is up to date, no action taken");
+        return(invisible(NULL));
+    }
+    load(infile);
 
-   dt <- with(data11$data, tapply(rt, list(soa, gapdur, ntargets), mean));
+    obse <- with(data11$data, tapply(obs, list(soa, ntargets), mean));
+    x <- as.numeric(dimnames(obse)[[1]]);
+    rtime.avg <- with(data11$parameters, tapply(rtime, list(ntargets), mean));
+    baseRT.avg <- with(data11$parameters, tapply(baseRT, list(ntargets), mean));
+    rtime.all <- with(data11$parameters, tapply(rtime, list(ntargets, sub), mean));
+    baseRT.all <- with(data11$parameters, tapply(baseRT, list(ntargets, sub), mean));
 
-   ## gather parameters for model fits
-   attach(data11$fit);
-   factors <- list(sub, gapdur, ntargets);
-   rtime <- tapply(rtime, factors, mean);
-   baseRT <- tapply(baseRT, factors, mean);
-   detach();
+    ## fit model to each subject in each condition
+    x.fit <- 0:max(x);
+    nx <- length(x.fit);
+    pred.avg <- array(dim = c(nx, dim(rtime.avg)[1]),
+                      dimnames = list(as.character(x.fit), dimnames(rtime.avg)[[1]]));
+    pred.all <- array(dim = c(nx, dim(rtime.all)[1], dim(rtime.all)[2]),
+                      dimnames = list(as.character(x.fit), dimnames(pred.avg)[[2]],
+                        dimnames(rtime.all)[[2]]));
+    for (nt in dimnames(pred.all)[[2]]) {
+        pred.avg[, nt] <- data11$model(x.fit, rtime.avg[nt], baseRT.avg[nt]);
+        for (sub in dimnames(pred.all)[[3]]) {
+            pred.all[, nt, sub] <- data11$model(x.fit, rtime.all[nt, sub], baseRT.all[nt, sub]);
+        }
+    }
+    pred.all <- apply(pred.all, 1:2, mean);
+    baseRT.all <- apply(baseRT.all, 1, mean);
+    print(baseRT.all);
 
-   ## fit model to each subject in each condition
-   Subjects <- dimnames(rtime)[[1]];
-   predx <- seq(0, 1280, by = 1);
-   predy <- array(dim = c(length(Subjects), length(predx), dim(rtime)[2], dim(rtime)[3]),
-                  dimnames = list(Subjects, 1:length(predx), dimnames(rtime)[[2]], dimnames(rtime)[[3]]));
-   for (sub in dimnames(predy)[[1]]) {
-      for (gd in dimnames(predy)[[3]]) {
-         for (nt in dimnames(predy)[[4]]) {
-            predy[sub, , gd, nt] <- model(predx, rtime[sub, gd, nt], baseRT[sub, gd, nt]);
-         }
-      }
-   }
-   predy <- apply(predy, 2:4, mean);
-   baseRT <- apply(baseRT, 2:3, mean);
+    ## plot settings
+    col <- rainbow(dim(obse)[2], v = .75);
+    pch <- c(21, 18, 3, 4);
+    lwd.all <- 1; lwd.avg <- 2;
+    lty.all <- 3; lty.avg <- 2;
 
-   x <- as.numeric(dimnames(dt)[[1]]);
-   gapdurList <- dimnames(dt)[[2]];
-   ntargetsList <- dimnames(dt)[[3]];
+    pdf(outfile, width = 6, height = 6, pointsize = 12);
+    opar <- par(mfrow = c(1, 1), las = 1, pty = "m", cex.axis = .6,
+                xpd = F, bg = "white");
 
-   ## plot settings
-   condNames <- ntargetsList;
-   nCond <- length(condNames);
-   col <- rainbow(nCond); names(col) <- condNames;
-   pch <- c(21, 22, 23, 24);  names(pch) <- condNames;
+    ylim <- c(450, 650);
 
-   pdf(outfile, width = 6, height = 6, pointsize = 12);
-   opar <- par(mfrow = c(1, 1), las = 1, pty = "m", cex.axis = .6,
-               xpd = NA, bg = "white");
-
-   ylim <- c(400, 650);
-
-   matplot(x, dt[, 1,], type = "n", bty = "n",
-        axes = F, ylim = ylim,
-        xlab = "Probe delay (ms)", ylab = "Probe RT (ms)", main = "ProbeTrack1");
-   for (nt in ntargetsList) {
-      axis(1, x);
-      axis(2);
-      for (gd in gapdurList) {
-         abline(h = baseRT[gd, nt], xpd = F,
-               col = col[nt], lwd = 2, lty = 3);
-         lines(predx, predy[, gd, nt], type = "l",
-               col = col[nt], lwd = 2, lty = 1);
-         points(x, dt[, gd, nt], type = "p",
-               col = col[nt], bg = "transparent", pch = pch[nt], cex = 1.5, lwd = 3);
-      }
-      legend("topright", sprintf("%s target(s)", condNames),
-             bty = "n", 
-             col = col[condNames], lty = 1, lwd = 3);
-   }
+    matplot(x, obse, type = "p", bty = "n",
+            axes = F, ylim = ylim,
+            col = col, pch = pch,
+            xlab = "Probe delay (ms)", ylab = "Probe RT (ms)", main = "ProbeTrack6b");
+    axis(1, x);
+    axis(2);
+    abline(v = 0, col = "gray50", lty = 1);
+    matlines(x.fit, pred.all, col = col, lwd = lwd.all, lty = lty.all);
+    matlines(x.fit, pred.avg, col = col, lwd = lwd.avg, lty = lty.avg);
+    ##abline(h = baseRT.all, lty = 2, lwd = 1, col = col);
+    legend("bottomright", sprintf("%s target(s)", dimnames(obse)[[2]]),
+           bty = "n", ncol = 2, cex = .8,
+           col = col, pch = pch);
+    legend("bottomleft", c("Across Subj", "Avg Pars"),
+           bty = "n", cex = .8, inset = c(.05, 0),
+           lwd = c(lwd.all, lwd.avg), lty = c(lty.all, lty.avg));
 }
 
-do.fig1102();
-rm(do.fig1102);
+f.fig1102();
+rm(f.fig1102);
