@@ -19,26 +19,26 @@ f.data12 <- function () {
     all.ntargets <- levels(data10$ntargets);
     all.sub <- levels(data10$sub);
     all.soa <- levels(data10$soa);
-    data10$soa <- as.numeric(as.character(data10$soa));
+    data10$ntargets <- as.numeric(as.character(data10$ntargets));
 
     ## Compute slopes and intercepts for each subject
     p.slopes <- t.slopes <- slopes <- intercepts <-
-        array(dim = c(length(all.ntargets), length(all.sub)),
-              dimnames = list(all.ntargets, all.sub));
-    for (nt in dimnames(slopes)[[1]]) {
+        array(dim = c(length(all.soa), length(all.sub)),
+              dimnames = list(all.soa, all.sub));
+    for (soa in dimnames(slopes)[[1]]) {
         for (sub in dimnames(slopes)[[2]]) {
-            g <- lm(rt ~ soa,
-                    data = data10[data10$ntargets == nt &
+            g <- lm(rt ~ ntargets,
+                    data = data10[data10$soa == soa &
                       data10$sub == sub, ]);
-            intercepts[nt, sub] <- g$coef[[1]];
-            slopes[nt, sub] <- g$coef[[2]];
+            intercepts[soa, sub] <- g$coef[[1]];
+            slopes[soa, sub] <- g$coef[[2]];
             gs <- summary(g);
-            t.slopes[nt, sub] <- gs$coef[2, 3];
-            p.slopes[nt, sub] <- gs$coef[2, 4];
+            t.slopes[soa, sub] <- gs$coef[2, 3];
+            p.slopes[soa, sub] <- gs$coef[2, 4];
         }
     }
     regr <- as.data.frame(as.table(intercepts));
-    names(regr) <- c("ntargets", "sub", "intercept");
+    names(regr) <- c("soa", "sub", "intercept");
     regr$slope <- as.data.frame(as.table(slopes))$Freq;
     regr$t.slope <- as.data.frame(as.table(t.slopes))$Freq;
     regr$p.slope <- as.data.frame(as.table(p.slopes))$Freq;
@@ -47,18 +47,17 @@ f.data12 <- function () {
     avg <- with(data10, aggregate(data.frame(rt = rt),
                                   list(soa = soa, ntargets = ntargets), mean));
     p.slopes <- t.slopes <- slopes <- intercepts <-
-        array(dim = c(length(all.ntargets)),
-              dimnames = list(all.ntargets));
-    for (nt in dimnames(slopes)[[1]]) {
-        g <- lm(rt ~ soa, data = avg[avg$ntargets == nt, ]);
-        intercepts[nt] <- g$coef[[1]];
-        slopes[nt] <- g$coef[[2]];
+        array(dim = c(length(all.soa)), dimnames = list(all.soa));
+    for (soa in dimnames(slopes)[[1]]) {
+        g <- lm(rt ~ ntargets, data = avg[avg$soa == soa, ]);
+        intercepts[soa] <- g$coef[[1]];
+        slopes[soa] <- g$coef[[2]];
         gs <- summary(g);
-        t.slopes[nt] <- gs$coef[2, 3];
-        p.slopes[nt] <- gs$coef[2, 4];
+        t.slopes[soa] <- gs$coef[2, 3];
+        p.slopes[soa] <- gs$coef[2, 4];
     }
     avg <- as.data.frame(as.table(intercepts));
-    names(avg) <- c("ntargets", "intercept");
+    names(avg) <- c("soa", "intercept");
     avg$slope <- as.data.frame(as.table(slopes))$Freq;
     avg$t.slope <- as.data.frame(as.table(t.slopes))$Freq;
     avg$p.slope <- as.data.frame(as.table(p.slopes))$Freq;

@@ -21,35 +21,35 @@ f.an1201 <- function () {
     r <- data12$regr;
 
     sink(outfile);
-    cat("ANOVA testing effect of tracking load on slope\n");
-    print(summary(aov(slope ~ ntargets + Error(sub / ntargets), data = r)));
+    cat("ANOVA testing effect of probe delay on slope\n");
+    print(summary(aov(slope ~ soa + Error(sub / soa), data = r)));
 
-    ntargetsList <- levels(r$ntargets);
-    n <- length(ntargetsList);
+    soaList <- levels(r$soa);
+    n <- length(soaList);
     for (i in 1:(n-1)) {
         for (j in (i+1):n) {
             cat("\n\n\n");
-            cat(sprintf("ANOVA comparing tracking loads of %s and %s\n",
-                        ntargetsList[i], ntargetsList[j]));
-            print(summary(aov(slope ~ ntargets + Error(sub / ntargets), data = r,
-                              subset = (r$ntargets == ntargetsList[i] |
-                                        r$ntargets == ntargetsList[j]))));
+            cat(sprintf("ANOVA comparing probe delays of %s and %s\n",
+                        soaList[i], soaList[j]));
+            print(summary(aov(slope ~ soa + Error(sub / soa), data = r,
+                              subset = (r$soa == soaList[i] |
+                                        r$soa == soaList[j]))));
         }
     }
 
     cat("\n\n\n");
-    cat("ANOVA testing effect of tracking load on intercept\n");
-    print(summary(aov(intercept ~ ntargets + Error(sub / ntargets), data = r)));
+    cat("ANOVA testing effect of probe delay on intercept\n");
+    print(summary(aov(intercept ~ soa + Error(sub / soa), data = r)));
 
     for (i in 1:(n-1)) {
         for (j in (i+1):n) {
             cat("\n\n\n");
-            cat(sprintf("ANOVA comparing tracking loads of %s and %s\n",
-                        ntargetsList[i], ntargetsList[j]));
-            print(summary(aov(intercept ~ ntargets + Error(sub / ntargets),
+            cat(sprintf("ANOVA comparing probe delays of %s and %s\n",
+                        soaList[i], soaList[j]));
+            print(summary(aov(intercept ~ soa + Error(sub / soa),
                               data = r,
-                              subset = (r$ntargets == ntargetsList[i] |
-                                        r$ntargets == ntargetsList[j]))));
+                              subset = (r$soa == soaList[i] |
+                                        r$soa == soaList[j]))));
         }
     }
 }
