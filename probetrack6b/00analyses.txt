@@ -96,4 +96,13 @@ o fig1201: plot best-fit lines against actual data separately for each
 
 ----------------------------------------------------------------------
 
+* data13: compute RT by tracking load intercepts and slopes for each
+  probe delay, gap duration, and subject, eliminating tracking load 1;
+  from data10
+
+* an1301: anova to test differences among slopes as a function of
+  probe delay
+
+----------------------------------------------------------------------
+
 (* = complete, o = incomplete)
