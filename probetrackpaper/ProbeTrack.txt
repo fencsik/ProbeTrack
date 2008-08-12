@@ -144,65 +144,57 @@ p = .947.  Median RT did decline with probe delay; F(7, 49) = 6.71,
 MSE = 1385, p < .001.  There was a marginally reliable interaction
 between probe delay and gap duration, but this was caused by a single
 unusual data point in the 320-ms probe delay and 307-ms gap duration
-condition.  Clearly, postgap performance is identical across gap
-durations, suggesting that the same task-postponement mechanisms that
-enable tracking through a 307- or 507-ms gap also function during a
-133-ms gap.  To obtain a reliable estimate of reacquisition time, we
-fit the model to the data from each observer collapsed across gap
-duration.  The average estimated reacquisition time was 44 ms, with a
-95% CI spanning 23--65 ms.
+condition.  Aside from this one point, postgap performance was
+identical across gap durations, suggesting that the same
+task-postponement mechanisms that enable tracking through a 307- or
+507-ms gap also function during a 133-ms gap.  To obtain a reliable
+estimate of reacquisition time, we fit the model to the data from each
+observer collapsed across gap duration.  The average estimated
+reacquisition time was 44 ms, with a 95% CI spanning 23--65 ms.
 
-Experiment 4 (ProbeTrack4/3B and ProbeTrack5/3C)
+The first three experiments suggest that targets are reacquired
+rapidly following resumption of tracking.  In the final experiment, we
+tested whether targets are recovered one-at-a-time or
+all-at-once---that is, by a serial or parallel process.  We varied the
+tracking load from one to four targets.  If target recovery is serial,
+then it should take longer to recover all the targets as the tracking
+load increases.  This will be apparent at the shortest probe delays as
+a systematic increase in response time with tracking load, as it takes
+longer, on average, to recover the targets.  However, if target
+recovery occurs in parallel, there should be no systematic
+relationship between tracking load and response time.  There was a
+reliable effect of tracking load on median RT; F(3, 12) = 8.73, MSE =
+5641, p < .001.  There was also a reliable effect of probe delay on
+median RT; F(3, 21) = 7.77, MSE = 1233, p < .01.  However, the
+interaction between tracking load and probe delay was not reliable;
+F(9, 63) = 1.52, MSE = 932, p = .16.  The effect of tracking load on
+RT appears to be driven by the one-target condition: when it is
+eliminated, there is no longer a reliable effect of tracking load;
+F(2, 14) = 1.09, MSE = 6127, p = .36.  Thus, there is no evidence that
+target recovery is a serial process.  We again fit the model to the
+data from each observer, looking only at the four-targets condition to
+replicate previous analyses.  The average estimated reacquisition time
+was again 44 ms, with a 95% CI spanning 14--74 ms.  It appears that all
+targets are recovered simultaneously by about 44 ms.
 
-In Experiment 4, we test whether targets are recovered one-at-a-time
-(i.e., by a serial process) or all-at-once (i.e., parallel).  To
-accomplish this, we varied the tracking load from one to four targets.
-If target recovery is a serial process, then it should take longer to
-recover all the targets as the tracking load increases.  This will be
-apparent at the shortest probe delays as a systematic increase in
-response time with tracking load, as it takes longer, on average, to
-recover the targets and determine whether or not the probed stimulus
-was a target.  However, if target recovery occurs in parallel, there
-should be no systematic relationship between tracking load and
-response time.
-
-Given that four targets may be recovered within 40 ms, we do not
-expect to observe any effects beyond the 0 ms probe delay.  We collect
-data from multiple probe delays, but our analysis of the relationship
-between response time and tracking load focuses only on the 0 ms probe
-delay.
-
-Experiment 4 actually consisted of two sub-experiments.  Experiment 4a
-allowed us to estimate baseline performance at each tracking load with
-no gap, and Experiment 4b manipulated probe delay following a gap of
-307 ms (23 frames).  Experiment 4a included 8 naive volunteers; their
-age ranged from ??-??  (mean ??; ?? females).  Experiment 4b included
-8 volunteers, with 4 of them having participated in previous
-experiments (not including Experiment 4a); their age ranged from ??-??
-(mean ??; ?? females).  At the beginning of each experiment, observers
-performed 50 trials with no gap.  In Experiment 4a, they then
-performed four trial blocks, each with 200 trials at one of the four
-tracking loads.  In Experiment 4b, observers also performed four
-blocks, one at each tracking load, but each block included four probe
-delays (0, 80, 320, and 1280 ms) randomly mixed within the block.
-
-Overall, the effects of probe delay on accuracy and RT were similar to
-the previous experiments and will not be discussed further.  Figure ??
-plots RT as a function of tracking load for Experiments 4a and 4b.  We
-conducted a repeated measures ANOVA investigating RT as a function of
-tracking load and found blah blah 
-
-These results are inconsistent with a serial process, which would
-predict a systematic relationship between RT and tracking load.
-Instead, they support the hypothesis that target recovery occurs in
-parllel, with all targets recovered simultaneously.
-
+(Note: There is some preliminary evidence of a tracking load effect on
+RT.  As noted above, there is a reliable effect of tracking load on
+RT.  However, this effect is reliable at every probe delay, suggesting
+that tracking load is influencing another stage, not recovery
+time---if the effect was primarily on recovery, then the tracking load
+effect would only appear at shorter probe delays.  Additionally, all
+effects disappear when the one-target condition is eliminated,
+suggesting that this is an outlier-based effect.  An alternative
+perspective comes from the RT x tracking load slopes.  Depending on
+how you look at these, there could be some suggestive patterns.  These
+suggestive patterns again disappear when the one-target condition is
+dropped from the analysis.)
 
 Discussion
 
 The experiments presented above show that recovery of moving targets
-after a brief disappearance occurs rapidly and in parallel.  By 40 ms
-after the tracked stimuli reappeared, observers could distinguish
+after a brief disappearance occurs rapidly and in parallel.  Around 40
+ms after the tracked stimuli reappeared, observers could distinguish
 targets from distractors as quickly as if the stimuli had never
 disappeared, suggesting that the tracking mechanisms were in the same
 state they had been in prior to disappearance.
