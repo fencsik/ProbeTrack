@@ -3,11 +3,12 @@
 ###
 ### $LastChangedDate$
 
-refresh.data <- function()
+f.refreshall <- function()
 {
    thisfile <- "refreshall.r";
    infile <- "refresh.r";
-   exp.dirs <- paste(file.path("..", "..", "probetrack"), 1:4, sep = "");
+   exp.dirs <- paste(file.path("..", "..", "probetrack"),
+                     c(as.character(1:3), "6b"), sep = "");
    exit.function <- function () {
       if (exists("op")) options(op);
       if (exists("owd") && owd != getwd()) setwd(owd);
@@ -37,5 +38,5 @@ refresh.data <- function()
    cat("\n");
 }
 
-refresh.data();
-rm(refresh.data);
+f.refreshall();
+rm(f.refreshall);
