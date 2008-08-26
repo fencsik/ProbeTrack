@@ -51,8 +51,7 @@ o an0202: t-tests comparing d' on gap trials at each probe delay to d'
   tracking load, and probe delay
 
 * an1001: anova on RT as a function of probe delay and # targets
-o an1002: t-tests comparing RT on gap trials at each probe delay to RT
-  on no-gap trials
+* an1002: ancova on RT as a function of probe delay and tracking load
 
 * an1003: anova on RT as a function of probe delay and tracking load,
   eliminating 1-target condition
