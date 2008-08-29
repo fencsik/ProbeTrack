@@ -109,18 +109,18 @@ target reacquisition occurs quite rapidly.  Observers responded to
 probes that onset 0, 80, 320, or 1280 ms (0, 6, 24, or 96 frames)
 after the gap.  Probe onset delay was randomized within block.  The
 design resulted in 50 trials per level of probe delay (25 target probe
-and 25 distractor probe).  Volunteers ranged in age from 22-40 (M =
-29.1; 6 females, 2 males).  To analyze the results, we computed each
-observer's median RT from correct responses, collapsing across probe
-types.  The open circles in Figure 1 indicate average median RT as a
-function of probe delay; the filled squares and dashed line indicate
-average d' (MacMillan & Creelman, 2005).  We conducted separate
-repeated measures ANOVAs on median RT and d' as a function of probe
-delay.  There was a reliable effect of probe delay on median RT; F(4,
-28) = 9.34, MSE = 1256, p < .001.  The main effect of probe delay on
-d' was marginally reliable; F(4, 28) = 2.27, MSE = 0.1914, p = .087.
-The error bars indicated 95% confidence intervals based on the within
-subject error (Masson & Loftus, 2003).
+and 25 distractor probe).  Observers included 6 females and 2 males
+ranging in age from 22-40 years (M = 29.1 years).  To analyze the
+results, we computed each observer's median RT from correct responses,
+collapsing across probe types.  The open circles in Figure 1 indicate
+average median RT as a function of probe delay; the filled squares and
+dashed line indicate average d' (MacMillan & Creelman, 2005).  We
+conducted separate repeated measures ANOVAs on median RT and d' as a
+function of probe delay.  There was a reliable effect of probe delay
+on median RT; F(4,28) = 9.34, MSE = 1256, p < .001.  The main effect
+of probe delay on d' was marginally reliable; F(4, 28) = 2.27, MSE =
+0.1914, p = .087.  The error bars indicate 95% confidence intervals
+based on the within subject error (Masson & Loftus, 2003).
 
 To further characterize the results, we fit the model from Equation 1
 to each observer's median RT by probe delay function.  We used a
@@ -129,38 +129,41 @@ and r, that best fit the observed median RTs.  The predicted median
 RTs based on the average parameter values are plotted as the solid
 line in Figure 1.  The averaged function predicts the observed data
 well, with R^2 = .88.  The average estimated reacquisition time was 83
-ms, with a 95% confidence interval (CI) spanning 38--128 ms.  While
-this is a wide range, it suggests that the time to recover from a
-disruption in tracking is less than 150 ms.
+ms, with a 95% confidence interval (CI) spanning 38--128 ms.  This
+suggests that observers tended to recover from the disruption in
+tracking by about 80 ms following the end of the gap.
 
-We conducted a second experiment in order to generate a more precise
-estimate of reacquisition time, adding probe delays to cover the 95%
-CI estimated in Experiment 1.  Probes appeared 0, 40, 80, 120, 160, or
-1280 ms (0, 3, 6, 9, 12, or 96 frames) after gap offset.  The results
-of this experiment are plotted in Figure 2, which is analogous to
-Figure 1.  There was a reliable effect of probe delay on median RT;
-F(5, 35) = 2.99, MSE = 1423, p = .024.  However, there was no reliable
-effect of probe delay on d'; F(5, 35) = .57, MSE = 0.25, p = .719.
-The average estimated reacquisition time, based on the best fit of
-Equation 1 to each observer's results, was 44 ms, with a 95% CI
-spanning 18--69 ms.  Apparently, observers had returned to tracking by
-around 70 ms following gap offset.
+The range of the estimate for recovery time was rather large in
+Experiment 1.  We conducted a second experiment in order to generate a
+more precise estimate of reacquisition time, adding probe delays to
+cover the 95% CI estimated in Experiment 1.  Probes appeared 0, 40,
+80, 120, 160, or 1280 ms (0, 3, 6, 9, 12, or 96 frames) after gap
+offset.  Observers included 7 females and 1 male ranging in age from
+24-45 years (M = 31.9 years).  The results of this experiment are
+plotted in Figure 2, which is analogous to Figure 1.  There was a
+reliable effect of probe delay on median RT; F(5, 35) = 2.99, MSE =
+1423, p = .024.  However, there was no reliable effect of probe delay
+on d'; F(5, 35) = .57, MSE = 0.25, p = .719.  The average estimated
+reacquisition time, based on the best fit of Equation 1 to each
+observer's results, was 44 ms, with a 95% CI spanning 18--69 ms.
 
 One possible explanation of our results is that the gaps we used, 133
 ms, were too brief to trigger task-postponement mechanisms.  To test
 this possibility, we conducted a third experiment in which we varied
 gap duration, including gaps of 133, 307, and 507 ms (10, 23, and 38
-frames).  In previous experiments, we have shown that performance with
-these longer gaps is equivalent to performance with a secondary task,
-suggesting that such gaps do trigger task-postponement mechanisms.  If
-a 133 ms gap does not involve task postponement, then we would expect
-gap duration to effect the RT by probe delay function in Experiment 3,
-and to lengthen the estimated reacquisition time.  However, there was
-no effect of gap duration on median RT; F(2, 14) = 0.054, MSE = 36315,
-p = .947.  Median RT did decline with probe delay; F(7, 49) = 6.71,
-MSE = 1385, p < .001.  There was a marginally reliable interaction
-between probe delay and gap duration, but this was caused by a single
-unusual data point in the 320-ms probe delay and 307-ms gap duration
+frames).  Observers included 5 females and 3 males ranging in age from
+19-50 years (M = 29.4 years).  In previous experiments, we have shown
+that performance with these longer gaps is equivalent to performance
+with a secondary task, suggesting that such gaps do trigger
+task-postponement mechanisms (Alvarez et al., 2005).  If a 133 ms gap
+does not involve task postponement, then we would expect gap duration
+to effect the RT by probe delay function in Experiment 3, and to
+lengthen the estimated reacquisition time.  However, there was no
+effect of gap duration on median RT; F(2, 14) = 0.054, MSE = 36315, p
+= .947.  Median RT did decline with probe delay; F(7, 49) = 6.71, MSE
+= 1385, p < .001.  There was a marginally reliable interaction between
+probe delay and gap duration, but this was caused by a single unusual
+data point in the 320-ms probe delay and 307-ms gap duration
 condition.  Aside from this one point, postgap performance was
 identical across gap durations, suggesting that the same
 task-postponement mechanisms that enable tracking through a 307- or
@@ -179,33 +182,51 @@ load increases.  This will be apparent at the shortest probe delays as
 a systematic increase in response time with tracking load, as it takes
 longer, on average, to recover the targets.  However, if target
 recovery occurs in parallel, there should be no systematic
-relationship between tracking load and response time.  There was a
-reliable effect of tracking load on median RT; F(3, 12) = 8.73, MSE =
-5641, p < .001.  There was also a reliable effect of probe delay on
-median RT; F(3, 21) = 7.77, MSE = 1233, p < .01.  However, the
-interaction between tracking load and probe delay was not reliable;
-F(9, 63) = 1.52, MSE = 932, p = .16.  The effect of tracking load on
-RT appears to be driven by the one-target condition: when it is
-eliminated, there is no longer a reliable effect of tracking load;
-F(2, 14) = 1.09, MSE = 6127, p = .36.  Thus, there is no evidence that
-target recovery is a serial process.  We again fit the model to the
-data from each observer, looking only at the four-targets condition to
-replicate previous analyses.  The average estimated reacquisition time
-was again 44 ms, with a 95% CI spanning 14--74 ms.  It appears that all
-targets are recovered simultaneously by about 44 ms.
+relationship between tracking load and response time.  Observers
+included 3 females and 5 males ranging in age from 21-44 years (M =
+30.2 years).  There was areliable effect of tracking load on median
+RT; F(3, 12) = 8.73, MSE = 5641, p < .001.  There was also a reliable
+effect of probe delay on median RT; F(3, 21) = 7.77, MSE = 1233, p <
+.01.  However, the interaction between tracking load and probe delay
+was not reliable; F(9, 63) = 1.52, MSE = 932, p = .16.  The effect of
+tracking load on RT appears to be driven by the one-target condition:
+when it is eliminated, there is no longer a reliable effect of
+tracking load; F(2, 14) = 1.09, MSE = 6127, p = .36.  Thus, there is
+no evidence that target recovery is a serial process.  We again fit
+the model to the data from each observer, looking only at the
+four-targets condition to replicate previous analyses.  The average
+estimated reacquisition time was again 44 ms, with a 95% CI spanning
+14--74 ms.  It appears that all targets are recovered simultaneously
+by about 44 ms.
 
-(Note: There is some preliminary evidence of a tracking load effect on
-RT.  As noted above, there is a reliable effect of tracking load on
-RT.  However, this effect is reliable at every probe delay, suggesting
-that tracking load is influencing another stage, not recovery
-time---if the effect was primarily on recovery, then the tracking load
-effect would only appear at shorter probe delays.  Additionally, all
-effects disappear when the one-target condition is eliminated,
-suggesting that this is an outlier-based effect.  An alternative
-perspective comes from the RT x tracking load slopes.  Depending on
-how you look at these, there could be some suggestive patterns.  These
-suggestive patterns again disappear when the one-target condition is
-dropped from the analysis.)
+[Note: The issue of RT x SS effects is somewhat complicated.  There
+are at least two possible sources of an RT x SS slope: additional time
+to recover each target, and additional time to respond to the probe.
+The first one is what we're looking for, but any slope we find could
+be at least partially caused by the second.  The first would lead to a
+larger slope at smaller probe delays, since that's when recovery
+occurs.  The second would lead to a slope common to all probe delays.
+There is some evidence to support a slope only at early probe delays,
+as seen in the table below (note that slope declines and the
+associated p-values increase as probe delay increases).  This would
+leave us with a recovery slope of around 15 ms/item, for a total of 60
+ms to recover 4 targets.
+
+delay    slope  t-value    p-value
+0     33.57500 5.317775 0.03359065
+40    31.36875 3.586439 0.06971318
+80    28.52500 2.579448 0.12314135
+1280  15.33125 1.118757 0.37957945
+
+The above table is based on a regression on the average of the
+individual subject median RTs.  An ANOVA leads to slightly different
+conclusions.  The effect of tracking load on RT is reliable at every
+probe delay, and, as noted above, there is no interaction between
+setsize and probe delay, suggesting the same slope at every probe
+delay.  Additionally, all effects disappear when the one-target
+condition is eliminated, suggesting that this is an outlier-based
+effect.  It may take more power than we have to do this analysis
+properly.]
 
 Discussion
 
@@ -231,68 +252,6 @@ The present results suggest that the cost of reloading the visual
 information relevant to one task is quite small.  It may be other
 aspects of a task, or the act of unloading another task from memory,
 that imposes the higher switching costs observed in other studies.
-
-Apply them to driving and other applied tasks
-
-
-
-Cutting-room floor:
-
-The present paper focuses on how the visual system deals with the
-temporary disappearance of moving objects. People can continue to
-track objects that disappear briefly behind occluding surfaces. Scholl
-and Pylyshyn (1999) demonstrated this using a multiple object tracking
-(MOT) task, in which participants track a subset of identical,
-independently moving objects. Accuracy on the task was unaffected on
-trials when tracked objects moved behind occluding surfaces, as
-compared to trials without occlusion. However, when objects
-spontaneously disappeared and then reappeared without occlusion cues,
-but for the same amount of time as on occlusion trials, accuracy was
-substantially decreased compared to the other trials. It appears that
-the visual system assumes that an occluded object still exists and
-therefore continues to track it, while an object that spontaneously
-disappears must no longer exist and ceases to track it (see also
-Scholl & Feigenson, 2004).
-
-On the face of it, this is an entirely reasonable assumption: in the
-real world, when you are gazing at an object, the only way it can
-disappear is through occlusion. Based on the findings of Scholl and
-Pylyshyn (1999), it appears that the visual system continues to track
-such objects. However, objects can also disappear when gaze is shifted
-temporarily, in which case all tracked objects will disappear, then
-reappear, simultaneously. Given that a shift in gaze may mean that a
-new set of stimuli need to be tracked, there should be some
-psychological mechanism that enables disengagement from the tracking
-task, followed by re-engagement and reacquisition of tracked targets.
-
-In previous work, we have demonstrated that observers can successfully
-perform a MOT task when all the stimuli disappear simultaneously for a
-brief (approximately 300 ms) gap.  Horowitz, Birnkrant, Wolfe, and
-Fencsik (in press) showed that tracking through such a gap is more
-difficult when the stimuli appear to move behind occluding surfaces
-than when they disappear suddenly, without occlusion.  This result is
-the opposite of Scholl and Pylyshyn's (1999) finding that occlusion
-cues facilitate tracking when a single object disappears.  This
-dissociation suggests that the mechanisms underlying tracking during
-simultaneous disappearance are not the same as those that subserve
-active tracking of visible objects.  In fact, Alvarez, Horowitz,
-Arsenio, DiMase, and Wolfe (2005) showed that performance of a second
-task during a gap in tracking had almost no effect on tracking
-itself.
-
-These results indicate that there must be some mechanism separate from
-the tracking mechanism that enables temporary postponement of the
-tracking task during a gap.  Information relevant to tracking is
-stored by this mechanism and is used to reacquire targets following
-reappearance. In a recent paper (Fencsik, Klieger, & Horowitz,
-submitted), we provided evidence that observers performing an MOT task
-may remember both an object's location and direction of motion prior
-to the gap; while they may use either type of information to reacquire
-targets after the gap, they seem to have more location information
-available and tend to favor using it for target reacquisition. In the
-present work, we focus on the timecourse of target reacquisition:
-Following the temporary disappearance of all tracked objects, how long
-does the visual system take to resume tracking the targets.
 
 
 References
