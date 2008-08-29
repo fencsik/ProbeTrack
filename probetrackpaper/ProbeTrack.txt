@@ -46,88 +46,105 @@ reacquire targets following reappearance.
 In the present work, we focus on the timecourse of target
 reacquisition: Following the temporary disappearance of all tracked
 objects, how long does the visual system take to resume tracking the
-targets?
-
-To study the timecourse of target reacquisition, we present a series
-of experiments using the MOT task with a gap in tracking.  Following
-the gap at a variable delay, one stimulus was probed.  Observers
-classified the probed stimulus as a tracked target or an untracked
-distractor; a target was probed on half of the trials, and a
-distractor was probed on the remaining trials.  We measured the speed
-and accuracy of responses to the probe as a function of probe onset
-latency in order to determine how long it took for observers to
-reacquire the targets.
+targets?  We present a series of experiments using the MOT task with a
+gap in tracking.  Following the gap at a variable delay, one stimulus
+was probed.  Observers classified the probed stimulus as a tracked
+target or an untracked distractor; a target was probed on half of the
+trials, and a distractor was probed on the remaining trials.  We
+measured the speed and accuracy of responses to the probe as a
+function of probe onset latency in order to determine how long it took
+for observers to reacquire the targets.
 
 If, on a trial, the probe onsets after target reacquisition has been
 completed for the probed target, then an accurate decision can be made
 immediately and reaction time (RT) will not include any time to
 reacquire the target.  However, if the probe onsets before the probed
 target had been reacquired, then response will be slowed until
-reacquisition of that target has been completed.
+reacquisition of that target has been completed.  Therefore, RT will
+decrease with probe delay until the probe delay is long enough for all
+targets to be reacquired; from that point on, RT should remain flat
+with probe delay.  Longer probe delays provide a measure of the
+baseline RT---that is, the minimum time required to identify the
+probed stimulus and respond when all targets are being tracked.
 
-We used the results of our experiments to distinguish between two
-broad classes of hypotheses about target reacquisition.  First, one
-could propose that target reacquisition occurs in serial, such that
-targets are reacquired one at a time with some additional amount of
-time needed for each individual target.  Second, target reacquisition
-could be a parallel process, in which all targets are reacquired
-simultaneously, with no additional cost in time from each individual
-target.  In general terms, serial hypotheses would predict longer
-target reacquisition times---on the order of a hundred
-milliseconds---than would a parallel process---on the order of tens of
-milliseconds, or possibly instantaneous reacquisition.
+We predict a systematic relationship between RT and probe delay.
+Specifically, RT will decline linearly from probe delays of 0 (i.e.,
+when the probe is presented as soon as the gap ends), and this decline
+will have a slope of -1: This is because each millisecond of probe
+delay provides another millisecond to reacquire targets.  RT will
+decline until it reaches a baseline level, at which point it will
+remain constant as probe delay continues to increase.  The
+relationship can be described by a formula with two parameters:
 
-rule out apparent motion?
+RT = b + max(r - d, 0), [Equation 1]
 
-Paragraph on general method
+where b is the baseline reaction time when all targets are being
+tracked, r is the time needed to reacquire all targets, and d is the
+probe delay.  The variable d is known, leaving b and r as free
+parameters that can be fit to observed data to estimate their values:
+in particular, the best-fitting value of r provides an estimate of how
+long it takes to recover from the task disruption.
 
-Paragraph or less on model
+The experiments all used a similar task (differences between
+experiments are described below).  The stimuli were dark gray circles
+on a light gray background, with diameters of approximately
+1.33 degrees of visual angle.  Trials were self-paced.  Each trial
+began with a brief cueing interval, during which the targets were
+drawn in yellow and distractors in dark gray.  After the cueing
+interval, all stimuli returned to dark gray and began moving in random
+directions, with each stimulus repulsing other stimuli to avoid
+overlap.  All stimuli continued to move for 800 to 2400 ms (60 to 180
+frame), then disappeared simultaneously for a 133 ms (10 frame) gap.
+Following the gap, all stimuli reappeared in the locations they would
+have occupied had they continued moving along their pre-gap
+trajectories.  After a variable delay, one stimulus turned red,
+indicating that it was the probe, and the observer had to press one of
+two keys to indicate whether the probe was a target or distractor; the
+probe delay could be 0 ms, which meant that the probed stimulus was
+red as soon as the gap ended.  Observers tracked four target stimuli
+among eight total stimuli.
 
 In Experiment 1, we introduce the basic methodology and observe that
 target reacquisition occurs quite rapidly.  Observers responded to
 probes that onset 0, 80, 320, or 1280 ms (0, 6, 24, or 96 frames)
-after the 130 ms (10 frame) gap.  Probe onset delay was randomized
-within block.  The design resulted in 50 trials per level of probe
-delay (25 target probe and 25 distractor probe).  Volunteers ranged in
-age from 22-40 (M = 29.1; 6 females).
+after the gap.  Probe onset delay was randomized within block.  The
+design resulted in 50 trials per level of probe delay (25 target probe
+and 25 distractor probe).  Volunteers ranged in age from 22-40 (M =
+29.1; 6 females, 2 males).  To analyze the results, we computed each
+observer's median RT from correct responses, collapsing across probe
+types.  The open circles in Figure 1 indicate average median RT as a
+function of probe delay; the filled squares and dashed line indicate
+average d' (MacMillan & Creelman, 2005).  We conducted separate
+repeated measures ANOVAs on median RT and d' as a function of probe
+delay.  There was a reliable effect of probe delay on median RT; F(4,
+28) = 9.34, MSE = 1256, p < .001.  The main effect of probe delay on
+d' was marginally reliable; F(4, 28) = 2.27, MSE = 0.1914, p = .087.
+The error bars indicated 95% confidence intervals based on the within
+subject error (Masson & Loftus, 2003).
 
-To analyze the results, we computed each observer's median RT from
-correct responses, collapsing across probe types.  The open circles in
-Figure 1 indicate average median RT as a function of probe delay; the
-filled squares and dashed line indicate average d' (MacMillan &
-Creelman, 2005).  We conducted separate repeated measures ANOVAs on
-median RT and d' as a function of probe delay.  There was a reliable
-effect of probe delay on median RT; F(4, 28) = 9.34, MSE = 1256, p <
-.001.  The main effect of probe delay on d' was marginally reliable;
-F(4, 28) = 2.27, MSE = 0.1914, p = .087.  The error bars indicated 95%
-confidence intervals based on the within subject error (Masson &
-Loftus, 2003).
-
-To further characterize the results, we fit the reacquisition model to
-each observer's median RT by probe delay function.  We used a gradient
-descent algorithm to find the values for each parameter, t_r and t_b,
-that best fit the observed median RTs.  The predicted median RTs based
-on the average parameter values are plotted as the solid line in
-Figure 1.  The averaged function predicts the observed data well, with
-R^2 = .88.  The average estimated reacquisition time was 83 ms, with a
-95% confidence interval (CI) spanning 38--128 ms.  While this is a
-wide range, it constrains the postgap recovery time to less than 150
-ms.
+To further characterize the results, we fit the model from Equation 1
+to each observer's median RT by probe delay function.  We used a
+gradient descent algorithm to find the values for each parameter, b
+and r, that best fit the observed median RTs.  The predicted median
+RTs based on the average parameter values are plotted as the solid
+line in Figure 1.  The averaged function predicts the observed data
+well, with R^2 = .88.  The average estimated reacquisition time was 83
+ms, with a 95% confidence interval (CI) spanning 38--128 ms.  While
+this is a wide range, it suggests that the time to recover from a
+disruption in tracking is less than 150 ms.
 
 We conducted a second experiment in order to generate a more precise
-estimate of reacquisition time.  Since it appears to fall
-approximately in the range of 40--120 ms, we added probe delays to
-cover that interval with greater resolution than in Experiment 1.
-Probes appeared 0, 40, 80, 120, 160, or 1280 ms (0, 3, 6, 9, 12, or 96
-frames) after gap offset.  The results of this experiment are plotted
-in Figure 2, which is analogous to Figure 1.  There was a reliable
-effect of probe delay on median RT; F(5, 35) = 2.99, MSE = 1423, p =
-.024.  However, there was no reliable effect of probe delay on d';
-F(5, 35) = .57, MSE = 0.25, p = .719.  The average estimated
-reacquisition time, based on the best fit of the model to each
-observer's results, was 44 ms, with a 95% CI spanning 18--69 ms.
-Clearly, the observers had returned to tracking by around 40 ms
-following gap offset.
+estimate of reacquisition time, adding probe delays to cover the 95%
+CI estimated in Experiment 1.  Probes appeared 0, 40, 80, 120, 160, or
+1280 ms (0, 3, 6, 9, 12, or 96 frames) after gap offset.  The results
+of this experiment are plotted in Figure 2, which is analogous to
+Figure 1.  There was a reliable effect of probe delay on median RT;
+F(5, 35) = 2.99, MSE = 1423, p = .024.  However, there was no reliable
+effect of probe delay on d'; F(5, 35) = .57, MSE = 0.25, p = .719.
+The average estimated reacquisition time, based on the best fit of
+Equation 1 to each observer's results, was 44 ms, with a 95% CI
+spanning 18--69 ms.  Apparently, observers had returned to tracking by
+around 70 ms following gap offset.
 
 One possible explanation of our results is that the gaps we used, 133
 ms, were too brief to trigger task-postponement mechanisms.  To test
