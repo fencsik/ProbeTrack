@@ -20,6 +20,9 @@ do.an1001 <- function () {
    }
    load(infile);
 
+   data10$gapdur <- factor(data10$gapdur)
+   data10$soa <- factor(data10$soa)
+
    sink(outfile);
    cat("ANOVA on median correct RT as a function of probe delay and gap duration\n");
    cat("  gap trials only\n");
