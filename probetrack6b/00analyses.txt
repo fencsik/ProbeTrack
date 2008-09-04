@@ -33,9 +33,12 @@ o an0102: same as an0101, but for accuracy
 * data02: compute d' from data01, and aggregate it by subject, gap
   duration, # targets, and probe delay
 
-* an0201: anova on d' as a function of probe delay and # targets
+* an0201: anova on d' as a function of probe delay and tracking load
 o an0202: t-tests comparing d' on gap trials at each probe delay to d'
   on no-gap trials
+
+* an0203: anova on d' as a function of probe delay and tracking load,
+  eliminating 1-target condition
 
 * fig0201: plot d' as a function of probe delay, separated by #
   targets
