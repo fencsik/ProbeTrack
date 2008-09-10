@@ -14,8 +14,8 @@ do.pb2 <- function () {
    on.exit(exit.function());
 
    ## hard code error values for RT and d'
-   err.rt <- sqrt(1256 / 8) * qt(.975, 28);
-   err.dp <- sqrt(0.1914 / 8) * qt(.975, 28);
+   err.rt <- sqrt(1423 / 8) * qt(.975, 35);
+   err.dp <- sqrt(0.2547 / 8) * qt(.975, 35);
 
    ## plotting limits
    ylim.rt <- c(500, 1000);
