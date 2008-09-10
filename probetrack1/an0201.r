@@ -19,6 +19,9 @@ do.an0201 <- function () {
    }
    load(infile);
 
+   data02$gapdur <- factor(data02$gapdur)
+   data02$soa <- factor(data02$soa)
+
    sink(outfile);
    cat("ANOVA on d' as a function of probe delay\n");
    cat("  gap trials only\n");
