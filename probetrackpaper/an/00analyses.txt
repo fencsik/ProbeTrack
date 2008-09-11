@@ -7,6 +7,11 @@ Version: $Id$
 
 * pb1.r: plots results (RT and d') for ProbeTrack1
 * pb2.r: same for ProbeTrack2
+* pb3a.r: same as pb1.r for ProbeTrack3, but separated by gap duration
+* pb3b.r: same as pb3a.r, but collapsed across gap durations
+* pb4a.r: same as pb1.r for ProbeTrack6b (Exp 4), but separated by
+  tracking load
+* pb4b.r: same as pb4a.r, but only for the 4-target condition
 
 
 * complete
