@@ -38,7 +38,7 @@ do.an0201 <- function () {
 
    for (s in as.character(sort(as.numeric(levels(data02$soa))))) {
       cat("\n\n\n");
-      cat(sprintf("ANOVA on RT as a function of gap duration at SOA = %s\n", s));
+      cat(sprintf("ANOVA on d' as a function of gap duration at SOA = %s\n", s));
       print(summary(aov(dprime ~ gapdur + Error(sub / (gapdur)),
                         data02[data02$gapdur != "0" & data02$soa == s,])));
    }
