@@ -18,7 +18,7 @@ do.pb2 <- function () {
    err.dp <- sqrt(0.2547 / 8) * qt(.975, 35);
 
    ## plotting limits
-   ylim.rt <- c(500, 1000);
+   ylim.rt <- c(400, 900);
    ylim.dp <- c(0, 3);
    p.ylim.dp <- 1/3;
    showy.dp <- seq(ylim.dp[1], ylim.dp[2], by = 1);
@@ -95,7 +95,7 @@ do.pb2 <- function () {
 
    ## add breaks to x-axis
    if (require("plotrix")) {
-      axis.break(axis = 1, breakpos = mean(c(320, 500)), style = "slash", brw = 0.02);
+      axis.break(axis = 1, breakpos = mean(c(160, 500)), style = "slash", brw = 0.02);
    }
 }
 
