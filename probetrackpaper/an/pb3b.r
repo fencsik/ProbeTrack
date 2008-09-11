@@ -63,7 +63,8 @@ f.pb3b <- function () {
 
     ## prepare plotting area
     plot(plotx, rt, type = "n", axes = F,
-         ylim = ylim.rt, xlab = "Probe delay (ms)", ylab = "Averaged median RT (ms)");
+         ylim = ylim.rt, xlab = "Probe delay (ms)", ylab = "Averaged median RT (ms)",
+         main = "Experiment 3");
     axis(1, plotx, showx);
     axis(2);
     axis(4, ploty.dp, showy.dp);
