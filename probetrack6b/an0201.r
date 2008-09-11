@@ -37,7 +37,7 @@ do.an0201 <- function () {
 
    for (s in as.character(sort(as.numeric(levels(data02$soa))))) {
       cat("\n\n\n");
-      cat(sprintf("ANOVA on RT as a function of number of targets at SOA = %s\n", s));
+      cat(sprintf("ANOVA on d' as a function of number of targets at SOA = %s\n", s));
       print(summary(aov(dprime ~ ntargets + Error(sub / ntargets),
                         data02[data02$soa == s,])));
    }

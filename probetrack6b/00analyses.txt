@@ -107,4 +107,14 @@ o fig1201: plot best-fit lines against actual data separately for each
 
 ----------------------------------------------------------------------
 
+* data20: aggregate median correct RT by subject, gap duration,
+  tracking load, and probe delay for probe-target trials only
+
+----------------------------------------------------------------------
+
+* data22: compute RT by tracking load intercepts and slopes for each
+  probe delay, gap duration, and subject; from data20
+
+----------------------------------------------------------------------
+
 (* = complete, o = incomplete)
