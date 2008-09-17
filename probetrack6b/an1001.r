@@ -43,6 +43,13 @@ do.an1001 <- function () {
       print(summary(aov(rt ~ ntargets + Error(sub / (ntargets)),
                         data10[data10$soa == s,])));
    }
+
+   cat("\n\n\n")
+   cat("ANOVA on RT as a function of tracking load and SOA\n")
+   cat("  at tracking loads > 1 and SOA = 0 and 1280 ms\n")
+   print(summary(aov(rt ~ soa * ntargets + Error(sub / (soa * ntargets)),
+                     data10[(data10$soa == "0" | data10$soa == "1280") &
+                            data10$ntargets != "1", ])))
 }
 
 do.an1001();
