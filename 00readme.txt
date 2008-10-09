@@ -4,6 +4,8 @@ $LastChangedDate$
 
 Code:
 
+* Code: directory for all current experiment code (other directories
+  are outdated, and code should be moved here if it's updated)
 * Search: speedsearch, winsearch, and acceleration search
 * SpeedTrack: speedtrack
 * colortrack:
@@ -40,6 +42,9 @@ Experiments:
   stopped early because only 4 targets were used, which made analysis
   difficult
 * getmoving03: replication of getmoving01 with more pre-gap durations
+
+* motsearch01: new version of driftsearch studies with staircased
+  exposure duration; first pilot study
 
 * probetrack1: basic probetrack experiment--track 4 out of 8 with SOAs
   of 0, 80, 160, 320, and 1280 ms--with a 133 ms gap
