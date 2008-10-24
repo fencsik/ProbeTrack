@@ -1,23 +1,13 @@
 function ProbeTrack
 
-% get RT response to MVT task with gap
-% how long does it take to recover targets?
-% vary tracking load
-% started 4/26/2005
-% current 4/26/2005
-% skyler added: 	9/28 - made cursor disappear, and added "configuring trial" screen inbetween trials. 
-%				            also adjusted size of font for testing room screens.
-%                             11/11 - adjusted SOA defaults for ProbeTrack2 requirements.
-%					    also changed program name and file output to reflect 2nd experiment.
-%				2/4    - adjusted SOA defaults for ProbeTrack3 requirements.
-%					    also changed program name and file output to reflect 3rd experiment.	
+% Runs MOT task with gap and variable post-gap probe-onset delay
 
 % $LastChangedDate$
 
-% declare global variables
-global MainWindow display
-global screenRect displayRect objectRect
-global white black midGray darkgray yellow red
+% declare global variables -- would be better if we don't need these
+% global MainWindow display
+% global screenRect displayRect objectRect
+% global white black midGray darkgray yellow red
 
 try
     AssertOpenGL;
@@ -56,10 +46,10 @@ try
 
 
     % get user input
-    [identifier, practiceTrials, experimentalTrials, nObjects, nTargets, ...
+    [subject, practiceTrials, experimentalTrials, nObjects, nTargets, ...
      cueDuration, gapDuration, SOAlist, gapOnsetRange, postProbeDuration] = ...
         DialogBox('Experiment Parameters', ...
-                  'Subject identifier'       , '1', 1, ...
+                  'Subject code:', '1', 1, ...
                   'practice trials'          , '16', 1, ...
                   'experimental trials'      , '120', 1, ...
                   'number of objects'        , '8', 1, ...
@@ -71,34 +61,38 @@ try
                   'post-probe duration'      , '60', 1);
 
     % define colors
-    midGray = [128 128 128];
-    darkGray = [64 64 64];
-    yellow = [240 240 0];
-    red = [250 0 0];
-
-    % setup video
-    [winMain, screenRect] = screen('OpenWindow', 0, 0, 32, 2);
-    display = screen(winMain, 'OpenOffscreenWindow', [], screenRect);
-    cueFrame = screen(winMain, 'OpenOffscreenWindow', [], screenRect);
-
-    % stimulus placement
-    fieldRect = CenterRect(displayRect, screenRect);
-
-    % define colors
-    black = BlackIndex(winMain);
-    white = WhiteIndex(winMain);
-    % get refresh rate
-    hz = screen(winMain, 'FrameRate');
-    hz = round(hz);
+    colBlack = [0 0 0];
+    colMidGray = [128 128 128];
+    colDarkGray = [64 64 64];
+    colYellow = [240 240 0];
+    colRed = [250 0 0];
 
     % now define color sets for each phase of the trial
-    trackingColors= repmat(darkGray, nObjects, 1);
+    trackingColors= repmat(colDarkGray, nObjects, 1);
     cueingColors = trackingColors;
-    cueingColors(1:nTargets, :) = repmat(yellow, nTargets, 1);
-    gapColors = repmat(midGray, nObjects, 1);
+    cueingColors(1:nTargets, :) = repmat(colYellow, nTargets, 1);
+    gapColors = repmat(colMidGray, nObjects, 1);
+
+    % Open and set-up main window
+    Screen('Preference', 'SkipSyncTests', 0);
+    Screen('Preference', 'VisualDebugLevel', 4);
+    screenNumber=max(Screen('Screens'));
+    [winMain, rectMain] = Screen('OpenWindow', screenNumber, 0, [], 32, 2);
+    refreshDuration = Screen('GetFlipInterval', winMain);
+    Screen(winMain, 'BlendFunction', GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    [centerX, centerY] = RectCenter(rectMain);
+    durSlack = refreshDuration / 2.0;
+
+    % Turn cursor and keyboard echoing off
+    HideCursor;
+    ListenChar(2);
+
+    % define colors
+    colBlack = BlackIndex(winMain);
+    colWhite = WhiteIndex(winMain);
 
     % miscellaneous setup
-    dataFileName = [experiment, 'Data-', identifier, '.txt'];
+    dataFileName = [experiment, 'Data-', subject, '.txt'];
     rand('state', 100 * sum(clock));
 
     % setup data file
@@ -132,7 +126,7 @@ try
     Screen('TextFont', winMain, 'Arial');
     Screen('TextSize', winMain, 24);
 
-    Screen('FillRect', winMain, midGray);
+    Screen('FillRect', winMain, colMidGray);
     CenterCellText(winMain, Instructions, 30);
     CenterText('Press any key to continue', 0, 300);
     KbReleaseWait;
@@ -180,12 +174,12 @@ try
         % set any remaining randomized variables
 	gapOnsetTime = randi(gapOnsetRange(2) - gapOnsetRange(1), [nTrials, 1]) + gapOnsetRange(1); % sets random gap duration for all trials
         
-	screen(winMain, 'FillRect', midGray);
+	screen(winMain, 'FillRect', colMidGray);
 	CenterText(['Press any key to start ', num2str(nTrials), ' ', message, ' trials']);
         KbStrokeWait;
 	
 	% trial routine
-	screen(winMain, 'FillRect', midGray);
+	screen(winMain, 'FillRect', colMidGray);
 	CenterText('configuring trial...', 0, 0);
 
         % variables for storing RT and accuracy across trials
@@ -205,11 +199,11 @@ try
             end
             
             probeColors = trackingColors;
-            probeColors(probeItem, :) = red; % set colors for probe frame
+            probeColors(probeItem, :) = colRed; % set colors for probe frame
             
             % now put up initial display, wait for keypress to initiate trial, then cue targets
-            screen(cueFrame, 'FillRect', midGray);
-            screen(display, 'FillRect', midGray);
+            screen(cueFrame, 'FillRect', colMidGray);
+            screen(display, 'FillRect', colMidGray);
             paintFrame(trajectories(:, :, 1), nObjects, trackingColors, display);
             paintFrame(trajectories(:, :, 1), nObjects, cueingColors, cueFrame);
             
@@ -279,13 +273,13 @@ try
                 feedback = 'Wrong!';
             end
 
-            screen(winMain, 'FillRect', midGray);
+            screen(winMain, 'FillRect', colMidGray);
             CenterText([feedback, ' - RT = ', num2str(RT), ' ms']);
             WaitSecs(1);
 
             % save data
             dataFile = fopen(dataFileName, 'a');
-            fprintf(dataFile, dataFormatString, identifier, hz,  nObjects, nTargets, cueDuration, gapDuration, SOA(trial), gapOnsetRange(1), gapOnsetRange(2), postProbeDuration, block, trial, gapOnsetTime(trial), probeType(trial), error, wrongKeyFlag, RT);
+            fprintf(dataFile, dataFormatString, subject, hz,  nObjects, nTargets, cueDuration, gapDuration, SOA(trial), gapOnsetRange(1), gapOnsetRange(2), postProbeDuration, block, trial, gapOnsetTime(trial), probeType(trial), error, wrongKeyFlag, RT);
             fclose(dataFile);
 
             % store trial info
@@ -301,7 +295,7 @@ try
         fprintf('\npcor  = %0.4f', mean(blockAcc(blockAcc >= 0)));
         fprintf('\nrtcor = %0.1f ms\n', mean(blockRT(blockAcc > 0)));
 
-        screen(winMain, 'FillRect', midGray);
+        screen(winMain, 'FillRect', colMidGray);
         CenterText('Thank you for participating!');
         CenterText('Please inform the experimenter that you are done.', 0, 120);
         KbStrokeWait;
@@ -324,10 +318,10 @@ clear all;
 function paintFrame(coordinates, nObjects, diskColors, window)
 
 global screenRect displayRect objectRect
-global white black midGray darkgray yellow red
+global colWhite colBlack colMidGray colDarkGray colYellow colRed
 
 
-screen(window, 'FillRect', midGray);
+screen(window, 'FillRect', colMidGray);
 for object = 1:nObjects
     placeRect = CenterRectOnPoint(objectRect, coordinates(object, 1), coordinates(object, 2));
     screen(window, 'FillOval', diskColors(object, :), placeRect);
