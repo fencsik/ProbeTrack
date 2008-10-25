@@ -4,355 +4,387 @@ function ProbeTrack
 
 % $LastChangedDate$
 
-% declare global variables -- would be better if we don't need these
-% global MainWindow display
-% global screenRect rectDisplay objectRect
-% global white black midGray darkgray yellow red
+    try
+%         rectMain = [0 0 1024 768];
+%         rectDisplay = [0 0 500 500];
+%         traj = MakeTrajectories(8, 30, 50);
+%         disp(traj(:, :, 1));
+%         error('just stop');
 
-try
-    AssertOpenGL;
-    InitializePsychSound;
-    KbName('UnifyKeyNames');
-    experiment = 'ProbeTrack7';
+        AssertOpenGL;
+        InitializePsychSound;
+        KbName('UnifyKeyNames');
+        experiment = 'ProbeTrack7';
 
-    % get user input
-    [subject, pTrials, xTrials, nStim, nTargets, ...
-     cueDuration, gapDuration, SOAlist, gapOnsetRange, postProbeDuration] = ...
-        DialogBox('Experiment Parameters', ...
-                  'Subject code:', '1', 1, ...
-                  'practice trials'          , '16', 1, ...
-                  'experimental trials'      , '120', 1, ...
-                  'number of objects'        , '8', 1, ...
-                  'number of targets'        , '4', 1, ...
-                  'cue duration (frames)'    , '60', 1, ...
-                  'gap duration'             , '10', 1, ...
-                  'SOAs'                     , '0 3 6 96', 1, ...
-                  'gap onset range (frames)' , '60 180', 1, ...
-                  'post-probe duration'      , '60', 1);
+        % get user input
+        [subject, pTrials, xTrials, nStim, nTargets, ...
+         cueDuration, gapDuration, SOAlist, gapOnsetRange, postProbeDuration] = ...
+            DialogBox('Experiment Parameters', ...
+                      'Subject code:', '1', 1, ...
+                      'practice trials'          , '16', 1, ...
+                      'experimental trials'      , '120', 1, ...
+                      'number of objects'        , '8', 1, ...
+                      'number of targets'        , '4', 1, ...
+                      'cue duration (frames)'    , '60', 1, ...
+                      'gap duration'             , '10', 1, ...
+                      'SOAs'                     , '0 3 6 96', 1, ...
+                      'gap onset range (frames)' , '60 180', 1, ...
+                      'post-probe duration'      , '60', 1);
 
-    % set any IVs not set in the dialog box, and that don't vary by block
-    % nStim = 8;
-    % nTargets = 4;
-    % cueDuration = 60; % time cue is up
-    % SOAlist = [0 6 12 24 96]; % time of probe from end of gap
-    % gapOnsetRange = [60 180]; % time (in frames) that the gap begins, from onset of trial
-    % postProbeDuration = 60; % period of motion after appearance of probe
-    pauseEvery = 20;
-    pauseMin = 4.0; % sec
+        % set any IVs not set in the dialog box, and that don't vary by block
+        % nStim = 8;
+        % nTargets = 4;
+        % cueDuration = 60; % time cue is up
+        % SOAlist = [0 6 12 24 96]; % time of probe from end of gap
+        % gapOnsetRange = [60 180]; % time (in frames) that the gap begins, from onset of trial
+        % postProbeDuration = 60; % period of motion after appearance of probe
+        pauseEvery = 20;
+        pauseMin = 4.0; % sec
 
-    % set up different block types
-    % pTrials = 5;
-    % xTrials = 5;
-    % gapDuration = 10; % duration of invisible motion
-    % TBD
-    practiceFlag = 1;
-    totalTrials = xTrials + pTrials;
+        % set up different block types
+        % pTrials = 5;
+        % xTrials = 5;
+        % gapDuration = 10; % duration of invisible motion
+        % TBD
+        practiceFlag = 1;
+        totalTrials = xTrials + pTrials;
 
-    % stimulus characteristics
-    rectDisplay = [0 0 500 500];
-    stimSize = 40;
-    rectStim = [0 0 stimSize stimSize];
+        % stimulus characteristics
+        rectDisplay = [0 0 500 500];
+        stimSize = 40;
+        rectStim = [0 0 stimSize stimSize];
 
-    % define colors
-    colBlack = [0 0 0];
-    colWhite = [255 255 255];
-    colMidGray = [128 128 128];
-    colDarkGray = [64 64 64];
-    colYellow = [240 240 0];
-    colRed = [250 0 0];
-    colBackground = colMidGray;
-    colText = colBlack;
+        % durations
+        durFeedback = .746;
+        durPostTrialBlank = .5;
 
-    % define color sets for each phase of the trial
-    trackingColors= repmat(colDarkGray, nStim, 1);
-    cueingColors = trackingColors;
-    cueingColors(1:nTargets, :) = repmat(colYellow, nTargets, 1);
-    gapColors = repmat(colBackground, nStim, 1);
+        % define colors
+        colBlack = [0 0 0];
+        colWhite = [255 255 255];
+        colMidGray = [128 128 128];
+        colDarkGray = [64 64 64];
+        colYellow = [240 240 0];
+        colRed = [250 0 0];
+        colBackground = colMidGray;
+        colText = colBlack;
 
-    % Set any remaining parameters
-    preloadFlag = 1;
+        % define color sets for each phase of the trial
+        trackingColors= repmat(colDarkGray', 1, nStim);
+        cueingColors = trackingColors;
+        cueingColors(:, 1:nTargets) = repmat(colYellow', 1, nTargets);
+        gapColors = repmat(colBackground', 1, nStim);
 
-    % Define response keys
-    respAbort = KbName('ESCAPE');
-    if IsOSX
-        respTarget = KbName('''"');
-    elseif IsWin
-        respTarget = KbName('''');
-    else
-        error('no keyboard mapping for this operating system');
-    end        
-    respDistractor  = KbName('a'); % a key (left-hand side)
-    allowedResponses = [respTarget, respDistractor];
-    %%keys = [KbName('''')  KbName('a')]; % response key assignments
+        % Set any remaining parameters
+        preloadFlag = 1;
 
-    % Tones
-    samplingRate = 44100;
-    paBeep = PsychPortAudio('Open', [], [], 0, samplingRate, 1);
-    paClick = PsychPortAudio('Open', [], [], 0, samplingRate, 1);
-    paBuzz = PsychPortAudio('Open', [], [], 0, samplingRate, 1);
-    sndBeep = MakeBeep(880, .1, samplingRate);
-    PsychPortAudio('FillBuffer', paBeep, sndBeep);
-    sndClick = MakeBeep(1000, .01, samplingRate);
-    PsychPortAudio('FillBuffer', paClick, sndClick);
-    sndBuzz = MakeBuzz(.1, samplingRate);
-    PsychPortAudio('FillBuffer', paBuzz, sndBuzz);
+        % Define response keys
+        respAbort = KbName('ESCAPE');
+        if IsOSX
+            respTarget = KbName('''"');
+        elseif IsWin
+            respTarget = KbName('''');
+        else
+            error('no keyboard mapping for this operating system');
+        end        
+        respDistractor  = KbName('a'); % a key (left-hand side)
+        allowedResponses = [respTarget, respDistractor];
+        %%keys = [KbName('''')  KbName('a')]; % response key assignments
 
-    % Miscellaneous setup
-    seed = 100 * sum(clock);
-    rand('twister', seed);
-    dataFileName = sprintf('%s-%03d-data.txt', experiment, subject);
-    [status, result] = system('echo $HOSTNAME');
-    if exist('TestingRoom', 'file')
-        computer = TestingRoom;
-    elseif status == 0
-        computer = strtok(result, '.');
-        computer = computer(isletter(computer)); % remove any spaces or newlines
-    else
-        computer = 'unknown';
-    end
-    revision = '$Rev: 1048 $';
-    revision = revision(7:end-2); % strip extra text from revision string generated by Subversion
-    blocktime = now;
+        % Tones
+        samplingRate = 44100;
+        paBeep = PsychPortAudio('Open', [], [], 0, samplingRate, 1);
+        paClick = PsychPortAudio('Open', [], [], 0, samplingRate, 1);
+        paBuzz = PsychPortAudio('Open', [], [], 0, samplingRate, 1);
+        sndBeep = MakeBeep(880, .1, samplingRate);
+        PsychPortAudio('FillBuffer', paBeep, sndBeep);
+        sndClick = MakeBeep(1000, .01, samplingRate);
+        PsychPortAudio('FillBuffer', paClick, sndClick);
+        sndBuzz = MakeBuzz(.1, samplingRate);
+        PsychPortAudio('FillBuffer', paBuzz, sndBuzz);
 
-    % Open and set-up main window
-    Screen('Preference', 'SkipSyncTests', 0);
-    Screen('Preference', 'VisualDebugLevel', 4);
-    screenNumber=max(Screen('Screens'));
-    [winMain, rectMain] = Screen('OpenWindow', screenNumber, 0, [], 32, 2);
-    refreshDuration = Screen('GetFlipInterval', winMain);
-    Screen(winMain, 'BlendFunction', GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    [centerX, centerY] = RectCenter(rectMain);
-    durSlack = refreshDuration / 2.0;
-
-    % Turn cursor and keyboard echoing off
-    HideCursor;
-    ListenChar(2);
-
-    % font setup
-    Screen('TextFont', winMain, 'Arial');
-    Screen('TextSize', winMain, 24);
-
-    % present instructions
-    Instructions = [
-        'In this experiment, you will be asked to track a number of moving disks.\n',
-        ['Each trial will start with a display of ',  num2str(nStim) ' gray disks.\n'],
-        'When you are ready, you will press a key to start the trial.\n',
-        [num2str(nTargets), ' of the disks will change to yellow.\n'],
-        'After a brief interval, these target disks will go back to gray and start to move.\n',
-        'You will track the target disks for several seconds.\n',
-        'During this time, the disks may briefly disappear from the screen.\n'
-        'At a randomly chosen time, one of the disks will turn red\n'
-        ['Your job is to indicate whether this probe disk was one of the ', num2str(nTargets), ' target disks you were tracking.\n'],
-        'Press the ''quote'' key for "yes" and the ''a'' key for "no".\n',
-        'Please respond as quickly and accurately as possible.\n',
-        ['There will be ', num2str(totalTrials), ' trials.\n\n'],
-        'Press any key to continue'];
-
-    Screen('FillRect', winMain, colBackground);
-    DrawFormattedText(winMain, Instructions, 'center', 'center', colText);
-    KbReleaseWait;
-    Screen('Flip', winMain);
-    Screen('FillRect', winMain, colBackground);
-    KbStrokeWait;
-    Screen('Flip', winMain);
-
-    % initialize block-level DVs
-    blockRT = zeros(totalTrials, 1) - 1;
-    blockAcc = zeros(totalTrials, 1) - 1;
-
-    subBlockList = 1:2;
-    trialCounter = 0;
-    for subBlock = subBlockList
-	if subBlock == 1
-            nTrials = pTrials;
-            prac = 1;
-	else
-            nTrials = xTrials;
-            prac = 0
-	end
-        if practiceFlag
-            prac = 1;
+        % Miscellaneous setup
+        seed = 100 * sum(clock);
+        rand('twister', seed);
+        dataFileName = sprintf('%s-%03d-data.txt', experiment, subject);
+        [status, result] = system('echo $HOSTNAME');
+        if exist('TestingRoom', 'file')
+            computer = TestingRoom;
+        elseif status == 0
+            computer = strtok(result, '.');
+            computer = computer(isletter(computer)); % remove any spaces or newlines
+        else
+            computer = 'unknown';
         end
-        if nTrials <= 0, contiunue; end
+        revision = '$Rev: 1048 $';
+        revision = revision(7:end-2); % strip extra text from revision string generated by Subversion
+        blocktime = now;
 
-        % balance independent variables
-        n = ceil(nTrials / numel(SOAlist) / 2);
-        [SOA, probeType] = ...
-            BalanceFactors(n, 1, SOAlist, 1:2);
+        % Open and set-up main window
+        Screen('Preference', 'SkipSyncTests', 0);
+        Screen('Preference', 'VisualDebugLevel', 4);
+        screenNumber=max(Screen('Screens'));
+        [winMain, rectMain] = Screen('OpenWindow', screenNumber, 0, [], 32, 2);
+        refreshDuration = Screen('GetFlipInterval', winMain);
+        Screen(winMain, 'BlendFunction', GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        [centerX, centerY] = RectCenter(rectMain);
+        durSlack = refreshDuration / 2.0;
 
-        if numel(setSize) ~= nTrials && prac == 0
-            warning('unbalanced design in sublock %d', subBlock);
+        % Turn cursor and keyboard echoing off
+        HideCursor;
+        ListenChar(2);
+
+        % font setup
+        Screen('TextFont', winMain, 'Arial');
+        Screen('TextSize', winMain, 24);
+
+        % present instructions
+        Instructions = [
+            'In this experiment, you will be asked to track a number of moving disks.\n'...
+            ['Each trial will start with a display of ',  num2str(nStim) ' gray disks.\n'] ...
+            'When you are ready, you will press a key to start the trial.\n' ...
+            [num2str(nTargets), ' of the disks will change to yellow.\n'] ...
+            'After a brief interval, these target disks will go back to gray and start to move.\n' ...
+            'You will track the target disks for several seconds.\n' ...
+            'During this time, the disks may briefly disappear from the screen.\n' ...
+            'At a randomly chosen time, one of the disks will turn red\n' ...
+            ['Your job is to indicate whether this probe disk was one of the ', num2str(nTargets), ' target disks you were tracking.\n'] ...
+            'Press the ''quote'' key for "yes" and the ''a'' key for "no".\n' ...
+            'Please respond as quickly and accurately as possible.\n' ...
+            ['There will be ', num2str(totalTrials), ' trials.\n\n'] ...
+            'Press any key to continue'];
+
+        Screen('FillRect', winMain, colBackground);
+        DrawFormattedText(winMain, Instructions, 'center', 'center', colText);
+        KbReleaseWait;
+        Screen('Flip', winMain);
+        Screen('FillRect', winMain, colBackground);
+        [keyTime, keyCode] = KbStrokeWait;
+        if keyCode(respAbort)
+            error('abort key pressed');
         end
+        Screen('Flip', winMain);
 
+        % initialize block-level DVs
+        blockRT = zeros(totalTrials, 1) - 1;
+        blockAcc = zeros(totalTrials, 1) - 1;
 
-	for trial = 1:nTrials
-            trialCounter = trialCounter + 1;
-            trialtime = datestr(now, 'yyyymmdd-HHMMSS');
-
-            % pre-trial blank
-            Screen('FillRect', winMain, colBackground);
-            Screen('FrameRect', winMain, colFrame);
-            DrawFormattedText(winMain, 'Configuring trial...', 'center', 'center');
-            Screen('Flip', winMain);
-
-            % randomize gap duration (in frames)
-            gapOnsetTime = Randi(gapOnsetRange(2) - gapOnsetRange(1)) + gapOnsetRange(1);
-            % compute total trial duration (in frames)
-            trialDuration = gapOnsetTime(trial) + gapDuration + SOA(trial) + postProbeDuration; % duration of trial in frames
-            % compute stimulus positions for entire trial
-            trajectories = MakeTrajectories(nStim, trialDuration, stimSize);
-
-            % select probe
-            if probeType(trial) == 1
-                % probe a target
-                probeItem = Randi(nTargets);
+        subBlockList = 1:2;
+        trialCounter = 0;
+        for subBlock = subBlockList
+            if subBlock == 1
+                nTrials = pTrials;
+                prac = 1;
             else
-                % probe a distractor
-                probeItem = Randi(nStim - nTargets) + nTargets;
+                nTrials = xTrials;
+                prac = 0;
+            end
+            if practiceFlag
+                prac = 1;
+            end
+            if nTrials <= 0, contiunue; end
+
+            % balance independent variables
+            n = ceil(nTrials / numel(SOAlist) / 2);
+            [SOA, probeType] = ...
+                BalanceFactors(n, 1, SOAlist, 1:2);
+
+            if numel(SOA) ~= nTrials && prac == 0
+                warning('unbalanced design in sublock %d', subBlock);
             end
 
-            % set colors for probe frames
-            probeColors = trackingColors;
-            probeColors(probeItem, :) = colRed;
-            
-            % Draw plain display and prompt for trial start
-            ClearScreen;
-            PaintFrame(trajectories(:, :, 1), nStim, trackingColors, winMain);
-            DrawFormattedText(winMain, ...
-                              sprintf('Press a key to start trial %d', ...
-                                      trialCounter), ...
-                              'center', 'center');
-            KbReleaseWait;
-            Screen('Flip', winMain);
-            KbStrokeWait;
-            
-            % Draw cue frame
-            ClearScreen;
-            PaintFrame(trajectories(:, :, 1), nStim, cueingColors, winMain);
-            tLastOnset = Screen('Flip', winMain);
-            
-            
-            screen(winMain, 'WaitBlanking');
-            screen('CopyWindow', display, winMain);
-            CenterText(['Press a key to start trial ', num2str(trial)], 0, 300);
-            Screen('Flip', winMain);
-            KbStrokeWait;
-            screen(winMain, 'WaitBlanking');
-            screen('CopyWindow', cueFrame, winMain);
-            screen(winMain, 'WaitBlanking', cueDuration);
-            
-            postProbeFrames = 0;
-            response = -1;
-            % motion sequence
-            for frame =1:gapOnsetTime(trial)
-                % pre-gap interval
-                PaintFrame(trajectories(:, :, frame), nStim, trackingColors, winMain);
+            for trial = 1:nTrials
+                trialCounter = trialCounter + 1;
+                trialtime = datestr(now, 'yyyymmdd-HHMMSS');
+
+                % pre-trial blank
+                ClearScreen;
+                DrawFormattedText(winMain, 'Configuring trial...', 'center', 'center', colText);
                 Screen('Flip', winMain);
-            end
-            for gLoop = 1:gapDuration
-                % gap interval
-                frame = frame + 1;
-                PaintFrame(trajectories(:, :, frame), nStim, gapColors, winMain);
-                Screen('Flip', winMain);
-            end
-            for sLoop = 1:SOA(trial)
-                % SOA interval
-                frame = frame + 1;
-                PaintFrame(trajectories(:, :, frame), nStim, trackingColors, winMain);
-                Screen('Flip', winMain);
-            end			
-            probeOnsetTime = GetSecs;
-            % this next bit of code looks for a response in between refreshes
-            responseTime = 0;
-            while postProbeFrames < postProbeDuration && response == -1
-                postProbeFrames = postProbeFrames + 1;
-                frame = frame + 1;
-                PaintFrame(trajectories(:, :, frame), nStim, probeColors, winMain);
-                Screen('DrawingFinished', winMain);
-                [keyIsDown, KbTime, keyCode] = KbCheck;
-                if keyIsDown
-                    response = find(keyCode);
-                    response = response(1);
-                    responseTime = KbTime;
+
+                % randomize gap duration (in frames)
+                gapOnsetTime = Randi(gapOnsetRange(2) - gapOnsetRange(1)) + gapOnsetRange(1);
+                % compute total trial duration (in frames)
+                trialDuration = gapOnsetTime + gapDuration + SOA(trial) + postProbeDuration; % duration of trial in frames
+                                                                                                    % compute stimulus positions for entire trial
+                trajectories = MakeTrajectories(nStim, trialDuration, stimSize);
+
+                % select probe
+                if probeType(trial) == 1
+                    % probe a target
+                    probeItem = Randi(nTargets);
+                else
+                    % probe a distractor
+                    probeItem = Randi(nStim - nTargets) + nTargets;
                 end
-                screen('Flip', winMain);
-            end
-            if responseTime > 0
-                RT = round((responseTime - probeOnsetTime) * 1000); % RT in ms
-            else
-                RT = 0;
-            end
 
-            % now classify response
-            responseKey = find(allowedResponses == response);
-            wrongKeyFlag = 0;
-            if isempty(responseKey)
-                error = 1;
-                feedback = 'Wrong Key! Use "a" for "no" and "quote" for "yes"!';
-                wrongKeyFlag = 1;
-            elseif responseKey == probeType(trial)
-                error = 0;
-                feedback = 'Correct!';
-            else
-                error = 1;
-                feedback = 'Wrong!';
-            end
+                % set colors for probe frames
+                probeColors = trackingColors;
+                probeColors(:, probeItem) = colRed';
 
-            screen(winMain, 'FillRect', colMidGray);
-            CenterText([feedback, ' - RT = ', num2str(RT), ' ms']);
-            WaitSecs(1);
+                % Set up timing variables
+                tFrameOnset = zeros(size(trajectories, 3), 1) - 1;
 
-            % new data-output code
-            dataFile = fopen(dataFileName, 'r');
-            if dataFile == -1
-                header = ['sub,hz,nobjects,ntargets,cuedur,gapdur,soa,min_gapOnset,max_gapOnset,postProbeDuration,block,trial,gapOnset,probeType,error,badkey,rt\n'];
-            else
+                % Draw plain display and prompt for trial start
+                ClearScreen;
+                PaintFrame(trajectories(:, :, 1), nStim, trackingColors, winMain);
+                DrawFormattedText(winMain, ...
+                                  sprintf('Press a key to start trial %d', ...
+                                          trialCounter), ...
+                                  'center', 'center', colText);
+                KbReleaseWait;
+                Screen('Flip', winMain);
+                [keyTime, keyCode] = KbStrokeWait;
+                if keyCode(respAbort)
+                    error('abort key pressed');
+                end
+
+                % Draw cue frame
+                ClearScreen;
+                PaintFrame(trajectories(:, :, 1), nStim, cueingColors, winMain);
+                tLastOnset = Screen('Flip', winMain);
+                targNextOnset = tLastOnset + cueDuration * refreshDuration - durSlack;
+
+                % main animation sequence
+                postProbeFrames = 0;
+                probeOnsetTime = -1;
+                response = -1;
+                responseTime = -1;
+                % draw first post-cue frame
+                ClearScreen;
+                PaintFrame(trajectories(:, :, 1), nStim, cueingColors, winMain);
+                tFrameOnset(1) = Screen('Flip', winMain, targNextOnset);
+                % motion sequence
+                for frame = 2:gapOnsetTime
+                    % pre-gap interval
+                    ClearScreen;
+                    PaintFrame(trajectories(:, :, frame), nStim, trackingColors, winMain);
+                    tFrameOnset(frame) = Screen('Flip', winMain);
+                end
+                for gLoop = 1:gapDuration
+                    % gap interval
+                    frame = frame + 1;
+                    ClearScreen;
+                    PaintFrame(trajectories(:, :, frame), nStim, gapColors, winMain);
+                    tFrameOnset(frame) = Screen('Flip', winMain);
+                end
+                for sLoop = 1:SOA(trial)
+                    % SOA interval
+                    frame = frame + 1;
+                    ClearScreen;
+                    PaintFrame(trajectories(:, :, frame), nStim, trackingColors, winMain);
+                    tFrameOnset(frame) = Screen('Flip', winMain);
+                end			
+                % present probe and continue motion while checking for a response every frame
+                while response == -1
+                    postProbeFrames = postProbeFrames + 1;
+                    frame = frame + 1;
+                    ClearScreen;
+                    if postProbeFrames <= postProbeDuration
+                        PaintFrame(trajectories(:, :, frame), nStim, probeColors, winMain);
+                    end
+                    Screen('DrawingFinished', winMain);
+                    [keyIsDown, KbTime, keyCode] = KbCheck;
+                    if keyIsDown
+                        response = find(keyCode);
+                        response = response(1);
+                        responseTime = KbTime;
+                    end
+                    tLastOnset = Screen('Flip', winMain);
+                    if frame <= numel(tFrameOnset)
+                        tFrameOnset(frame) = tLastOnset;
+                    end
+                    if probeOnsetTime < 0
+                        probeOnsetTime = tLastOnset;
+                    end
+                end
+
+                % compute RT and accuracy
+                if responseTime > 0
+                    RT = round((responseTime - probeOnsetTime) * 1000); % RT in ms
+                else
+                    RT = 0;
+                end
+                responseKey = find(allowedResponses == response);
+                wrongKeyFlag = 0;
+                if isempty(responseKey)
+                    acc = -1;
+                    feedback = 'Wrong Key! Use "a" for "no" and "quote" for "yes"!';
+                    wrongKeyFlag = 1;
+                elseif responseKey == probeType(trial)
+                    acc = 1;
+                    feedback = 'Correct!';
+                else
+                    acc = 0;
+                    feedback = 'Wrong!';
+                end
+
+                % output data
+                dataFile = fopen(dataFileName, 'r');
+                if dataFile == -1
+                    header = ['sub\trefresh\tnstim\tntargets\tcuedur\tgapdur\tsoa\tmin_gapOnset\tmax_gapOnset\tpostProbeDuration\tblock\ttrial\tgapOnset\tprobeType\tacc\tbadkey\trt\tmdnFrameDur\tmaxFrameDur\n'];
+                else
+                    fclose(dataFile);
+                    header = [];
+                end
+                dataFile = fopen(dataFileName, 'a');
+                if dataFile == -1
+                    error('cannot open data file %s for writing', dataFileName);
+                end
+                if ~isempty(header)
+                    fprintf(dataFile, header);
+                end
+                fprintf(dataFile, '%d\t%0.6f\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%0.6f\t%0.6f\n', ...
+                        subject, refreshDuration, nStim, nTargets, cueDuration, gapDuration, ...
+                        SOA(trial), gapOnsetRange(1), gapOnsetRange(2), ...
+                        postProbeDuration, subBlock, trial, ...
+                        gapOnsetTime, probeType(trial), acc, ...
+                        wrongKeyFlag, RT, median(diff(tFrameOnset)), max(diff(tFrameOnset)));
                 fclose(dataFile);
-                header = [];
-            end
-            dataFile = fopen(dataFileName, 'a');
-            if dataFile == -1
-                error('cannot open data file %s for writing', dataFileName);
-            end
-            if ~isempty(header)
-                fprintf(dataFile, header);
-            end
-            fprintf(dataFile, '%s,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n', ...
-                    'sub', 'hz',  'nobjects', 'ntargets', 'cuedur', 'gapdur', 'soa', ...
-                    'min_gapOnset', 'max_gapOnset', 'postProbeDuration', ...
-                    'block', 'trial', 'gapOnset', 'probeType', 'error', 'badkey', 'rt');
-            fclose(dataFile);
 
-            % store trial info
-            blockRT(trial) = RT;
-            blockAcc(trial) = 1 - error;
-            if wrongKeyFlag
-                blockAcc(trial) = -1;
-            end
-	end % end trial loop
+                ClearScreen;
+                DrawFormattedText(winMain, sprintf('%s\n\n\nResponse Time = %0.0f ms', ...
+                                                   feedback, RT), 'center', 'center', colText);
+                tLastOnset = Screen('Flip', winMain);
+                targNextOnset = tLastOnset + durFeedback - durSlack;
+                ClearScreen;
 
-        % output performance summary
-        fprintf('\nBlock %d', subBlock);
-        fprintf('\npcor  = %0.4f', mean(blockAcc(blockAcc >= 0)));
-        fprintf('\nrtcor = %0.1f ms\n', mean(blockRT(blockAcc > 0)));
+                % store trial info
+                blockRT(trial) = RT;
+                blockAcc(trial) = acc;
+                if wrongKeyFlag
+                    blockAcc(trial) = -1;
+                end
 
-        screen(winMain, 'FillRect', colMidGray);
-        CenterText('Thank you for participating!');
-        CenterText('Please inform the experimenter that you are done.', 0, 120);
+                tLastOnset = Screen('Flip', winMain, targNextOnset);
+                targNextOnset = tLastOnset + durPostTrialBlank - durSlack;
+                ClearScreen;
+                Screen('Flip', winMain, targNextOnset);
+            end % end trial loop
+
+            % output performance summary
+            fprintf('\nBlock %d', subBlock);
+            fprintf('\npcor  = %0.4f', mean(blockAcc(blockAcc >= 0)));
+            fprintf('\nrtcor = %0.1f ms\n', mean(blockRT(blockAcc > 0)));
+        end % end block loop
+
+        ClearScreenCompletely;
+        DrawFormattedText(winMain, ...
+                          ['Thank you for participating!\n\n\n', ...
+                           'Please inform the experimenter that you are done.'], ...
+                          'center', 'center', colText);
+        Screen('Flip', winMain);
         KbStrokeWait;
-    end % end block loop
+    catch
+        ple;
+    end
 
-catch
-    ple;
-end
-
-Priority(0);
-ListenChar;
-ShowCursor;
-fprintf('\n# of open windows = %d\n', numel(Screen('Windows')));
-Screen('CloseAll');
-PsychPortAudio('Close');
-clear all;
+    Priority(0);
+    ListenChar;
+    ShowCursor;
+    fprintf('\n# of open windows = %d\n', numel(Screen('Windows')));
+    Screen('CloseAll');
+    PsychPortAudio('Close');
+    clear all;
 
 
 function varargout = DialogBox (title, varargin)
@@ -389,37 +421,58 @@ function varargout = DialogBox (title, varargin)
     end
 end
 
+function [buzz, rate] = MakeBuzz (dur, rate)
+
+    if nargin < 2 || isempty(rate) 
+        rate = 44100;
+    end
+    
+    freqs = 100 * [1:15, 75:100];
+
+    n = 0;
+    buzz = zeros(1, length(0:rate*dur));
+    for f = freqs
+        buzz = buzz + sin(2 * pi * f * (0:rate*dur) / rate);
+        n = n + 1;
+    end
+    buzz = buzz / n;
+    buzz = (buzz - min(buzz)) / (max(buzz) - min(buzz)) * 2 - 1;
+end
+
+
 function ClearScreen
     Screen('FillRect', winMain, colBackground);
 end
 
+
+function ClearScreenCompletely
+    Screen('FillRect', winMain, colBackground);
 end
+
 
 function PaintFrame(coordinates, nStim, diskColors, window)
-    % global screenRect rectDisplay rectStim
-    % global colWhite colBlack colMidGray colDarkGray colYellow colRed
-    for i = 1:nStim
-        placeRect = CenterRectOnPoint(rectStim, coordinates(i, 1), coordinates(i, 2));
-        screen(window, 'FillOval', diskColors(i, :), placeRect);
-    end
+    Screen('DrawDots', window, coordinates(:, 1:nStim, :), stimSize, diskColors, [], 2);
+%     for i = 1:nStim
+%         placeRect = CenterRectOnPoint(rectStim, coordinates(i, 1), coordinates(i, 2));
+%         screen(window, 'FillOval', diskColors(i, :), placeRect);
+%     end
 end
 
-function trajectories = MakeTrajectories(nStim, nFrames, stimSize)
+function trajectories = MakeTrajectories (nStim, nFrames, stimSize)
 
-    % generates MVT trajectories
-    % given the number of objects and frames, returns positions for each object for each frame
-    % code adapted from Jen Dimase's motPictMem, Justin Junge
-    % started 9/10/2004
-    % current 9/14/2004
+% generates MVT trajectories
+% given the number of objects and frames, returns positions for each object for each frame
+% code adapted from Jen Dimase's motPictMem, Justin Junge
+% started 9/10/2004
+% current 9/14/2004
 
-    %  Creates target Locations.
+%  Creates target Locations.
+    trajectories = zeros(2, nStim, nFrames);
 
-    % coordinate system
-    centx = round(screenRect(3)/2);
-    centy = round(screenRect(4)/2);
+% coordinate system
     cellSize = round(rectDisplay(3:4)/7); % size of initial position grid cell
 
-    [fieldRect, xOffset, yOffset] = CenterRect(rectDisplay, screenRect);
+    [fieldRect, xOffset, yOffset] = CenterRect(rectDisplay, rectMain);
 
     x = 0:6;
     xloc = xOffset + cellSize(1) * x;
@@ -429,8 +482,8 @@ function trajectories = MakeTrajectories(nStim, nFrames, stimSize)
 
     shufflegrid = randperm(49);
     shufflegrid = shufflegrid(1:nStim);
-    trajectories(:, 1, 1) = gridx(shufflegrid(:));
-    trajectories(:, 2, 1) = gridy(shufflegrid(:));
+    trajectories(1, :, 1) = gridx(shufflegrid(:));
+    trajectories(2, :, 1) = gridy(shufflegrid(:));
 
     % motion parameters
     repulsionPower = 10000; % not sure where the value comes from
@@ -438,102 +491,100 @@ function trajectories = MakeTrajectories(nStim, nFrames, stimSize)
     pathchange = 1.5; % Determines Degree of Change on Motion Paths
     forcefieldDistance = 1.5 * stimSize; % 1.5 = Item Repulsion only occurs within a field around each shape 25% the size of the shape. 
 
-    initMotion = [-4:4] * pathchange;
-    frameMotion = [-2:2] * inertia;
-    rXmove = initMotion(randi(9, [1, nStim]));
-    rYmove = initMotion(randi(9, [1, nStim]));
+    initMotion = (-4:4) * pathchange;
+    frameMotion = (-2:2) * inertia;
+    rXmove = initMotion(Randi(9, [1, nStim]));
+    rYmove = initMotion(Randi(9, [1, nStim]));
 
-    for frame = 2:nFrames
-        aa = frame-1;
-        
+    for f = 2:nFrames
+        aa = f-1;
+
         % Repulsion 
-        repel = ones(nStim, 2) * 0.00001;
-        
+        repel = ones(2, nStim) * 0.00001;
+
         for object=1:nStim;
-            thisLocation = repmat(trajectories(object, :, aa), nStim, 1); % creates nStim X 2 array of object object's coordinates
-            distances  = thisLocation - trajectories(:, :, aa);
-            absoluteDistances = abs(distances);
-            % 		i = find((absoluteDistance(1) < forcefieldDistance) & (absoluteDistance(2) < forcefieldDistance));
-            
+            % this code is useless
+            %             thisLocation = repmat(trajectories(object, :, aa), nStim, 1); % creates nStim X 2 array of object object's coordinates
+            %             distances  = thisLocation - trajectories(:, :, aa);
+            %             absoluteDistances = abs(distances);
+            %             i = find((absoluteDistance(1) < forcefieldDistance) & (absoluteDistance(2) < forcefieldDistance));
+
             for qq=1:nStim;
                 if qq ~= object
-                    distance = trajectories(object, :, aa) - trajectories(qq, :, aa);
+                    distance = trajectories(:, object, aa) - trajectories(:, qq, aa);
                     absoluteDistance = abs(distance);
-                    if (absoluteDistance(1) < forcefieldDistance) & (absoluteDistance(2) < forcefieldDistance)
-                        if distance(1) ~= 0 & distance(2) ~= 0
+                    if (absoluteDistance(1) < forcefieldDistance) && (absoluteDistance(2) < forcefieldDistance)
+                        if distance(1) ~= 0 && distance(2) ~= 0
                             addrepel = 1./((distance.^2) .* sign(distance));
-                            repel(object, :) = repel(object, :) + repulsionPower * addrepel;
+                            repel(:, object) = repel(:, object) + repulsionPower * addrepel;
                         end
                     end
                 end
             end
         end
 
-        rXchange = frameMotion(randi(5, [1, nStim]));
-        rYchange = frameMotion(randi(5, [1, nStim]));
+        rXchange = frameMotion(Randi(5, [1, nStim]));
+        rYchange = frameMotion(Randi(5, [1, nStim]));
         newrm = [-1 1];
 
         % X Trajectories
-        
         for object = 1:nStim
-            
-            rXmove(object) = rXmove(object) + rXchange(object) + repel(object, 1);										% Makes change to X motion
-            
+            rXmove(object) = rXmove(object) + rXchange(object) + repel(1, object);										% Makes change to X motion
+
             % floor and ceiling
-            
             if rXmove(object)==0;
-                rXmove(object) = newrm(randi(2));
+                rXmove(object) = newrm(Randi(2));
             end
-            
+
             if rXmove(object) > 4*pathchange
                 rXmove(object) = 4*pathchange;
             end
             if rXmove(object) < -4*pathchange
                 rXmove(object) = -4*pathchange;
             end
-            
-            trajectories(object, 1, frame) = (trajectories(object, 1, aa) + rXmove(object));
-            
-            if trajectories(object, 1, frame) >= (fieldRect(3) - stimSize); 		% Bounces off right
-                trajectories(object, 1, frame) = (fieldRect(3) - stimSize);
+
+            trajectories(1, object, f) = (trajectories(1, object, aa) + rXmove(object));
+
+            if trajectories(1, object, f) >= (fieldRect(3) - stimSize); 		% Bounces off right
+                trajectories(1, object, f) = (fieldRect(3) - stimSize);
                 rXmove(object) = -(4*rXmove(object));	
             end			
-            if  trajectories(object, 1, frame) <= fieldRect(1);					% Bounces off left
-                trajectories(object, 1, frame) = fieldRect(1);
+            if  trajectories(1, object, f) <= fieldRect(1);					% Bounces off left
+                trajectories(1, object, f) = fieldRect(1);
                 rXmove(object) = -(4*rXmove(object));											
             end	
         end
 
         % Y Trajectories
         for object = 1:nStim
-            
-            rYmove(object) = rYmove(object) + rYchange(object) + repel(object, 2);										% Makes change to Y motion
-            
+
+            rYmove(object) = rYmove(object) + rYchange(object) + repel(2, object);										% Makes change to Y motion
+
             if rYmove(object)==0;
-                rYmove(object) = newrm(randi(2));
+                rYmove(object) = newrm(Randi(2));
             end
-            
+
             if rYmove(object) > 4*pathchange
                 rYmove(object) = 4*pathchange;
             end
             if rYmove(object) < -4*pathchange
                 rYmove(object) = -4*pathchange;
             end
-            
-            trajectories(object, 2, frame) = (trajectories(object, 2, aa) + rYmove(object));							
-            if trajectories(object, 2, frame) >= (fieldRect(4) - stimSize);													% Bounces off Bottom
-                trajectories(object, 2, frame) = (fieldRect(4) - stimSize);
+
+            trajectories(2, object, f) = (trajectories(2, object, aa) + rYmove(object));							
+            if trajectories(2, object, f) >= (fieldRect(4) - stimSize);													% Bounces off Bottom
+                trajectories(2, object, f) = (fieldRect(4) - stimSize);
                 rYmove(object) = -(4*rYmove(object));	
             end
-            
-            if 	trajectories(object, 2, frame) <= fieldRect(2);																% Bounces off Top
-                trajectories(object, 2, frame) = fieldRect(2);
+
+            if 	trajectories(2, object, f) <= fieldRect(2);																% Bounces off Top
+                trajectories(2, object, f) = fieldRect(2);
                 rYmove(object) = -(4*rYmove(object));									
             end
         end
-        d(frame, :) = sqrt(rXmove.^2 + rYmove.^2);
+        %d(f, :) = sqrt(rXmove.^2 + rYmove.^2);
     end
+    %mean(d)
 end % end MakeTrajectories function
-% mean(d)
 
 end
