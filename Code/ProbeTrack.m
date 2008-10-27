@@ -5,48 +5,59 @@ function ProbeTrack
 % $LastChangedDate$
 
     try
-%         rectMain = [0 0 1024 768];
-%         rectDisplay = [0 0 500 500];
-%         traj = MakeTrajectories(8, 30, 50);
-%         disp(traj(:, :, 1));
-%         error('just stop');
-
         AssertOpenGL;
         InitializePsychSound;
         KbName('UnifyKeyNames');
         experiment = 'ProbeTrack7';
 
         % get user input
-        [subject, pTrials, xTrials, nStim, nTargets, ...
-         cueDuration, gapDuration, SOAlist, gapOnsetRange, postProbeDuration] = ...
-            DialogBox('Experiment Parameters', ...
+        [subject, nTargets, blockType] = ...
+            DialogBox(sprintf('%s Parameters', experiment), ...
                       'Subject code:', '1', 1, ...
-                      'practice trials'          , '16', 1, ...
-                      'experimental trials'      , '120', 1, ...
-                      'number of objects'        , '8', 1, ...
-                      'number of targets'        , '4', 1, ...
-                      'cue duration (frames)'    , '60', 1, ...
-                      'gap duration'             , '10', 1, ...
-                      'SOAs'                     , '0 3 6 96', 1, ...
-                      'gap onset range (frames)' , '60 180', 1, ...
-                      'post-probe duration'      , '60', 1);
+                      'Number of targets:', '4', 1, ...
+                      'Block type (1, 2, 3):', '3', 1);
 
-        % set any IVs not set in the dialog box, and that don't vary by block
-        % nStim = 8;
-        % nTargets = 4;
-        % cueDuration = 60; % time cue is up
-        % SOAlist = [0 6 12 24 96]; % time of probe from end of gap
-        % gapOnsetRange = [60 180]; % time (in frames) that the gap begins, from onset of trial
-        % postProbeDuration = 60; % period of motion after appearance of probe
-        pauseEvery = 20;
-        pauseMin = 4.0; % sec
+        % set any remaining IVs
+        SOAlist = [0 3 6 96]; % # of frames
+        probeTargetList = 0:1;
+
+        % set any remaining control variables
+        durGap = 10; % # of frames
+        nStim = 8;
 
         % set up different block types
-        % pTrials = 5;
-        % xTrials = 5;
-        % gapDuration = 10; % duration of invisible motion
-        % TBD
-        practiceFlag = 1;
+        switch blockType 
+          case 1
+            % training without gap
+            practiceFlag = 1;
+            pTrials = 10;
+            xTrials = 40;
+            durGap = 0; % # of frames
+            blockTypeStr = 'NoGap';
+            blockMesg = 'Initial Block without Gap';
+          case 2
+            % training with gap
+            practiceFlag = 1;
+            pTrials = 4;
+            xTrials = 16;
+            blockTypeStr = 'GapPrac';
+            blockMesg = 'Training Block with Gap';
+          case 3
+            % experimental block
+            practiceFlag = 0;
+            pTrials = 5;
+            xTrials = 120;
+            blockTypeStr = 'GapExp';
+            blockMesg = 'Experimental Block with Gap';
+          case -1
+            practiceFlag = 0;
+            pTrials = 2;
+            xTrials = 8;
+            blockTypeStr = 'Testing';
+            blockMesg = 'Testing Run';
+          otherwise
+            error('Block type of %d not supported', blockType);
+        end
         totalTrials = xTrials + pTrials;
 
         % stimulus characteristics
@@ -55,8 +66,12 @@ function ProbeTrack
         rectStim = [0 0 stimSize stimSize];
 
         % durations
-        durFeedback = .746;
-        durPostTrialBlank = .5;
+        durCue = 60; % # of frames to present target cues
+        durPostProbe = 60; % # of frames
+        durFeedback = .746; % sec
+        durPostTrialBlank = .5; % sec
+        gapOnsetRange = [60 180]; % # of frames; bounds of range from which to pick pre-gap tracking duration
+        gapOnsetRangeStr = sprintf('%d-%d', min(gapOnsetRange), max(gapOnsetRange));
 
         % define colors
         colBlack = [0 0 0];
@@ -88,7 +103,6 @@ function ProbeTrack
         end        
         respDistractor  = KbName('a'); % a key (left-hand side)
         allowedResponses = [respTarget, respDistractor];
-        %%keys = [KbName('''')  KbName('a')]; % response key assignments
 
         % Tones
         samplingRate = 44100;
@@ -138,23 +152,16 @@ function ProbeTrack
         Screen('TextSize', winMain, 24);
 
         % present instructions
-        Instructions = [
-            'In this experiment, you will be asked to track a number of moving disks.\n'...
-            ['Each trial will start with a display of ',  num2str(nStim) ' gray disks.\n'] ...
-            'When you are ready, you will press a key to start the trial.\n' ...
-            [num2str(nTargets), ' of the disks will change to yellow.\n'] ...
-            'After a brief interval, these target disks will go back to gray and start to move.\n' ...
-            'You will track the target disks for several seconds.\n' ...
-            'During this time, the disks may briefly disappear from the screen.\n' ...
-            'At a randomly chosen time, one of the disks will turn red\n' ...
-            ['Your job is to indicate whether this probe disk was one of the ', num2str(nTargets), ' target disks you were tracking.\n'] ...
-            'Press the ''quote'' key for "yes" and the ''a'' key for "no".\n' ...
-            'Please respond as quickly and accurately as possible.\n' ...
-            ['There will be ', num2str(totalTrials), ' trials.\n\n'] ...
-            'Press any key to continue'];
-
         Screen('FillRect', winMain, colBackground);
-        DrawFormattedText(winMain, Instructions, 'center', 'center', colText);
+        DrawFormattedText(winMain, ...
+                          [blockMesg, '\n\n\n', ...
+                           '--------------------------------------------------\n\n\n'...
+                           sprintf('Track %d targets out of %d total stimuli\n\n\n', nTargets, nStim), ...
+                           'Respond when one disk flashes red\n\n' ...
+                           'Press YES if the red disk is a target\n\n' ...
+                           'Press NO if the red disk is NOT a target\n\n\n\n', ...
+                           sprintf('Press any key to begin block of %d trials', totalTrials)], ...
+                          'center', 'center', colText);
         KbReleaseWait;
         Screen('Flip', winMain);
         Screen('FillRect', winMain, colBackground);
@@ -185,8 +192,8 @@ function ProbeTrack
 
             % balance independent variables
             n = ceil(nTrials / numel(SOAlist) / 2);
-            [SOA, probeType] = ...
-                BalanceFactors(n, 1, SOAlist, 1:2);
+            [SOA, probeTarget] = ...
+                BalanceFactors(n, 1, SOAlist, probeTargetList);
 
             if numel(SOA) ~= nTrials && prac == 0
                 warning('unbalanced design in sublock %d', subBlock);
@@ -194,22 +201,22 @@ function ProbeTrack
 
             for trial = 1:nTrials
                 trialCounter = trialCounter + 1;
-                trialtime = datestr(now, 'yyyymmdd-HHMMSS');
+                trialtime = now;
 
                 % pre-trial blank
                 ClearScreen;
-                DrawFormattedText(winMain, 'Configuring trial...', 'center', 'center', colText);
+                % DrawFormattedText(winMain, 'Configuring trial...', 'center', 'center', colText);
                 Screen('Flip', winMain);
 
                 % randomize gap duration (in frames)
                 gapOnsetTime = Randi(gapOnsetRange(2) - gapOnsetRange(1)) + gapOnsetRange(1);
                 % compute total trial duration (in frames)
-                trialDuration = gapOnsetTime + gapDuration + SOA(trial) + postProbeDuration; % duration of trial in frames
+                trialDuration = gapOnsetTime + durGap + SOA(trial) + durPostProbe; % duration of trial in frames
                                                                                                     % compute stimulus positions for entire trial
                 trajectories = MakeTrajectories(nStim, trialDuration, stimSize);
 
                 % select probe
-                if probeType(trial) == 1
+                if probeTarget(trial) == 1
                     % probe a target
                     probeItem = Randi(nTargets);
                 else
@@ -223,6 +230,10 @@ function ProbeTrack
 
                 % Set up timing variables
                 tFrameOnset = zeros(size(trajectories, 3), 1) - 1;
+
+                % Reset suppression of keypress output on every trial, since Windows
+                % intermittently resets suppression.
+                ListenChar(2);
 
                 % Draw plain display and prompt for trial start
                 ClearScreen;
@@ -242,13 +253,14 @@ function ProbeTrack
                 ClearScreen;
                 PaintFrame(trajectories(:, :, 1), nStim, cueingColors, winMain);
                 tLastOnset = Screen('Flip', winMain);
-                targNextOnset = tLastOnset + cueDuration * refreshDuration - durSlack;
+                targNextOnset = tLastOnset + durCue * refreshDuration - durSlack;
 
                 % main animation sequence
                 postProbeFrames = 0;
                 probeOnsetTime = -1;
                 response = -1;
                 responseTime = -1;
+                tResponseEnd = -1;
                 % draw first post-cue frame
                 ClearScreen;
                 PaintFrame(trajectories(:, :, 1), nStim, cueingColors, winMain);
@@ -260,7 +272,7 @@ function ProbeTrack
                     PaintFrame(trajectories(:, :, frame), nStim, trackingColors, winMain);
                     tFrameOnset(frame) = Screen('Flip', winMain);
                 end
-                for gLoop = 1:gapDuration
+                for gLoop = 1:durGap
                     % gap interval
                     frame = frame + 1;
                     ClearScreen;
@@ -279,14 +291,13 @@ function ProbeTrack
                     postProbeFrames = postProbeFrames + 1;
                     frame = frame + 1;
                     ClearScreen;
-                    if postProbeFrames <= postProbeDuration
+                    if postProbeFrames <= durPostProbe
                         PaintFrame(trajectories(:, :, frame), nStim, probeColors, winMain);
                     end
                     Screen('DrawingFinished', winMain);
                     [keyIsDown, KbTime, keyCode] = KbCheck;
                     if keyIsDown
                         response = find(keyCode);
-                        response = response(1);
                         responseTime = KbTime;
                     end
                     tLastOnset = Screen('Flip', winMain);
@@ -298,30 +309,60 @@ function ProbeTrack
                     end
                 end
 
+                % Wait for key release
+                if response > 0
+                    while any(keyCode(response))
+                        [keyIsDown, KbTime, keyCode] = KbCheck;
+                    end
+                    tResponseEnd = KbTime;
+                end                    
+
                 % compute RT and accuracy
                 if responseTime > 0
                     RT = round((responseTime - probeOnsetTime) * 1000); % RT in ms
+                    dur = round((tResponseEnd - responseTime) * 1000); % response dur in ms
                 else
                     RT = 0;
+                    dur = 0;
                 end
-                responseKey = find(allowedResponses == response);
-                wrongKeyFlag = 0;
-                if isempty(responseKey)
+                if isempty(response)
+                    % no response
+                    respString = 'none';
                     acc = -1;
-                    feedback = 'Wrong Key! Use "a" for "no" and "quote" for "yes"!';
-                    wrongKeyFlag = 1;
-                elseif responseKey == probeType(trial)
-                    acc = 1;
-                    feedback = 'Correct!';
+                elseif numel(response) > 1
+                    % multiple keys pressed
+                    respString = 'multi';
+                    acc = -2;
+                elseif response == respTarget
+                    respString = 'target';
+                    if probeTarget(trial)
+                        acc = 1;
+                    else
+                        acc = 0;
+                    end
+                elseif response == respDistractor
+                    respString = 'distractor';
+                    if probeTarget(trial)
+                        acc = 0;
+                    else
+                        acc = 1;
+                    end
                 else
-                    acc = 0;
-                    feedback = 'Wrong!';
+                    % some other key was pressed
+                    respString = sprintf('%d', response);
+                    acc = -3;
                 end
+
+                % compute durations
+                durFrames = diff(tFrameOnset(tFrameOnset > 0)) * 1000;
 
                 % output data
                 dataFile = fopen(dataFileName, 'r');
                 if dataFile == -1
-                    header = ['sub\trefresh\tnstim\tntargets\tcuedur\tgapdur\tsoa\tmin_gapOnset\tmax_gapOnset\tpostProbeDuration\tblock\ttrial\tgapOnset\tprobeType\tacc\tbadkey\trt\tmdnFrameDur\tmaxFrameDur\n'];
+                    header = ['exp\tsub\tcode\trev\tcomp\truntime\ttrialtime\t' ...
+                              'nstim\trefreshdur\tcuedur\tgapdur\tgapOnsetRange\tdurPostProbe\tgapOnsetTime\t' ...
+                              'blocktype\tprac\ttrial\tntargets\tsoa\tprobeTarget\t' ...
+                              'resp\tacc\trt\tmeanFrameDur\tminFrameDur\tmaxFrameDur\n'];
                 else
                     fclose(dataFile);
                     header = [];
@@ -333,14 +374,29 @@ function ProbeTrack
                 if ~isempty(header)
                     fprintf(dataFile, header);
                 end
-                fprintf(dataFile, '%d\t%0.6f\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%0.6f\t%0.6f\n', ...
-                        subject, refreshDuration, nStim, nTargets, cueDuration, gapDuration, ...
-                        SOA(trial), gapOnsetRange(1), gapOnsetRange(2), ...
-                        postProbeDuration, subBlock, trial, ...
-                        gapOnsetTime, probeType(trial), acc, ...
-                        wrongKeyFlag, RT, median(diff(tFrameOnset)), max(diff(tFrameOnset)));
+                %                              %rev    %runtime    %refresh   %gapdur         %blocktype      %soa    %resp   %rt %framedurs
+                fprintf(dataFile, '%s\t%d\t%s\t%s\t%s\t%f\t%f\t%d\t%0.6f\t%d\t%d\t%s\t%d\t%d\t%s\t%d\t%d\t%d\t%d\t%d\t%s\t%d\t%d\t%0.3f\t%0.3f\t%0.3f\n', ...
+                        experiment, subject, mfilename, revision, computer, blocktime, trialtime, ...
+                        nStim, refreshDuration, durCue, durGap, gapOnsetRangeStr, durPostProbe, gapOnsetTime, ...
+                        blockTypeStr, prac, trialCounter, nTargets, SOA(trial), probeTarget(trial), ...
+                        respString, acc, RT, mean(durFrames), min(durFrames), max(durFrames(2:end)));
                 fclose(dataFile);
 
+                % Prepare feedback
+                switch acc
+                  case -1
+                    feedback = 'NO RESPONSE!';
+                  case -2
+                    feedback = 'MULTIPLE KEYS PRESSED!';
+                  case -3
+                    feedback = 'NON-RESPONSE KEY PRESSED!';
+                  case 0
+                    feedback = 'Wrong!';
+                  case 1
+                    feedback = 'Correct!';
+                end
+
+                % Present feedback
                 ClearScreen;
                 DrawFormattedText(winMain, sprintf('%s\n\n\nResponse Time = %0.0f ms', ...
                                                    feedback, RT), 'center', 'center', colText);
@@ -351,9 +407,6 @@ function ProbeTrack
                 % store trial info
                 blockRT(trial) = RT;
                 blockAcc(trial) = acc;
-                if wrongKeyFlag
-                    blockAcc(trial) = -1;
-                end
 
                 tLastOnset = Screen('Flip', winMain, targNextOnset);
                 targNextOnset = tLastOnset + durPostTrialBlank - durSlack;
@@ -363,17 +416,25 @@ function ProbeTrack
 
             % output performance summary
             fprintf('\nBlock %d', subBlock);
-            fprintf('\npcor  = %0.4f', mean(blockAcc(blockAcc >= 0)));
-            fprintf('\nrtcor = %0.1f ms\n', mean(blockRT(blockAcc > 0)));
+            fprintf('\npcor  = %0.1f%%', 100 * mean(blockAcc(blockAcc >= 0)));
+            fprintf('\nrtcor = %0.0f ms\n', mean(blockRT(blockAcc > 0)));
         end % end block loop
 
         ClearScreenCompletely;
         DrawFormattedText(winMain, ...
                           ['Thank you for participating!\n\n\n', ...
+                           sprintf('Overall accuracy = %0.0f%%\n\n', 100 * mean(blockAcc(blockAcc >= 0))), ...
+                           sprintf('Average response time = %0.0f ms\n\n\n', ...
+                                   mean(blockRT(blockAcc > 0 & blockRT > 0))), ...
                            'Please inform the experimenter that you are done.'], ...
                           'center', 'center', colText);
         Screen('Flip', winMain);
-        KbStrokeWait;
+        while 1
+            [keyTime, keyCode] = KbStrokeWait;
+            if keyCode(respAbort)
+                break;
+            end
+        end
     catch
         ple;
     end
