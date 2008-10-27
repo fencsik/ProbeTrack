@@ -149,7 +149,7 @@ function ProbeTrack
 
         % font setup
         Screen('TextFont', winMain, 'Arial');
-        Screen('TextSize', winMain, 24);
+        Screen('TextSize', winMain, 18);
 
         % present instructions
         Screen('FillRect', winMain, colBackground);
@@ -235,15 +235,22 @@ function ProbeTrack
                 % intermittently resets suppression.
                 ListenChar(2);
 
-                % Draw plain display and prompt for trial start
+                % Draw plain display and wait a bit
                 ClearScreen;
                 PaintFrame(trajectories(:, :, 1), nStim, trackingColors, winMain);
+                KbReleaseWait;
+                tLastOnset = Screen('Flip', winMain);
+                targNextOnset = tLastOnset + .25;
+
+                % Draw cue display and prompt for trial start
+                ClearScreen;
+                PaintFrame(trajectories(:, :, 1), nStim, cueingColors, winMain);
                 DrawFormattedText(winMain, ...
                                   sprintf('Press a key to start trial %d', ...
                                           trialCounter), ...
                                   'center', 'center', colText);
                 KbReleaseWait;
-                Screen('Flip', winMain);
+                Screen('Flip', winMain, targNextOnset);
                 [keyTime, keyCode] = KbStrokeWait;
                 if keyCode(respAbort)
                     error('abort key pressed');
