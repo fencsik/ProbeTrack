@@ -67,6 +67,8 @@ function ProbeTrack
 
         % durations
         durCue = 60; % # of frames to present target cues
+        durCueMove = 38; % # of frames of motion with cue
+        durCueFade = 38; % # of frames of motion during which cue fades
         durPostProbe = 60; % # of frames
         durFeedback = .746; % sec
         durPostTrialBlank = .5; % sec
@@ -74,12 +76,12 @@ function ProbeTrack
         gapOnsetRangeStr = sprintf('%d-%d', min(gapOnsetRange), max(gapOnsetRange));
 
         % define colors
-        colBlack = [0 0 0];
-        colWhite = [255 255 255];
-        colMidGray = [128 128 128];
-        colDarkGray = [64 64 64];
-        colYellow = [240 240 0];
-        colRed = [250 0 0];
+        colBlack = [0 0 0 255];
+        colWhite = [255 255 255 255];
+        colMidGray = [128 128 128 255];
+        colDarkGray = [64 64 64 255];
+        colYellow = [240 240 0 255];
+        colRed = [250 0 0 255];
         colBackground = colMidGray;
         colText = colBlack;
 
@@ -211,8 +213,9 @@ function ProbeTrack
                 % randomize gap duration (in frames)
                 gapOnsetTime = Randi(gapOnsetRange(2) - gapOnsetRange(1)) + gapOnsetRange(1);
                 % compute total trial duration (in frames)
-                trialDuration = gapOnsetTime + durGap + SOA(trial) + durPostProbe; % duration of trial in frames
-                                                                                                    % compute stimulus positions for entire trial
+                trialDuration = durCueMove + durCueFade + gapOnsetTime + ...
+                    durGap + SOA(trial) + durPostProbe;
+                % compute stimulus positions for entire trial
                 trajectories = MakeTrajectories(nStim, trialDuration, stimSize);
 
                 % select probe
@@ -228,8 +231,19 @@ function ProbeTrack
                 probeColors = trackingColors;
                 probeColors(:, probeItem) = colRed';
 
+                % set colors for fading frames
+                cueFadeColors = repmat(cueingColors, [1, 1, durCueFade]);
+                cueFadeColors(4, :, :) = repmat(reshape(round(255:(-255 / (durCueFade - 1)):0), ...
+                                                        [1, 1, durCueFade]), ...
+                                                [1, nStim, 1]);
+
                 % Set up timing variables
                 tFrameOnset = zeros(size(trajectories, 3), 1) - 1;
+                postProbeFrames = 0;
+                probeOnsetTime = -1;
+                response = -1;
+                responseTime = -1;
+                tResponseEnd = -1;
 
                 % Reset suppression of keypress output on every trial, since Windows
                 % intermittently resets suppression.
@@ -240,7 +254,7 @@ function ProbeTrack
                 PaintFrame(trajectories(:, :, 1), nStim, trackingColors, winMain);
                 KbReleaseWait;
                 tLastOnset = Screen('Flip', winMain);
-                targNextOnset = tLastOnset + .25;
+                targNextOnset = tLastOnset + .1;
 
                 % Draw cue display and prompt for trial start
                 ClearScreen;
@@ -263,18 +277,29 @@ function ProbeTrack
                 targNextOnset = tLastOnset + durCue * refreshDuration - durSlack;
 
                 % main animation sequence
-                postProbeFrames = 0;
-                probeOnsetTime = -1;
-                response = -1;
-                responseTime = -1;
-                tResponseEnd = -1;
                 % draw first post-cue frame
+                frame = 1;
                 ClearScreen;
-                PaintFrame(trajectories(:, :, 1), nStim, cueingColors, winMain);
-                tFrameOnset(1) = Screen('Flip', winMain, targNextOnset);
-                % motion sequence
-                for frame = 2:gapOnsetTime
-                    % pre-gap interval
+                PaintFrame(trajectories(:, :, frame), nStim, cueingColors, winMain);
+                tFrameOnset(frame) = Screen('Flip', winMain, targNextOnset);
+                % cue + motion
+                for f = 2:durCueMove
+                    frame = frame + 1;
+                    ClearScreen;
+                    PaintFrame(trajectories(:, :, frame), nStim, cueingColors, winMain);
+                    tFrameOnset(frame) = Screen('Flip', winMain);
+                end
+                % cue fade + motion
+                for f = 1:durCueFade
+                    frame = frame + 1;
+                    ClearScreen;
+                    PaintFrame(trajectories(:, :, frame), nStim, trackingColors, winMain);
+                    PaintFrame(trajectories(:, :, frame), nStim, cueFadeColors(:, :, f), winMain);
+                    tFrameOnset(frame) = Screen('Flip', winMain);
+                end
+                % pre-gap interval
+                for f = 1:gapOnsetTime
+                    frame = frame + 1;
                     ClearScreen;
                     PaintFrame(trajectories(:, :, frame), nStim, trackingColors, winMain);
                     tFrameOnset(frame) = Screen('Flip', winMain);
@@ -298,7 +323,7 @@ function ProbeTrack
                     postProbeFrames = postProbeFrames + 1;
                     frame = frame + 1;
                     ClearScreen;
-                    if postProbeFrames <= durPostProbe
+                    if frame <= trialDuration
                         PaintFrame(trajectories(:, :, frame), nStim, probeColors, winMain);
                     end
                     Screen('DrawingFinished', winMain);
