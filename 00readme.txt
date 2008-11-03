@@ -61,6 +61,8 @@ Experiments:
   SOAs of 0, 40, 80, and 160 ms (didn't work; need longer SOA)
 * probetrack6b: replicates probetrack4 with more trials per cell and
   SOAs of 0, 40, 80, and 1280 ms
+* probetrack7: replicates probetrack6b with only set sizes 3 and 4;
+  run by CSUEB Psych 3100 in 2008-4
 
 * shifttrack2: compare tracking performance across no-disappearance,
   shift 0, and shift 1 conditions, with movement speeds of 6 and 10
