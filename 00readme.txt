@@ -63,6 +63,8 @@ Experiments:
   SOAs of 0, 40, 80, and 1280 ms
 * probetrack7: replicates probetrack6b with only set sizes 3 and 4;
   run by CSUEB Psych 3100 in 2008-4
+* probetrack08: replicates probetrack7 with tracking loads 2 and 4;
+  run as pilot study to prep for dual-task experiments
 
 * shifttrack2: compare tracking performance across no-disappearance,
   shift 0, and shift 1 conditions, with movement speeds of 6 and 10
