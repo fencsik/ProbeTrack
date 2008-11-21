@@ -1,7 +1,7 @@
 ### gatherData.r: collects data from individual subject's data files and outputs
 ### to one comma-delimited text data file
 ###
-### $LastChangedDate: 2008-08-07 21:33:18 -0700 (Thu, 07 Aug 2008) $
+### $LastChangedDate$
 
 f.gatherData <- function () {
     datadir <- "data";
