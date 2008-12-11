@@ -730,3 +730,22 @@ Steps:
 3. Complete the discussion.
 4. Add a paragraph describing the method in general terms.
 5. Convert to MSWord and send to TSH.
+
+----------------------------------------------------------------------
+
+December 11, 2008:
+
+Probetrack:
+
+All of the previous steps have been completed.  The paper's discussion
+needs to be expanded, and the mention of task-switching revised to
+reflect the observations of ~50-ms switch costs, which are remarkably
+close to the values we observed.
+
+Also, I just had the idea of an obvious control experiment: What if we
+used Scholl & Pylyshyn's (1999) occlusion-based disappearance, and
+varied probe delay following disocclusion?  Because occlusion should
+not trigger task-postponement mechanisms, one would expect to observe
+no post-reappearance slowing at small probe delays.
+
+
