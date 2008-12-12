@@ -748,4 +748,15 @@ varied probe delay following disocclusion?  Because occlusion should
 not trigger task-postponement mechanisms, one would expect to observe
 no post-reappearance slowing at small probe delays.
 
+----------------------------------------------------------------------
 
+December 12, 2008:
+
+MotionSearch:
+
+One potential problem with the MotionSearch stimuli is that the
+gratings are black and white, so there is a potential for phosphor
+decay issues: the black segments of fast-moving stimuli may be
+brighter than the black segments of slow-moving stimuli.  This could
+be tested by changing the black segments to gray segments, and
+adjusting the background color.
