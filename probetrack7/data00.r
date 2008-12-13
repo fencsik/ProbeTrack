@@ -15,7 +15,11 @@ f.data00 <- function () {
     data00 <- read.delim(infile);
 
 ### remove bad subjects:
-    ## (none so far)
+    ## 1. subjects 3, 4, 12, 24, 26, 27, 28, and 33 had overall accuracies below 70%
+    ## 2. subject 32 had an overall average RT greater than 1000 ms due to a physical disability
+    data00 <- data00[data00$sub != 3 & data00$sub != 4 & data00$sub != 12 &
+                     data00$sub != 24 & data00$sub != 26 & data00$sub != 27 &
+                     data00$sub != 28 & data00$sub != 33 & data00$sub != 32,]
 
 ### remove practice blocks, bad keypresses, and RTs <= 0
     data00 <- data00[data00$prac == 0 & data00$acc >= 0 & data00$rt > 0, ];
