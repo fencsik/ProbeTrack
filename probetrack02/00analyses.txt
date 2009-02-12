@@ -1,0 +1,175 @@
+00analyses.txt
+
+$LastChangedDate$
+
+----------------------------------------------------------------------
+
+* data01: aggregate accuracy and RT statistics by subject, gap
+  duration, probe type, number of targets, and probe delay
+
+* an0101: anova on RT as a function of probe delay and probe type
+* an0102: anova on accuracy as a function of probe delay and probe type
+* an0103: t-tests comparing RT on gap trials at each probe delay to RT
+  on no-gap trials
+* an0104: t-tests comparing accuracy on gap trials at each probe delay
+  to accuracy on no-gap trials
+
+* an0110: generate table of average accuracy as a function of gap
+  duration for each subject
+
+* fig0101: plot correct RT by probe delay separated by gap duration
+  and probe type
+* fig0102: plot accuracy by probe delay separated by gap duration and
+  probe type
+* fig0103: plot correct RT by probe delay separated by gap duration
+  and probe type, separately for each subject
+* fig0104: plot accuracy by probe delay separated by gap duration
+  and probe type, separately for each subject
+
+----------------------------------------------------------------------
+
+* data02: compute d' from data01, and aggregate it by subject, gap
+  duration, number of targets, and probe delay (no-gap trials need to
+  be collapsed across soa)
+
+* an0201: anova on d' as a function of probe delay
+* an0202: t-tests comparing d' on gap trials at each probe delay to d'
+  on no-gap trials
+
+* fig0201: plot d' as a function of probe delay, separated by gap
+  duration
+* fig0202: plot d' as a function of probe delay, separated by gap
+  duration, separately for each subject
+* fig0203: same as fig0201, but with error bars based on MSE from
+  an0201
+
+----------------------------------------------------------------------
+
+* data03: aggregate accuracy and RT statistics by subject, gap
+  duration, number of targets, and probe delay
+
+* an0301: anova on RT as a function of probe delay
+* an0302: anova on accuracy as a function of probe delay
+* an0303: t-tests comparing RT on gap trials at each probe delay to RT
+  on no-gap trials
+* an0304: t-tests comparing accuracy on gap trials at each probe delay
+  to accuracy on no-gap trials
+
+* fig0301: plot correct RT by probe delay separated by gap duration
+* fig0302: plot accuracy by probe delay separated by gap duration
+* fig0303: plot correct RT by probe delay separated by gap duration,
+  separately for each subject
+* fig0304: plot accuracy by probe delay separated by gap duration,
+  separately for each subject
+
+----------------------------------------------------------------------
+
+* data04: fit weibull cdf to RT by probe delay function from data03
+
+* an0401: generate table of parameters of weibull for each subject
+* an0402: test RT at each probe delay against the baseline
+* an0403: table reporting probe delay at which fitted weibull equals
+  estimated  baseline
+
+* fig0401: plot fit of weibull against observed data for each subject
+* fig0402: plot fit of weibull against observed data, averaged across
+  subjects
+o fig0403: plot RT as a function of probe delay, plotting the baseline
+  as an error region
+* fig0404: scatter-plot of weibull baseline against zero-gap RT for
+  each subject
+
+----------------------------------------------------------------------
+
+* data05: fit weibull cdf to RT by probe delay functions from data01,
+  but only for target-probe trials
+
+* an0501: generate table of parameters of weibull for each subject
+* an0502: test RT at each probe delay against the baseline
+
+* fig0501: plot fit of weibull against observed data for each subject
+* fig0502: plot fit of weibull against observed data, averaged across
+  subjects
+o fig0503: plot RT as a function of probe delay, plotting the baseline
+  as an error region
+* fig0504: scatter-plot of weibull baseline against zero-gap RT for
+  each subject
+
+----------------------------------------------------------------------
+
+* data06: fit weibull cdf to RT by probe delay function, averaged
+  across subjects, from data03
+* weibullTest06: tests fit of weibull under various starting parameter
+  values
+
+* an0601: generate table of parameters of weibull for each subject
+* an0602: test RT at each probe delay against the baseline
+* an0603: table reporting probe delay at which fitted weibull equals
+  estimated  baseline
+
+* fig0601: plot fit of weibull against observed data for each subject
+* fig0602: plot fit of weibull against observed data, averaged across
+  subjects
+
+----------------------------------------------------------------------
+
+* data07: fit weibull cdf to RT by probe delay function for averaged
+  data from data01, separately for target- and distractor-probe trials
+o weibullTest07: tests fit of weibull under various starting parameter
+  values
+
+o an0701: generate table of parameters of the fitted weibull
+o an0703: table reporting probe delay at which fitted weibulls reach
+  a lower bound
+
+* fig0701: plot of fitted weibull and observed data
+
+----------------------------------------------------------------------
+
+* data08: fit reacquire-time model to RT by probe delay functions from
+  data03
+
+* an0801: generate table of parameters of fitted model for each subject
+
+* fig0801: plot fit of model against observed data for each subject
+* fig0802: plot fit of model against observed data, averaged across
+  subjects
+
+----------------------------------------------------------------------
+
+* data09: fit reacquire-time model to RT by probe delay functions from
+  data03, averaged across subjects
+
+* an0901: generate table of parameters of fitted model for each subject
+
+* fig0901: plot fit of model against observed data
+
+----------------------------------------------------------------------
+
+* data10: aggregate median correct RT by subject, gap duration, number
+  of targets, and probe delay
+
+* an1001: anova on RT as a function of probe delay
+* an1002: t-tests comparing RT on gap trials at each probe delay to RT
+  on no-gap trials
+
+* fig1001: plot average median RT by probe delay, separately for gap
+  and no-gap trials
+* fig1002: same as fig1001, but with error bars based on the repeated
+  measures ANOVA
+* fig1003: same as fig1001, but separately for each subject
+
+----------------------------------------------------------------------
+
+* data11: fit reacquire-time model to RT by probe delay functions from
+  data10
+
+* an1101: generate table of parameters of fitted model for each subject
+
+* fig1101: plot fit of model against observed data for each subject
+* fig1102: plot fit of model against observed data, averaged across
+  subjects
+
+----------------------------------------------------------------------
+
+(* = complete, o = incomplete)
