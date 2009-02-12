@@ -1,11 +1,11 @@
-### pb4c.r: generates plot for ProbeTrack6b (Experiment 4) results, plotting RT
+### pb4c.r: generates plot for ProbeTrack06b (Experiment 4) results, plotting RT
 ### and d' by tracking load, separated by probe delay
 ###
 ### $LastChangedDate$
 
 f.pb4c <- function () {
-    rtfile <- "../../probetrack6b/data11.rda";
-    dfile <- "../../probetrack6b/data02.rda";
+    rtfile <- "../../probetrack06b/data11.rda";
+    dfile <- "../../probetrack06b/data02.rda";
     outfile <- "pb4c.pdf";
     thisfile <- "pb4c.r";
     exit.function <- function () {

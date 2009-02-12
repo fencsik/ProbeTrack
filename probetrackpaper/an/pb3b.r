@@ -1,11 +1,11 @@
-### pb3b.r: generates plot for ProbeTrack3 results, collapsing across gap
+### pb3b.r: generates plot for ProbeTrack03 results, collapsing across gap
 ### duration
 ###
 ### $LastChangedDate$
 
 f.pb3b <- function () {
-    rtfile <- "../../probetrack3/data12.rda";
-    dfile <- "../../probetrack3/data02.rda";
+    rtfile <- "../../probetrack03/data12.rda";
+    dfile <- "../../probetrack03/data02.rda";
     outfile <- "pb3b.pdf";
     thisfile <- "pb3b.r";
     exit.function <- function () {

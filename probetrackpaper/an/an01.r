@@ -3,10 +3,10 @@
 ### $Id$
 
 f.an01 <- function() {
-    infiles <- c("../../probetrack1/data01.rda",
-                 "../../probetrack2/data01.rda",
-                 "../../probetrack3/data01.rda",
-                 "../../probetrack6b/data01.rda"
+    infiles <- c("../../probetrack01/data01.rda",
+                 "../../probetrack02/data01.rda",
+                 "../../probetrack03/data01.rda",
+                 "../../probetrack06b/data01.rda"
                  );
     demofile <- "demographics.txt";
     outfile <- "an01out.txt"

@@ -7,7 +7,7 @@ f.refreshall <- function()
 {
    thisfile <- "refreshall.r";
    infile <- "refresh.r";
-   exp.dirs <- paste(file.path("..", "..", "probetrack"),
+   exp.dirs <- paste(file.path("..", "..", "probetrack0"),
                      c(as.character(1:3), "6b"), sep = "");
    exit.function <- function () {
       if (exists("op")) options(op);

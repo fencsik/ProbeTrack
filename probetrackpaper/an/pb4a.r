@@ -4,8 +4,8 @@
 ### $LastChangedDate$
 
 f.pb4a <- function () {
-    rtfile <- "../../probetrack6b/data11.rda";
-    dfile <- "../../probetrack6b/data02.rda";
+    rtfile <- "../../probetrack06b/data11.rda";
+    dfile <- "../../probetrack06b/data02.rda";
     outfile <- "pb4a.pdf";
     thisfile <- "pb4a.r";
     exit.function <- function () {

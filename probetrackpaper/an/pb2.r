@@ -1,10 +1,10 @@
-### pb2.r: generates plot for ProbeTrack1 results
+### pb2.r: generates plot for ProbeTrack02 results
 ###
 ### $LastChangedDate$
 
 do.pb2 <- function () {
-   rtfile <- "../../probetrack2/data11.rda";
-   dfile <- "../../probetrack2/data02.rda";
+   rtfile <- "../../probetrack02/data11.rda";
+   dfile <- "../../probetrack02/data02.rda";
    outfile <- "pb2.pdf";
    thisfile <- "pb2.r";
    exit.function <- function () {
