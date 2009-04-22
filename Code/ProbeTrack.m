@@ -190,7 +190,7 @@ function ProbeTrack
             if practiceFlag
                 prac = 1;
             end
-            if nTrials <= 0, contiunue; end
+            if nTrials <= 0, continue; end
 
             % balance independent variables
             n = ceil(nTrials / numel(SOAlist) / 2);
