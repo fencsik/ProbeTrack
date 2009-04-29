@@ -15,23 +15,21 @@ Code:
 
 Experiments:
 
-* driftsearch01: next twist on speed search studies, where subjects
-  search among moving gratings; compared fast/slow asymmetry for
-  oscillating vs. unidirectional gratings
-* driftsearch02: control study with oscillating motion replaced with
-  each stimulus moving in a random direction (balanced across stimuli)
-* driftsearch03: control study, in which grouping is broken up by
-  using heterogeneous distractor speeds (aborted after 4 subjects and
-  replaced by driftsearch04)
-* driftsearch04: same as driftsearch03, but with a different set of
-  comparison conditions (driftsearch04b was used for most
-  participants, and just had different grating frequency)
-* driftsearch05: test unidirectional motion at different levels of
-  speed
-* driftsearch05b: replication of driftsearch05 with different levels
-  of speed
-* driftsearch05c: sub-set of driftsearch05b with just one speed and
-  only the slow-target condition (why did we run this?)
+* driftsearch01: next twist on speed search studies, where subjects search
+  among moving gratings; compared fast/slow asymmetry for oscillating
+  vs. unidirectional gratings
+* driftsearch02: control study with oscillating motion replaced with each
+  stimulus moving in a random direction (balanced across stimuli)
+* driftsearch03: control study, in which grouping is broken up by using
+  heterogeneous distractor speeds (aborted after 4 subjects and replaced by
+  driftsearch04)
+* driftsearch04: same as driftsearch03, but with a different set of comparison
+  conditions (driftsearch04b was used for most participants, and just had
+  different grating frequency)
+* driftsearch05: test unidirectional motion at different levels of speed
+* driftsearch05b: replication of driftsearch05 with different levels of speed
+* driftsearch05c: sub-set of driftsearch05b with just one speed and only the
+  slow-target condition (why did we run this?)
 
 * flashtrack1: first FlashTrack study with either one target or one
   distractor flashing
@@ -45,26 +43,29 @@ Experiments:
 
 * motsearch01: new version of driftsearch studies with staircased
   exposure duration; first pilot study
+* motsearch02: identical to motsearch01, but run with paid participants
+* motsearch03: added oscillating condition, and run at different speeds
+* motsearch04: moving vs. static study
 
-* probetrack1: basic probetrack experiment--track 4 out of 8 with SOAs
-  of 0, 80, 160, 320, and 1280 ms--with a 133 ms gap
-* probetrack2: added more SOAs to probetrack1--0, 40, 80, 120, 160,
-  and 1280 ms
-* probetrack3: added multiple gap durations--133, 307, and 507 ms--and
-  more SOAs--0, 40, 80, 120, 160, 320, 960, and 1280 ms--to
-  probetrack1
-* probetrack4: probetrack1 with 307 ms gaps, SOAs of 0, 80, 320, and
-  1280 ms, tracking 1, 2, 3, or 4 targets out of 8 disks
-* probetrack5: control for probetrack4 without gaps to estimate
-  baseline performance at each level of tracking load
-* probetrack6: replicates probetrack4 with more trials per cell and
-  SOAs of 0, 40, 80, and 160 ms (didn't work; need longer SOA)
-* probetrack6b: replicates probetrack4 with more trials per cell and
-  SOAs of 0, 40, 80, and 1280 ms
-* probetrack7: replicates probetrack6b with only set sizes 3 and 4;
-  run by CSUEB Psych 3100 in 2008-4
-* probetrack08: replicates probetrack7 with tracking loads 2 and 4;
-  run as pilot study to prep for dual-task experiments
+* probetrack01: basic probetrack experiment--track 4 out of 8 with SOAs of 0,
+  80, 160, 320, and 1280 ms--with a 133 ms gap
+* probetrack02: added more SOAs to probetrack01--0, 40, 80, 120, 160, and 1280
+  ms
+* probetrack03: added multiple gap durations--133, 307, and 507 ms--and more
+  SOAs--0, 40, 80, 120, 160, 320, 960, and 1280 ms--to probetrack01
+* probetrack04: probetrack01 with 307 ms gaps, SOAs of 0, 80, 320, and 1280 ms,
+  tracking 1, 2, 3, or 4 targets out of 8 disks
+* probetrack05: control for probetrack04 without gaps to estimate baseline
+  performance at each level of tracking load
+* probetrack06: replicates probetrack04 with more trials per cell and SOAs of
+  0, 40, 80, and 160 ms (didn't work; need longer SOA)
+* probetrack06b: replicates probetrack04 with more trials per cell and SOAs of
+  0, 40, 80, and 1280 ms
+* probetrack07: replicates probetrack06b with only set sizes 3 and 4; run by
+  CSUEB Psych 3100 in 2008-4
+* probetrack08: replicates probetrack07 with tracking loads 2 and 4; run as
+  pilot study to prep for dual-task experiments
+* probetrack09: replicates probetrack07 with tracking load 2 only
 
 * shifttrack2: compare tracking performance across no-disappearance,
   shift 0, and shift 1 conditions, with movement speeds of 6 and 10
