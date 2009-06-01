@@ -21,22 +21,12 @@ $LastChangedDate$
 
 ----------------------------------------------------------------------
 
-o data10: aggregate median correct RT by subject, gap duration,
-  tracking load, and probe delay
+* data10: aggregate median correct RT by subject, gap duration, and probe delay
 
-o tab1001: anova on RT as a function of probe delay and # targets
-o tab1002: ancova on RT as a function of probe delay and tracking load
+* tab1001: anova on RT as a function of probe delay
 
-o tab1003: anova on RT as a function of probe delay and tracking load,
-  eliminating 1-target condition
-
-o fig1001: plot average median RT by probe delay, separated by #
-  targets
+* fig1001: plot average median RT by probe delay
 o fig1002: same as fig1001, but separately for each subject
-
-o fig1003: plot average median RT by # targets, separated by probe
-  delay
-o fig1004: fig1003 separately for each subject
 
 ----------------------------------------------------------------------
 
@@ -45,8 +35,6 @@ o data11: fit reacquire-time model to RT by probe delay functions from
 
 o tab1101: generate table of parameters of fitted model for each
   subject
-o tab1102: anova to test differences among parameters as a function of
-  tracking load
 
 o fig1101: plot observed and predicted RT as a function of probe
   delay, separated by tracking load, for each subject
