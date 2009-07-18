@@ -1,5 +1,7 @@
 *.aux
+*.fff
 *.log
 *.pdf
 *.rda
+*.ttt
 *.txt
