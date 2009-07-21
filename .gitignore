@@ -2,6 +2,7 @@
 *.bbl
 *.blg
 *.fff
+*.lof
 *.log
 *.pdf
 *.rda
