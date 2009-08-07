@@ -1,4 +1,11 @@
 .Rhistory
+*.aux
+*.bbl
+*.blg
+*.fff
+*.lof
+*.log
 *.pdf
 *.rda
+*.ttt
 *.txt
