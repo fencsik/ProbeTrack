@@ -5,6 +5,7 @@
 *.fff
 *.lof
 *.log
+*.mat
 *.pdf
 *.rda
 *.ttt
