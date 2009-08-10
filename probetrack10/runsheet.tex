@@ -3,50 +3,34 @@
 \usepackage[landscape,margin=1in]{geometry}
 \usepackage{lmodern}
 
-%\usepackage{array}
 \usepackage{tabularx}
-%\renewcommand{\tabularxcolumn}[1]{>{\centering p{#1}}
 \newcolumntype{Z}{>{\centering\arraybackslash}X}
 
-\begin{document}
+\newcommand{\LineOne}{& & & & & & 1 & 2 & 3 & \\ \hline}
 
+\begin{document}
 \pagestyle{empty}
+\small
+\setlength{\extrarowheight}{5pt}
 
 \begin{center}
   {\large ProbeTrack10}
 
   \medskip
 
-  \setlength{\extrarowheight}{5pt}
   \begin{tabularx}{\textwidth}%
-    {*{9}{|c}*3{|Z}|Z|}\hline
+    {*6{|c}*3{|p{.4in}}|Z|}\hline
     \bf Sub & \bf Date & \bf Age & \bf Gen & \bf Room & \bf Exp & 
       \bf 1 & \bf 2 & \bf 3 & \bf Notes \\ \hline
-    1   &      &     &     &      &     & 1 & 2 & 3 & \\ \hline
-    2   &      &     &     &      &     & 1 & 2 & 3 & \\ \hline
-    3   &      &     &     &      &     & 1 & 2 & 3 & \\ \hline
-    4   &      &     &     &      &     & 1 & 2 & 3 & \\ \hline
-    5   &      &     &     &      &     & 1 & 2 & 3 & \\ \hline
-    6   &      &     &     &      &     & 1 & 2 & 3 & \\ \hline
-    7   &      &     &     &      &     & 1 & 2 & 3 & \\ \hline
-    8   &      &     &     &      &     & 1 & 2 & 3 & \\ \hline
-    9   &      &     &     &      &     & 1 & 2 & 3 & \\ \hline
-    10  &      &     &     &      &     & 1 & 2 & 3 & \\ \hline
-    11  &      &     &     &      &     & 1 & 2 & 3 & \\ \hline
-    12  &      &     &     &      &     & 1 & 2 & 3 & \\ \hline
-    13  &      &     &     &      &     & 1 & 2 & 3 & \\ \hline
-    14  &      &     &     &      &     & 1 & 2 & 3 & \\ \hline
-    15  &      &     &     &      &     & 1 & 2 & 3 & \\ \hline
-    16  &      &     &     &      &     & 1 & 2 & 3 & \\ \hline
-    17  &      &     &     &      &     & 1 & 2 & 3 & \\ \hline
-    18  &      &     &     &      &     & 1 & 2 & 3 & \\ \hline
-    19  &      &     &     &      &     & 1 & 2 & 3 & \\ \hline
-    20  &      &     &     &      &     & 1 & 2 & 3 & \\ \hline
-    21  &      &     &     &      &     & 1 & 2 & 3 & \\ \hline
-    22  &      &     &     &      &     & 1 & 2 & 3 & \\ \hline
-    23  &      &     &     &      &     & 1 & 2 & 3 & \\ \hline
-    24  &      &     &     &      &     & 1 & 2 & 3 & \\ \hline
-  \end{tabularx}
+      \LineOne\LineOne\LineOne\LineOne\LineOne
+      \LineOne\LineOne\LineOne\LineOne\LineOne
+      \LineOne\LineOne\LineOne\LineOne\LineOne
+      \LineOne\LineOne\LineOne\LineOne\LineOne
+      \LineOne\LineOne\LineOne\LineOne\LineOne
+      \LineOne\LineOne
+
+ \end{tabularx}
+
 \end{center}
 
 \end{document}
