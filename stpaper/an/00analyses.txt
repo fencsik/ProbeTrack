@@ -5,15 +5,15 @@ $LastChangedDate$
 * an01.r: creates a table showing which subject has been in which	
 	  experiment.
 
-* pb1.r: plots results (RT and d') for ProbeTrack1
-* pb2.r: same for ProbeTrack2
-* pb3a.r: same as pb1.r for ProbeTrack3, but separated by gap duration
+* pb1.r: plots results (RT and d') for ProbeTrack01
+* pb2.r: same for ProbeTrack02
+* pb3a.r: same as pb1.r for ProbeTrack03, but separated by gap duration
 * pb3b.r: same as pb3a.r, but collapsed across gap durations
 
-* pb4a.r: same as pb1.r for ProbeTrack6b (Exp 4), but separated by
+* pb4a.r: same as pb1.r for ProbeTrack06b (Exp 4), but separated by
   tracking load
 * pb4b.r: same as pb4a.r, but only for the 4-target condition
-* pb4c.r: plots RT and d' for ProbeTrack6b (Exp 4) by tracking load,
+* pb4c.r: plots RT and d' for ProbeTrack06b (Exp 4) by tracking load,
   separated by probe delay
 
 * complete
