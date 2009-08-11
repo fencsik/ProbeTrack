@@ -33,16 +33,11 @@ o fig1002: same as fig1001, but separately for each subject
 * data11: fit reacquire-time model to RT by probe delay functions from
   data10, assuming separate reacquisition times for each tracking load
 
-o tab1101: generate table of parameters of fitted model for each
-  subject
+* tab1101: generate table of parameters of fitted model for each subject
 
-o fig1101: plot observed and predicted RT as a function of probe
-  delay, separated by tracking load, for each subject
-o fig1102: same as fig1101, but averaged across subjects
-
-o fig1103: plot observed and predicted RT as a function of tracking
-  load, separated by probe delay, for each subject
-o fig1104: same as fig1103, but averaged across subjects
+* fig1101: plot observed and predicted RT as a function of probe delay,
+  separated by tracking load, for each subject
+* fig1102: same as fig1101, but averaged across subjects
 
 ----------------------------------------------------------------------
 
