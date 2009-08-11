@@ -16,5 +16,7 @@ $LastChangedDate$
 * pb4c.r: plots RT and d' for ProbeTrack06b (Exp 4) by tracking load,
   separated by probe delay
 
+* pb5.r: plots results for ProbeTrack09
+
 * complete
 o incomplete
