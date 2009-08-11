@@ -15,10 +15,11 @@ f.data00 <- function () {
     data00 <- read.delim(infile)
 
 ### remove bad subjects:
-    ## 1. Subject 2, 3, 6, and 15 had accuracy less that 80% in at least one
-    ## SOA condition
+    ## 1. Subject 2, 3, 6, and 15 had accuracy less that 80% in at least
+    ## one SOA condition
+    ## 2. Subject 8 has unusually high false-alarm rates
     data00 <- data00[data00$sub != 2 & data00$sub != 3 & data00$sub != 6 &
-                     data00$sub != 15, ]
+                     data00$sub != 15 & data00$sub != 8, ]
 
 ### remove practice blocks, bad keypresses, and RTs <= 0
     data00 <- data00[data00$prac == 0 & data00$acc >= 0 & data00$rt > 0, ]
