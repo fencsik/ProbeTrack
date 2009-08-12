@@ -1,7 +1,5 @@
 00analyses.txt
 
-$LastChangedDate$
-
 * data00.r: clean up raw data file
 
 * tab0001.r: output subject demographics
@@ -26,6 +24,7 @@ $LastChangedDate$
 * data10: aggregate median correct RT by subject, gap duration, and probe delay
 
 * tab1001: anova on RT as a function of probe delay
+* tab1002: anova comparing ProbeTrack09 to ProbeTrack02
 
 * fig1001: plot average median RT by probe delay
 o fig1002: same as fig1001, but separately for each subject
