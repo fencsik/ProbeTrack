@@ -57,8 +57,20 @@ f.tab1002 <- function () {
     dt$exp <- factor(dt$exp)
 
     sink(outfile)
-    cat("ANOVA on median correct RT as a function of probe delay and experiment\n")
+    cat("ANOVA comparing median correct RT between ")
+    cat("ProbeTrack02 and ProbeTrack09\n")
     print(summary(aov(rt ~ soa * exp + Error(sub / soa), dt)))
+
+    soa <- as.character(sort(as.numeric(levels(dt$soa))))
+    for (i in 1:(length(soa) - 1)) {
+        for (j in (i+1):length(soa)) {
+            cat("\n\n\n")
+            cat("ANOVA comparing experiments and SOAs ")
+            cat(sprintf("%s and %s\n", soa[i], soa[j]))
+            print(summary(aov(rt ~ soa * exp + Error(sub / soa),
+                              dt[dt$soa == soa[i] | dt$soa == soa[j], ])))
+        }
+    }
 }
 
 f.tab1002()
