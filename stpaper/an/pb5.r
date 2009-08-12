@@ -11,8 +11,8 @@ do.pb5 <- function () {
             TRUE)
 
     ## hard code error values for RT and d'
-    err.rt <- sqrt(429.1 / 15) * qt(.975, 42)
-    err.dp <- sqrt(0.12871 / 15) * qt(.975, 42)
+    err.rt <- sqrt(528.8 / 10) * qt(.975, 27)
+    err.dp <- sqrt(0.1821 / 10) * qt(.975, 27)
 
     ## plotting limits
     ylim.rt <- c(200, 700)
