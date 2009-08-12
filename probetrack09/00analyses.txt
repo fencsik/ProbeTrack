@@ -26,7 +26,8 @@
 * tab1001: anova on RT as a function of probe delay
 * tab1002: anova comparing ProbeTrack09 to ProbeTrack02
 
-* fig1001: plot average median RT by probe delay
+* fig1001: plot average median RT by probe delay (with ProbeTrack02 thrown
+  in for comparison)
 o fig1002: same as fig1001, but separately for each subject
 
 ----------------------------------------------------------------------
