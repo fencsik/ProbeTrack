@@ -1,4 +1,4 @@
-### pb5.r: generates plot for ProbeTrack02 results
+### pb5.r: generates plot for ProbeTrack09 results
 
 do.pb5 <- function () {
     rtfile <- "../../probetrack09/data11.rda"
