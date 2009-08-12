@@ -4,6 +4,8 @@ $LastChangedDate$
 
 * data00.r: clean up raw data file
 
+* tab0001.r: output subject demographics
+
 ----------------------------------------------------------------------
 
 * data01: aggregate accuracy and RT statistics by subject, gap
