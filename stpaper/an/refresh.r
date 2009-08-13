@@ -6,7 +6,8 @@ refresh.all <- function()
 {
    infiles <- c("pb1.r", "pb2.r",
                 "pb3a.r", "pb3b.r",
-                "pb4a.r", "pb4b.r");
+                "pb4a.r", "pb4b.r",
+                "pb5.r");
    thisfile <- "refresh.r";
    exit.function <- function () {
       if (exists("op")) options(op);
