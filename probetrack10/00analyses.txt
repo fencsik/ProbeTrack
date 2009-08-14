@@ -1,0 +1,45 @@
+00analyses.txt
+
+* data00.r: clean up raw data file
+
+o tab0001.r: output subject demographics
+
+----------------------------------------------------------------------
+
+* data01: aggregate accuracy and RT statistics by subject, gap
+  duration, probe type, number of targets, and probe delay
+
+----------------------------------------------------------------------
+
+* data02: compute d' from data01, and aggregate it by subject, gap
+  duration, # targets, and probe delay
+
+* tab0201: anova on d' as a function of probe delay
+
+* fig0201: plot d' as a function of probe delay
+* fig0202: fig0201, separately for each subject
+
+----------------------------------------------------------------------
+
+* data10: aggregate median correct RT by subject, gap duration, and probe delay
+
+* tab1001: anova on RT as a function of probe delay
+
+* fig1001: plot average median RT by probe delay (with ProbeTrack02 thrown
+  in for comparison)
+o fig1002: same as fig1001, but separately for each subject
+
+----------------------------------------------------------------------
+
+* data11: fit reacquire-time model to RT by probe delay functions from
+  data10, assuming separate reacquisition times for each tracking load
+
+* tab1101: generate table of parameters of fitted model for each subject
+
+* fig1101: plot observed and predicted RT as a function of probe delay,
+  separated by tracking load, for each subject
+* fig1102: same as fig1101, but averaged across subjects
+
+----------------------------------------------------------------------
+
+(* = complete, o = incomplete)
