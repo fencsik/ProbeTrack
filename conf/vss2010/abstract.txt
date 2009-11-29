@@ -4,6 +4,8 @@ Authors: David E. Fencsik, Melanie Johnson, & Todd S. Horowitz
 
 (Other Potential Authors: Jeremy M. Wolfe, Skyler S. Place, ?)
 
+Word count = 207 (limit = 300)
+
 When people are engaged in dynamic tasks, such as monitoring traffic while
 driving or supervising children on a playground, they are able to keep
 track of multiple moving objects even through disruptions to the task
@@ -23,5 +25,3 @@ following the gap.  The model fits the data best when X is around 45 ms,
 regardless of the duration of the disappearance or the number of targets
 tracked.  This suggests that recovery of tracked objects following a
 disruption occurs rapidly and in parallel.
-
-Word limit: 250 (?)
