@@ -3,7 +3,7 @@ Title: Rapid Recovery of Moving Targets Following Task Disruption
 Authors: David E. Fencsik, Skyler S. Place, Melanie A. Johnson, & Todd
 S. Horowitz
 
-Word count = 224 (limit = 300)
+Word count = 270 (limit = 300)
 
 Tracking tasks, such as monitoring traffic while driving or supervising
 children on a playground, would seem to require continuous visual
@@ -17,15 +17,19 @@ et al., 2006).
 Here we studied the timecourse of target recovery following a brief
 disruption.  Participants tracked a set of moving targets among identical
 moving distractors.  During tracking, all objects disappeared
-simultaneously, then reappeared after a brief gap (133-507 ms).  Objects
-continued to move during the gap.  At a variable delay following
-reappearance, one object was probed.  Participants identified the probed
-object as a target or distractor.  RT decreased over probe delays of
-roughly 0-50 ms following reappearance, then remained constant.
+simultaneously, then reappeared after a brief gap.  Objects continued to
+move during the gap.  At a delay between 0-1280 ms following reappearance,
+one object was probed.  Participants identified the probed object as a
+target or distractor.  In different experiments, we varied the gap duration
+from 133-507 ms, the tracking load from 1-4 targets, and the set of probe
+delays.  In all experiments, RT decreased over probe delays of roughly 0-50
+ms following reappearance, then remained constant.
 
-We assumed that RT would decline linearly as a function of delay with a
-slope of -1, and estimated recovery time as the delay at which RT reached
-baseline.  Across XXX experiments, recovery time was around 45 ms.  This
-value did not change as a function of gap duration or tracking load.  These
-results suggest that recovery of tracked objects following disruption
-occurs rapidly and in parallel.
+We assumed that the visual system takes some amount of time to recover the
+targets following the gap.  Under this assumption, RT should decline
+linearly as a function of probe delay with a slope of -1.  Recovery time
+may be estimated as the probe delay at which RT reaches baseline and stops
+declining.  Recovery time was estimated to be about 45 ms in all
+experiments, regardless of gap duration or tracking load.  These results
+suggest that recovery of tracked objects following disruption occurs
+rapidly and in parallel.
