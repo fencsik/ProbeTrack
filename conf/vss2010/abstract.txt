@@ -3,7 +3,7 @@ Title: Rapid Recovery of Moving Targets Following Task Disruptions
 Authors: David E. Fencsik, Skyler S. Place, Melanie A. Johnson, & Todd
 S. Horowitz
 
-Word count = 216 (limit = 300)
+Word count = 275 (limit = 300)
 
 While tracking tasks, such as monitoring traffic while driving or
 supervising children on a playground, would seem to require continuous
@@ -12,19 +12,25 @@ disruptions to the task (e.g., looking away).  How do we do this?  We have
 previously suggested a mechanism that stores information about tracked
 objects offline during disruption so the visual system can perform a
 secondary task, then later resume tracking without complete loss (Horowitz
-et al., 2006).  Here we studied the timecourse of target recovery following
-a brief disruption.  Participants tracked a set of moving targets among
-identical moving distractors.  During tracking, all objects disappeared
+et al., 2006).
+
+Here we studied the timecourse of target recovery following a brief
+disruption.  Participants tracked a set of moving targets among identical
+moving distractors.  During tracking, all objects disappeared
 simultaneously, then reappeared after a brief gap (133-507 ms).  Objects
 continued to move during the gap.  At a variable delay following
 reappearance, one object was probed; participants identified the probed
-object as target or distractor.  RT decreased over probe delays of 0-50 ms
-following reappearance, then remained constant.
+object as a target or distractor.  RT decreased over probe delays of
+roughly 0-50 ms following reappearance, then remained constant.
 
 We developed a model based on the assumption that the visual system takes X
-ms to recover the targets following the gap. The model fits the data best
-when X is around 45 ms, regardless of the duration of the disappearance or
-the number of targets tracked.
+ms to recover the targets following the gap.  Under this model, RTs at
+probe delays of 0 ms reflect baseline response time plus X ms of recovery
+time, RTs to probe delays between 0-X ms should decline linearly as a
+function of probe delay with a slope of -1, and RTs to probe delays greater
+than X ms reflect just baseline response time.
 
-This suggests that recovery of tracked objects following disruption occurs
+The model fits the data well when X is around 45 ms.  This value did not
+change as a function of gap duration or tracking load.  These results
+suggest that recovery of tracked objects following disruption occurs
 rapidly and in parallel.
