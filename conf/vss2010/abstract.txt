@@ -1,8 +1,7 @@
 Title: Rapid Recovery of Moving Targets Following Task Disruptions
 
-Authors: David E. Fencsik, Melanie Johnson, & Todd S. Horowitz
-
-(Other Potential Authors: Jeremy M. Wolfe, Skyler S. Place, ?)
+Authors: David E. Fencsik, Skyler S. Place, Melanie A. Johnson, & Todd
+S. Horowitz
 
 Word count = 207 (limit = 300)
 
