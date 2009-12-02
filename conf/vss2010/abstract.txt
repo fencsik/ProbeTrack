@@ -3,24 +3,28 @@ Title: Rapid Recovery of Moving Targets Following Task Disruptions
 Authors: David E. Fencsik, Skyler S. Place, Melanie A. Johnson, & Todd
 S. Horowitz
 
-Word count = 207 (limit = 300)
+Word count = 216 (limit = 300)
 
-When people are engaged in dynamic tasks, such as monitoring traffic while
-driving or supervising children on a playground, they are able to keep
-track of multiple moving objects even through disruptions to the task
-(e.g., looking away).  Previous research suggests the existence of a
-mechanism that can store tracked objects offline during disruption so the
-visual system can perform a secondary task, then later resume tracking
-without complete loss.  We describe a set of studies investigating the
-process of recovering targets following disruption to a tracking
-task. Participants tracked a set of moving targets among identical moving
-distractors.  During tracking, all objects disappeared simultaneously, then
-reappeared after a brief delay.  At some delay following reappearance, one
-object was probed, and participants identified the probed object as a
-target or distractor.  We found that RT decreased over probe delays of 0-50
-ms following reappearance, then remained constant.  We developed a model
-based on the assumption that the visual system takes X ms to recover
-following the gap.  The model fits the data best when X is around 45 ms,
-regardless of the duration of the disappearance or the number of targets
-tracked.  This suggests that recovery of tracked objects following a
-disruption occurs rapidly and in parallel.
+While tracking tasks, such as monitoring traffic while driving or
+supervising children on a playground, would seem to require continuous
+visual attention, in fact we can track multiple moving objects even through
+disruptions to the task (e.g., looking away).  How do we do this?  We have
+previously suggested a mechanism that stores information about tracked
+objects offline during disruption so the visual system can perform a
+secondary task, then later resume tracking without complete loss (Horowitz
+et al., 2006).  Here we studied the timecourse of target recovery following
+a brief disruption.  Participants tracked a set of moving targets among
+identical moving distractors.  During tracking, all objects disappeared
+simultaneously, then reappeared after a brief gap (133-507 ms).  Objects
+continued to move during the gap.  At a variable delay following
+reappearance, one object was probed; participants identified the probed
+object as target or distractor.  RT decreased over probe delays of 0-50 ms
+following reappearance, then remained constant.
+
+We developed a model based on the assumption that the visual system takes X
+ms to recover the targets following the gap. The model fits the data best
+when X is around 45 ms, regardless of the duration of the disappearance or
+the number of targets tracked.
+
+This suggests that recovery of tracked objects following disruption occurs
+rapidly and in parallel.
