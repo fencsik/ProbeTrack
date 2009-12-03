@@ -33,3 +33,5 @@ declining.  Recovery time was estimated to be about 45 ms in all
 experiments, regardless of gap duration or tracking load.  These results
 suggest that recovery of tracked objects following disruption occurs
 rapidly and in parallel.
+
+Supported by NIH Grant MH65576 to TSH.
