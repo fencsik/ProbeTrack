@@ -35,7 +35,7 @@ f.fig0202 <- function () {
         matplot(x, dt[, sub], type="o", bty="n",
                 ylim=c(0, 4), axes=F,
                 pch=21, lty=1, lwd=3, bg="white",
-                xlab="", ylab="", main=paste("ProbeTrack09 Sub", sub))
+                xlab="", ylab="", main=paste("ProbeTrack10 Sub", sub))
         axis(1, x)
         axis(2)
         if (counter %% 3 == 0) title(ylab="d'")

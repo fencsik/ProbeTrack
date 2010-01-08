@@ -37,7 +37,7 @@ f.fig0201 <- function () {
 
     matplot(x, dt, type="n", bty="n",
             ylim=c(0, 4), axes=F,
-            xlab="Probe delay (ms)", ylab="d'", main="ProbeTrack09")
+            xlab="Probe delay (ms)", ylab="d'", main="ProbeTrack10")
     axis(1, x)
     axis(2)
 

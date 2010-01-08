@@ -55,7 +55,7 @@ f.fig1102 <- function () {
          axes=F, ylim=ylim,
          col=col, pch=pch,
          xlab="Probe delay (ms)", ylab="Probe RT (ms)",
-         main="ProbeTrack09")
+         main="ProbeTrack10")
     axis(1, x)
     axis(2)
     abline(v=0, col="gray50", lty=1)

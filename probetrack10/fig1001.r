@@ -41,7 +41,7 @@ f.fig1001 <- function () {
             ylim=c(400, 800), axes=F,
             xlab="Probe delay (ms)",
             ylab="Correct median RT (ms)",
-            main="ProbeTrack09")
+            main="ProbeTrack10")
     axis(1, x)
     axis(2)
 
@@ -53,7 +53,7 @@ f.fig1001 <- function () {
            length=.05, angle=90, code=3, lwd=2, lty=1)
     lines(x, dt, type="o",
           pch=21, lty=1, lwd=2, cex=1.5, bg="white")
-    legend("bottomright", c("ProbeTrack02", "ProbeTrack09"),
+    legend("bottomright", c("ProbeTrack02", "ProbeTrack10"),
            bty="n", cex=.75, 
            col="black", lty=c(2, 1), lwd=c(2, 2))
     
