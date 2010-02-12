@@ -40,7 +40,7 @@ f.fig1101 <- function () {
     counter <- 0
     for (sub in dimnames(obse)[[2]]) {
         matplot(x, obse[, sub], type="p", bty="n",
-                axes=F, cex=.75, ylim=ylim,
+                axes=F, cex=.75, #ylim=ylim,
                 col=col, pch=pch, lty=lty[1], lwd=lwd[1], bg=pt.bg,
                 xlab="", ylab="", main=sprintf("ProbeTrack10 - %s", sub))
         pred <- data11$model(x.fit, rtime[sub], baseRT[sub])
