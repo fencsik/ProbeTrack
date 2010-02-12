@@ -10,3 +10,4 @@
 *.rda
 *.ttt
 *.txt
+!*-data.txt
