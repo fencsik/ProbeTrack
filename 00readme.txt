@@ -1,9 +1,11 @@
 00readme.txt: desciption of contents of ProbeTrack project
 
-Code:
+Miscellaneous directories:
 
 * Code: directory for all current experiment code (other directories
   are outdated, and code should be moved here if it's updated)
+* conf: conference materials
+* stpaper: Single-task ProbeTrack paper
 
 Experiments:
 
