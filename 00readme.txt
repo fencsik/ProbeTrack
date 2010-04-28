@@ -28,3 +28,5 @@ Experiments:
 * probetrack08: replicates probetrack07 with tracking loads 2 and 4; run as
   pilot study to prep for dual-task experiments
 * probetrack09: replicates probetrack07 with tracking load 2 only
+* probetrack10: ProbeTrack with 3 targets and different, generally shorter
+  probe delays, and an attempt to get reliable effects with 20 trials/cell.
