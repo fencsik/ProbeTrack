@@ -8,6 +8,7 @@
 *.mat
 *.pdf
 *.rda
+*.synctex.gz
 *.ttt
 *.txt
 !*-data.txt
