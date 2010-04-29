@@ -88,3 +88,8 @@ no post-reappearance slowing at small probe delays.
 
 ----------------------------------------------------------------------
 
+April 28, 2010:
+
+Need a study in which gap and no-gap trials are randomly intermixed in a
+block so we can get a clean estimate of baseline RT.  This would
+(hopefully) demonstrate that we're measuring what we claim to be measuring.
