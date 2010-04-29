@@ -1,0 +1,27 @@
+Outline:
+ * Background
+   - Tracking tasks seem to require continuous attention.
+   - But Alvarez et al. (2005) showed that we can continue tracking even
+     through brief disruptions.
+   - Horowitz et al. (2006) proposed a postponement mechanism to store
+     tracking information during brief disruptions.
+ * Question: How long does it take to recover the targets after the
+   disruption ends?
+ * Method
+ * Analysis
+ * Experiment 1: Basic finding
+ * Experiment 2: Confirmation with more Probe Delays
+ * Experiment 3: Confirmation with 3 targets and shorter delays
+ * Experiment 4: Confirmation with 2 targets
+ * Experiment 5: Not just the short gap duration
+ * Conclusions:
+   - Post-gap recovery is rapid
+   - Seems to take about 40 ms to recover all targets and resume tracking
+ * Future Directions:
+   - Is this recovery time affected by a secondary task?
+   - Alvarez et al.'s (2005) results suggest not, but it hasn't been
+     measured yet.
+   - If so, what aspects of the secondary task might influence the recovery
+     time?
+ * References
+ * Acknowledgements
