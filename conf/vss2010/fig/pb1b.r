@@ -75,18 +75,12 @@ do.pb1b <- function () {
    axis(1, plotx, showx, lwd=lwd.axis, cex.axis=cex.axis)
    axis(2, seq(ylim.rt[1], ylim.rt[2], by=100),
         lwd=lwd.axis, cex.axis=cex.axis)
-   axis(4, ploty.dp, showy.dp, lwd=lwd.axis, cex.axis=cex.axis)
-   mtext("d'", side=4, line=2, las=0, at=at.ylab.dp)
 
    ## plot error bars and points
    lines(predx, rt.pred, lwd=lwd.model, col=1)
    arrows(plotx, rt - err.rt, plotx, rt + err.rt,
           length=.05, angle=90, code=3, lwd=lwd.ci, col=1, lty=1)
    points(plotx, rt, pch=pch.rt, col=1, bg="white", lwd=lwd.pts, cex=cex.pts)
-   arrows(plotx, dp - err.dp, plotx, dp + err.dp,
-          length=.05, angle=90, code=3, lwd=lwd.ci.dp, col=1, lty=1)
-   lines(plotx, dp, type="o", bg="white",
-         lwd=lwd.dp, lty=2, pch=pch.dp, cex=cex.pts.dp)
 
    ## add breaks to x-axis
    if (require("plotrix")) {

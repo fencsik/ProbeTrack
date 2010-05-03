@@ -84,6 +84,8 @@ f.pb3 <- function () {
 
     ## define colors
     col <- rainbow(dim(rt)[2], v=.75)
+    print(col2rgb(col))
+    print(dimnames(rt)[[2]])
 
     ## open pdf file
     pdf(outfile, width=plotSize[1], height=plotSize[2], pointsize=fontSize)
@@ -97,8 +99,6 @@ f.pb3 <- function () {
     axis(1, plotx, showx, lwd=lwd.axis, cex.axis=cex.axis)
     axis(2, seq(ylim.rt[1], ylim.rt[2], by=100),
          lwd=lwd.axis, cex.axis=cex.axis)
-    axis(4, ploty.dp, showy.dp, lwd=lwd.axis, cex.axis=cex.axis)
-    mtext("d'", side=4, line=2, las=0, at=at.ylab.dp)
 
     ## plot error bars and points
     ##print(plotx <- array(plotx, dim=c(length(plotx), 3)))
@@ -108,11 +108,6 @@ f.pb3 <- function () {
            col=rep(col, rep(length(plotx), 3)))
     matpoints(plotx, rt, pch=pch.rt, col=col, bg="white",
               lwd=lwd.pts, cex=cex.pts)
-    arrows(plotx, dp - err.dp, plotx, dp + err.dp,
-           length=.05, angle=90, code=3, lwd=lwd.ci.dp, lty=1,
-           col=rep(col, rep(length(plotx), 3)))
-    matlines(plotx, dp, type="o", bg="white",
-             lwd=lwd.dp, lty=2, col=col, pch=pch.dp, cex=cex.pts.dp)
 
     ## add breaks to x-axis
     if (require("plotrix")) {
