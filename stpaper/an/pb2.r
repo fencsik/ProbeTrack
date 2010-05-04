@@ -67,7 +67,7 @@ do.pb2 <- function () {
    rt.pred <- apply(rt.pred, 2, mean);
 
    ## or just compute based on average parameters
-   rt.pred <- model.rt(predx, 43.62047, 726.1516);
+   ##rt.pred <- model.rt(predx, 43.62047, 726.1516);
 
    ## open pdf file
    pdf(outfile, width = 8, height = 6, pointsize = 12);
