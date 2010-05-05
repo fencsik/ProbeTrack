@@ -373,6 +373,9 @@ function ProbeTrack
                     Screen('DrawingFinished', winMain);
                     [keyIsDown, KbTime, keyCode] = KbCheck;
                     if keyIsDown
+                        if keyCode(respAbort)
+                            error('abort key pressed');
+                        end
                         response = find(keyCode);
                         responseTime = KbTime;
                     end
