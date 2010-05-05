@@ -94,6 +94,8 @@ function ProbeTrack
         % Set any remaining parameters
         preloadFlag = 1;
         subjectPaced = 0; % does subject start each trial?
+        pauseEvery = 4; % pause every N trials
+        pauseMin = 4.0; % sec
 
         % Define point setup: Add pointsCorrect for every correct response,
         % subtract pointsError for every incorrect response, and subtract
@@ -523,6 +525,30 @@ function ProbeTrack
                 ClearScreen;
                 if pointsFlag, PresentPoints; end
                 Screen('Flip', winMain, targNextOnset);
+
+                % pause every N trials, unless there's only one or no trials remaining
+                if mod(trialCounter, pauseEvery) == 0 && ...
+                        (totalTrials - trialCounter > 1)
+                    ClearScreen;
+                    if pointsFlag, PresentPoints; end
+                    DrawFormattedText(...
+                        winMain, 'Please take a short break\n\n\n\n', ...
+                        'center', 'center', colText);
+                    t1 = Screen('Flip', winMain);
+                    ClearScreen;
+                    if pointsFlag, PresentPoints; end
+                    DrawFormattedText(...
+                        winMain, ...
+                        ['Please take a short break\n\n\n\n', ...
+                         'Press any button to continue'], ...
+                        'center', 'center', colText);
+                    Screen('Flip', winMain, t1 + pauseMin);
+                    KbStrokeWait;
+                    ClearScreen;
+                    if pointsFlag, PresentPoints; end
+                    Screen('Flip', winMain);
+                end
+
             end % end trial loop
 
             % output performance summary
