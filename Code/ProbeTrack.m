@@ -93,6 +93,7 @@ function ProbeTrack
 
         % Set any remaining parameters
         preloadFlag = 1;
+        subjectPaced = 0; % does subject start each trial?
 
         % Define point setup: Add pointsCorrect for every correct response,
         % subtract pointsError for every incorrect response, and subtract
@@ -292,18 +293,20 @@ function ProbeTrack
                 targNextOnset = tLastOnset + .1;
 
                 % Draw cue display and prompt for trial start
-                ClearScreen;
-                if pointsFlag, PresentPoints; end
-                PaintFrame(trajectories(:, :, 1), nStim, cueingColors, winMain);
-                DrawFormattedText(winMain, ...
-                                  sprintf('Press a key to start trial %d', ...
-                                          trialCounter), ...
-                                  'center', 'center', colText);
-                KbReleaseWait;
-                Screen('Flip', winMain, targNextOnset);
-                [keyTime, keyCode] = KbStrokeWait;
-                if keyCode(respAbort)
-                    error('abort key pressed');
+                if subjectPaced
+                    ClearScreen;
+                    if pointsFlag, PresentPoints; end
+                    PaintFrame(trajectories(:, :, 1), nStim, cueingColors, winMain);
+                    DrawFormattedText(winMain, ...
+                                      sprintf('Press a key to start trial %d', ...
+                                              trialCounter), ...
+                                      'center', 'center', colText);
+                    KbReleaseWait;
+                    Screen('Flip', winMain, targNextOnset);
+                    [keyTime, keyCode] = KbStrokeWait;
+                    if keyCode(respAbort)
+                        error('abort key pressed');
+                    end
                 end
 
                 % Draw cue frame
