@@ -1,3 +1,5 @@
+## -*-Octave-*-
+
 function ProbeTrack
 
 % Runs MOT task with gap and variable post-gap probe-onset delay
