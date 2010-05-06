@@ -4,19 +4,19 @@ function ProbeTrack
 
 % Runs MOT task with gap and variable post-gap probe-onset delay
 
-    VERSION = '10.2';
+    VERSION = "10.2";
     try
         AssertOpenGL;
         InitializePsychSound;
-        KbName('UnifyKeyNames');
-        experiment = 'ProbeTrackDT01';
+        KbName("UnifyKeyNames");
+        experiment = "ProbeTrackDT01";
 
         % get user input
         [subject, blockType, pointsFlag] = ...
-            DialogBox(sprintf('%s Parameters', experiment), ...
-                      'Subject code:', '1', 1, ...
-                      'Block type (1, 2, 3):', '3', 1, ...
-                      'Display points:', '1', 1);
+            DialogBox(sprintf("%s Parameters", experiment), ...
+                      "Subject code:", "1", 1, ...
+                      "Block type (1, 2, 3):", "3", 1, ...
+                      "Display points:", "1", 1);
 
         % set any remaining IVs
         SOAlist = [0 1 2 4 75]; % # of frames
@@ -35,30 +35,30 @@ function ProbeTrack
             pTrials = 0;
             xTrials = 40;
             durGap = 0; % # of frames
-            blockTypeStr = 'NoGap';
-            blockMesg = 'Initial Block without Gap';
+            blockTypeStr = "NoGap";
+            blockMesg = "Initial Block without Gap";
           case 2
             % training with gap
             practiceFlag = 1;
             pTrials = 0;
             xTrials = 20;
-            blockTypeStr = 'GapPrac';
-            blockMesg = 'Training Block with Gap';
+            blockTypeStr = "GapPrac";
+            blockMesg = "Training Block with Gap";
           case 3
             % experimental block
             practiceFlag = 0;
             pTrials = 10;
             xTrials = 200;
-            blockTypeStr = 'GapExp';
-            blockMesg = 'Experimental Block with Gap';
+            blockTypeStr = "GapExp";
+            blockMesg = "Experimental Block with Gap";
           case -1
             practiceFlag = 0;
             pTrials = 2;
             xTrials = 8;
-            blockTypeStr = 'Testing';
-            blockMesg = 'Testing Run';
+            blockTypeStr = "Testing";
+            blockMesg = "Testing Run";
           otherwise
-            error('Block type of %d not supported', blockType);
+            error("Block type of %d not supported", blockType);
         end
         totalTrials = xTrials + pTrials;
 
@@ -75,7 +75,7 @@ function ProbeTrack
         durFeedback = .746; % sec
         durPostTrialBlank = .5; % sec
         gapOnsetRange = [60 180]; % # of frames; bounds of range from which to pick pre-gap tracking duration
-        gapOnsetRangeStr = sprintf('%d-%d', min(gapOnsetRange), max(gapOnsetRange));
+        gapOnsetRangeStr = sprintf("%d-%d", min(gapOnsetRange), max(gapOnsetRange));
 
         % define colors
         colBlack = [0 0 0 255];
@@ -106,8 +106,8 @@ function ProbeTrack
         pointsCorrect = 1000;
         pointsError = 1000;
         pointsTimePenalty = .5;
-        pointsFile = sprintf('Points-%s.mat', experiment);
-        pointsFieldName = sprintf('s%04d', subject);
+        pointsFile = sprintf("Points-%s.mat", experiment);
+        pointsFieldName = sprintf("s%04d", subject);
         % open or initialize points file
         try
             load(pointsFile);
@@ -122,52 +122,52 @@ function ProbeTrack
         pointsRun = 0;
 
         % Define response keys
-        respAbort = KbName('ESCAPE');
+        respAbort = KbName("ESCAPE");
         if IsOSX
-            respTarget = KbName('''"');
+            respTarget = KbName("'\"");
         elseif IsWin
-            respTarget = KbName('''');
+            respTarget = KbName("'");
         else
-            error('no keyboard mapping for this operating system');
+            error("no keyboard mapping for this operating system");
         end        
-        respDistractor  = KbName('a'); % a key (left-hand side)
+        respDistractor  = KbName("a"); % a key (left-hand side)
         allowedResponses = [respTarget, respDistractor];
 
         % Tones
         samplingRate = 44100;
-        paBeep = PsychPortAudio('Open', [], [], 0, samplingRate, 1);
-        paClick = PsychPortAudio('Open', [], [], 0, samplingRate, 1);
-        paBuzz = PsychPortAudio('Open', [], [], 0, samplingRate, 1);
+        paBeep = PsychPortAudio("Open", [], [], 0, samplingRate, 1);
+        paClick = PsychPortAudio("Open", [], [], 0, samplingRate, 1);
+        paBuzz = PsychPortAudio("Open", [], [], 0, samplingRate, 1);
         sndBeep = MakeBeep(880, .1, samplingRate);
-        PsychPortAudio('FillBuffer', paBeep, sndBeep);
+        PsychPortAudio("FillBuffer", paBeep, sndBeep);
         sndClick = MakeBeep(1000, .01, samplingRate);
-        PsychPortAudio('FillBuffer', paClick, sndClick);
+        PsychPortAudio("FillBuffer", paClick, sndClick);
         sndBuzz = MakeBuzz(.1, samplingRate);
-        PsychPortAudio('FillBuffer', paBuzz, sndBuzz);
+        PsychPortAudio("FillBuffer", paBuzz, sndBuzz);
 
         % Miscellaneous setup
         seed = 100 * sum(clock);
-        rand('twister', seed);
-        dataFileName = sprintf('%s-%03d-data.txt', experiment, subject);
-        [status, result] = system('echo $HOSTNAME');
-        if exist('TestingRoom', 'file')
+        rand("twister", seed);
+        dataFileName = sprintf("%s-%03d-data.txt", experiment, subject);
+        [status, result] = system("echo $HOSTNAME");
+        if exist("TestingRoom", "file")
             computer = TestingRoom;
         elseif status == 0
-            computer = strtok(result, '.');
+            computer = strtok(result, ".");
             computer = computer(isletter(computer)); % remove any spaces or newlines
         else
-            computer = 'unknown';
+            computer = "unknown";
         end
         revision = VERSION;
-        blocktime = datestr(now, 'yyyymmdd.HHMMSS');;
+        blocktime = datestr(now, "yyyymmdd.HHMMSS");;
 
         % Open and set-up main window
-        Screen('Preference', 'SkipSyncTests', 0);
-        Screen('Preference', 'VisualDebugLevel', 4);
-        screenNumber=max(Screen('Screens'));
-        [winMain, rectMain] = Screen('OpenWindow', screenNumber, 0, [], 32, 2);
-        refreshDuration = Screen('GetFlipInterval', winMain);
-        Screen(winMain, 'BlendFunction', GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        Screen("Preference", "SkipSyncTests", 0);
+        Screen("Preference", "VisualDebugLevel", 4);
+        screenNumber=max(Screen("Screens"));
+        [winMain, rectMain] = Screen("OpenWindow", screenNumber, 0, [], 32, 2);
+        refreshDuration = Screen("GetFlipInterval", winMain);
+        Screen(winMain, "BlendFunction", GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         [centerX, centerY] = RectCenter(rectMain);
         durSlack = refreshDuration / 2.0;
 
@@ -176,40 +176,40 @@ function ProbeTrack
         ListenChar(2);
 
         % font setup
-        Screen('TextFont', winMain, 'Arial');
-        Screen('TextSize', winMain, 18);
+        Screen("TextFont", winMain, "Arial");
+        Screen("TextSize", winMain, 18);
 
         % create point window
         if pointsFlag
-            [winPoints, rectPoints] = Screen('OpenOffscreenWindow', winMain, ...
+            [winPoints, rectPoints] = Screen("OpenOffscreenWindow", winMain, ...
                                              colBackground, [0 0 250 40]);
-            Screen('TextFont', winPoints, 'Arial');
-            Screen('TextSize', winPoints, 24);
+            Screen("TextFont", winPoints, "Arial");
+            Screen("TextSize", winPoints, 24);
             rectPoints = OffsetRect(rectPoints, 10, 10);
             GeneratePoints(points);
         end
 
         % present instructions
-        Screen('FillRect', winMain, colBackground);
+        Screen("FillRect", winMain, colBackground);
         if pointsFlag, PresentPoints; end
         DrawFormattedText(winMain, ...
-                          [blockMesg, '\n\n\n', ...
-                           '--------------------------------------------------\n\n\n'...
-                           sprintf('Track %d targets out of %d total stimuli\n\n\n', nTargets, nStim), ...
-                           'Respond when one disk flashes red\n\n' ...
-                           'Press YES if the red disk is a target\n\n' ...
-                           'Press NO if the red disk is NOT a target\n\n\n\n', ...
-                           sprintf('Press any key to begin block of %d trials', totalTrials)], ...
-                          'center', 'center', colText);
+                          [blockMesg, "\n\n\n", ...
+                           "--------------------------------------------------\n\n\n"...
+                           sprintf("Track %d targets out of %d total stimuli\n\n\n", nTargets, nStim), ...
+                           "Respond when one disk flashes red\n\n" ...
+                           "Press YES if the red disk is a target\n\n" ...
+                           "Press NO if the red disk is NOT a target\n\n\n\n", ...
+                           sprintf("Press any key to begin block of %d trials", totalTrials)], ...
+                          "center", "center", colText);
         KbReleaseWait;
-        Screen('Flip', winMain);
-        Screen('FillRect', winMain, colBackground);
+        Screen("Flip", winMain);
+        Screen("FillRect", winMain, colBackground);
         if pointsFlag, PresentPoints; end
         [keyTime, keyCode] = KbStrokeWait;
         if keyCode(respAbort)
-            error('abort key pressed');
+            error("abort key pressed");
         end
-        Screen('Flip', winMain);
+        Screen("Flip", winMain);
 
         % initialize block-level DVs
         blockRT = zeros(totalTrials, 1) - 1;
@@ -236,18 +236,18 @@ function ProbeTrack
                 BalanceFactors(n, 1, SOAlist, probeTargetList);
 
             if numel(SOA) ~= nTrials && prac == 0
-                warning('unbalanced design in sublock %d', subBlock);
+                warning("unbalanced design in sublock %d", subBlock);
             end
 
             for trial = 1:nTrials
                 trialCounter = trialCounter + 1;
-                trialtime = datestr(now, 'yyyymmdd.HHMMSS');;
+                trialtime = datestr(now, "yyyymmdd.HHMMSS");;
 
                 % pre-trial blank
                 ClearScreen;
                 if pointsFlag, PresentPoints; end
-                % DrawFormattedText(winMain, 'Configuring trial...', 'center', 'center', colText);
-                Screen('Flip', winMain);
+                % DrawFormattedText(winMain, "Configuring trial...", "center", "center", colText);
+                Screen("Flip", winMain);
 
                 % randomize gap duration (in frames)
                 gapOnsetTime = Randi(gapOnsetRange(2) - gapOnsetRange(1)) + gapOnsetRange(1);
@@ -293,7 +293,7 @@ function ProbeTrack
                 if pointsFlag, PresentPoints; end
                 PaintFrame(trajectories(:, :, 1), nStim, trackingColors, winMain);
                 KbReleaseWait;
-                tLastOnset = Screen('Flip', winMain);
+                tLastOnset = Screen("Flip", winMain);
                 targNextOnset = tLastOnset + .1;
 
                 % Draw cue display and prompt for trial start
@@ -302,14 +302,14 @@ function ProbeTrack
                     if pointsFlag, PresentPoints; end
                     PaintFrame(trajectories(:, :, 1), nStim, cueingColors, winMain);
                     DrawFormattedText(winMain, ...
-                                      sprintf('Press a key to start trial %d', ...
+                                      sprintf("Press a key to start trial %d", ...
                                               trialCounter), ...
-                                      'center', 'center', colText);
+                                      "center", "center", colText);
                     KbReleaseWait;
-                    Screen('Flip', winMain, targNextOnset);
+                    Screen("Flip", winMain, targNextOnset);
                     [keyTime, keyCode] = KbStrokeWait;
                     if keyCode(respAbort)
-                        error('abort key pressed');
+                        error("abort key pressed");
                     end
                 end
 
@@ -317,7 +317,7 @@ function ProbeTrack
                 ClearScreen;
                 if pointsFlag, PresentPoints; end
                 PaintFrame(trajectories(:, :, 1), nStim, cueingColors, winMain);
-                tLastOnset = Screen('Flip', winMain);
+                tLastOnset = Screen("Flip", winMain);
                 targNextOnset = tLastOnset + durCue * refreshDuration - durSlack;
 
                 % main animation sequence
@@ -326,14 +326,14 @@ function ProbeTrack
                 ClearScreen;
                 if pointsFlag, PresentPoints; end
                 PaintFrame(trajectories(:, :, frame), nStim, cueingColors, winMain);
-                tFrameOnset(frame) = Screen('Flip', winMain, targNextOnset);
+                tFrameOnset(frame) = Screen("Flip", winMain, targNextOnset);
                 % cue + motion
                 for f = 2:durCueMove
                     frame = frame + 1;
                     ClearScreen;
                     if pointsFlag, PresentPoints; end
                     PaintFrame(trajectories(:, :, frame), nStim, cueingColors, winMain);
-                    tFrameOnset(frame) = Screen('Flip', winMain);
+                    tFrameOnset(frame) = Screen("Flip", winMain);
                 end
                 % cue fade + motion
                 for f = 1:durCueFade
@@ -342,7 +342,7 @@ function ProbeTrack
                     if pointsFlag, PresentPoints; end
                     PaintFrame(trajectories(:, :, frame), nStim, trackingColors, winMain);
                     PaintFrame(trajectories(:, :, frame), nStim, cueFadeColors(:, :, f), winMain);
-                    tFrameOnset(frame) = Screen('Flip', winMain);
+                    tFrameOnset(frame) = Screen("Flip", winMain);
                 end
                 % pre-gap interval
                 for f = 1:gapOnsetTime
@@ -350,7 +350,7 @@ function ProbeTrack
                     ClearScreen;
                     if pointsFlag, PresentPoints; end
                     PaintFrame(trajectories(:, :, frame), nStim, trackingColors, winMain);
-                    tFrameOnset(frame) = Screen('Flip', winMain);
+                    tFrameOnset(frame) = Screen("Flip", winMain);
                 end
                 for gLoop = 1:durGap
                     % gap interval
@@ -358,7 +358,7 @@ function ProbeTrack
                     ClearScreen;
                     if pointsFlag, PresentPoints; end
                     PaintFrame(trajectories(:, :, frame), nStim, gapColors, winMain);
-                    tFrameOnset(frame) = Screen('Flip', winMain);
+                    tFrameOnset(frame) = Screen("Flip", winMain);
                 end
                 for sLoop = 1:SOA(trial)
                     % SOA interval
@@ -366,7 +366,7 @@ function ProbeTrack
                     ClearScreen;
                     if pointsFlag, PresentPoints; end
                     PaintFrame(trajectories(:, :, frame), nStim, trackingColors, winMain);
-                    tFrameOnset(frame) = Screen('Flip', winMain);
+                    tFrameOnset(frame) = Screen("Flip", winMain);
                 end			
                 % present probe and continue motion while checking for a response every frame
                 while response == -1
@@ -377,16 +377,16 @@ function ProbeTrack
                     if frame <= trialDuration
                         PaintFrame(trajectories(:, :, frame), nStim, probeColors, winMain);
                     end
-                    Screen('DrawingFinished', winMain);
+                    Screen("DrawingFinished", winMain);
                     [keyIsDown, KbTime, keyCode] = KbCheck;
                     if keyIsDown
                         if keyCode(respAbort)
-                            error('abort key pressed');
+                            error("abort key pressed");
                         end
                         response = find(keyCode);
                         responseTime = KbTime;
                     end
-                    tLastOnset = Screen('Flip', winMain);
+                    tLastOnset = Screen("Flip", winMain);
                     if frame <= numel(tFrameOnset)
                         tFrameOnset(frame) = tLastOnset;
                     end
@@ -413,21 +413,21 @@ function ProbeTrack
                 end
                 if isempty(response)
                     % no response
-                    respString = 'none';
+                    respString = "none";
                     acc = -1;
                 elseif numel(response) > 1
                     % multiple keys pressed
-                    respString = 'multi';
+                    respString = "multi";
                     acc = -2;
                 elseif response == respTarget
-                    respString = 'target';
+                    respString = "target";
                     if probeTarget(trial)
                         acc = 1;
                     else
                         acc = 0;
                     end
                 elseif response == respDistractor
-                    respString = 'distractor';
+                    respString = "distractor";
                     if probeTarget(trial)
                         acc = 0;
                     else
@@ -435,7 +435,7 @@ function ProbeTrack
                     end
                 else
                     % some other key was pressed
-                    respString = sprintf('%d', response);
+                    respString = sprintf("%d", response);
                     acc = -3;
                 end
 
@@ -459,26 +459,26 @@ function ProbeTrack
                 if pointsFlag, GeneratePoints(points); end
 
                 % output data
-                dataFile = fopen(dataFileName, 'r');
+                dataFile = fopen(dataFileName, "r");
                 if dataFile == -1
-                    header = ['exp\tsub\tcode\trev\tcomp\truntime\ttrialtime\t' ...
-                              'nstim\trefreshdur\tcuedur\tgapdur\tgapOnsetRange\tdurPostProbe\tgapOnsetTime\t' ...
-                              'blocktype\tprac\ttrial\tntargets\tsoa\tprobeTarget\t' ...
-                              'resp\tacc\trt\tpts\ttpts\tmeanFrameDur\tminFrameDur\tmaxFrameDur\n'];
+                    header = ["exp\tsub\tcode\trev\tcomp\truntime\ttrialtime\t" ...
+                              "nstim\trefreshdur\tcuedur\tgapdur\tgapOnsetRange\tdurPostProbe\tgapOnsetTime\t" ...
+                              "blocktype\tprac\ttrial\tntargets\tsoa\tprobeTarget\t" ...
+                              "resp\tacc\trt\tpts\ttpts\tmeanFrameDur\tminFrameDur\tmaxFrameDur\n"];
                 else
                     fclose(dataFile);
                     header = [];
                 end
-                dataFile = fopen(dataFileName, 'a');
+                dataFile = fopen(dataFileName, "a");
                 if dataFile == -1
-                    error('cannot open data file %s for writing', dataFileName);
+                    error("cannot open data file %s for writing", dataFileName);
                 end
                 if ~isempty(header)
                     fprintf(dataFile, header);
                 end
-                fprintf(dataFile, ['%s\t%d\t%s\t%s\t%s\t%s\t%s\t%d\t%0.6f\t' ...
-                                   '%d\t%d\t%s\t%d\t%d\t%s\t%d\t%d\t%d\t%d\t' ...
-                                   '%d\t%s\t%d\t%d\t%d\t%d\t%0.3f\t%0.3f\t%0.3f\n'], ...
+                fprintf(dataFile, ["%s\t%d\t%s\t%s\t%s\t%s\t%s\t%d\t%0.6f\t" ...
+                                   "%d\t%d\t%s\t%d\t%d\t%s\t%d\t%d\t%d\t%d\t" ...
+                                   "%d\t%s\t%d\t%d\t%d\t%d\t%0.3f\t%0.3f\t%0.3f\n"], ...
                         experiment, subject, mfilename, revision, computer, ...
                         blocktime, trialtime, nStim, refreshDuration, ...
                         durCue, durGap, gapOnsetRangeStr, durPostProbe, ...
@@ -491,25 +491,25 @@ function ProbeTrack
                 % Prepare feedback
                 switch acc
                   case -1
-                    feedback = 'NO RESPONSE!';
+                    feedback = "NO RESPONSE!";
                   case -2
-                    feedback = 'MULTIPLE KEYS PRESSED!';
+                    feedback = "MULTIPLE KEYS PRESSED!";
                   case -3
-                    feedback = 'NON-RESPONSE KEY PRESSED!';
+                    feedback = "NON-RESPONSE KEY PRESSED!";
                   case 0
-                    feedback = 'ERROR';
+                    feedback = "ERROR";
                   case 1
-                    feedback = 'CORRECT';
+                    feedback = "CORRECT";
                   otherwise
-                    error('unknown accuracy code %d', acc);
+                    error("unknown accuracy code %d", acc);
                 end
                 if acc >= 0
                     if pointsFlag
-                        feedback = sprintf('TRIAL %d - %s\n\n\nPOINTS = %s', ...
+                        feedback = sprintf("TRIAL %d - %s\n\n\nPOINTS = %s", ...
                                            trialCounter, feedback, ...
                                            NumberWithSeparators(pointsTrial));
                     else
-                        feedback = sprintf('TRIAL %d - %s\n\n\nResponse Time = %0.0f ms', ...
+                        feedback = sprintf("TRIAL %d - %s\n\n\nResponse Time = %0.0f ms", ...
                                            trialCounter, feedback, RT);
                     end
                 end
@@ -517,16 +517,16 @@ function ProbeTrack
                 % Present feedback
                 ClearScreenCompletely;
                 if pointsFlag, PresentPoints; end
-                DrawFormattedText(winMain, feedback, 'center', 'center', colText);
-                tLastOnset = Screen('Flip', winMain);
+                DrawFormattedText(winMain, feedback, "center", "center", colText);
+                tLastOnset = Screen("Flip", winMain);
                 targNextOnset = tLastOnset + durFeedback - durSlack;
                 ClearScreen;
                 if pointsFlag, PresentPoints; end
-                tLastOnset = Screen('Flip', winMain, targNextOnset);
+                tLastOnset = Screen("Flip", winMain, targNextOnset);
                 targNextOnset = tLastOnset + durPostTrialBlank - durSlack;
                 ClearScreen;
                 if pointsFlag, PresentPoints; end
-                Screen('Flip', winMain, targNextOnset);
+                Screen("Flip", winMain, targNextOnset);
 
                 % pause every N trials, unless there's only one or no trials remaining
                 if mod(trialCounter, pauseEvery) == 0 && ...
@@ -534,51 +534,51 @@ function ProbeTrack
                     ClearScreen;
                     if pointsFlag, PresentPoints; end
                     DrawFormattedText(...
-                        winMain, 'Please take a short break\n\n\n\n', ...
-                        'center', 'center', colText);
-                    t1 = Screen('Flip', winMain);
+                        winMain, "Please take a short break\n\n\n\n", ...
+                        "center", "center", colText);
+                    t1 = Screen("Flip", winMain);
                     ClearScreen;
                     if pointsFlag, PresentPoints; end
                     DrawFormattedText(...
                         winMain, ...
-                        ['Please take a short break\n\n\n\n', ...
-                         'Press any button to continue'], ...
-                        'center', 'center', colText);
-                    Screen('Flip', winMain, t1 + pauseMin);
+                        ["Please take a short break\n\n\n\n", ...
+                         "Press any button to continue"], ...
+                        "center", "center", colText);
+                    Screen("Flip", winMain, t1 + pauseMin);
                     KbStrokeWait;
                     ClearScreen;
                     if pointsFlag, PresentPoints; end
-                    Screen('Flip', winMain);
+                    Screen("Flip", winMain);
                 end
 
             end % end trial loop
 
             % output performance summary
-            fprintf('\nBlock %d', subBlock);
-            fprintf('\npcor  = %0.1f%%', 100 * mean(blockAcc(blockAcc >= 0)));
-            fprintf('\nrtcor = %0.0f ms\n', mean(blockRT(blockAcc > 0)));
+            fprintf("\nBlock %d", subBlock);
+            fprintf("\npcor  = %0.1f%%", 100 * mean(blockAcc(blockAcc >= 0)));
+            fprintf("\nrtcor = %0.0f ms\n", mean(blockRT(blockAcc > 0)));
         end % end block loop
 
         % prepare final screen
-        closingString = sprintf('Overall accuracy = %0.0f%%\n\n', ...
+        closingString = sprintf("Overall accuracy = %0.0f%%\n\n", ...
                                 100 * mean(blockAcc(blockAcc >= 0)));
         if pointsFlag
-            closingString = sprintf('%sPoints Earned = %s', ...
+            closingString = sprintf("%sPoints Earned = %s", ...
                                     closingString, ...
                                     NumberWithSeparators(pointsRun));
         else
-            closingString = sprintf('%sAverage response time = %0.0f ms', ...
+            closingString = sprintf("%sAverage response time = %0.0f ms", ...
                                     closingString, ...
                                     mean(blockRT(blockAcc > 0 & blockRT > 0)));
         end
         ClearScreenCompletely;
         if pointsFlag, PresentPoints; end
         DrawFormattedText(winMain, ...
-                          ['Trial block is complete\n\n\n', ...
-                           closingString, '\n\n\n', ...
-                           'Please inform the experimenter that you are done.'], ...
-                          'center', 'center', colText);
-        Screen('Flip', winMain);
+                          ["Trial block is complete\n\n\n", ...
+                           closingString, "\n\n\n", ...
+                           "Please inform the experimenter that you are done."], ...
+                          "center", "center", colText);
+        Screen("Flip", winMain);
         while 1
             [keyTime, keyCode] = KbStrokeWait;
             if keyCode(respAbort)
@@ -589,45 +589,45 @@ function ProbeTrack
         ple;
     end
 
-    if exist('pointsArray', 'var') && exist('pointsFile', 'var')
-        save(pointsFile, 'pointsArray');
+    if exist("pointsArray", "var") && exist("pointsFile", "var")
+        save(pointsFile, "pointsArray");
     end
     Priority(0);
     ListenChar;
     ShowCursor;
-    fprintf('\n# of open windows = %d\n', numel(Screen('Windows')));
-    fclose('all');
-    Screen('CloseAll');
-    PsychPortAudio('Close');
+    fprintf("\n# of open windows = %d\n", numel(Screen("Windows")));
+    fclose("all");
+    Screen("CloseAll");
+    PsychPortAudio("Close");
     clear all;
 
 
 function GeneratePoints (pts)
-    Screen('FillRect', winPoints, colBackground);
+    Screen("FillRect", winPoints, colBackground);
     DrawFormattedText(winPoints, ...
-                      sprintf('Points = %s', NumberWithSeparators(pts)), ...
+                      sprintf("Points = %s", NumberWithSeparators(pts)), ...
                       [], [], colText);
 end
 
 
 function PresentPoints
-    Screen('DrawTexture', winMain, winPoints, [], rectPoints);
+    Screen("DrawTexture", winMain, winPoints, [], rectPoints);
 end
 
 
 function s = NumberWithSeparators (n)
     n = int2str(floor(n)); % convert to string
     ln = numel(n); % number of digits in n
-    if n(1) == '-'
+    if n(1) == "-"
         lc = floor((ln - 2) ./ 3); % number of commas (ignore -)
     else
         lc = floor((ln - 1) ./ 3); % number of commas
     end
-    s = repmat(' ', [1, ln + lc]);
+    s = repmat(" ", [1, ln + lc]);
     j = ln + lc;
     for i = 0:ln-1
-        if i > 0 && n(ln-i) ~= '-' && mod(i, 3) == 0
-            s(j) = ',';
+        if i > 0 && n(ln-i) ~= "-" && mod(i, 3) == 0
+            s(j) = ",";
             j = j - 1;
         end
         s(j) = n(ln-i); j = j - 1;
@@ -639,14 +639,14 @@ function varargout = DialogBox (title, varargin)
 
     n = (nargin - 1);
     if nargout ~= n / 3
-        error('input and output arguments must match');
+        error("input and output arguments must match");
     end
     prompt = varargin(1:3:n);
     defaults = varargin(2:3:n);
     toNum = varargin(3:3:n);
     param = inputdlg(prompt, title, 1, defaults);
     if isempty(param)
-        error('Dialog box cancelled');
+        error("Dialog box cancelled");
     end
     varargout = cell(1, nargout);
     for i = 1:length(param)
@@ -660,7 +660,7 @@ function varargout = DialogBox (title, varargin)
                 end
             end
             if isempty(n)
-                error('parameter ''%s'' value ''%s'' could not be converted to numeric as requested', ...
+                error("parameter '%s' value '%s' could not be converted to numeric as requested", ...
                       prompt{i}, p);
             end
         else
@@ -689,20 +689,20 @@ end
 
 
 function ClearScreen
-    Screen('FillRect', winMain, colBackground);
+    Screen("FillRect", winMain, colBackground);
 end
 
 
 function ClearScreenCompletely
-    Screen('FillRect', winMain, colBackground);
+    Screen("FillRect", winMain, colBackground);
 end
 
 
 function PaintFrame(coordinates, nStim, diskColors, window)
-    Screen('DrawDots', window, coordinates(:, 1:nStim, :), stimSize, diskColors, [], 2);
+    Screen("DrawDots", window, coordinates(:, 1:nStim, :), stimSize, diskColors, [], 2);
 %     for i = 1:nStim
 %         placeRect = CenterRectOnPoint(rectStim, coordinates(i, 1), coordinates(i, 2));
-%         screen(window, 'FillOval', diskColors(i, :), placeRect);
+%         screen(window, "FillOval", diskColors(i, :), placeRect);
 %     end
 end
 
