@@ -1,6 +1,6 @@
 ## -*-Octave-*-
 
-function ProbeTrack
+function ProbeTrackOct
 
     ## Runs MOT task with gap and variable post-gap probe-onset delay
 
@@ -113,11 +113,11 @@ function ProbeTrack
             load(pointsFile);
         catch
             pointsArray = struct();
-        end
+        end_try_catch
         ## create record of subject points if it doesn't exist, then extract it
         if ~isfield(pointsArray, pointsFieldName)
             pointsArray.(pointsFieldName) = 0;
-        end
+        endif
         points = pointsArray.(pointsFieldName);
         pointsRun = 0;
 
@@ -129,7 +129,7 @@ function ProbeTrack
             respTarget = KbName("'");
         else
             error("no keyboard mapping for this operating system");
-        end        
+        endif
         respDistractor  = KbName("a"); # a key (left-hand side)
         allowedResponses = [respTarget, respDistractor];
 
@@ -157,7 +157,7 @@ function ProbeTrack
             computer = computer(isletter(computer)); # remove any spaces or newlines
         else
             computer = "unknown";
-        end
+        endif
         revision = VERSION;
         blocktime = datestr(now, "yyyymmdd.HHMMSS");;
 
@@ -187,11 +187,11 @@ function ProbeTrack
             Screen("TextSize", winPoints, 24);
             rectPoints = OffsetRect(rectPoints, 10, 10);
             GeneratePoints(points);
-        end
+        endif
 
         ## present instructions
         Screen("FillRect", winMain, colBackground);
-        if pointsFlag, PresentPoints; end
+        if pointsFlag, PresentPoints; endif
         DrawFormattedText(winMain, ...
                           [blockMesg, "\n\n\n", ...
                            "--------------------------------------------------\n\n\n"...
@@ -204,11 +204,11 @@ function ProbeTrack
         KbReleaseWait;
         Screen("Flip", winMain);
         Screen("FillRect", winMain, colBackground);
-        if pointsFlag, PresentPoints; end
+        if pointsFlag, PresentPoints; endif
         [keyTime, keyCode] = KbStrokeWait;
         if keyCode(respAbort)
             error("abort key pressed");
-        end
+        endif
         Screen("Flip", winMain);
 
         ## initialize block-level DVs
@@ -224,11 +224,11 @@ function ProbeTrack
             else
                 nTrials = xTrials;
                 prac = 0;
-            end
+            endif
             if practiceFlag
                 prac = 1;
-            end
-            if nTrials <= 0, continue; end
+            endif
+            if nTrials <= 0, continue; endif
 
             ## balance independent variables
             n = ceil(nTrials / numel(SOAlist) / 2);
@@ -237,7 +237,7 @@ function ProbeTrack
 
             if numel(SOA) ~= nTrials && prac == 0
                 warning("unbalanced design in sublock %d", subBlock);
-            end
+            endif
 
             for trial = 1:nTrials
                 trialCounter = trialCounter + 1;
@@ -245,7 +245,7 @@ function ProbeTrack
 
                 ## pre-trial blank
                 ClearScreen;
-                if pointsFlag, PresentPoints; end
+                if pointsFlag, PresentPoints; endif
                 ## DrawFormattedText(winMain, "Configuring trial...", "center", "center", colText);
                 Screen("Flip", winMain);
 
@@ -264,7 +264,7 @@ function ProbeTrack
                 else
                     ## probe a distractor
                     probeItem = Randi(nStim - nTargets) + nTargets;
-                end
+                endif
 
                 ## set colors for probe frames
                 probeColors = trackingColors;
@@ -290,7 +290,7 @@ function ProbeTrack
 
                 ## Draw plain display and wait a bit
                 ClearScreen;
-                if pointsFlag, PresentPoints; end
+                if pointsFlag, PresentPoints; endif
                 PaintFrame(trajectories(:, :, 1), nStim, trackingColors, winMain);
                 KbReleaseWait;
                 tLastOnset = Screen("Flip", winMain);
@@ -299,7 +299,7 @@ function ProbeTrack
                 ## Draw cue display and prompt for trial start
                 if subjectPaced
                     ClearScreen;
-                    if pointsFlag, PresentPoints; end
+                    if pointsFlag, PresentPoints; endif
                     PaintFrame(trajectories(:, :, 1), nStim, cueingColors, winMain);
                     DrawFormattedText(winMain, ...
                                       sprintf("Press a key to start trial %d", ...
@@ -310,12 +310,12 @@ function ProbeTrack
                     [keyTime, keyCode] = KbStrokeWait;
                     if keyCode(respAbort)
                         error("abort key pressed");
-                    end
-                end
+                    endif
+                endif
 
                 ## Draw cue frame
                 ClearScreen;
-                if pointsFlag, PresentPoints; end
+                if pointsFlag, PresentPoints; endif
                 PaintFrame(trajectories(:, :, 1), nStim, cueingColors, winMain);
                 tLastOnset = Screen("Flip", winMain);
                 targNextOnset = tLastOnset + durCue * refreshDuration - durSlack;
@@ -324,84 +324,84 @@ function ProbeTrack
                 ## draw first post-cue frame
                 frame = 1;
                 ClearScreen;
-                if pointsFlag, PresentPoints; end
+                if pointsFlag, PresentPoints; endif
                 PaintFrame(trajectories(:, :, frame), nStim, cueingColors, winMain);
                 tFrameOnset(frame) = Screen("Flip", winMain, targNextOnset);
                 ## cue + motion
                 for f = 2:durCueMove
                     frame = frame + 1;
                     ClearScreen;
-                    if pointsFlag, PresentPoints; end
+                    if pointsFlag, PresentPoints; endif
                     PaintFrame(trajectories(:, :, frame), nStim, cueingColors, winMain);
                     tFrameOnset(frame) = Screen("Flip", winMain);
-                end
+                endfor
                 ## cue fade + motion
                 for f = 1:durCueFade
                     frame = frame + 1;
                     ClearScreen;
-                    if pointsFlag, PresentPoints; end
+                    if pointsFlag, PresentPoints; endif
                     PaintFrame(trajectories(:, :, frame), nStim, trackingColors, winMain);
                     PaintFrame(trajectories(:, :, frame), nStim, cueFadeColors(:, :, f), winMain);
                     tFrameOnset(frame) = Screen("Flip", winMain);
-                end
+                endfor
                 ## pre-gap interval
                 for f = 1:gapOnsetTime
                     frame = frame + 1;
                     ClearScreen;
-                    if pointsFlag, PresentPoints; end
+                    if pointsFlag, PresentPoints; endif
                     PaintFrame(trajectories(:, :, frame), nStim, trackingColors, winMain);
                     tFrameOnset(frame) = Screen("Flip", winMain);
-                end
+                endfor
                 for gLoop = 1:durGap
                     ## gap interval
                     frame = frame + 1;
                     ClearScreen;
-                    if pointsFlag, PresentPoints; end
+                    if pointsFlag, PresentPoints; endif
                     PaintFrame(trajectories(:, :, frame), nStim, gapColors, winMain);
                     tFrameOnset(frame) = Screen("Flip", winMain);
-                end
+                endfor
                 for sLoop = 1:SOA(trial)
                     ## SOA interval
                     frame = frame + 1;
                     ClearScreen;
-                    if pointsFlag, PresentPoints; end
+                    if pointsFlag, PresentPoints; endif
                     PaintFrame(trajectories(:, :, frame), nStim, trackingColors, winMain);
                     tFrameOnset(frame) = Screen("Flip", winMain);
-                end			
+                endfor
                 ## present probe and continue motion while checking for a response every frame
                 while response == -1
                     postProbeFrames = postProbeFrames + 1;
                     frame = frame + 1;
                     ClearScreen;
-                    if pointsFlag, PresentPoints; end
+                    if pointsFlag, PresentPoints; endif
                     if frame <= trialDuration
                         PaintFrame(trajectories(:, :, frame), nStim, probeColors, winMain);
-                    end
+                    endif
                     Screen("DrawingFinished", winMain);
                     [keyIsDown, KbTime, keyCode] = KbCheck;
                     if keyIsDown
                         if keyCode(respAbort)
                             error("abort key pressed");
-                        end
+                        endif
                         response = find(keyCode);
                         responseTime = KbTime;
-                    end
+                    endif
                     tLastOnset = Screen("Flip", winMain);
                     if frame <= numel(tFrameOnset)
                         tFrameOnset(frame) = tLastOnset;
-                    end
+                    endif
                     if probeOnsetTime < 0
                         probeOnsetTime = tLastOnset;
-                    end
-                end
+                    endif
+                endwhile
 
                 ## Wait for key release
                 if response > 0
                     while any(keyCode(response))
                         [keyIsDown, KbTime, keyCode] = KbCheck;
-                    end
+                    endwhile
                     tResponseEnd = KbTime;
-                end                    
+                endif
 
                 ## compute RT and accuracy
                 if responseTime > 0
@@ -410,7 +410,7 @@ function ProbeTrack
                 else
                     RT = 0;
                     dur = 0;
-                end
+                endif
                 if isempty(response)
                     ## no response
                     respString = "none";
@@ -425,19 +425,19 @@ function ProbeTrack
                         acc = 1;
                     else
                         acc = 0;
-                    end
+                    endif
                 elseif response == respDistractor
                     respString = "distractor";
                     if probeTarget(trial)
                         acc = 0;
                     else
                         acc = 1;
-                    end
+                    endif
                 else
                     ## some other key was pressed
                     respString = sprintf("%d", response);
                     acc = -3;
-                end
+                endif
 
                 ## compute durations
                 durFrames = diff(tFrameOnset(tFrameOnset > 0)) * 1000;
@@ -448,7 +448,7 @@ function ProbeTrack
                     pointsTrial = -1 * pointsError;
                 else
                     pointsTrial = max(pointsCorrect - floor(RT * pointsTimePenalty), 0);
-                end
+                endif
 
                 ## store trial info
                 blockRT(trial) = RT;
@@ -456,7 +456,7 @@ function ProbeTrack
                 points = points + pointsTrial;
                 pointsRun = pointsRun + pointsTrial;
                 pointsArray.(pointsFieldName) = points;
-                if pointsFlag, GeneratePoints(points); end
+                if pointsFlag, GeneratePoints(points); endif
 
                 ## output data
                 dataFile = fopen(dataFileName, "r");
@@ -468,14 +468,14 @@ function ProbeTrack
                 else
                     fclose(dataFile);
                     header = [];
-                end
+                endif
                 dataFile = fopen(dataFileName, "a");
                 if dataFile == -1
                     error("cannot open data file %s for writing", dataFileName);
-                end
+                endif
                 if ~isempty(header)
                     fprintf(dataFile, header);
-                end
+                endif
                 fprintf(dataFile, ["%s\t%d\t%s\t%s\t%s\t%s\t%s\t%d\t%0.6f\t" ...
                                    "%d\t%d\t%s\t%d\t%d\t%s\t%d\t%d\t%d\t%d\t" ...
                                    "%d\t%s\t%d\t%d\t%d\t%d\t%0.3f\t%0.3f\t%0.3f\n"], ...
@@ -502,7 +502,7 @@ function ProbeTrack
                         feedback = "CORRECT";
                     otherwise
                         error("unknown accuracy code %d", acc);
-                end
+                endswitch
                 if acc >= 0
                     if pointsFlag
                         feedback = sprintf("TRIAL %d - %s\n\n\nPOINTS = %s", ...
@@ -511,34 +511,34 @@ function ProbeTrack
                     else
                         feedback = sprintf("TRIAL %d - %s\n\n\nResponse Time = %0.0f ms", ...
                                            trialCounter, feedback, RT);
-                    end
-                end
+                    endif
+                endif
 
                 ## Present feedback
                 ClearScreenCompletely;
-                if pointsFlag, PresentPoints; end
+                if pointsFlag, PresentPoints; endif
                 DrawFormattedText(winMain, feedback, "center", "center", colText);
                 tLastOnset = Screen("Flip", winMain);
                 targNextOnset = tLastOnset + durFeedback - durSlack;
                 ClearScreen;
-                if pointsFlag, PresentPoints; end
+                if pointsFlag, PresentPoints; endif
                 tLastOnset = Screen("Flip", winMain, targNextOnset);
                 targNextOnset = tLastOnset + durPostTrialBlank - durSlack;
                 ClearScreen;
-                if pointsFlag, PresentPoints; end
+                if pointsFlag, PresentPoints; endif
                 Screen("Flip", winMain, targNextOnset);
 
                 ## pause every N trials, unless there's only one or no trials remaining
                 if mod(trialCounter, pauseEvery) == 0 && ...
                         (totalTrials - trialCounter > 1)
                     ClearScreen;
-                    if pointsFlag, PresentPoints; end
+                    if pointsFlag, PresentPoints; endif
                     DrawFormattedText(...
                                       winMain, "Please take a short break\n\n\n\n", ...
                                       "center", "center", colText);
                     t1 = Screen("Flip", winMain);
                     ClearScreen;
-                    if pointsFlag, PresentPoints; end
+                    if pointsFlag, PresentPoints; endif
                     DrawFormattedText(...
                                       winMain, ...
                                       ["Please take a short break\n\n\n\n", ...
@@ -547,17 +547,17 @@ function ProbeTrack
                     Screen("Flip", winMain, t1 + pauseMin);
                     KbStrokeWait;
                     ClearScreen;
-                    if pointsFlag, PresentPoints; end
+                    if pointsFlag, PresentPoints; endif
                     Screen("Flip", winMain);
-                end
+                endif
 
-            end # end trial loop
+            endfor # end trial loop
 
             ## output performance summary
             fprintf("\nBlock %d", subBlock);
             fprintf("\npcor  = %0.1f%%", 100 * mean(blockAcc(blockAcc >= 0)));
             fprintf("\nrtcor = %0.0f ms\n", mean(blockRT(blockAcc > 0)));
-        end # end block loop
+        endfor # end block loop
 
         ## prepare final screen
         closingString = sprintf("Overall accuracy = %0.0f%%\n\n", ...
@@ -570,9 +570,9 @@ function ProbeTrack
             closingString = sprintf("%sAverage response time = %0.0f ms", ...
                                     closingString, ...
                                     mean(blockRT(blockAcc > 0 & blockRT > 0)));
-        end
+        endif
         ClearScreenCompletely;
-        if pointsFlag, PresentPoints; end
+        if pointsFlag, PresentPoints; endif
         DrawFormattedText(winMain, ...
                           ["Trial block is complete\n\n\n", ...
                            closingString, "\n\n\n", ...
@@ -583,15 +583,15 @@ function ProbeTrack
             [keyTime, keyCode] = KbStrokeWait;
             if keyCode(respAbort)
                 break;
-            end
-        end
+            endif
+        endwhile
     catch
         ple;
-    end
+    end_try_catch
 
     if exist("pointsArray", "var") && exist("pointsFile", "var")
         save(pointsFile, "pointsArray");
-    end
+    endif
     Priority(0);
     ListenChar;
     ShowCursor;
@@ -600,146 +600,143 @@ function ProbeTrack
     Screen("CloseAll");
     PsychPortAudio("Close");
     clear all;
+endfunction
+
+function GeneratePoints (pts)
+    Screen("FillRect", winPoints, colBackground);
+    DrawFormattedText(winPoints, ...
+                      sprintf("Points = %s", NumberWithSeparators(pts)), ...
+                      [], [], colText);
+endfunction
 
 
-    function GeneratePoints (pts)
-        Screen("FillRect", winPoints, colBackground);
-        DrawFormattedText(winPoints, ...
-                          sprintf("Points = %s", NumberWithSeparators(pts)), ...
-                          [], [], colText);
-    end
+function PresentPoints
+    Screen("DrawTexture", winMain, winPoints, [], rectPoints);
+endfunction
 
 
-    function PresentPoints
-        Screen("DrawTexture", winMain, winPoints, [], rectPoints);
-    end
-
-
-    function s = NumberWithSeparators (n)
-        n = int2str(floor(n)); # convert to string
-        ln = numel(n); # number of digits in n
-        if n(1) == "-"
-            lc = floor((ln - 2) ./ 3); # number of commas (ignore -)
-        else
-            lc = floor((ln - 1) ./ 3); # number of commas
-        end
-        s = repmat(" ", [1, ln + lc]);
-        j = ln + lc;
-        for i = 0:ln-1
-            if i > 0 && n(ln-i) ~= "-" && mod(i, 3) == 0
-                s(j) = ",";
-                j = j - 1;
-            end
-            s(j) = n(ln-i); j = j - 1;
-        end
-    end
-
-
-    function varargout = DialogBox (title, varargin)
-
-        n = (nargin - 1);
-        if nargout ~= n / 3
-            error("input and output arguments must match");
-        end
-        prompt = varargin(1:3:n);
-        defaults = varargin(2:3:n);
-        toNum = varargin(3:3:n);
-        param = inputdlg(prompt, title, 1, defaults);
-        if isempty(param)
-            error("Dialog box cancelled");
-        end
-        varargout = cell(1, nargout);
-        for i = 1:length(param)
-            p = param{i};
-            if toNum{i}
-                n = [];
-                if ~exist(p)
-                    n = str2num(p);
-                    if ~isempty(n)
-                        varargout{i} = n;
-                    end
-                end
-                if isempty(n)
-                    error("parameter '%s' value '%s' could not be converted to numeric as requested", ...
-                          prompt{i}, p);
-                end
-            else
-                varargout{i} = p;
-            end
-        end
-    end
-
-    function [buzz, rate] = MakeBuzz (dur, rate)
-
-        if nargin < 2 || isempty(rate) 
-            rate = 44100;
-        end
-        
-        freqs = 100 * [1:15, 75:100];
-
-        n = 0;
-        buzz = zeros(1, length(0:rate*dur));
-        for f = freqs
-            buzz = buzz + sin(2 * pi * f * (0:rate*dur) / rate);
-            n = n + 1;
-        end
-        buzz = buzz / n;
-        buzz = (buzz - min(buzz)) / (max(buzz) - min(buzz)) * 2 - 1;
-    end
-
-
-    function ClearScreen
-        Screen("FillRect", winMain, colBackground);
-    end
-
-
-    function ClearScreenCompletely
-        Screen("FillRect", winMain, colBackground);
-    end
-
-
-    function PaintFrame(coordinates, nStim, diskColors, window)
-        Screen("DrawDots", window, coordinates(:, 1:nStim, :), stimSize, diskColors, [], 2);
-        ##     for i = 1:nStim
-        ##         placeRect = CenterRectOnPoint(rectStim, coordinates(i, 1), coordinates(i, 2));
-        ##         screen(window, "FillOval", diskColors(i, :), placeRect);
-        ##     end
-    end
-
-    function trajectories = MakeTrajectories (nStim, nFrames, stimSize)
-
-        ## generates MVT trajectories
-        ## given the number of objects and frames, returns positions for each object for each frame
-        ## code adapted from Jen Dimase's motPictMem, Justin Junge
-        ## started 9/10/2004
-        ## current 9/14/2004
-
-        ##  Creates target Locations.
-        trajectories = zeros(2, nStim, nFrames);
-
-        ## coordinate system
-        cellSize = round(rectDisplay(3:4)/7); # size of initial position grid cell
-
-        [fieldRect, xOffset, yOffset] = CenterRect(rectDisplay, rectMain);
-
-        x = 0:6;
-        xloc = xOffset + cellSize(1) * x;
-        yloc = yOffset + cellSize(2) * x;
-
-        [gridy, gridx] = meshgrid(yloc, xloc);
-
-        shufflegrid = randperm(49);
-        shufflegrid = shufflegrid(1:nStim);
-        trajectories(1, :, 1) = gridx(shufflegrid(:));
-        trajectories(2, :, 1) = gridy(shufflegrid(:));
-
-        ## motion parameters
-        repulsionPower = 10000; # not sure where the value comes from
-        inertia = 1;
-        pathchange = 1.5; # Determines Degree of Change on Motion Paths    for (i = 1:numel(prompt))
-        
+function s = NumberWithSeparators (n)
+    n = int2str(floor(n)); # convert to string
+    ln = numel(n); # number of digits in n
+    if n(1) == "-"
+        lc = floor((ln - 2) ./ 3); # number of commas (ignore -)
+    else
+        lc = floor((ln - 1) ./ 3); # number of commas
+    endif
+    s = repmat(" ", [1, ln + lc]);
+    j = ln + lc;
+    for i = 0:ln-1
+        if i > 0 && n(ln-i) ~= "-" && mod(i, 3) == 0
+            s(j) = ",";
+            j = j - 1;
+        endif
+        s(j) = n(ln-i); j = j - 1;
     endfor
+endfunction
 
+
+function varargout = DialogBox (title, varargin)
+
+    n = (nargin - 1);
+    if nargout ~= n / 3
+        error("input and output arguments must match");
+    endif
+    prompt = varargin(1:3:n);
+    defaults = varargin(2:3:n);
+    toNum = varargin(3:3:n);
+    param = inputdlg(prompt, title, 1, defaults);
+    if isempty(param)
+        error("Dialog box cancelled");
+    endif
+    varargout = cell(1, nargout);
+    for i = 1:length(param)
+        p = param{i};
+        if toNum{i}
+            n = [];
+            if ~exist(p)
+                n = str2num(p);
+                if ~isempty(n)
+                    varargout{i} = n;
+                endif
+            endif
+            if isempty(n)
+                error("parameter '%s' value '%s' could not be converted to numeric as requested", ...
+                      prompt{i}, p);
+            endif
+        else
+            varargout{i} = p;
+        endif
+    endfor
+endfunction
+
+function [buzz, rate] = MakeBuzz (dur, rate)
+
+    if nargin < 2 || isempty(rate) 
+        rate = 44100;
+    endif
+    
+    freqs = 100 * [1:15, 75:100];
+
+    n = 0;
+    buzz = zeros(1, length(0:rate*dur));
+    for f = freqs
+        buzz = buzz + sin(2 * pi * f * (0:rate*dur) / rate);
+        n = n + 1;
+    endfor
+    buzz = buzz / n;
+    buzz = (buzz - min(buzz)) / (max(buzz) - min(buzz)) * 2 - 1;
+endfunction
+
+
+function ClearScreen
+    Screen("FillRect", winMain, colBackground);
+endfunction
+
+
+function ClearScreenCompletely
+    Screen("FillRect", winMain, colBackground);
+endfunction
+
+
+function PaintFrame(coordinates, nStim, diskColors, window)
+    Screen("DrawDots", window, coordinates(:, 1:nStim, :), stimSize, diskColors, [], 2);
+    ##     for i = 1:nStim
+    ##         placeRect = CenterRectOnPoint(rectStim, coordinates(i, 1), coordinates(i, 2));
+    ##         screen(window, "FillOval", diskColors(i, :), placeRect);
+    ##     endfor
+endfunction
+
+function trajectories = MakeTrajectories (nStim, nFrames, stimSize)
+
+    ## generates MVT trajectories
+    ## given the number of objects and frames, returns positions for each object for each frame
+    ## code adapted from Jen Dimase's motPictMem, Justin Junge
+    ## started 9/10/2004
+    ## current 9/14/2004
+
+    ##  Creates target Locations.
+    trajectories = zeros(2, nStim, nFrames);
+
+    ## coordinate system
+    cellSize = round(rectDisplay(3:4)/7); # size of initial position grid cell
+
+    [fieldRect, xOffset, yOffset] = CenterRect(rectDisplay, rectMain);
+
+    x = 0:6;
+    xloc = xOffset + cellSize(1) * x;
+    yloc = yOffset + cellSize(2) * x;
+
+    [gridy, gridx] = meshgrid(yloc, xloc);
+
+    shufflegrid = randperm(49);
+    shufflegrid = shufflegrid(1:nStim);
+    trajectories(1, :, 1) = gridx(shufflegrid(:));
+    trajectories(2, :, 1) = gridy(shufflegrid(:));
+
+    ## motion parameters
+    repulsionPower = 10000; # not sure where the value comes from
+    inertia = 1;
+    pathchange = 1.5; # Determines Degree of Change on Motion Paths    for (i = 1:numel(prompt))
     forcefieldDistance = 1.5 * stimSize; # 1.5 = Item Repulsion only occurs within a field around each shape 25% the size of the shape. 
 
     initMotion = (-4:4) * pathchange;
@@ -768,11 +765,11 @@ function ProbeTrack
                         if distance(1) ~= 0 && distance(2) ~= 0
                             addrepel = 1./((distance.^2) .* sign(distance));
                             repel(:, object) = repel(:, object) + repulsionPower * addrepel;
-                        end
-                    end
-                end
-            end
-        end
+                        endif
+                    endif
+                endif
+            endfor
+        endfor
 
         rXchange = frameMotion(Randi(5, [1, nStim]));
         rYchange = frameMotion(Randi(5, [1, nStim]));
@@ -785,26 +782,26 @@ function ProbeTrack
             ## floor and ceiling
             if rXmove(object)==0;
                 rXmove(object) = newrm(Randi(2));
-            end
+            endif
 
             if rXmove(object) > 4*pathchange
                 rXmove(object) = 4*pathchange;
-            end
+            endif
             if rXmove(object) < -4*pathchange
                 rXmove(object) = -4*pathchange;
-            end
+            endif
 
             trajectories(1, object, f) = (trajectories(1, object, aa) + rXmove(object));
 
             if trajectories(1, object, f) >= (fieldRect(3) - stimSize); 		# Bounces off right
                 trajectories(1, object, f) = (fieldRect(3) - stimSize);
                 rXmove(object) = -(4*rXmove(object));	
-            end			
+            endif
             if  trajectories(1, object, f) <= fieldRect(1);					# Bounces off left
                 trajectories(1, object, f) = fieldRect(1);
                 rXmove(object) = -(4*rXmove(object));											
-            end	
-        end
+            endif
+        endfor
 
         ## Y Trajectories
         for object = 1:nStim
@@ -813,29 +810,27 @@ function ProbeTrack
 
             if rYmove(object)==0;
                 rYmove(object) = newrm(Randi(2));
-            end
+            endif
 
             if rYmove(object) > 4*pathchange
                 rYmove(object) = 4*pathchange;
-            end
+            endif
             if rYmove(object) < -4*pathchange
                 rYmove(object) = -4*pathchange;
-            end
+            endif
 
             trajectories(2, object, f) = (trajectories(2, object, aa) + rYmove(object));							
             if trajectories(2, object, f) >= (fieldRect(4) - stimSize);													# Bounces off Bottom
                 trajectories(2, object, f) = (fieldRect(4) - stimSize);
                 rYmove(object) = -(4*rYmove(object));	
-            end
+            endif
 
             if 	trajectories(2, object, f) <= fieldRect(2);																# Bounces off Top
                 trajectories(2, object, f) = fieldRect(2);
                 rYmove(object) = -(4*rYmove(object));									
-            end
-        end
+            endif
+        endfor
         ##d(f, :) = sqrt(rXmove.^2 + rYmove.^2);
-    end
+    endfor
     ##mean(d)
-    end # end MakeTrajectories function
-
-end
+endfunction
