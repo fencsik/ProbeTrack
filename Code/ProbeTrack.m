@@ -2,7 +2,7 @@ function ProbeTrack
 
 % Runs MOT task with gap and variable post-gap probe-onset delay
 
-    VERSION = '10.2';
+    VERSION = '10.3';
     try
         AssertOpenGL;
         InitializePsychSound;
