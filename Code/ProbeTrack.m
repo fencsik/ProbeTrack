@@ -14,7 +14,7 @@ function ProbeTrack
             DialogBox(sprintf('%s Parameters', experiment), ...
                       'Subject code:', '1', 1, ...
                       'Block type (1, 2, 3):', '3', 1, ...
-                      'Display points:', '1', 1);
+                      'Display points:', '0', 1);
 
         % set any remaining IVs
         SOAlist = [0 1 2 4 75]; % # of frames
@@ -46,7 +46,7 @@ function ProbeTrack
             % experimental block
             practiceFlag = 0;
             pTrials = 10;
-            xTrials = 200;
+            xTrials = 2000;
             blockTypeStr = 'GapExp';
             blockMesg = 'Experimental Block with Gap';
           case -1
@@ -69,7 +69,7 @@ function ProbeTrack
         durCue = 60; % # of frames to present target cues
         durCueMove = 38; % # of frames of motion with cue
         durCueFade = 38; % # of frames of motion during which cue fades
-        durPostProbe = 60; % # of frames
+        durPostProbe = 90; % # of frames
         durFeedback = .746; % sec
         durPostTrialBlank = .5; % sec
         gapOnsetRange = [60 180]; % # of frames; bounds of range from which to pick pre-gap tracking duration
@@ -367,14 +367,12 @@ function ProbeTrack
                     tFrameOnset(frame) = Screen('Flip', winMain);
                 end			
                 % present probe and continue motion while checking for a response every frame
-                while response == -1
+                while frame < trialDuration
                     postProbeFrames = postProbeFrames + 1;
                     frame = frame + 1;
                     ClearScreen;
                     if pointsFlag, PresentPoints; end
-                    if frame <= trialDuration
-                        PaintFrame(trajectories(:, :, frame), nStim, probeColors, winMain);
-                    end
+                    PaintFrame(trajectories(:, :, frame), nStim, probeColors, winMain);
                     Screen('DrawingFinished', winMain);
                     [keyIsDown, KbTime, keyCode] = KbCheck;
                     if keyIsDown
@@ -392,6 +390,14 @@ function ProbeTrack
                         probeOnsetTime = tLastOnset;
                     end
                 end
+                
+                if probeTarget(trial)
+                    response = respTarget;
+                else
+                    response = respDistractor;
+                end
+                responseTime = probeOnsetTime + rand;
+                tResponseEnd = responseTime + rand;
 
                 % Wait for key release
                 if response > 0
@@ -456,98 +462,9 @@ function ProbeTrack
                 pointsArray.(pointsFieldName) = points;
                 if pointsFlag, GeneratePoints(points); end
 
-                % output data
-                dataFile = fopen(dataFileName, 'r');
-                if dataFile == -1
-                    header = ['exp\tsub\tcode\trev\tcomp\truntime\ttrialtime\t' ...
-                              'nstim\trefreshdur\tcuedur\tgapdur\tgapOnsetRange\tdurPostProbe\tgapOnsetTime\t' ...
-                              'blocktype\tprac\ttrial\tntargets\tsoa\tprobeTarget\t' ...
-                              'resp\tacc\trt\tpts\ttpts\tmeanFrameDur\tminFrameDur\tmaxFrameDur\n'];
-                else
-                    fclose(dataFile);
-                    header = [];
-                end
-                dataFile = fopen(dataFileName, 'a');
-                if dataFile == -1
-                    error('cannot open data file %s for writing', dataFileName);
-                end
-                if ~isempty(header)
-                    fprintf(dataFile, header);
-                end
-                fprintf(dataFile, ['%s\t%d\t%s\t%s\t%s\t%s\t%s\t%d\t%0.6f\t' ...
-                                   '%d\t%d\t%s\t%d\t%d\t%s\t%d\t%d\t%d\t%d\t' ...
-                                   '%d\t%s\t%d\t%d\t%d\t%d\t%0.3f\t%0.3f\t%0.3f\n'], ...
-                        experiment, subject, mfilename, revision, computer, ...
-                        blocktime, trialtime, nStim, refreshDuration, ...
-                        durCue, durGap, gapOnsetRangeStr, durPostProbe, ...
-                        gapOnsetTime, blockTypeStr, prac, trialCounter, ...
-                        nTargets, SOA(trial), probeTarget(trial), respString, ...
-                        acc, RT, pointsTrial, points, ...
-                        mean(durFrames), min(durFrames), max(durFrames(2:end)));
-                fclose(dataFile);
-
-                % Prepare feedback
-                switch acc
-                  case -1
-                    feedback = 'NO RESPONSE!';
-                  case -2
-                    feedback = 'MULTIPLE KEYS PRESSED!';
-                  case -3
-                    feedback = 'NON-RESPONSE KEY PRESSED!';
-                  case 0
-                    feedback = 'ERROR';
-                  case 1
-                    feedback = 'CORRECT';
-                  otherwise
-                    error('unknown accuracy code %d', acc);
-                end
-                if acc >= 0
-                    if pointsFlag
-                        feedback = sprintf('TRIAL %d - %s\n\n\nPOINTS = %s', ...
-                                           trialCounter, feedback, ...
-                                           NumberWithSeparators(pointsTrial));
-                    else
-                        feedback = sprintf('TRIAL %d - %s\n\n\nResponse Time = %0.0f ms', ...
-                                           trialCounter, feedback, RT);
-                    end
-                end
-
-                % Present feedback
-                ClearScreenCompletely;
-                if pointsFlag, PresentPoints; end
-                DrawFormattedText(winMain, feedback, 'center', 'center', colText);
-                tLastOnset = Screen('Flip', winMain);
-                targNextOnset = tLastOnset + durFeedback - durSlack;
-                ClearScreen;
-                if pointsFlag, PresentPoints; end
-                tLastOnset = Screen('Flip', winMain, targNextOnset);
-                targNextOnset = tLastOnset + durPostTrialBlank - durSlack;
-                ClearScreen;
-                if pointsFlag, PresentPoints; end
-                Screen('Flip', winMain, targNextOnset);
-
-                % pause every N trials, unless there's only one or no trials remaining
-                if mod(trialCounter, pauseEvery) == 0 && ...
-                        (totalTrials - trialCounter > 1)
-                    ClearScreen;
-                    if pointsFlag, PresentPoints; end
-                    DrawFormattedText(...
-                        winMain, 'Please take a short break\n\n\n\n', ...
-                        'center', 'center', colText);
-                    t1 = Screen('Flip', winMain);
-                    ClearScreen;
-                    if pointsFlag, PresentPoints; end
-                    DrawFormattedText(...
-                        winMain, ...
-                        ['Please take a short break\n\n\n\n', ...
-                         'Press any button to continue'], ...
-                        'center', 'center', colText);
-                    Screen('Flip', winMain, t1 + pauseMin);
-                    KbStrokeWait;
-                    ClearScreen;
-                    if pointsFlag, PresentPoints; end
-                    Screen('Flip', winMain);
-                end
+                ClearScreen();
+                tLastOnset = Screen('Flip', winMain, tLastOnset + durPostTrialBlank);
+                WaitSecs(durPostTrialBlank);
 
             end % end trial loop
 
