@@ -1,7 +1,7 @@
 ## -*-Octave-*-
 
 function ProbeTrackOct
-
+    global par
     ## Runs MOT task with gap and variable post-gap probe-onset delay
 
     VERSION = "10.2";
@@ -63,9 +63,9 @@ function ProbeTrackOct
         totalTrials = xTrials + pTrials;
 
         ## stimulus characteristics
-        rectDisplay = [0 0 500 500];
-        stimSize = 40;
-        rectStim = [0 0 stimSize stimSize];
+        par.rect.display = [0 0 500 500];
+        par.stimSize = 40;
+        par.rect.stim = [0 0 par.stimSize par.stimSize];
 
         ## durations
         durCue = 60; # # of frames to present target cues
@@ -78,20 +78,20 @@ function ProbeTrackOct
         gapOnsetRangeStr = sprintf("%d-%d", min(gapOnsetRange), max(gapOnsetRange));
 
         ## define colors
-        colBlack = [0 0 0 255];
-        colWhite = [255 255 255 255];
-        colMidGray = [128 128 128 255];
-        colDarkGray = [64 64 64 255];
-        colYellow = [240 240 0 255];
-        colRed = [250 0 0 255];
-        colBackground = colMidGray;
-        colText = colBlack;
+        par.col.black = [0 0 0 255];
+        par.col.white = [255 255 255 255];
+        par.col.midGray = [128 128 128 255];
+        par.col.darkGray = [64 64 64 255];
+        par.col.yellow = [240 240 0 255];
+        par.col.red = [250 0 0 255];
+        par.col.background = par.col.midGray;
+        par.col.text = par.col.black;
 
         ## define color sets for each phase of the trial
-        trackingColors= repmat(colDarkGray', 1, nStim);
+        trackingColors= repmat(par.col.darkGray', 1, nStim);
         cueingColors = trackingColors;
-        cueingColors(:, 1:nTargets) = repmat(colYellow', 1, nTargets);
-        gapColors = repmat(colBackground', 1, nStim);
+        cueingColors(:, 1:nTargets) = repmat(par.col.yellow', 1, nTargets);
+        gapColors = repmat(par.col.background', 1, nStim);
 
         ## Set any remaining parameters
         preloadFlag = 1;
@@ -165,10 +165,10 @@ function ProbeTrackOct
         Screen("Preference", "SkipSyncTests", 0);
         Screen("Preference", "VisualDebugLevel", 4);
         screenNumber=max(Screen("Screens"));
-        [winMain, rectMain] = Screen("OpenWindow", screenNumber, 0, [], 32, 2);
-        refreshDuration = Screen("GetFlipInterval", winMain);
-        Screen(winMain, "BlendFunction", GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        [centerX, centerY] = RectCenter(rectMain);
+        [par.win.main, par.rect.main] = Screen("OpenWindow", screenNumber, 0, [], 32, 2);
+        refreshDuration = Screen("GetFlipInterval", par.win.main);
+        Screen(par.win.main, "BlendFunction", GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        [centerX, centerY] = RectCenter(par.rect.main);
         durSlack = refreshDuration / 2.0;
 
         ## Turn cursor and keyboard echoing off
@@ -176,23 +176,23 @@ function ProbeTrackOct
         ListenChar(2);
 
         ## font setup
-        Screen("TextFont", winMain, "Arial");
-        Screen("TextSize", winMain, 18);
+        Screen("TextFont", par.win.main, "Arial");
+        Screen("TextSize", par.win.main, 18);
 
         ## create point window
         if pointsFlag
-            [winPoints, rectPoints] = Screen("OpenOffscreenWindow", winMain, ...
-                                             colBackground, [0 0 250 40]);
-            Screen("TextFont", winPoints, "Arial");
-            Screen("TextSize", winPoints, 24);
-            rectPoints = OffsetRect(rectPoints, 10, 10);
+            [par.win.points, par.rect.points] = Screen("OpenOffscreenWindow", par.win.main, ...
+                                             par.col.background, [0 0 250 40]);
+            Screen("TextFont", par.win.points, "Arial");
+            Screen("TextSize", par.win.points, 24);
+            par.rect.points = OffsetRect(par.rect.points, 10, 10);
             GeneratePoints(points);
         endif
 
         ## present instructions
-        Screen("FillRect", winMain, colBackground);
+        Screen("FillRect", par.win.main, par.col.background);
         if pointsFlag, PresentPoints; endif
-        DrawFormattedText(winMain, ...
+        DrawFormattedText(par.win.main, ...
                           [blockMesg, "\n\n\n", ...
                            "--------------------------------------------------\n\n\n"...
                            sprintf("Track %d targets out of %d total stimuli\n\n\n", nTargets, nStim), ...
@@ -200,16 +200,16 @@ function ProbeTrackOct
                            "Press YES if the red disk is a target\n\n" ...
                            "Press NO if the red disk is NOT a target\n\n\n\n", ...
                            sprintf("Press any key to begin block of %d trials", totalTrials)], ...
-                          "center", "center", colText);
+                          "center", "center", par.col.text);
         KbReleaseWait;
-        Screen("Flip", winMain);
-        Screen("FillRect", winMain, colBackground);
+        Screen("Flip", par.win.main);
+        Screen("FillRect", par.win.main, par.col.background);
         if pointsFlag, PresentPoints; endif
         [keyTime, keyCode] = KbStrokeWait;
         if keyCode(respAbort)
             error("abort key pressed");
         endif
-        Screen("Flip", winMain);
+        Screen("Flip", par.win.main);
 
         ## initialize block-level DVs
         blockRT = zeros(totalTrials, 1) - 1;
@@ -246,8 +246,8 @@ function ProbeTrackOct
                 ## pre-trial blank
                 ClearScreen;
                 if pointsFlag, PresentPoints; endif
-                ## DrawFormattedText(winMain, "Configuring trial...", "center", "center", colText);
-                Screen("Flip", winMain);
+                ## DrawFormattedText(par.win.main, "Configuring trial...", "center", "center", par.col.text);
+                Screen("Flip", par.win.main);
 
                 ## randomize gap duration (in frames)
                 gapOnsetTime = Randi(gapOnsetRange(2) - gapOnsetRange(1)) + gapOnsetRange(1);
@@ -255,7 +255,7 @@ function ProbeTrackOct
                 trialDuration = durCueMove + durCueFade + gapOnsetTime + ...
                     durGap + SOA(trial) + durPostProbe;
                 ## compute stimulus positions for entire trial
-                trajectories = MakeTrajectories(nStim, trialDuration, stimSize);
+                trajectories = MakeTrajectories(nStim, trialDuration, par.stimSize);
 
                 ## select probe
                 if probeTarget(trial) == 1
@@ -268,7 +268,7 @@ function ProbeTrackOct
 
                 ## set colors for probe frames
                 probeColors = trackingColors;
-                probeColors(:, probeItem) = colRed';
+                probeColors(:, probeItem) = par.col.red';
 
                 ## set colors for fading frames
                 cueFadeColors = repmat(cueingColors, [1, 1, durCueFade]);
@@ -291,22 +291,22 @@ function ProbeTrackOct
                 ## Draw plain display and wait a bit
                 ClearScreen;
                 if pointsFlag, PresentPoints; endif
-                PaintFrame(trajectories(:, :, 1), nStim, trackingColors, winMain);
+                PaintFrame(trajectories(:, :, 1), nStim, trackingColors, par.win.main);
                 KbReleaseWait;
-                tLastOnset = Screen("Flip", winMain);
+                tLastOnset = Screen("Flip", par.win.main);
                 targNextOnset = tLastOnset + .1;
 
                 ## Draw cue display and prompt for trial start
                 if subjectPaced
                     ClearScreen;
                     if pointsFlag, PresentPoints; endif
-                    PaintFrame(trajectories(:, :, 1), nStim, cueingColors, winMain);
-                    DrawFormattedText(winMain, ...
+                    PaintFrame(trajectories(:, :, 1), nStim, cueingColors, par.win.main);
+                    DrawFormattedText(par.win.main, ...
                                       sprintf("Press a key to start trial %d", ...
                                               trialCounter), ...
-                                      "center", "center", colText);
+                                      "center", "center", par.col.text);
                     KbReleaseWait;
-                    Screen("Flip", winMain, targNextOnset);
+                    Screen("Flip", par.win.main, targNextOnset);
                     [keyTime, keyCode] = KbStrokeWait;
                     if keyCode(respAbort)
                         error("abort key pressed");
@@ -316,8 +316,8 @@ function ProbeTrackOct
                 ## Draw cue frame
                 ClearScreen;
                 if pointsFlag, PresentPoints; endif
-                PaintFrame(trajectories(:, :, 1), nStim, cueingColors, winMain);
-                tLastOnset = Screen("Flip", winMain);
+                PaintFrame(trajectories(:, :, 1), nStim, cueingColors, par.win.main);
+                tLastOnset = Screen("Flip", par.win.main);
                 targNextOnset = tLastOnset + durCue * refreshDuration - durSlack;
 
                 ## main animation sequence
@@ -325,48 +325,48 @@ function ProbeTrackOct
                 frame = 1;
                 ClearScreen;
                 if pointsFlag, PresentPoints; endif
-                PaintFrame(trajectories(:, :, frame), nStim, cueingColors, winMain);
-                tFrameOnset(frame) = Screen("Flip", winMain, targNextOnset);
+                PaintFrame(trajectories(:, :, frame), nStim, cueingColors, par.win.main);
+                tFrameOnset(frame) = Screen("Flip", par.win.main, targNextOnset);
                 ## cue + motion
                 for f = 2:durCueMove
                     frame = frame + 1;
                     ClearScreen;
                     if pointsFlag, PresentPoints; endif
-                    PaintFrame(trajectories(:, :, frame), nStim, cueingColors, winMain);
-                    tFrameOnset(frame) = Screen("Flip", winMain);
+                    PaintFrame(trajectories(:, :, frame), nStim, cueingColors, par.win.main);
+                    tFrameOnset(frame) = Screen("Flip", par.win.main);
                 endfor
                 ## cue fade + motion
                 for f = 1:durCueFade
                     frame = frame + 1;
                     ClearScreen;
                     if pointsFlag, PresentPoints; endif
-                    PaintFrame(trajectories(:, :, frame), nStim, trackingColors, winMain);
-                    PaintFrame(trajectories(:, :, frame), nStim, cueFadeColors(:, :, f), winMain);
-                    tFrameOnset(frame) = Screen("Flip", winMain);
+                    PaintFrame(trajectories(:, :, frame), nStim, trackingColors, par.win.main);
+                    PaintFrame(trajectories(:, :, frame), nStim, cueFadeColors(:, :, f), par.win.main);
+                    tFrameOnset(frame) = Screen("Flip", par.win.main);
                 endfor
                 ## pre-gap interval
                 for f = 1:gapOnsetTime
                     frame = frame + 1;
                     ClearScreen;
                     if pointsFlag, PresentPoints; endif
-                    PaintFrame(trajectories(:, :, frame), nStim, trackingColors, winMain);
-                    tFrameOnset(frame) = Screen("Flip", winMain);
+                    PaintFrame(trajectories(:, :, frame), nStim, trackingColors, par.win.main);
+                    tFrameOnset(frame) = Screen("Flip", par.win.main);
                 endfor
                 for gLoop = 1:durGap
                     ## gap interval
                     frame = frame + 1;
                     ClearScreen;
                     if pointsFlag, PresentPoints; endif
-                    PaintFrame(trajectories(:, :, frame), nStim, gapColors, winMain);
-                    tFrameOnset(frame) = Screen("Flip", winMain);
+                    PaintFrame(trajectories(:, :, frame), nStim, gapColors, par.win.main);
+                    tFrameOnset(frame) = Screen("Flip", par.win.main);
                 endfor
                 for sLoop = 1:SOA(trial)
                     ## SOA interval
                     frame = frame + 1;
                     ClearScreen;
                     if pointsFlag, PresentPoints; endif
-                    PaintFrame(trajectories(:, :, frame), nStim, trackingColors, winMain);
-                    tFrameOnset(frame) = Screen("Flip", winMain);
+                    PaintFrame(trajectories(:, :, frame), nStim, trackingColors, par.win.main);
+                    tFrameOnset(frame) = Screen("Flip", par.win.main);
                 endfor
                 ## present probe and continue motion while checking for a response every frame
                 while response == -1
@@ -375,9 +375,9 @@ function ProbeTrackOct
                     ClearScreen;
                     if pointsFlag, PresentPoints; endif
                     if frame <= trialDuration
-                        PaintFrame(trajectories(:, :, frame), nStim, probeColors, winMain);
+                        PaintFrame(trajectories(:, :, frame), nStim, probeColors, par.win.main);
                     endif
-                    Screen("DrawingFinished", winMain);
+                    Screen("DrawingFinished", par.win.main);
                     [keyIsDown, KbTime, keyCode] = KbCheck;
                     if keyIsDown
                         if keyCode(respAbort)
@@ -386,7 +386,7 @@ function ProbeTrackOct
                         response = find(keyCode);
                         responseTime = KbTime;
                     endif
-                    tLastOnset = Screen("Flip", winMain);
+                    tLastOnset = Screen("Flip", par.win.main);
                     if frame <= numel(tFrameOnset)
                         tFrameOnset(frame) = tLastOnset;
                     endif
@@ -517,16 +517,16 @@ function ProbeTrackOct
                 ## Present feedback
                 ClearScreenCompletely;
                 if pointsFlag, PresentPoints; endif
-                DrawFormattedText(winMain, feedback, "center", "center", colText);
-                tLastOnset = Screen("Flip", winMain);
+                DrawFormattedText(par.win.main, feedback, "center", "center", par.col.text);
+                tLastOnset = Screen("Flip", par.win.main);
                 targNextOnset = tLastOnset + durFeedback - durSlack;
                 ClearScreen;
                 if pointsFlag, PresentPoints; endif
-                tLastOnset = Screen("Flip", winMain, targNextOnset);
+                tLastOnset = Screen("Flip", par.win.main, targNextOnset);
                 targNextOnset = tLastOnset + durPostTrialBlank - durSlack;
                 ClearScreen;
                 if pointsFlag, PresentPoints; endif
-                Screen("Flip", winMain, targNextOnset);
+                Screen("Flip", par.win.main, targNextOnset);
 
                 ## pause every N trials, unless there's only one or no trials remaining
                 if mod(trialCounter, pauseEvery) == 0 && ...
@@ -534,21 +534,21 @@ function ProbeTrackOct
                     ClearScreen;
                     if pointsFlag, PresentPoints; endif
                     DrawFormattedText(...
-                                      winMain, "Please take a short break\n\n\n\n", ...
-                                      "center", "center", colText);
-                    t1 = Screen("Flip", winMain);
+                                      par.win.main, "Please take a short break\n\n\n\n", ...
+                                      "center", "center", par.col.text);
+                    t1 = Screen("Flip", par.win.main);
                     ClearScreen;
                     if pointsFlag, PresentPoints; endif
                     DrawFormattedText(...
-                                      winMain, ...
+                                      par.win.main, ...
                                       ["Please take a short break\n\n\n\n", ...
                                        "Press any button to continue"], ...
-                                      "center", "center", colText);
-                    Screen("Flip", winMain, t1 + pauseMin);
+                                      "center", "center", par.col.text);
+                    Screen("Flip", par.win.main, t1 + pauseMin);
                     KbStrokeWait;
                     ClearScreen;
                     if pointsFlag, PresentPoints; endif
-                    Screen("Flip", winMain);
+                    Screen("Flip", par.win.main);
                 endif
 
             endfor # end trial loop
@@ -573,12 +573,12 @@ function ProbeTrackOct
         endif
         ClearScreenCompletely;
         if pointsFlag, PresentPoints; endif
-        DrawFormattedText(winMain, ...
+        DrawFormattedText(par.win.main, ...
                           ["Trial block is complete\n\n\n", ...
                            closingString, "\n\n\n", ...
                            "Please inform the experimenter that you are done."], ...
-                          "center", "center", colText);
-        Screen("Flip", winMain);
+                          "center", "center", par.col.text);
+        Screen("Flip", par.win.main);
         while 1
             [keyTime, keyCode] = KbStrokeWait;
             if keyCode(respAbort)
@@ -603,15 +603,17 @@ function ProbeTrackOct
 endfunction
 
 function GeneratePoints (pts)
-    Screen("FillRect", winPoints, colBackground);
-    DrawFormattedText(winPoints, ...
+    global par
+    Screen("FillRect", par.win.points, par.col.background);
+    DrawFormattedText(par.win.points, ...
                       sprintf("Points = %s", NumberWithSeparators(pts)), ...
-                      [], [], colText);
+                      [], [], par.col.text);
 endfunction
 
 
 function PresentPoints
-    Screen("DrawTexture", winMain, winPoints, [], rectPoints);
+    global par
+    Screen("DrawTexture", par.win.main, par.win.points, [], par.rect.points);
 endfunction
 
 
@@ -689,24 +691,28 @@ endfunction
 
 
 function ClearScreen
-    Screen("FillRect", winMain, colBackground);
+    global par
+    Screen("FillRect", par.win.main, par.col.background);
 endfunction
 
 
 function ClearScreenCompletely
-    Screen("FillRect", winMain, colBackground);
+    global par
+    Screen("FillRect", par.win.main, par.col.background);
 endfunction
 
 
 function PaintFrame(coordinates, nStim, diskColors, window)
-    Screen("DrawDots", window, coordinates(:, 1:nStim, :), stimSize, diskColors, [], 2);
+    global par
+    Screen("DrawDots", window, coordinates(:, 1:nStim, :), par.stimSize, diskColors, [], 2);
     ##     for i = 1:nStim
-    ##         placeRect = CenterRectOnPoint(rectStim, coordinates(i, 1), coordinates(i, 2));
+    ##         placeRect = CenterRectOnPoint(par.rect.stim, coordinates(i, 1), coordinates(i, 2));
     ##         screen(window, "FillOval", diskColors(i, :), placeRect);
     ##     endfor
 endfunction
 
 function trajectories = MakeTrajectories (nStim, nFrames, stimSize)
+    global par
 
     ## generates MVT trajectories
     ## given the number of objects and frames, returns positions for each object for each frame
@@ -718,9 +724,9 @@ function trajectories = MakeTrajectories (nStim, nFrames, stimSize)
     trajectories = zeros(2, nStim, nFrames);
 
     ## coordinate system
-    cellSize = round(rectDisplay(3:4)/7); # size of initial position grid cell
+    cellSize = round(par.rect.display(3:4)/7); # size of initial position grid cell
 
-    [fieldRect, xOffset, yOffset] = CenterRect(rectDisplay, rectMain);
+    [fieldRect, xOffset, yOffset] = CenterRect(par.rect.display, par.rect.main);
 
     x = 0:6;
     xloc = xOffset + cellSize(1) * x;
