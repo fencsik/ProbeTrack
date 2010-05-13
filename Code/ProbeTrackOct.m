@@ -13,10 +13,9 @@ function ProbeTrackOct
 
         ## get user input
         [subject, blockType, pointsFlag] = ...
-            DialogBox(sprintf("%s Parameters", experiment), ...
-                      "Subject code:", "1", 1, ...
-                      "Block type (1, 2, 3):", "3", 1, ...
-                      "Display points:", "1", 1);
+            GetExpInput("Subject code", [], "d", 0,
+                        "Block type (1, 2, 3)", "3", "d", 0, ...
+                        "Display points", "1", "d", 0);
 
         ## set any remaining IVs
         SOAlist = [0 1 2 4 75]; # # of frames
@@ -637,38 +636,78 @@ function s = NumberWithSeparators (n)
 endfunction
 
 
-function varargout = DialogBox (title, varargin)
-
-    n = (nargin - 1);
-    if nargout ~= n / 3
+function varargout = GetExpInput (varargin)
+    n = nargin;
+    if nargout ~= n / 4
         error("input and output arguments must match");
     endif
-    prompt = varargin(1:3:n);
-    defaults = varargin(2:3:n);
-    toNum = varargin(3:3:n);
-    param = inputdlg(prompt, title, 1, defaults);
-    if isempty(param)
-        error("Dialog box cancelled");
-    endif
+    prompt = varargin(1:4:n);
+    defaultValues = varargin(2:4:n);
+    inputType = varargin(3:4:n);
+    confirmInput = varargin(4:4:n);
+    n = numel(prompt);
     varargout = cell(1, nargout);
-    for i = 1:length(param)
-        p = param{i};
-        if toNum{i}
-            n = [];
-            if ~exist(p)
-                n = str2num(p);
-                if ~isempty(n)
-                    varargout{i} = n;
-                endif
-            endif
-            if isempty(n)
-                error("parameter '%s' value '%s' could not be converted to numeric as requested", ...
-                      prompt{i}, p);
-            endif
-        else
-            varargout{i} = p;
-        endif
+    for (i = 1:n)
+        varargout{i} = GetInput(prompt{i}, defaultValues{i}, inputType{i},
+                                confirmInput{i});
     endfor
+endfunction
+
+function response = GetInput (prompt, default, inputType, confirm)
+    if (!isempty(default))
+        df = sprintf(" [%s]", default);
+    else
+        df = "";
+    endif
+    prompt2 = sprintf("\n%s%s: ", prompt, df);
+    do
+        done = 1;
+        response = input(prompt2, "s");
+        if (isempty(response))
+            if (isempty(default))
+                done = 0;
+            else
+                response = default;
+            endif
+        endif
+        if (!isempty(response))
+            if (inputType != "s")
+                [done, response] = ProcessResponse(response, inputType);
+            endif
+            if (confirm)
+                done = ConfirmResponse(response);
+            endif
+        endif
+    until (done)
+endfunction
+
+function [success, responseOut] = ProcessResponse(responseIn, rtype)
+    if (any(rtype == "dif")) % match d/i = integer; f = float
+        success = 0;
+        [responseOut, n] = sscanf(responseIn, "%f");
+        if (n == 1)
+            success = 1;
+        endif
+        if (any(rtype == "di"))
+            responseOut = fix(responseOut);
+        endif
+    else
+        success = 1;
+        responseOut = responseIn;
+    endif
+endfunction
+
+function confirmed = ConfirmResponse(response)
+    printf("You entered \"%s\".\nIs this correct? (y/n) ", response);
+    do
+        r = kbhit();
+    until (any(r == "yYnN"))
+    printf("%s\n", r);
+    if (any(r == "yY"))
+        confirmed = 1;
+    else
+        confirmed = 0;
+    endif
 endfunction
 
 function [buzz, rate] = MakeBuzz (dur, rate)
