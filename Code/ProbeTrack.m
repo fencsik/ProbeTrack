@@ -19,7 +19,7 @@ function ProbeTrack
         % set any remaining IVs
         SOAlist = [0 1 2 4 75]; % # of frames
         probeTargetList = 0:1;
-        nTargets = 3;
+        nTargets = 2;
 
         % set any remaining control variables
         durGap = 10; % # of frames
