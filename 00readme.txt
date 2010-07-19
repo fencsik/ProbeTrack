@@ -9,6 +9,11 @@ Miscellaneous directories:
 
 Experiments:
 
+* dtprobetrack01: track 2-3 targets while performing Strayer & Johnston's
+  generation task; subjects 1-7 tracked 3 targets; all subjects after than
+  tracked 2 targets in an attempt to improve accuracy; subjects 1-9 were
+  run by M. Johnson, subjects 10- were run by N. Gill
+
 * probetrack01: basic probetrack experiment--track 4 out of 8 with SOAs of 0,
   80, 160, 320, and 1280 ms--with a 133 ms gap
 * probetrack02: added more SOAs to probetrack01--0, 40, 80, 120, 160, and 1280
