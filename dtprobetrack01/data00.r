@@ -18,6 +18,14 @@ f.data00 <- function () {
 ### remove bad subjects:
     ## 1. Subject 1 left early due to poor performance
     data00 <- data00[data00$sub != 1, ]
+    ## 2. Subjects before 8 tracked 3 targets, and later ones tracked 2
+    data00 <- data00[data00$sub >= 8, ]
+    ## 3. Eliminate subjects with d' less than 1
+    ### data00 <- data00[data00$sub != 12 & data00$sub != 14 &
+    ###                  data00$sub != 15 & data00$sub != 16 &
+    ###                  data00$sub != 17 & data00$sub != 19 &
+    ###                  data00$sub != 21 & data00$sub != 23 &
+    ###                  data00$sub != 24, ] 
 
 ### remove practice blocks, bad keypresses, and RTs <= 0
     data00 <- data00[data00$prac == 0 & data00$acc >= 0 & data00$rt > 0, ]
