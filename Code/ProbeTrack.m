@@ -19,10 +19,10 @@ function ProbeTrack
         % set any remaining IVs
         SOAlist = [0 1 2 4 75]; % # of frames
         probeTargetList = 0:1;
+        gapDurList = [0 10]; % # of frames
         nTargets = 2;
 
         % set any remaining control variables
-        durGap = 10; % # of frames
         nStim = 8;
 
         % set up different block types
@@ -32,7 +32,7 @@ function ProbeTrack
             practiceFlag = 1;
             pTrials = 0;
             xTrials = 40;
-            durGap = 0; % # of frames
+            gapDurList = 0;
             blockTypeStr = 'NoGap';
             blockMesg = 'Initial Block without Gap';
           case 2
@@ -229,9 +229,9 @@ function ProbeTrack
             if nTrials <= 0, continue; end
 
             % balance independent variables
-            n = ceil(nTrials / numel(SOAlist) / 2);
-            [SOA, probeTarget] = ...
-                BalanceFactors(n, 1, SOAlist, probeTargetList);
+            n = ceil(nTrials / numel(SOAlist) / numel(gapDurList) / 2);
+            [SOA, durGap, probeTarget] = ...
+                BalanceFactors(n, 1, SOAlist, gapDurList, probeTargetList);
 
             if numel(SOA) ~= nTrials && prac == 0
                 warning('unbalanced design in sublock %d', subBlock);
@@ -251,7 +251,7 @@ function ProbeTrack
                 gapOnsetTime = Randi(gapOnsetRange(2) - gapOnsetRange(1)) + gapOnsetRange(1);
                 % compute total trial duration (in frames)
                 trialDuration = durCueMove + durCueFade + gapOnsetTime + ...
-                    durGap + SOA(trial) + durPostProbe;
+                    durGap(trial) + SOA(trial) + durPostProbe;
                 % compute stimulus positions for entire trial
                 trajectories = MakeTrajectories(nStim, trialDuration, stimSize);
 
@@ -350,7 +350,7 @@ function ProbeTrack
                     PaintFrame(trajectories(:, :, frame), nStim, trackingColors, winMain);
                     tFrameOnset(frame) = Screen('Flip', winMain);
                 end
-                for gLoop = 1:durGap
+                for gLoop = 1:durGap(trial)
                     % gap interval
                     frame = frame + 1;
                     ClearScreen;
@@ -479,7 +479,7 @@ function ProbeTrack
                                    '%d\t%s\t%d\t%d\t%d\t%d\t%0.3f\t%0.3f\t%0.3f\n'], ...
                         experiment, subject, mfilename, revision, computer, ...
                         blocktime, trialtime, nStim, refreshDuration, ...
-                        durCue, durGap, gapOnsetRangeStr, durPostProbe, ...
+                        durCue, durGap(trial), gapOnsetRangeStr, durPostProbe, ...
                         gapOnsetTime, blockTypeStr, prac, trialCounter, ...
                         nTargets, SOA(trial), probeTarget(trial), respString, ...
                         acc, RT, pointsTrial, points, ...
