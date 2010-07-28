@@ -2,12 +2,12 @@ function ProbeTrack
 
 % Runs MOT task with gap and variable post-gap probe-onset delay
 
-    VERSION = '10.4';
+    VERSION = '11.0';
     try
         AssertOpenGL;
         InitializePsychSound;
         KbName('UnifyKeyNames');
-        experiment = 'ProbeTrackDT01';
+        experiment = 'ProbeTrack11';
 
         % get user input
         [subject, blockType, pointsFlag] = ...
@@ -17,7 +17,7 @@ function ProbeTrack
                       'Display points:', '1', 1);
 
         % set any remaining IVs
-        SOAlist = [0 1 2 4 75]; % # of frames
+        SOAlist = [0 1 3 45]; % # of frames
         probeTargetList = 0:1;
         gapDurList = [0 10]; % # of frames
         nTargets = 2;
@@ -38,21 +38,21 @@ function ProbeTrack
           case 2
             % training with gap
             practiceFlag = 1;
-            pTrials = 0;
-            xTrials = 20;
+            pTrials = 4;
+            xTrials = 16;
             blockTypeStr = 'GapPrac';
             blockMesg = 'Training Block with Gap';
           case 3
             % experimental block
             practiceFlag = 0;
-            pTrials = 10;
-            xTrials = 200;
+            pTrials = 5;
+            xTrials = 320;
             blockTypeStr = 'GapExp';
             blockMesg = 'Experimental Block with Gap';
           case -1
             practiceFlag = 0;
-            pTrials = 2;
-            xTrials = 8;
+            pTrials = 0;
+            xTrials = 16;
             blockTypeStr = 'Testing';
             blockMesg = 'Testing Run';
           otherwise
@@ -93,7 +93,7 @@ function ProbeTrack
 
         % Set any remaining parameters
         preloadFlag = 1;
-        subjectPaced = 0; % does subject start each trial?
+        subjectPaced = 1; % does subject start each trial?
         pauseEvery = 50; % pause every N trials
         pauseMin = 4.0; % sec
 
