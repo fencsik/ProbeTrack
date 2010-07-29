@@ -94,7 +94,7 @@ function ProbeTrack
         % Set any remaining parameters
         preloadFlag = 1;
         subjectPaced = 1; % does subject start each trial?
-        pauseEvery = 50; % pause every N trials
+        pauseEvery = 0; % pause every N trials
         pauseMin = 4.0; % sec
 
         % Define point setup: Add pointsCorrect for every correct response,
