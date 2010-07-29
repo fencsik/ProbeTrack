@@ -527,7 +527,8 @@ function ProbeTrack
                 Screen('Flip', winMain, targNextOnset);
 
                 % pause every N trials, unless there's only one or no trials remaining
-                if mod(trialCounter, pauseEvery) == 0 && ...
+                if pauseEvery > 0 && ...
+                        mod(trialCounter, pauseEvery) == 0 && ...
                         (totalTrials - trialCounter > 1)
                     ClearScreen;
                     if pointsFlag, PresentPoints; end
