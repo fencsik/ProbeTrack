@@ -7,7 +7,7 @@ function ProbeTrack
         AssertOpenGL;
         InitializePsychSound;
         KbName('UnifyKeyNames');
-        experiment = 'ProbeTrackDT02';
+        experiment = 'DTProbeTrack02';
 
         % get user input
         [subject, blockType, pointsFlag] = ...
