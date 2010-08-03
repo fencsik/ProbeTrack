@@ -1,0 +1,36 @@
+\documentclass[10pt,draft]{article}
+
+\usepackage[landscape,margin=1in]{geometry}
+
+\usepackage{tabularx}
+\newcolumntype{Z}{>{\centering\arraybackslash}X}
+
+\newcommand{\LineOne}{& & & & & & \small 1 & \small 2 & \small 2+words & 
+  \small 3+words & \\ \hline}
+
+\begin{document}
+\pagestyle{empty}
+\small
+\setlength{\extrarowheight}{5pt}
+
+\begin{center}
+  {\large DT-ProbeTrack02}
+
+  \medskip
+
+  \begin{tabularx}{\textwidth}%
+    {*6{|c}*4{|p{.5in}}|Z|}\hline
+    \bf Sub & \bf Date & \bf Age & \bf Gen & \bf Room & \bf Exp & 
+      \bf Blk1 & \bf Blk2 & \bf Blk3 & \bf Blk4 & \bf Notes \\ \hline
+      \LineOne\LineOne\LineOne\LineOne\LineOne
+      \LineOne\LineOne\LineOne\LineOne\LineOne
+      \LineOne\LineOne\LineOne\LineOne\LineOne
+      \LineOne\LineOne\LineOne\LineOne\LineOne
+      \LineOne\LineOne\LineOne\LineOne\LineOne
+      \LineOne\LineOne
+
+ \end{tabularx}
+
+\end{center}
+
+\end{document}
