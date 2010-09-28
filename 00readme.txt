@@ -13,6 +13,8 @@ Experiments:
   generation task; subjects 1-7 tracked 3 targets; all subjects after than
   tracked 2 targets in an attempt to improve accuracy; subjects 1-9 were
   run by M. Johnson, subjects 10- were run by N. Gill
+* dtprobetrack02: same as dtprobetrack01, but with different probe delays
+  to capture the recovery slope observed in dtprobetrack01
 
 * probetrack01: basic probetrack experiment--track 4 out of 8 with SOAs of 0,
   80, 160, 320, and 1280 ms--with a 133 ms gap
