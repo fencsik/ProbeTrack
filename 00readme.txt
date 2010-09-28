@@ -37,3 +37,6 @@ Experiments:
 * probetrack09: replicates probetrack07 with tracking load 2 only
 * probetrack10: ProbeTrack with 3 targets and different, generally shorter
   probe delays, and an attempt to get reliable effects with 20 trials/cell.
+* probetrack11: probetrack10 with intermixed gap and no-gap trials to test
+  if the long-SOA baseline is appropriate
+* probetrack12: probetrack11 run at the Wolfelab
