@@ -93,3 +93,14 @@ April 28, 2010:
 Need a study in which gap and no-gap trials are randomly intermixed in a
 block so we can get a clean estimate of baseline RT.  This would
 (hopefully) demonstrate that we're measuring what we claim to be measuring.
+
+----------------------------------------------------------------------
+
+September 27, 2010:
+
+The above suggestion was repeated by Karla Evans at VSS shortly thereafter.
+Brian Keane suggested using a large luminance change instead of a gap to
+demonstrate that the recovery time is not caused by surprise.  Another
+individual suggested using move and no-move trials (a la ShiftTrack) to
+separate recovery of the targets from recovery of the task---presumably,
+no-move trials involve less target recovery, but no less task recovery.
