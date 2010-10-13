@@ -1,17 +1,15 @@
 ### Collect each subject's data files into an R binary data file
 
-f.gatherData <- function () {
+f.rawdata <- function () {
     datadir <- "data"
     outfile <- "rawdata.rda"
-    thisfile <- "gatherData.r"
-    filelist <- "gatherDataList.rda"
+    thisfile <- "rawdata.r"
 
     infiles <- file.path(datadir, dir(datadir))
 
     varnames <- NULL
     varnamesFromFile <- NULL
     alldata <- NULL
-    filesLoaded <- infiles
 
     for (f in infiles) {
         if (!file.exists(f)) stop("cannot find input file ", f)
@@ -35,8 +33,7 @@ f.gatherData <- function () {
     }
 
     save(alldata, file=outfile)
-    save(filesLoaded, file = filelist)
 }
 
-f.gatherData()
-rm(f.gatherData)
+f.rawdata()
+rm(f.rawdata)
