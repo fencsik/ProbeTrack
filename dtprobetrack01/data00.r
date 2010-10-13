@@ -7,11 +7,6 @@ f.data00 <- function () {
     outfile <- "data00.rda"
     thisfile <- "data00.r"
 
-    if (!file.exists(infile)) stop("cannot open file ", infile)
-    if (IsFileUpToDate(outfile, c(thisfile, infile))) {
-        warning("Output file is up to date, no action taken")
-        return(invisible(NULL))
-    }
     load(infile)
     data00 <- alldata
 
