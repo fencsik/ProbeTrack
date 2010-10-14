@@ -1,0 +1,44 @@
+\documentclass[10pt,draft]{article}
+
+\usepackage[landscape,margin=1in]{geometry}
+
+\usepackage{tabularx}
+\newcolumntype{Z}{>{\centering\arraybackslash}X}
+
+\newcommand{\LineOne}{& & & & & & \small training & \small single &
+  \small shadow & \small gen & \\ \hline}
+\newcommand{\LineTwo}{& & & & & & \small training & \small single &
+  \small gen & \small shadow & \\ \hline}
+\newcommand{\LineThree}{& & & & & & \small training & \small shadow &
+  \small single & \small gen & \\ \hline}
+\newcommand{\LineFour}{& & & & & & \small training & \small shadow &
+  \small gen & \small single & \\ \hline}
+\newcommand{\LineFive}{& & & & & & \small training & \small gen &
+  \small single & \small shadow & \\ \hline}
+\newcommand{\LineSix}{& & & & & & \small training & \small gen &
+  \small shadow & \small single & 
+  \\ \hline}
+
+\begin{document}
+\pagestyle{empty}
+\small
+\setlength{\extrarowheight}{5pt}
+
+\begin{center}
+  {\large DT-ProbeTrack03}
+
+  \medskip
+
+  \begin{tabularx}{\textwidth}%
+    {*6{|c}*4{|p{.45in}}|Z|}\hline
+    \bf Sub & \bf Date & \bf Age & \bf Gen & \bf Room & \bf Exp & 
+      \bf 1 & \bf 2 & \bf 3 & \bf 4 & \bf Notes \\ \hline
+      \LineOne\LineTwo\LineThree\LineFour\LineFive\LineSix
+      \LineOne\LineTwo\LineThree\LineFour\LineFive\LineSix
+      \LineOne\LineTwo\LineThree\LineFour\LineFive\LineSix
+      \LineOne\LineTwo\LineThree\LineFour\LineFive\LineSix
+ \end{tabularx}
+
+\end{center}
+
+\end{document}
