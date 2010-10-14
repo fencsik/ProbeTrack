@@ -104,3 +104,22 @@ demonstrate that the recovery time is not caused by surprise.  Another
 individual suggested using move and no-move trials (a la ShiftTrack) to
 separate recovery of the targets from recovery of the task---presumably,
 no-move trials involve less target recovery, but no less task recovery.
+
+----------------------------------------------------------------------
+
+October 13, 2010:
+
+I have started running dual-task ProbeTrack experiments.  So far, we have
+run simple versions in which people perform the standard ProbeTrack task,
+but have to perform a word-generation task at the same time (a la Strayer &
+Johnston, 2001).  There is a hint of slowing in some subjects when compared
+to earlier single-task studies, but nothing significant.
+
+What's needed is a proper experiment with baseline conditions so we can do
+a within-subjects comparison.  The current version of the DT-ProbeTrack
+code (as of Mon Oct 11 10:38:00 2010) collects 20 trials at each
+combination of probe delay and target type and takes 30-40 minutes to run.
+The next step should be one with three conditions---tracking-only, tracking
+plus shadowing, and tracking plus word generation---properly
+counterbalanced.  All this really requires is a new runsheet, although I
+will also add a block label feature to the dual-task ProbeTrack code.
