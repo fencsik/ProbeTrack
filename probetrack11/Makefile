@@ -22,3 +22,7 @@ R = /usr/bin/R --slave --no-save --no-restore --no-readline --file=$<
 .PHONY : clean
 clean :
 	-rm -f *.rda fig*.pdf tab*.txt
+
+# Local Variables:
+# mode:makefile-gmake
+# End:
