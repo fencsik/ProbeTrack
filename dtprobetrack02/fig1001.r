@@ -24,8 +24,8 @@ f.fig1001 <- function () {
     x2 <- as.numeric(dimnames(dt2)[[1]])
 
     ## CIs based on MSE of soa main effect
-    errg <- sqrt(528.8 / 10) * qt(.975, 27)
-    errg2 <- sqrt(1423 / 8) * qt(.975, 35)
+    errg <- sqrt(5629.1 / 21) * qt(.975, 80)
+    errg2 <- sqrt(15312 / 22) * qt(.975, 84)
 
     pdf(outfile, width=6, height=6, pointsize=12)
     opar <- par(mfrow=c(1, 1), las=1, pty="m", cex.axis=.6,
