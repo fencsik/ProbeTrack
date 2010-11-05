@@ -14,11 +14,6 @@ f.data11 <- function () {
     on.exit(exit.function())
     old.opt <- options(warn = 1)
 
-    if (!file.exists(infile)) stop("cannot open input file ", infile)
-    if (IsFileUpToDate(outfile, c(thisfile, infile))) {
-        warning("Output file is up to date, no action taken")
-        return(invisible(NULL))
-    }
     load(infile)
 
     ## set-up data matrix

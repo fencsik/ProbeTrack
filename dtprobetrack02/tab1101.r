@@ -9,11 +9,6 @@ f.tab1101 <- function () {
 
     on.exit( while (sink.number() > 0) sink() )
 
-    if (!file.exists(infile)) stop("cannot open input file ", infile)
-    if (IsFileUpToDate(outfile, c(thisfile, infile))) {
-        warning("Output file is up to date, no action taken")
-        return(invisible(NULL))
-    }
     load(infile)
 
     ## Compute mean and 95% CI on fit parameters

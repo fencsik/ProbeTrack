@@ -12,11 +12,6 @@ f.fig0201 <- function () {
     }
     on.exit(exit.function())
 
-    if (!file.exists(infile)) stop("cannot open input file ", infile)
-    if (IsFileUpToDate(outfile, c(infile, thisfile))) {
-        warning("Output file is up to date, no action taken")
-        return(invisible(NULL))
-    }
     load(infile)
     data02$soa <- as.numeric(as.character(data02$soa))
 

@@ -10,11 +10,6 @@ f.fig1102 <- function () {
     on.exit(if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off(),
             TRUE)
 
-    if (!file.exists(infile)) stop("cannot open input file ", infile)
-    if (IsFileUpToDate(outfile, c(infile, thisfile))) {
-        warning("Output file is up to date, no action taken")
-        return(invisible(NULL))
-    }
     load(infile)
 
     obse <- with(data11$data, tapply(rt, list(soa), mean))

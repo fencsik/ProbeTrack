@@ -12,11 +12,6 @@ f.an1001 <- function () {
     }
     on.exit(exit.function())
 
-    if (!file.exists(infile)) stop("cannot open input file ", infile)
-    if (IsFileUpToDate(outfile, c(thisfile, infile))) {
-        warning("Output file is up to date, no action taken")
-        return(invisible(NULL))
-    }
     load(infile)
 
     sink(outfile)

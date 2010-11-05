@@ -11,12 +11,6 @@ f.fig1001 <- function () {
     }
     on.exit(exit.function())
 
-    if (!file.exists(infile)) stop("cannot open input file ", infile)
-    if (!file.exists(infile2)) stop("cannot open input file ", infile2)
-    if (IsFileUpToDate(outfile, c(infile, infile2, thisfile))) {
-        warning("Output file is up to date, no action taken")
-        return(invisible(NULL))
-    }
     load(infile2)
     dt2 <- data10
     load(infile)
