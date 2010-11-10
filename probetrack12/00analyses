@@ -21,6 +21,17 @@ o fig0202: fig0201, separately for each subject
 
 ----------------------------------------------------------------------
 
+* data03: aggregate RT by subject, gap duration, and probe delay (same as
+  data01, but collapsing across probe types and ignoring some other
+  variables)
+
+* tab0301: anova on average RT as a function of probe delay and gap
+  duration
+
+* fig0301: plot average RT as a function of probe delay and gap duration
+
+----------------------------------------------------------------------
+
 * data10: aggregate median correct RT by subject, gap duration, and probe delay
 
 * tab1001: anova on RT as a function of probe delay
