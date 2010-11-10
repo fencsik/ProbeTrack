@@ -16,6 +16,8 @@ f.data00 <- function () {
     data00$resp <- factor(data00$resp)
 
 ### rename and recode variables
+    ## convert subject variable to a factor
+    data00$sub <- factor(data00$sub)
     ## probeType == 1 -> target; probeType == 2 -> distractor
     data00$target <- factor(data00$probeTarget, levels=c(0, 1),
                             labels=c("distractor", "target"))
