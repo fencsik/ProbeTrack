@@ -4,13 +4,6 @@
 f.data02 <- function () {
     infile <- "data01.rda"
     outfile <- "data02.rda"
-    thisfile <- "data02.r"
-
-    if (!file.exists(infile)) stop("cannot open file ", infile)
-    if (IsFileUpToDate(outfile, c(thisfile, infile))) {
-        warning("Output file is up to date, no action taken")
-        return(invisible(NULL))
-    }
     load(infile)
 
     ## split data

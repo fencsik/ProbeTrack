@@ -4,13 +4,6 @@
 f.data10 <- function () {
     infile <- "data00.rda"
     outfile <- "data10.rda"
-    thisfile <- "data10.r"
-
-    if (!file.exists(infile)) stop("cannot open file ", infile)
-    if (IsFileUpToDate(outfile, c(thisfile, infile))) {
-        warning("Output file is up to date, no action taken")
-        return(invisible(NULL))
-    }
     load(infile)
 
     ## extract factors for all trials and for all correct trials
