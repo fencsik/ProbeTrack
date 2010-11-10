@@ -1,7 +1,5 @@
 ### data02 compute d' from data01, and aggregate it by subject, gap duration,
 ### number of targets, and probe delay
-###
-### $LastChangedDate$
 
 f.data02 <- function () {
     infile <- "data01.rda"

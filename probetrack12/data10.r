@@ -1,7 +1,5 @@
 ### data10: aggregate median correct RT by subject, gap duration, tracking load,
 ### and probe delay
-###
-### $LastChangedDate$
 
 f.data10 <- function () {
     infile <- "data00.rda"

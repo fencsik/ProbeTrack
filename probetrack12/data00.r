@@ -1,6 +1,4 @@
 ### data00: cleans up raw data file
-###
-### $LastChangedDate$
 
 f.data00 <- function () {
     infile <- "rawdata.rda"

@@ -1,7 +1,5 @@
 ### data01: aggregate accuracy and RT statistics by subject, gap duration,
 ### probe type, number of targets, and probe delay
-###
-### $LastChangedDate$
 
 f.data01 <- function () {
     infile <- "data00.rda"
