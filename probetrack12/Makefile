@@ -1,6 +1,7 @@
 # Explicit rules
 
-all : rawdata.rda data00.rda data01.rda data02.rda data10.rda
+all : tab0201.txt \
+      tab1001.txt
 
 RAWDATA = rawdata.r data/*
 DATA = $(RAWDATA) data00.rda
@@ -10,6 +11,8 @@ data00.rda : $(RAWDATA) data00.r
 data01.rda : $(DATA) data01.r
 data02.rda : $(DATA) data01.rda data02.r
 data10.rda : $(DATA) data10.r
+tab0201.txt : data02.rda tab0201.r
+tab1001.txt : data10.rda tab1001.r
 
 # Commands and implicit rules
 
