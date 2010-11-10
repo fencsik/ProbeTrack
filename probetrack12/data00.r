@@ -7,7 +7,8 @@ f.data00 <- function () {
     data00 <- alldata
 
 ### remove bad subjects:
-    ## None so far
+    ## Subject 8's acc is around 70% on gap trials
+    data00 <- data00[data00$sub != 8, ]
 
 ### remove practice blocks, bad keypresses, and RTs <= 0
     data00 <- data00[data00$prac == 0 & data00$acc >= 0 & data00$rt > 0, ]
