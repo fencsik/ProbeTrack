@@ -3,7 +3,6 @@
 f.rawdata <- function () {
     datadir <- "data"
     outfile <- "rawdata.rda"
-    thisfile <- "rawdata.r"
 
     infiles <- file.path(datadir, dir(datadir))
 

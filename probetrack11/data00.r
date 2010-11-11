@@ -1,17 +1,8 @@
 ### data00: cleans up raw data file
-###
-### $LastChangedDate$
 
 f.data00 <- function () {
     infile <- "rawdata.rda"
     outfile <- "data00.rda"
-    thisfile <- "data00.r"
-
-    if (!file.exists(infile)) stop("cannot open file ", infile)
-    if (IsFileUpToDate(outfile, c(thisfile, infile))) {
-        warning("Output file is up to date, no action taken")
-        return(invisible(NULL))
-    }
     load(infile)
     data00 <- alldata
 
@@ -25,6 +16,8 @@ f.data00 <- function () {
     data00$resp <- factor(data00$resp)
 
 ### rename and recode variables
+    ## convert subject variable to a factor
+    data00$sub <- factor(data00$sub)
     ## probeType == 1 -> target; probeType == 2 -> distractor
     data00$target <- factor(data00$probeTarget, levels=c(0, 1),
                             labels=c("distractor", "target"))

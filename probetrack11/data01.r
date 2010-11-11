@@ -1,18 +1,9 @@
 ### data01: aggregate accuracy and RT statistics by subject, gap duration,
 ### probe type, number of targets, and probe delay
-###
-### $LastChangedDate$
 
 f.data01 <- function () {
     infile <- "data00.rda"
     outfile <- "data01.rda"
-    thisfile <- "data01.r"
-
-    if (!file.exists(infile)) stop("cannot open file ", infile)
-    if (IsFileUpToDate(outfile, c(thisfile, infile))) {
-        warning("Output file is up to date, no action taken")
-        return(invisible(NULL))
-    }
     load(infile)
 
 ### extract factors for all trials and for all correct trials
