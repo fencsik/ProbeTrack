@@ -10,6 +10,9 @@ f.data00 <- function () {
     ## Subject 3 has overall accuracy < 80%, and accuracy on gap trials
     ## around 55%
     data00 <- data00[data00$sub != 3, ]
+    ## These subjects have < 80% accuracy on gap trials
+    data00 <- data00[data00$sub != 1  & data00$sub != 13 &
+                     data00$sub != 14 & data00$sub != 16, ]
 
 ### remove practice blocks, bad keypresses, and RTs <= 0
     data00 <- data00[data00$prac == 0 & data00$acc >= 0 & data00$rt > 0, ]
