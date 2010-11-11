@@ -7,7 +7,8 @@ f.data00 <- function () {
     data00 <- alldata
 
 ### remove bad subjects:
-    ## Overall accuracy < 80%
+    ## Subject 3 has overall accuracy < 80%, and accuracy on gap trials
+    ## around 55%
     data00 <- data00[data00$sub != 3, ]
 
 ### remove practice blocks, bad keypresses, and RTs <= 0
