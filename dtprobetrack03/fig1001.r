@@ -18,8 +18,8 @@ f.fig1001 <- function () {
     x <- as.numeric(dimnames(dt)[[1]])
     col <- rainbow(length(dimnames(dt)[[2]]))
 
-    ## CIs based on MSE of soa main effect
-    errg <- sqrt(5629.1 / 21) * qt(.975, 80)
+    ## CIs based on MSE of soa main effect for each cond
+    errg <- sqrt(c(1998.6, 585.22, 666.92) / 13) * qt(.975, 40)
 
     pdf(outfile, width=6, height=6, pointsize=12)
     opar <- par(mfrow=c(1, 1), las=1, pty="m", cex.axis=.6,
@@ -34,7 +34,7 @@ f.fig1001 <- function () {
     axis(2)
 
     for (i in 1:length(col)) {
-        arrows(x, dt[, i] - errg, x, dt[, i] + errg,
+        arrows(x, dt[, i] - errg[i], x, dt[, i] + errg[i],
                length=.05, angle=90, code=3, col=col[i], lwd=2, lty=1)
     }
     matlines(x, dt, type="o",
