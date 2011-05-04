@@ -10,4 +10,4 @@ publication in a professional, peer-reviewed journal.  Finishing this paper
 will allow me to complete the first phase of this project and begin work on
 the next phase.  In the next phase, we plan to apply the technique to
 real-world problems, such as the effects that distracting tasks like
-cell-phone conversations can have on the recovery time.
+cell-phone conversations can have on recovery time.
