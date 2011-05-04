@@ -1,13 +1,16 @@
-Attention enables us to focus on some parts of our environment and ignore
-others.  One critical aspect of attention is the ability to move it rapidly
-from one object to another, or one task to another.  For example, driving
-requires that you move your attention between the traffic in front of you,
-the mirrors around you, and the dashboard.  I and my collaborators have
-developed a technique for measuring the time taken to recover following
-such movements of attention.  In the present proposal, I seek assigned time
-in Winter 2012 to write a manuscript describing our work and submit it for
-publication in a professional, peer-reviewed journal.  Finishing this paper
-will allow me to complete the first phase of this project and begin work on
-the next phase.  In the next phase, we plan to apply the technique to
-real-world problems, such as the effects that distracting tasks like
-cell-phone conversations can have on recovery time.
+In the present proposal, I seek assigned time in Winter 2012 to write a
+manuscript describing my recent work on attention and submit it to a
+peer-reviewed journal for publication.  Attention enables us to focus on
+some parts of our environment and ignore others.  One critical aspect of
+attention is the ability to move it rapidly from one object to another, or
+one task to another.  For example, driving requires that you move your
+attention between the traffic in front of you, the mirrors around you, and
+the dashboard.  I and my collaborators have developed a technique for
+measuring the time taken to recover following such movements of attention,
+and have completed several experiments using the technique.  I have
+presented this work at a conference, but I have not been able to prepare it
+for publication yet.  Finishing this paper will allow me to complete the
+first phase of this project and begin work on the next phase.  In the next
+phase, we plan to apply the technique to real-world problems, such as the
+effects that distracting tasks like cell-phone conversations can have on
+recovery time.
