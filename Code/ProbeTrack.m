@@ -642,7 +642,7 @@ function ProbeTrack
 
 
 function GeneratePoints (pts)
-    Screen('FillRect', winPoints, colBackground);
+    Screen('FillRect', winPoints, [0 0 0 0]);
     DrawFormattedText(winPoints, ...
                       sprintf('Points = %s', NumberWithSeparators(pts)), ...
                       [], [], colText);
