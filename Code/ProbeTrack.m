@@ -25,6 +25,24 @@ function ProbeTrack
         % set any remaining control variables
         nStim = 8;
 
+        % set up disappearance types
+        dtNone = 0;
+        dtBlank = 1;
+        dtStimFlash = 2;
+        dtBkgdFlash = 3;
+        switch gapTypeCode
+          case 'a'
+            gapType = dtBlank;
+            gapTypeStr = 'Blank';
+          case 'b'
+            gapType = dtStimFlash;
+            gapTypeStr = 'StimFlash';
+          case 'c'
+            gapType = dtBkgdFlash;
+            gapTypeStr = 'BkgdFlash';
+          otherwise
+            error('Gap type "%s" not recognized', gapTypeCode);
+        end
         % set up different block types
         switch blockType 
           case 1
@@ -33,7 +51,9 @@ function ProbeTrack
             pTrials = 0;
             xTrials = 40;
             gapDurList = 0;
+            gapType = dtNone;
             blockTypeStr = 'NoGap';
+            gapTypeStr = 'None';
             blockMesg = 'Initial Block without Gap';
           case 2
             % training with gap
@@ -264,6 +284,23 @@ function ProbeTrack
                     probeItem = Randi(nStim - nTargets) + nTargets;
                 end
 
+                % set colors for gap
+                originalBackgroundColor = colBackground;
+                switch gapType
+                  case dtNone
+                    gapBackgroundColor = colBackground;
+                    gapColors = trackingColors;
+                  case dtBlank
+                    gapBackgroundColor = colBackground;
+                    gapColors = repmat(colBackground', 1, nStim);
+                  case dtStimFlash
+                    gapBackgroundColor = colBackground;
+                    gapColors = repmat(colWhite', 1, nStim);
+                  case dtBkgdFlash
+                    gapBackgroundColor = colWhite;
+                    gapColors = trackingColors;
+                end
+
                 % set colors for probe frames
                 probeColors = trackingColors;
                 probeColors(:, probeItem) = colRed';
@@ -350,6 +387,7 @@ function ProbeTrack
                     PaintFrame(trajectories(:, :, frame), nStim, trackingColors, winMain);
                     tFrameOnset(frame) = Screen('Flip', winMain);
                 end
+                colBackground = gapBackgroundColor;
                 for gLoop = 1:durGap(trial)
                     % gap interval
                     frame = frame + 1;
@@ -358,6 +396,7 @@ function ProbeTrack
                     PaintFrame(trajectories(:, :, frame), nStim, gapColors, winMain);
                     tFrameOnset(frame) = Screen('Flip', winMain);
                 end
+                colBackground = originalBackgroundColor;
                 for sLoop = 1:SOA(trial)
                     % SOA interval
                     frame = frame + 1;
