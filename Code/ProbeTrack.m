@@ -7,7 +7,7 @@ function ProbeTrack
         AssertOpenGL;
         InitializePsychSound;
         KbName('UnifyKeyNames');
-        experiment = 'ProbeTrack12';
+        experiment = 'ProbeTrack13';
 
         % get user input
         [subject, blockType, gapTypeCode, pointsFlag] = ...
@@ -18,7 +18,7 @@ function ProbeTrack
                       'Display points:', '1', 1);
 
         % set any remaining IVs
-        SOAlist = [1 3 6 9 45]; % # of frames
+        SOAlist = [0 1 3 45]; % # of frames
         probeTargetList = 0:1;
         gapDurList = 10; % # of frames
         nTargets = 2;
@@ -59,15 +59,15 @@ function ProbeTrack
           case 2
             % training with gap
             practiceFlag = 1;
-            pTrials = 0;
-            xTrials = 20;
+            pTrials = 4;
+            xTrials = 16;
             blockTypeStr = 'GapPrac';
             blockMesg = 'Training Block with Gap';
           case 3
             % experimental block
             practiceFlag = 0;
-            pTrials = 10;
-            xTrials = 240;
+            pTrials = 8;
+            xTrials = 192;
             blockTypeStr = 'GapExp';
             blockMesg = 'Experimental Block with Gap';
           case -1
