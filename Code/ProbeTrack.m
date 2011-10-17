@@ -737,6 +737,33 @@ function ClearScreenCompletely
 end
 
 
+function [kbCode, responsePixxCode] = WaitForAnyButtonPress ()
+% Waits for a button press on the keyboard or ResponsePixx device,
+% whichever comes first.
+    while (1)
+        keyDown = KbCheck();
+        responsePixxCode = ResponsePixx('GetButtons');
+        if (keyDown || any(responsePixxCode))
+            [keyDown, t, kbCode] = KbCheck();
+            break;
+        end
+        WaitSecs(0.005);
+    end
+end
+
+function WaitUntilAllButtonsReleased ()
+% Waits until all buttons on the keyboard and ResponsePixx device are up.
+    while (1)
+        keyDown = KbCheck();
+        responsePixxCode = ResponsePixx('GetButtons');
+        if (~(keyDown || any(responsePixxCode)))
+            break;
+        end
+        WaitSecs(0.005);
+    end
+end
+
+
 function PaintFrame(coordinates, nStim, diskColors, window)
     Screen('DrawDots', window, coordinates(:, 1:nStim, :), stimSize, diskColors, [], 2);
 %     for i = 1:nStim
