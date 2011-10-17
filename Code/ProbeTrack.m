@@ -142,15 +142,15 @@ function ProbeTrack
 
         % Define response keys
         respAbort = KbName('ESCAPE');
-        if IsOSX
-            respTarget = KbName('''"');
-        elseif IsWin
-            respTarget = KbName('''');
-        else
-            error('no keyboard mapping for this operating system');
-        end        
-        respDistractor  = KbName('a'); % a key (left-hand side)
+        respTarget = 3; % ResponsePIXX index for green/left button
+        respDistractor  = 1; % ResponsePIXX index for red/right button
         allowedResponses = [respTarget, respDistractor];
+        responsePixxLights = zeros(1, 5);
+        responsePixxLights(allowedResponses) = 1;
+
+        % Set up ResponsePixx device
+        PsychDataPixx('Open');
+        ResponsePixx('Open');
 
         % Tones
         samplingRate = 44100;
@@ -194,6 +194,9 @@ function ProbeTrack
         HideCursor;
         ListenChar(2);
 
+        % Turn on ResponsePixx lights
+        ResponsePixx('StopNow', 1, responsePixxLights);
+
         % font setup
         Screen('TextFont', winMain, 'Arial');
         Screen('TextSize', winMain, 18);
@@ -220,11 +223,11 @@ function ProbeTrack
                            'Press NO if the red disk is NOT a target\n\n\n\n', ...
                            sprintf('Press any key to begin block of %d trials', totalTrials)], ...
                           'center', 'center', colText);
-        KbReleaseWait;
+        WaitUntilAllButtonsReleased();
         Screen('Flip', winMain);
         Screen('FillRect', winMain, colBackground);
         if pointsFlag, PresentPoints; end
-        [keyTime, keyCode] = KbStrokeWait;
+        [keyCode, responsePixxCode] = WaitForAnyButtonPress();
         if keyCode(respAbort)
             error('abort key pressed');
         end
@@ -328,7 +331,7 @@ function ProbeTrack
                 ClearScreen;
                 if pointsFlag, PresentPoints; end
                 PaintFrame(trajectories(:, :, 1), nStim, trackingColors, winMain);
-                KbReleaseWait;
+                WaitUntilAllButtonsReleased();
                 tLastOnset = Screen('Flip', winMain);
                 targNextOnset = tLastOnset + .1;
 
@@ -341,9 +344,9 @@ function ProbeTrack
                                       sprintf('Press a key to start trial %d', ...
                                               trialCounter), ...
                                       'center', 'center', colText);
-                    KbReleaseWait;
+                    WaitUntilAllButtonsReleased();
                     Screen('Flip', winMain, targNextOnset);
-                    [keyTime, keyCode] = KbStrokeWait;
+                    [keyCode, responsePixxCode] = WaitForAnyButtonPress();
                     if keyCode(respAbort)
                         error('abort key pressed');
                     end
@@ -354,6 +357,7 @@ function ProbeTrack
                 if pointsFlag, PresentPoints; end
                 PaintFrame(trajectories(:, :, 1), nStim, cueingColors, winMain);
                 tLastOnset = Screen('Flip', winMain);
+                ResponsePixx('StartNow', 1, responsePixxLights);
                 targNextOnset = tLastOnset + durCue * refreshDuration - durSlack;
 
                 % main animation sequence
@@ -583,8 +587,9 @@ function ProbeTrack
                         ['Please take a short break\n\n\n\n', ...
                          'Press any button to continue'], ...
                         'center', 'center', colText);
+                    WaitUntilAllButtonsReleased();
                     Screen('Flip', winMain, t1 + pauseMin);
-                    KbStrokeWait;
+                    WaitForAnyButtonPress();
                     ClearScreen;
                     if pointsFlag, PresentPoints; end
                     Screen('Flip', winMain);
@@ -636,6 +641,8 @@ function ProbeTrack
     ShowCursor;
     fprintf('\n# of open windows = %d\n', numel(Screen('Windows')));
     fclose('all');
+    ResponsePixx('Close');
+    PsychDataPixx('Close');
     Screen('CloseAll');
     PsychPortAudio('Close');
     clear all;
