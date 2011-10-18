@@ -142,8 +142,8 @@ function ProbeTrack
 
         % Define response keys
         respAbort = KbName('ESCAPE');
-        respTarget = 3; % ResponsePIXX index for green/left button
-        respDistractor  = 1; % ResponsePIXX index for red/right button
+        respTarget = 1; % ResponsePIXX index for red/right button
+        respDistractor  = 3; % ResponsePIXX index for green/left button
         allowedResponses = [respTarget, respDistractor];
         responsePixxLights = zeros(1, 5);
         responsePixxLights(allowedResponses) = 1;
