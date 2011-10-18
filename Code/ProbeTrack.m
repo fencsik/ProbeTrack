@@ -356,8 +356,9 @@ function ProbeTrack
                 if pointsFlag, PresentPoints; end
                 PaintFrame(trajectories(:, :, 1), nStim, cueingColors, winMain);
                 tLastOnset = Screen('Flip', winMain);
-                ResponsePixx('StartNow', 1, responsePixxLights);
                 targNextOnset = tLastOnset + durCue * refreshDuration - durSlack;
+                WaitUntilAllButtonsReleased;
+                ResponsePixx('StartNow', 1, responsePixxLights);
 
                 % main animation sequence
                 % draw first post-cue frame
@@ -419,13 +420,11 @@ function ProbeTrack
                         PaintFrame(trajectories(:, :, frame), nStim, probeColors, winMain);
                     end
                     Screen('DrawingFinished', winMain);
-                    [keyIsDown, KbTime, keyCode] = KbCheck;
-                    if keyIsDown
-                        if keyCode(respAbort)
-                            error('abort key pressed');
-                        end
-                        response = find(keyCode);
-                        responseTime = KbTime;
+                    buttons = ResponsePixx('GetButtons');
+                    if (any(buttons))
+                        initialResponse = buttons;
+                        response = find(buttons);
+                        break;
                     end
                     tLastOnset = Screen('Flip', winMain);
                     if frame <= numel(tFrameOnset)
@@ -436,22 +435,50 @@ function ProbeTrack
                     end
                 end
 
-                % Wait for key release
-                if response > 0
-                    while any(keyCode(response))
-                        [keyIsDown, KbTime, keyCode] = KbCheck;
-                    end
-                    tResponseEnd = KbTime;
-                end                    
+                % Clear screen
+                ClearScreenCompletely;
+                if pointsFlag, PresentPoints; end
+                tLastOnset = Screen('Flip', winMain);
 
-                % compute RT and accuracy
-                if responseTime > 0
+                % wait for button release
+                if (response(1) ~= -1)
+                    while (1)
+                        buttons = ResponsePixx('GetButtons');
+                        if (~any(initialResponse & buttons))
+                            break;
+                        end
+                    end
+                end
+
+                % analyze ResponsePixx log
+                [buttons, buttonTimes] = ResponsePixx('GetLoggedResponses');
+                buttonTimes = PsychDataPixx('BoxsecsToGetsecs', buttonTimes);
+                if (any(buttons(1, :)))
+                    response = find(buttons(1, :));
+                    responseTime = buttonTimes(1);
                     RT = round((responseTime - probeOnsetTime) * 1000); % RT in ms
+                else
+                    % non-response detected in first response log entry
+                    response = [];
+                    responseTime = 0;
+                    RT = 0;
+                end
+                % find response release
+                tRespondEnd = 0;
+                for (i = 2:size(buttons, 1))
+                    if (~any(buttons(1, :) & buttons(i, :)))
+                        tRespondEnd = buttonTimes(i);
+                        break;
+                    end
+                end
+                if (responseTime > 0 && tResponseEnd > 0)
                     dur = round((tResponseEnd - responseTime) * 1000); % response dur in ms
                 else
-                    RT = 0;
                     dur = 0;
                 end
+                ResponsePixx('StopNow', 1, responsePixxLights);
+
+                % compute accuracy
                 if isempty(response)
                     % no response
                     respString = 'none';
