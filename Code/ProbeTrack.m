@@ -410,7 +410,7 @@ function ProbeTrack
                     tFrameOnset(frame) = Screen('Flip', winMain);
                 end			
                 % present probe and continue motion while checking for a response every frame
-                while response == -1
+                while response(1) == -1
                     postProbeFrames = postProbeFrames + 1;
                     frame = frame + 1;
                     ClearScreen;
