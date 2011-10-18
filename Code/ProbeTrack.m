@@ -487,6 +487,10 @@ function ProbeTrack
                     % multiple keys pressed
                     respString = 'multi';
                     acc = -2;
+                elseif RT < 0
+                    % early response
+                    respString = 'early';
+                    acc = -4;
                 elseif response == respTarget
                     respString = 'target';
                     if probeTarget(trial)
@@ -564,6 +568,8 @@ function ProbeTrack
                     feedback = 'MULTIPLE KEYS PRESSED!';
                   case -3
                     feedback = 'NON-RESPONSE KEY PRESSED!';
+                  case -4
+                    feedback = 'RESPONDED EARLY!';
                   case 0
                     feedback = 'ERROR';
                   case 1
