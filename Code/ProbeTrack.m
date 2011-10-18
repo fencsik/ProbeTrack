@@ -149,7 +149,6 @@ function ProbeTrack
         responsePixxLights(allowedResponses) = 1;
 
         % Set up ResponsePixx device
-        PsychDataPixx('Open');
         ResponsePixx('Open');
 
         % Tones
@@ -642,7 +641,6 @@ function ProbeTrack
     fprintf('\n# of open windows = %d\n', numel(Screen('Windows')));
     fclose('all');
     ResponsePixx('Close');
-    PsychDataPixx('Close');
     Screen('CloseAll');
     PsychPortAudio('Close');
     clear all;
