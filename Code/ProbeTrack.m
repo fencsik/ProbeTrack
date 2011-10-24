@@ -447,6 +447,7 @@ function ProbeTrack
                         if (~any(initialResponse & buttons))
                             break;
                         end
+                        WaitSecs(.005);
                     end
                 end
 
