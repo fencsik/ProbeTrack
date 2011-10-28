@@ -2,7 +2,7 @@ function ProbeTrack
 
 % Runs MOT task with gap and variable post-gap probe-onset delay
 
-    VERSION = '13.1';
+    VERSION = '13.2';
     try
         AssertOpenGL;
         InitializePsychSound;
@@ -29,18 +29,18 @@ function ProbeTrack
         % set up disappearance types
         dtNone = 0;
         dtBlank = 1;
-        dtStimFlash = 2;
-        dtBkgdFlash = 3;
+        dtSmallFlash = 2;
+        dtBigFlash = 3;
         switch gapTypeCode
           case 'a'
             gapType = dtBlank;
             gapTypeStr = 'Blank';
           case 'b'
-            gapType = dtStimFlash;
-            gapTypeStr = 'StimFlash';
+            gapType = dtSmallFlash
+            gapTypeStr = 'SmallFlash';
           case 'c'
-            gapType = dtBkgdFlash;
-            gapTypeStr = 'BkgdFlash';
+            gapType = dtBigFlash;
+            gapTypeStr = 'BigFlash';
           otherwise
             error('Gap type "%s" not recognized', gapTypeCode);
         end
@@ -97,20 +97,17 @@ function ProbeTrack
         gapOnsetRangeStr = sprintf('%d-%d', min(gapOnsetRange), max(gapOnsetRange));
 
         % define colors
-        colBlack = [0 0 0 255];
-        colWhite = [255 255 255 255];
-        colMidGray = [128 128 128 255];
-        colDarkGray = [64 64 64 255];
-        colYellow = [240 240 0 255];
-        colRed = [250 0 0 255];
-        colBackground = colMidGray;
-        colText = colBlack;
+        colBackground = [25 25 25 255];
+        colDisks = [125 125 125 255];
+        colCue = [0 0 255 255];
+        colProbe = [250 0 0 255];
+        colText = [255 255 255 255];
 
         % define color sets for each phase of the trial
-        trackingColors= repmat(colDarkGray', 1, nStim);
+        trackingColors= repmat(colDisks', 1, nStim);
         cueingColors = trackingColors;
-        cueingColors(:, 1:nTargets) = repmat(colYellow', 1, nTargets);
-        gapColors = repmat(colBackground', 1, nStim);
+        cueingColors(:, 1:nTargets) = repmat(colCue', 1, nTargets);
+        gapBackgroundColor = colBackground;
 
         % Set any remaining parameters
         preloadFlag = 1;
@@ -178,6 +175,18 @@ function ProbeTrack
         end
         revision = VERSION;
         blocktime = datestr(now, 'yyyymmdd.HHMMSS');;
+
+        % Set flash colors based on room
+        if (any(colDisks(1:3) ~= 125))
+            error('If you change the disk colors, you must change the flash colors too!');
+        end
+        if (strcmpi(computer, 'scs215b'))
+            colSmallFlash = [165 165 165 255]; % 2:1
+            colBigFlash = [238 238 238 255]; % 5:1
+        else
+            colSmallFlash = [168 168 168 255]; % 2:1
+            colBigFlash = [247 247 247 255]; % 5:1
+        end
 
         % Open and set-up main window
         Screen('Preference', 'SkipSyncTests', 0);
@@ -291,22 +300,18 @@ function ProbeTrack
                 originalBackgroundColor = colBackground;
                 switch gapType
                   case dtNone
-                    gapBackgroundColor = colBackground;
                     gapColors = trackingColors;
                   case dtBlank
-                    gapBackgroundColor = colBackground;
                     gapColors = repmat(colBackground', 1, nStim);
-                  case dtStimFlash
-                    gapBackgroundColor = colBackground;
-                    gapColors = repmat(colWhite', 1, nStim);
-                  case dtBkgdFlash
-                    gapBackgroundColor = colWhite;
-                    gapColors = trackingColors;
+                  case dtSmallFlash
+                    gapColors = repmat(colSmallFlash', 1, nStim);
+                  case dtBigFlash
+                    gapColors = repmat(colBigFlash', 1, nStim);
                 end
 
                 % set colors for probe frames
                 probeColors = trackingColors;
-                probeColors(:, probeItem) = colRed';
+                probeColors(:, probeItem) = colProbe';
 
                 % set colors for fading frames
                 cueFadeColors = repmat(cueingColors, [1, 1, durCueFade]);
