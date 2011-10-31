@@ -1,0 +1,38 @@
+\documentclass[10pt,draft]{article}
+\usepackage[T1]{fontenc}
+\usepackage[scaled=.92]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage[landscape,margin=1in]{geometry}
+
+\usepackage{tabularx}
+\newcolumntype{Z}{>{\centering\arraybackslash}X}
+
+\newcommand{\LineOne}{& & & & & 1/a & 2/a & 3/a & 2/c & 3/c & 2/b & 3/b & \\ \hline}
+\newcommand{\LineTwo}{& & & & & 1/a & 2/c & 3/c & 2/b & 3/b & 2/a & 3/a & \\ \hline}
+\newcommand{\LineThree}{& & & & & 1/a & 2/b & 3/b & 2/a & 3/a & 2/c & 3/c & \\ \hline}
+
+\begin{document}
+\pagestyle{empty}
+\small
+\setlength{\extrarowheight}{5pt}
+
+\begin{center}
+  {\large ProbeTrack13}
+
+  \medskip
+
+  \begin{tabularx}{\textwidth}%
+    {*5{|c}*7{|p{.35in}}|Z|}\hline
+    \bf Sub & \bf Date & \bf Age & \bf Gen & \bf Exp & 
+    \bf 1 & \bf 2 & \bf 3 & \bf 4 & \bf 5 & \bf 6 & \bf 7 &
+    \bf Notes \\ \hline
+    \LineOne\LineTwo\LineThree\LineOne\LineTwo\LineThree
+    \LineOne\LineTwo\LineThree\LineOne\LineTwo\LineThree
+    \LineOne\LineTwo\LineThree\LineOne\LineTwo\LineThree
+    \LineOne\LineTwo\LineThree\LineOne\LineTwo\LineThree
+  \end{tabularx}
+
+\end{center}
+
+\end{document}
