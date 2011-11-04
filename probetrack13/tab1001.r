@@ -1,7 +1,7 @@
 ### tab1001: anova on median correct RT as a function of condition and probe
 ### delay
 
-f.an1001 <- function () {
+f.tab1001 <- function () {
     thisfile <- "tab1001.r"
     infile <- "data10.rda"
     outfile <- "tab1001.txt"
@@ -31,5 +31,5 @@ f.an1001 <- function () {
     }
 }
 
-f.an1001()
-rm(f.an1001)
+f.tab1001()
+rm(f.tab1001)
