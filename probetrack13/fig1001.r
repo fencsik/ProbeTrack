@@ -24,7 +24,7 @@ f.fig1001 <- function () {
     }
 
     ## CIs based on MSE of soa main effect for each cond
-    errg <- sqrt(c(483.57, 341.61, 353.11) / 9) * qt(.975, 24)
+    errg <- sqrt(c(407.74, 313.16, 315.81) / 11) * qt(.975, 30)
 
     pdf(outfile, width=6, height=6, pointsize=12)
     opar <- par(mfrow=c(1, 1), las=1, pty="m", cex.axis=.6,
