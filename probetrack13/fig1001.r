@@ -19,7 +19,8 @@ f.fig1001 <- function () {
     col <- rainbow(length(dimnames(dt)[[2]]))
 
     ## CIs based on MSE of soa main effect for each cond
-    errg <- sqrt(c(407.74, 313.16, 315.81) / 11) * qt(.975, 30)
+    ## order is Blank, SmallFlash, BigFlash
+    errg <- sqrt(c(490.71, 271.85, 282.04) / 17) * qt(.975, 48)
 
     pdf(outfile, width=6, height=6, pointsize=12)
     opar <- par(mfrow=c(1, 1), las=1, pty="m", cex.axis=.6,
