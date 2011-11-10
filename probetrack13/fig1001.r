@@ -18,11 +18,6 @@ f.fig1001 <- function () {
     x <- as.numeric(dimnames(dt)[[1]])
     col <- rainbow(length(dimnames(dt)[[2]]))
 
-    ## adjust RTs so they don't fall on top of each other
-    for (i in 1:dim(dt)[2]) {
-        dt[, i] <- dt[, i] + 50 * (i - 1)
-    }
-
     ## CIs based on MSE of soa main effect for each cond
     errg <- sqrt(c(407.74, 313.16, 315.81) / 11) * qt(.975, 30)
 
