@@ -176,18 +176,6 @@ function ProbeTrack
         revision = VERSION;
         blocktime = datestr(now, 'yyyymmdd.HHMMSS');;
 
-        % Set flash colors based on room
-        if (any(colDisks(1:3) ~= 125))
-            error('If you change the disk colors, you must change the flash colors too!');
-        end
-        if (strcmpi(computer, 'scs215b'))
-            colSmallFlash = [165 165 165 255]; % 2:1
-            colBigFlash = [238 238 238 255]; % 5:1
-        else
-            colSmallFlash = [168 168 168 255]; % 2:1
-            colBigFlash = [247 247 247 255]; % 5:1
-        end
-
         % Open and set-up main window
         Screen('Preference', 'SkipSyncTests', 0);
         Screen('Preference', 'VisualDebugLevel', 4);
