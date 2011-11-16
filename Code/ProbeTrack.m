@@ -17,7 +17,7 @@ function ProbeTrack
                       'Display points:', '1', 1);
 
         % set any remaining IVs
-        SOAlist = [0 1 3 45]; % # of frames
+        SOAlist = [0 1 2 6 45]; % # of frames
         probeTargetList = 0:1;
         gapDurList = 10; % # of frames
         gapTypeCode = 'a';
@@ -59,15 +59,15 @@ function ProbeTrack
           case 2
             % training with gap
             practiceFlag = 1;
-            pTrials = 4;
-            xTrials = 16;
+            pTrials = 0;
+            xTrials = 20;
             blockTypeStr = 'GapPrac';
             blockMesg = 'Training Block with Gap';
           case 3
             % experimental block
             practiceFlag = 0;
-            pTrials = 8;
-            xTrials = 192;
+            pTrials = 10;
+            xTrials = 240;
             blockTypeStr = 'GapExp';
             blockMesg = 'Experimental Block with Gap';
           case -1
