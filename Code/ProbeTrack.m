@@ -10,17 +10,17 @@ function ProbeTrack
         experiment = 'ProbeTrack13';
 
         % get user input
-        [subject, blockType, gapTypeCode, pointsFlag] = ...
+        [subject, blockType, pointsFlag] = ...
             DialogBox(sprintf('%s Parameters', experiment), ...
                       'Subject code:', '1', 1, ...
                       'Block type (1, 2, 3):', '3', 1, ...
-                      'Gap type (a, b, c):', 'a', 0, ...
                       'Display points:', '1', 1);
 
         % set any remaining IVs
         SOAlist = [0 1 3 45]; % # of frames
         probeTargetList = 0:1;
         gapDurList = 10; % # of frames
+        gapTypeCode = 'a';
         nTargets = 2;
 
         % set any remaining control variables
