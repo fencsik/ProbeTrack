@@ -97,9 +97,9 @@ function ProbeTrack
         gapOnsetRangeStr = sprintf('%d-%d', min(gapOnsetRange), max(gapOnsetRange));
 
         % define colors
-        colBackground = [25 25 25 255];
-        colDisks = [125 125 125 255];
-        colCue = [0 0 255 255];
+        colBackground = [128 128 128 255];
+        colDisks = [64 64 64 255];
+        colCue = [240 240 0 255];
         colProbe = [250 0 0 255];
         colText = [255 255 255 255];
 
