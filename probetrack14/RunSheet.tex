@@ -1,0 +1,37 @@
+\documentclass[10pt,draft]{article}
+\usepackage[T1]{fontenc}
+\usepackage[scaled=.92]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage[landscape,margin=1in]{geometry}
+
+\usepackage{tabularx}
+\newcolumntype{Z}{>{\centering\arraybackslash}X}
+
+\newcommand{\LineOne}{& & & & & 1 & 2 & 3 & \\ \hline}
+
+\begin{document}
+\pagestyle{empty}
+\small
+\setlength{\extrarowheight}{5pt}
+
+\begin{center}
+  {\large ProbeTrack14}
+
+  \medskip
+
+  \begin{tabularx}{\textwidth}%
+    {*5{|c}*3{|p{.35in}}|Z|}\hline
+    \bf Sub & \bf Date & \bf Age & \bf Gen & \bf Exp & 
+    \bf Blk 1 & \bf Blk 2 & \bf Blk 3 &
+    \bf Notes \\ \hline
+    \LineOne\LineOne\LineOne\LineOne\LineOne\LineOne
+    \LineOne\LineOne\LineOne\LineOne\LineOne\LineOne
+    \LineOne\LineOne\LineOne\LineOne\LineOne\LineOne
+    \LineOne\LineOne\LineOne\LineOne\LineOne\LineOne
+    \LineOne\LineOne\LineOne
+  \end{tabularx}
+
+\end{center}
+
+\end{document}
