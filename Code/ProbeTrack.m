@@ -10,17 +10,17 @@ function ProbeTrack
         experiment = 'ProbeTrack14';
 
         % get user input
-        [subject, blockType, pointsFlag] = ...
+        [subject, blockType, gapTypeCode, pointsFlag] = ...
             DialogBox(sprintf('%s Parameters', experiment), ...
                       'Subject code:', '1', 1, ...
                       'Block type (1, 2, 3):', '3', 1, ...
+                      'Gap type (a, b, c):', 'a', 0, ...
                       'Display points:', '1', 1);
 
         % set any remaining IVs
-        SOAlist = [0 1 2 6 45]; % # of frames
+        SOAlist = [0 1 3 45]; % # of frames
         probeTargetList = 0:1;
         gapDurList = 10; % # of frames
-        gapTypeCode = 'a';
         nTargets = 2;
 
         % set any remaining control variables
@@ -59,15 +59,15 @@ function ProbeTrack
           case 2
             % training with gap
             practiceFlag = 1;
-            pTrials = 0;
-            xTrials = 20;
+            pTrials = 4;
+            xTrials = 16;
             blockTypeStr = 'GapPrac';
             blockMesg = 'Training Block with Gap';
           case 3
             % experimental block
             practiceFlag = 0;
-            pTrials = 10;
-            xTrials = 240;
+            pTrials = 8;
+            xTrials = 192;
             blockTypeStr = 'GapExp';
             blockMesg = 'Experimental Block with Gap';
           case -1
@@ -97,9 +97,9 @@ function ProbeTrack
         gapOnsetRangeStr = sprintf('%d-%d', min(gapOnsetRange), max(gapOnsetRange));
 
         % define colors
-        colBackground = [128 128 128 255];
-        colDisks = [64 64 64 255];
-        colCue = [240 240 0 255];
+        colBackground = [25 25 25 255];
+        colDisks = [125 125 125 255];
+        colCue = [0 0 255 255];
         colProbe = [250 0 0 255];
         colText = [255 255 255 255];
 
@@ -175,6 +175,18 @@ function ProbeTrack
         end
         revision = VERSION;
         blocktime = datestr(now, 'yyyymmdd.HHMMSS');;
+
+        % Set flash colors based on room
+        if (any(colDisks(1:3) ~= 125))
+            error('If you change the disk colors, you must change the flash colors too!');
+        end
+        if (strcmpi(computer, 'scs215b'))
+            colSmallFlash = [165 165 165 255]; % 2:1
+            colBigFlash = [238 238 238 255]; % 5:1
+        else
+            colSmallFlash = [168 168 168 255]; % 2:1
+            colBigFlash = [247 247 247 255]; % 5:1
+        end
 
         % Open and set-up main window
         Screen('Preference', 'SkipSyncTests', 0);
