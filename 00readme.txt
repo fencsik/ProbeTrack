@@ -15,6 +15,8 @@ Experiments:
   run by M. Johnson, subjects 10- were run by N. Gill
 * dtprobetrack02: same as dtprobetrack01, but with different probe delays
   to capture the recovery slope observed in dtprobetrack01
+* dtprobetrack03: in addition to the word-generation task used previously,
+  add single-task and shadowing control conditions
 
 * probetrack01: basic probetrack experiment--track 4 out of 8 with SOAs of 0,
   80, 160, 320, and 1280 ms--with a 133 ms gap
@@ -40,3 +42,11 @@ Experiments:
 * probetrack11: probetrack10 with intermixed gap and no-gap trials to test
   if the long-SOA baseline is appropriate
 * probetrack12: probetrack11 run at the Wolfelab
+* probetrack13: ProbeTrack with both gaps and changes in stimulus luminance
+  to see if surprise causes SOA effects
+* probetrack14: basic ProbeTrack replication to check whether the effect
+  works with the current SOA values and the new ResponsePIXX device;
+  probetrack13 failed to replicate the previous basic effect
+* probetrack15: probetrack13 with changes in background luminance (instead
+  of stimulus luminance); the motion of the stimuli may have "silenced" the
+  luminance changes, as in Suchow & Alvarez (2011)
