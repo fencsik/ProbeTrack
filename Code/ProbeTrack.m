@@ -18,7 +18,7 @@ function ProbeTrack
                       'Display points:', '1', 1);
 
         % set any remaining IVs
-        SOAlist = [0 1 3 45]; % # of frames
+        SOAlist = [0 1 3 30]; % # of frames
         probeTargetList = 0:1;
         gapDurList = 10; % # of frames
         nTargets = 2;
