@@ -2,12 +2,12 @@ function ProbeTrack
 
 % Runs MOT task with gap and variable post-gap probe-onset delay
 
-    VERSION = '14.0';
+    VERSION = '15.0';
     try
         AssertOpenGL;
         InitializePsychSound;
         KbName('UnifyKeyNames');
-        experiment = 'ProbeTrack14';
+        experiment = 'ProbeTrack15';
 
         % get user input
         [subject, blockType, gapTypeCode, pointsFlag] = ...
