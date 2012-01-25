@@ -97,17 +97,9 @@ function ProbeTrack
         gapOnsetRangeStr = sprintf('%d-%d', min(gapOnsetRange), max(gapOnsetRange));
 
         % define colors
-        colBackground = [25 25 25 255];
-        colDisks = [125 125 125 255];
         colCue = [0 0 255 255];
         colProbe = [250 0 0 255];
         colText = [255 255 255 255];
-
-        % define color sets for each phase of the trial
-        trackingColors= repmat(colDisks', 1, nStim);
-        cueingColors = trackingColors;
-        cueingColors(:, 1:nTargets) = repmat(colCue', 1, nTargets);
-        gapBackgroundColor = colBackground;
 
         % Set any remaining parameters
         preloadFlag = 1;
@@ -177,16 +169,24 @@ function ProbeTrack
         blocktime = datestr(now, 'yyyymmdd.HHMMSS');;
 
         % Set flash colors based on room
+        colDisks = [125 125 125 255];
         if (any(colDisks(1:3) ~= 125))
             error('If you change the disk colors, you must change the flash colors too!');
         end
         if (strcmpi(computer, 'scs215b'))
-            colSmallFlash = [165 165 165 255]; % 2:1
-            colBigFlash = [238 238 238 255]; % 5:1
+            colBackground = [95 95 95 255];
+            colSmallFlash = [73 73 73 255]; % 1/2 of bg
+            colBigFlash = [238 238 238 255]; % 10x bg
         else
-            colSmallFlash = [168 168 168 255]; % 2:1
-            colBigFlash = [247 247 247 255]; % 5:1
+            colBackground = [93 93 93 255];
+            colSmallFlash = [70 70 70 255]; % 1/2 of bg
+            colBigFlash = [247 247 247 255]; % 10x bg
         end
+
+        % define color sets for each phase of the trial
+        trackingColors= repmat(colDisks', 1, nStim);
+        cueingColors = trackingColors;
+        cueingColors(:, 1:nTargets) = repmat(colCue', 1, nTargets);
 
         % Open and set-up main window
         Screen('Preference', 'SkipSyncTests', 0);
@@ -298,15 +298,17 @@ function ProbeTrack
 
                 % set colors for gap
                 originalBackgroundColor = colBackground;
+                gapColors = trackingColors;
                 switch gapType
                   case dtNone
-                    gapColors = trackingColors;
+                    gapBackgroundColor = colBackground;
                   case dtBlank
-                    gapColors = repmat(colBackground', 1, nStim);
+                    gapBackgroundColor = colBackground;
+                    gapColors = repmat(gapBackgroundColor', 1, nStim);
                   case dtSmallFlash
-                    gapColors = repmat(colSmallFlash', 1, nStim);
+                    gapBackgroundColor = colSmallFlash;
                   case dtBigFlash
-                    gapColors = repmat(colBigFlash', 1, nStim);
+                    gapBackgroundColor = colBigFlash;
                 end
 
                 % set colors for probe frames
