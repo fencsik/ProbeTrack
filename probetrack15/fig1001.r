@@ -20,7 +20,7 @@ f.fig1001 <- function () {
 
     ## CIs based on MSE of soa main effect for each cond
     ## order is Blank, SmallFlash, BigFlash
-    errg <- sqrt(c(490.71, 271.85, 282.04) / 17) * qt(.975, 48)
+    errg <- sqrt(c(645.5, 376.11, 430.91) / 10) * qt(.975, 27)
 
     pdf(outfile, width=6, height=6, pointsize=12)
     opar <- par(mfrow=c(1, 1), las=1, pty="m", cex.axis=.6,
