@@ -1,0 +1,71 @@
+\documentclass[10pt]{article}
+
+\usepackage[hmargin=1in,vmargin=0.25in]{geometry}
+\renewcommand{\familydefault}{\sfdefault}
+
+
+\begin{document}
+
+\pagestyle{empty}
+
+\newsavebox{\debriefingtext}
+
+\sbox{\debriefingtext}{%
+  \begin{minipage}{1.0\linewidth}
+    \bigskip
+    \footnotesize
+    \setlength{\parindent}{3ex}
+    \begin{flushright}
+      TrackDT01
+    \end{flushright}
+    \begin{center}\small
+      Tracking Experiment Debriefing
+    \end{center}
+
+    Thank you for volunteering to participate in this experiment.  The
+    purpose of the experiment is to investigate how we perform demanding
+    tasks while we are distracted by other tasks.  We know that
+    distractions like cell phone conversations can make it harder to
+    concentrate on demanding tasks like driving, but we don't yet know
+    exactly how one task affects the other.  With this experiment, we are
+    testing a theory that the conversation makes it harder to track moving
+    objects, which is critical to driving through traffic.
+
+    The results may be incorporated into a conference presentation or a
+    published research article.  If you have any questions or concerns
+    about this study, please contact Prof.\ David Fencsik by phone at
+    510-885-2384 or by email at david.fencsik@csueastbay.edu.
+
+    Thank you again.
+
+    \bigskip\bigskip
+
+  \end{minipage}
+}
+
+\begin{center}
+  \hrulefill
+
+  \usebox{\debriefingtext}
+
+  \hrulefill
+
+  \usebox{\debriefingtext}
+
+  \hrulefill
+
+  \usebox{\debriefingtext}
+
+  \hrulefill
+
+  \usebox{\debriefingtext}
+
+  \hrulefill
+
+  \usebox{\debriefingtext}
+
+  \hrulefill
+\end{center}
+
+
+\end{document}
