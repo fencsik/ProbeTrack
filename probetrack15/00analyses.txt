@@ -1,0 +1,47 @@
+Summaries of analysis files
+
+* rawdata: collect individual text data files into one binary file
+
+----------------------------------------------------------------------
+
+* data00: clean up raw data file
+
+----------------------------------------------------------------------
+
+* data01: aggregate accuracy and RT statistics by subject, gap type, probe
+  type, and probe delay
+
+----------------------------------------------------------------------
+
+* data02: compute d' from data01, and aggregate it by subject, gap type,
+  and probe delay
+
+* tab0201: anova on d' as a function of probe delay and gap type
+
+* fig0201: plot d' as a function of probe delay and gap type
+* fig0202: plot d' as a function of probe delay and gap type separately for
+  each subject
+
+----------------------------------------------------------------------
+
+* data10: aggregate median correct RT by subject, gap type, and probe delay
+
+* tab1001: anova on RT as a function of gap type and probe delay
+
+* fig1001: plot RT as a function of gap type and probe delay
+* fig1002: plot RT as a function of gap type and probe delay separately for
+  each subject
+
+----------------------------------------------------------------------
+
+* data11: fit reacquire-time model to RT by probe delay functions from
+  data10 separately for each gap type
+
+* tab1101: generate summaries of parameters of the fitted model
+
+* fig1101: plot fit of model against observed data for each subject
+* fig1102: plot fit of model against observed data
+
+----------------------------------------------------------------------
+
+(* = complete, o = incomplete)
