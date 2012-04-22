@@ -46,6 +46,13 @@ do.an1101 <- function () {
                  mean(y) - ci, mean(y) + ci));
 
    cat("\n\n\n");
+   cat("Average baseRT, with 95% confidence intervals\n");
+   y <- dt[rownames(dt) != "MEAN", "baseRT"];
+   ci <- qt(.975, length(y) - 1) * sqrt(var(y) / length(y));
+   cat(sprintf("%0.2f +/- %0.2f (%0.2f, %0.2f)\n", mean(y), ci,
+                 mean(y) - ci, mean(y) + ci));
+
+   cat("\n\n\n");
    cat("Goodness of fit statistics for averaged fit\n");
    obsey <- with(data11$data, aggregate(rt, list(soa, ntargets, gapdur), mean))$x;
    predy <- with(data11$data, aggregate(rt.pred, list(soa, ntargets, gapdur), mean))$x;
