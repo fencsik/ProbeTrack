@@ -49,7 +49,7 @@ f.fig1102 <- function () {
     opar <- par(mfrow=c(1, 1), las=1, pty="m", cex.axis=.6,
                 xpd=F, bg="white")
 
-    ylim <- c(400, 600)
+    ylim <- c(500, 600)
 
     plot(x, obse, type="p", bty="n",
          axes=F, ylim=ylim,
