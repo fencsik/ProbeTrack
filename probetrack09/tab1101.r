@@ -49,6 +49,13 @@ f.tab1101 <- function () {
                 M, CI, M - CI, M + CI))
 
     cat("\n\n\n")
+    cat("Average baseRT, with 95% confidence intervals\n")
+    M <- dt["MEAN", "baseRT"]
+    CI <- dt["CI", "baseRT"]
+    cat(sprintf("   %0.2f +/- %0.2f (%0.2f, %0.2f)\n",
+                M, CI, M - CI, M + CI))
+
+    cat("\n\n\n")
     cat("Goodness of fit statistics for overall data\n")
     cat(with(data11$data,
              sprintf("R-squared = %0.5f\n", cor(rt, rt.pred)^2)))
