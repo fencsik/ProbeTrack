@@ -18,6 +18,8 @@ Experiments:
 * dtprobetrack03: in addition to the word-generation task used previously,
   add single-task and shadowing control conditions
 
+* trackdt01: re-try dtprobetrack03
+
 * probetrack01: basic probetrack experiment--track 4 out of 8 with SOAs of 0,
   80, 160, 320, and 1280 ms--with a 133 ms gap
 * probetrack02: added more SOAs to probetrack01--0, 40, 80, 120, 160, and 1280
