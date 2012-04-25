@@ -63,7 +63,7 @@ do.fig1101 <- function () {
       matplot(x, dt[sub, , , 1], type = "n", bty = "n",
               axes = F, ylim = ylim,
               xlab = "Probe delay (ms)", ylab = "Probe RT (ms)",
-              main = sprintf("ProbeTrack1 - %s", sub));
+              main = sprintf("ProbeTrack3 - %s", sub));
       for (gd in gapdurList) {
          axis(1, x);
          axis(2);

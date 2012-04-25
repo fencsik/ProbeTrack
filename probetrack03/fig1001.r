@@ -45,7 +45,7 @@ do.fig1001 <- function () {
 
    matplot(x, dtg, type = "n", bty = "n",
            ylim = ylim, axes = F,
-           xlab = "Probe delay (ms)", ylab = "Probe RT (ms)", main = "ProbeTrack1");
+           xlab = "Probe delay (ms)", ylab = "Probe RT (ms)", main = "ProbeTrack3");
    axis(1, x);
    axis(2);
 
