@@ -51,7 +51,7 @@ do.fig1101 <- function () {
    counter <- 0
    for (sub in Subjects) {
       matplot(x, dt[sub, , ], type="n", bty="n",
-              axes=F, ylim=ylim,
+              axes=F,
               xlab="Probe delay (ms)", ylab="Probe RT (ms)",
               main=sprintf("TrackDT01 - %s", sub))
       for (gt in condList) {

@@ -28,7 +28,7 @@ f.fig1002 <- function () {
     counter <- 0
     for (sub in dimnames(dt)[[3]]) {
         matplot(x, dt[, , sub], type="o", bty="n",
-                ylim=c(300, 700), axes=F,
+                axes=F,
                 col=col, pch=21, lty=1, lwd=3, bg="white",
                 xlab="", ylab="", main=paste("TrackDT01 Sub", sub))
         axis(1, x)

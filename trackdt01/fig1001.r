@@ -27,7 +27,7 @@ f.fig1001 <- function () {
                 xpd=NA, bg="white")
 
     matplot(x, dt, type="n", bty="n",
-            ylim=c(350, 500), axes=F,
+            axes=F, ylim=c(425, 725),
             xlab="Probe delay (ms)",
             ylab="Correct median RT (ms)",
             main="TrackDT01")
