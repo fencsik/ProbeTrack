@@ -59,7 +59,7 @@ do.fig1102 <- function () {
    opar <- par(mfrow = c(1, 1), las = 1, pty = "m", cex.axis = .6,
                xpd = NA, bg = "white");
 
-   ylim <- c(500, 800);
+   ylim <- c(575, 700);
 
    matplot(x, dt[, , 1], type = "n", bty = "n",
         axes = F, ylim = ylim,
