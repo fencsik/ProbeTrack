@@ -21,21 +21,20 @@ do.an1102 <- function () {
    load(infile);
 
    dt <- data11$fit;
-   ##dt$sub <- as.character(dt$sub);
-   ##dt$gapdur <- as.numeric(as.character(dt$gapdur));
-   ##dt$ntargets <- as.numeric(as.character(dt$ntargets));
+   dt$sub <- factor(dt$sub);
+   dt$gapdur <- factor(dt$gapdur);
 
    sink(outfile);
    cat("ANOVA testing effect of gap duration on rtime\n");
    print(summary(aov(rtime ~ gapdur + Error(sub / gapdur),
                      data = dt)));
 
-   gapdurList <- sort(unique(as.numeric(as.character(dt$gapdur))));
+   gapdurList <- levels(dt$gapdur);
    nGapdur <- length(gapdurList);
    for (i in 1:(nGapdur-1)) {
       for (j in (i+1):nGapdur) {
          cat("\n\n\n");
-         cat(sprintf("ANOVA comparing gap durations %0.0f and %0.0f\n",
+         cat(sprintf("ANOVA comparing gap durations %s and %s\n",
                      gapdurList[i], gapdurList[j]));
          print(summary(aov(rtime ~ gapdur + Error(sub / gapdur),
                            data = dt[dt$gapdur == gapdurList[i] | dt$gapdur == gapdurList[j], ])));
@@ -50,7 +49,7 @@ do.an1102 <- function () {
    for (i in 1:(nGapdur-1)) {
       for (j in (i+1):nGapdur) {
          cat("\n\n\n");
-         cat(sprintf("ANOVA comparing gap durations %0.0f and %0.0f\n",
+         cat(sprintf("ANOVA comparing gap durations %s and %s\n",
                      gapdurList[i], gapdurList[j]));
          print(summary(aov(baseRT ~ gapdur + Error(sub / gapdur),
                            data = dt[dt$gapdur == gapdurList[i] | dt$gapdur == gapdurList[j], ])));
