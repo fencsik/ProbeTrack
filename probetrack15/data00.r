@@ -7,7 +7,11 @@ f.data00 <- function () {
     load(infile)
     data00 <- alldata
 
-### remove bad subjects (none so far):
+### remove bad subjects:
+    ## Subject 1 had 322 early responses out of 576 trials
+    data00 <- data00[data00$sub != 1, ]
+    ## Subject 7 had overall accuracy around 79%
+    ##data00 <- data00[data00$sub != 7, ]
 
 ### remove practice blocks, bad keypresses, and RTs <= 0
     data00 <- data00[data00$prac == 0 & data00$acc >= 0 & data00$rt > 0, ]
