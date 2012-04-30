@@ -63,6 +63,9 @@ do.fig1102 <- function () {
         points(x, dt[, gt], type="p",
                col=col[gt], bg="transparent", pch=21, cex=1.5, lwd=3)
     }
+    legend("topright", dimnames(dt)[[2]],
+           bty="n", cex=.75, pt.cex=1.2,
+           pt.bg="white", col=col, pch=21, lty=1, lwd=2)
 }
 
 do.fig1102()
