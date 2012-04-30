@@ -39,7 +39,7 @@ f.fig1001 <- function () {
                length=.05, angle=90, code=3, col=col[i], lwd=2, lty=1)
     }
     matlines(x, dt, type="o",
-          col=col, pch=21, lty=1, lwd=2, cex=1.5, bg="white")
+             col=col, pch=21, lty=1, lwd=2, cex=1.5, bg="white")
     legend("bottomright", dimnames(dt)[[2]],
            bty="n", cex=.75, pt.cex=1.2,
            pt.bg="white", col=col, pch=21, lty=1, lwd=2)
