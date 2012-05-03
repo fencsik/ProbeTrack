@@ -16,7 +16,8 @@ f.data00 <- function () {
     ##data00 <- data00[data00$sub != 7, ]
 
 ### remove practice blocks, bad keypresses, and RTs <= 0
-    data00 <- data00[data00$prac == 0 & data00$acc >= 0 & data00$rt > 0, ]
+    data00 <- data00[data00$prac == 0 & data00$acc >= 0 &
+                     data00$rt > 100 & data00$rt < 5000, ]
     data00$blocktype <- factor(data00$blocktype)
     data00$resp <- factor(data00$resp)
 
