@@ -15,7 +15,10 @@ f.data00 <- function () {
     ## Subject 7 had overall accuracy around 79%
     ##data00 <- data00[data00$sub != 7, ]
 
-### remove practice blocks, bad keypresses, and RTs <= 0
+### remove practice blocks, bad keypresses, and responses that are too slow
+### or too fast; note that there are some extremely large RTs, which are
+### actually just early responses that were mishandled by the code: they
+### were set to the clock rather than the RT
     data00 <- data00[data00$prac == 0 & data00$acc >= 0 &
                      data00$rt > 100 & data00$rt < 5000, ]
     data00$blocktype <- factor(data00$blocktype)
