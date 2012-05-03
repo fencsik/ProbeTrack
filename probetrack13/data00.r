@@ -10,7 +10,8 @@ f.data00 <- function () {
 ### remove bad subjects (none so far):
 
 ### remove practice blocks, bad keypresses, and RTs <= 0
-    data00 <- data00[data00$prac == 0 & data00$acc >= 0 & data00$rt > 0, ]
+    data00 <- data00[data00$prac == 0 & data00$acc >= 0 &
+                     data00$rt > 50 & data00$rt < 5000, ]
     data00$blocktype <- factor(data00$blocktype)
     data00$resp <- factor(data00$resp)
 
