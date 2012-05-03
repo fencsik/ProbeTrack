@@ -10,6 +10,8 @@ f.data00 <- function () {
 ### remove bad subjects:
     ## Subject 1 had 322 early responses out of 576 trials
     data00 <- data00[data00$sub != 1, ]
+    ## Subject 12 had 95
+    data00 <- data00[data00$sub != 12, ]
     ## Subject 7 had overall accuracy around 79%
     ##data00 <- data00[data00$sub != 7, ]
 
