@@ -14,6 +14,8 @@ f.data00 <- function () {
     data00 <- data00[data00$sub != 12, ]
     ## Subject 7 had overall accuracy around 79%
     ##data00 <- data00[data00$sub != 7, ]
+    ## Subject 14 ran out of time and couldn't finish
+    data00 <- data00[data00$sub != 14, ]
 
 ### remove practice blocks, bad keypresses, and responses that are too slow
 ### or too fast; note that there are some extremely large RTs, which are
