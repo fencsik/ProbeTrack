@@ -5,10 +5,9 @@ function TrackDemo (nTargets, gapDur, gapType)
 % Runs MOT Demos
 %
 % NTARGETS is the number of targets to track out of 8 total stimuli.
-% GAPDUR is the length of the "gap" in milliseconds.  GAPTYPE is one of
-% three types of gaps: a = no gap, b = disappearance, c = small decrease in
-% background brightnes, and d = large increase in background luminance with
-% a polarity reversal.
+% GAPDUR is the length of the "gap" in milliseconds.  GAPTYPE is one of: a
+% = no gap, b = disappearance, c = small decrease in background brightness,
+% and d = large increase in background brightness with a polarity reversal.
 
 % Author: David Fencsik (david.fencsik@csueastbay.edu)
 
