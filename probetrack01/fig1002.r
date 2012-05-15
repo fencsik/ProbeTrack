@@ -27,6 +27,7 @@ do.fig1002 <- function () {
    errg <- sqrt(1256 / nsub) * qt(.975, 28);
  
    x <- as.numeric(dimnames(dtg)[[1]]);
+   dtng <- rep(mean(data10[data10$gapdur == "0", "rt"], na.rm = F), length(x));
 
    ## settings
    ylim <- c(500, 1000);
@@ -41,6 +42,8 @@ do.fig1002 <- function () {
    axis(1, x);
    axis(2);
 
+   lines(x, dtng, type = "l",
+         col = 1, lty = 2, lwd = 3);
    if (!is.null(errg)) {
       arrows(x, dtg - errg, x, dtg + errg,
              length = .05, angle = 90, code = 3, lwd = 1, col = 1, lty = 1);
