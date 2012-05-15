@@ -1,6 +1,6 @@
-function TrackDemo (nTargets, gapDur, gapType)
+function TrackDemo (nTargets, gapDur, gapType, probe)
 
-% TrackDemo (NTARGETS, GAPDUR, GAPTYPE)
+% TrackDemo (NTARGETS, GAPDUR, GAPTYPE, PROBE)
 %
 % Runs MOT Demos
 %
@@ -8,6 +8,10 @@ function TrackDemo (nTargets, gapDur, gapType)
 % GAPDUR is the length of the "gap" in milliseconds.  GAPTYPE is one of: a
 % = no gap, b = disappearance, c = small decrease in background brightness,
 % and d = large increase in background brightness with a polarity reversal.
+% PROBE specifies the post-gap probe delays in milliseconds; the program
+% will pick one value at random for each tracking interval; with an empty
+% array, there will be just an experimenter-controlled target-reveal at the
+% end of the tracking interval.
 
 % Author: David Fencsik (david.fencsik@csueastbay.edu)
 
@@ -24,6 +28,14 @@ function TrackDemo (nTargets, gapDur, gapType)
         % handle empty gaptype
         if (nargin < 3 || isempty(gapType))
             gapType = 'a';
+        end
+
+        % handle probe
+        if (nargin < 4)
+            probe = [];
+        end
+        if (~isempty(probe))
+            probe = reshape(probe, [1, numel(probe)]);
         end
 
         % set up disappearance types
@@ -58,6 +70,7 @@ function TrackDemo (nTargets, gapDur, gapType)
 
         % define colors
         colCue = [255 0 0 255];
+        colProbe = [0 200 0 255];
         colText = [255 255 255 255];
         colDisks = [125 125 125 255];
         colBackground = [72 72 72 255];
@@ -89,6 +102,9 @@ function TrackDemo (nTargets, gapDur, gapType)
         durSlack = refreshDuration / 2.0;
         % convert from ms -> frames
         gapDur = round(gapDur / 1000 / refreshDuration);
+        if (~isempty(probe))
+            probe = round(probe / 1000 / refreshDuration);
+        end
 
         % Turn cursor and keyboard echoing off
         HideCursor;
@@ -107,6 +123,19 @@ function TrackDemo (nTargets, gapDur, gapType)
             gapOnsetTime = Randi(gapOnsetRange(2) - gapOnsetRange(1)) + gapOnsetRange(1);
             % compute total trial duration (in frames)
             trialDuration = durCueMove + durCueFade + gapOnsetTime + gapDur + durPostGap;
+            % select a probe delay and a probe object
+            if (~isempty(probe))
+                soa = probe(Randi(numel(probe)));
+                trialDuration = trialDuration + soa;
+                if (Randi(2) == 1)
+                    % probe a target
+                    probeIndex = Randi(nTargets);
+                else
+                    % probe a distractor
+                    distractors = nTargets+1:nStim;
+                    probeIndex = distractors(Randi(numel(distractors)));
+                end
+            end
             % compute stimulus positions for entire trial
             trajectories = MakeTrajectories(nStim, trialDuration, stimSize);
 
@@ -179,11 +208,12 @@ function TrackDemo (nTargets, gapDur, gapType)
                 PaintFrame(trajectories(:, :, frame), nStim, cueFadeColors(:, :, f), winMain);
                 Screen('Flip', winMain);
             end
+            currentColors = trackingColors;
             % pre-gap interval
             for f = 1:gapOnsetTime
                 frame = frame + 1;
                 ClearScreen;
-                PaintFrame(trajectories(:, :, frame), nStim, trackingColors, winMain);
+                PaintFrame(trajectories(:, :, frame), nStim, currentColors, winMain);
                 Screen('Flip', winMain);
             end
             colBackground = gapBackgroundColor;
@@ -195,16 +225,27 @@ function TrackDemo (nTargets, gapDur, gapType)
                 Screen('Flip', winMain);
             end
             colBackground = originalBackgroundColor;
+            if (~isempty(probe))
+                % gap-probe soa
+                for f = 1:soa
+                    frame = frame + 1;
+                    ClearScreen;
+                    PaintFrame(trajectories(:, :, frame), nStim, currentColors, winMain);
+                    Screen('Flip', winMain);
+                end
+                currentColors(:, probeIndex) = colProbe';
+            end
             for sLoop = 1:durPostGap
                 % post-gap interval
                 frame = frame + 1;
                 ClearScreen;
-                PaintFrame(trajectories(:, :, frame), nStim, trackingColors, winMain);
+                PaintFrame(trajectories(:, :, frame), nStim, currentColors, winMain);
                 Screen('Flip', winMain);
             end
+
             % present final display
             ClearScreen;
-            PaintFrame(trajectories(:, :, frame), nStim, trackingColors, winMain);
+            PaintFrame(trajectories(:, :, frame), nStim, currentColors, winMain);
             Screen('Flip', winMain);
             [t, keyCode] = KbStrokeWait();
             if keyCode(respAbort)
@@ -213,7 +254,8 @@ function TrackDemo (nTargets, gapDur, gapType)
 
             % present target(s) again
             ClearScreen;
-            PaintFrame(trajectories(:, :, frame), nStim, cueingColors, winMain);
+            currentColors(:, 1:nTargets) = cueingColors(:, 1:nTargets);
+            PaintFrame(trajectories(:, :, frame), nStim, currentColors, winMain);
             Screen('Flip', winMain);
             [t, keyCode] = KbStrokeWait();
             if keyCode(respAbort)
