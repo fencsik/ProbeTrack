@@ -119,7 +119,7 @@ function TrackDemo (nTargets, gapDur, gapType, probe)
             ClearScreen;
             Screen('Flip', winMain);
 
-            % randomize gap duration (in frames)
+            % randomize gap onset (in frames)
             gapOnsetTime = Randi(gapOnsetRange(2) - gapOnsetRange(1)) + gapOnsetRange(1);
             % compute total trial duration (in frames)
             trialDuration = durCueMove + durCueFade + gapOnsetTime + gapDur + durPostGap;
@@ -217,8 +217,8 @@ function TrackDemo (nTargets, gapDur, gapType, probe)
                 Screen('Flip', winMain);
             end
             colBackground = gapBackgroundColor;
-            for gLoop = 1:gapDur
-                % gap interval
+            % gap interval
+            for f = 1:gapDur
                 frame = frame + 1;
                 ClearScreen;
                 PaintFrame(trajectories(:, :, frame), nStim, gapColors, winMain);
@@ -235,7 +235,7 @@ function TrackDemo (nTargets, gapDur, gapType, probe)
                 end
                 currentColors(:, probeIndex) = colProbe';
             end
-            for sLoop = 1:durPostGap
+            for f = 1:durPostGap
                 % post-gap interval
                 frame = frame + 1;
                 ClearScreen;
