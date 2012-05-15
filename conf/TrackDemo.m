@@ -69,8 +69,8 @@ function TrackDemo (nTargets, gapDur, gapType, probe)
         durPostGap = 60;
 
         % define colors
-        colCue = [255 0 0 255];
-        colProbe = [0 200 0 255];
+        colCue = [255 255 0 255];
+        colProbe = [255 0 0 255];
         colText = [255 255 255 255];
         colDisks = [125 125 125 255];
         colBackground = [72 72 72 255];
