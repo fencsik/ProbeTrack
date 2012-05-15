@@ -15,7 +15,7 @@ function TrackDemo (nTargets, gapDur, gapType, probe)
 
 % Author: David Fencsik (david.fencsik@csueastbay.edu)
 
-    VERSION = '1.0';
+    VERSION = '1.1';
     try
         AssertOpenGL;
         InitializePsychSound;
