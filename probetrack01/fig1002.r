@@ -50,6 +50,9 @@ do.fig1002 <- function () {
    }
    lines(x, dtg, type = "o",
          col = 1, pch = 21, lty = 1, lwd = 3, cex = 1.5, bg = "white");
+   legend("bottomright", c("gap", "no gap"),
+          lty = 1:2, lwd = 3,
+          bty = "n", y.intersp = 1.3);
 }
 
 do.fig1002();
