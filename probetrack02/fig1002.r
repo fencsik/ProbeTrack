@@ -24,7 +24,7 @@ do.fig1002 <- function () {
    dtg <- with(data10[data10$gapdur != "0", ],
                tapply(rt, list(soa), mean, na.rm = TRUE));
    nsub <- length(unique(data10$sub));
-   errg <- sqrt(1256 / nsub) * qt(.975, 28);
+   errg <- sqrt(1423 / nsub) * qt(.975, 35);
  
    x <- as.numeric(dimnames(dtg)[[1]]);
    dtng <- rep(mean(data10[data10$gapdur == "0", "rt"], na.rm = F), length(x));

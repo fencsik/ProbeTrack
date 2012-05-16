@@ -26,7 +26,7 @@ do.fig0203 <- function () {
    dtg <- with(data02[data02$gapdur != "0", ],
                tapply(dprime, list(soa), mean, na.rm = TRUE));
    nsub <- length(unique(data02$sub));
-   errg <- sqrt(0.1914 / nsub) * qt(.975, 28);
+   errg <- sqrt(0.25466 / nsub) * qt(.975, 35);
    x <- as.numeric(dimnames(dtg)[[1]])
    dtng <- rep(mean(data02[data02$gapdur == "0", "dprime"], na.rm = TRUE), length(x));
 
