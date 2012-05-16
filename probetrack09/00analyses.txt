@@ -28,7 +28,8 @@
 
 * fig1001: plot average median RT by probe delay (with ProbeTrack02 thrown
   in for comparison)
-o fig1002: same as fig1001, but separately for each subject
+* fig1002: same as fig1001, but without ProbeTrack02 results
+o fig1003: same as fig1001, but separately for each subject
 
 ----------------------------------------------------------------------
 
