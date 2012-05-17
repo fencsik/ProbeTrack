@@ -49,7 +49,7 @@ function TrackDemo (nTargets, gapDur, gapType, probe)
           case 'b'
             gapType = dtBlank;
           case 'c'
-            gapType = dtSmallFlash
+            gapType = dtSmallFlash;
           case 'd'
             gapType = dtBigFlash;
           otherwise
