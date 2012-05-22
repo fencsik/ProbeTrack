@@ -1,9 +1,6 @@
 ### an0401: generate table of parameters of weibull for each subject
-###
-### $LastChangedDate$
 
 do.an0401 <- function () {
-   thisfile <- "an0401.r";
    infile <- "data04.rda";
    outfile <- "an0401.txt";
 
@@ -12,11 +9,6 @@ do.an0401 <- function () {
    }
    on.exit(exit.function());
 
-   if (!file.exists(infile)) stop("cannot open input file ", infile);
-   if (IsFileUpToDate(outfile, c(thisfile, infile))) {
-      warning("Output file is up to date, no action taken");
-      return(invisible(NULL));
-   }
    load(infile);
 
    dt <- data04$fit;

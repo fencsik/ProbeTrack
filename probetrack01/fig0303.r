@@ -1,22 +1,15 @@
 ### fig0303.r: plot correct RT by probe delay separated by gap duration,
 ### separately for each subject
-###
-### $LastChangedDate$
 
 do.fig0303 <- function () {
    infile <- "data03.rda";
    outfile <- "fig0303.pdf";
-   thisfile <- "fig0303.r";
    exit.function <- function () {
       if (exists("opar")) par(opar);
       if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
    }
    on.exit(exit.function());
 
-   if (IsFileUpToDate(outfile, c(infile, thisfile))) {
-      warning("Output file is up to date, no action taken");
-      return(invisible(NULL));
-   }
    load(infile);
    data03$soa <- as.numeric(as.character(data03$soa));
    data03$gapdur <- as.numeric(as.character(data03$gapdur));

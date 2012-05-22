@@ -1,12 +1,9 @@
-### fig0203.r: plot d' as a function of probe delay with error bars based on a
-### repeated measures anova
-###
-### $LastChangedDate$
+### fig0203.r: plot d' as a function of probe delay with error bars based
+### on a repeated measures anova
 
 do.fig0203 <- function () {
    infile <- "data02.rda";
    outfile <- "fig0203.pdf";
-   thisfile <- "fig0203.r";
    errfile <- "an0202.rda";
    exit.function <- function () {
       if (exists("opar")) par(opar);
@@ -14,11 +11,6 @@ do.fig0203 <- function () {
    }
    on.exit(exit.function());
 
-   if (!file.exists(infile)) stop("cannot open input file ", infile);
-   if (IsFileUpToDate(outfile, c(infile, thisfile, errfile))) {
-      warning("Output file is up to date, no action taken");
-      return(invisible(NULL));
-   }
    load(infile);
    data02$soa <- as.numeric(as.character(data02$soa));
 

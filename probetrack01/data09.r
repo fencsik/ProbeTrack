@@ -1,10 +1,7 @@
 ### data09.r: fit reacquire-time model to RT by probe delay functions from
 ### data03, averaged across subjects
-###
-### $LastChangedDate$
 
 do.data09 <- function () {
-   thisfile <- "data09.r";
    infile <- "data03.rda";
    outfile <- "data09.rda";
 
@@ -13,12 +10,6 @@ do.data09 <- function () {
    }
    on.exit(exit.function());
    old.opt <- options(warn = 1);
-
-   if (!file.exists(infile)) stop("cannot open input file ", infile);
-   if (IsFileUpToDate(outfile, c(thisfile, infile))) {
-      warning("Output file is up to date, no action taken");
-      return(invisible(NULL));
-   }
    load(infile);
 
    ## set-up data matrix

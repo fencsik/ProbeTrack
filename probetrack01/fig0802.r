@@ -1,23 +1,15 @@
 ### fig0802.r: plot fit of model against observed data, averaged across
 ### subjects
-###
-### $LastChangedDate$
 
 do.fig0802 <- function () {
    infile <- "data08.rda";
    outfile <- "fig0802.pdf";
-   thisfile <- "fig0802.r";
    exit.function <- function () {
       if (exists("opar")) par(opar);
       if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
    }
    on.exit(exit.function());
 
-   if (!file.exists(infile)) stop("cannot open input file ", infile);
-   if (IsFileUpToDate(outfile, c(infile, thisfile))) {
-      warning("Output file is up to date, no action taken");
-      return(invisible(NULL));
-   }
    load(infile);
    model <- data08$model;
 

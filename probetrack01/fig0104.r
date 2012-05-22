@@ -1,22 +1,15 @@
 ### fig0104.r: plot accuracy by probe delay separated by gap duration and probe
 ### type, separately for each subject
-###
-### $LastChangedDate$
 
 do.fig0104 <- function () {
    infile <- "data01.rda";
    outfile <- "fig0104.pdf";
-   thisfile <- "fig0104.r";
    exit.function <- function () {
       if (exists("opar")) par(opar);
       if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
    }
    on.exit(exit.function());
 
-   if (IsFileUpToDate(outfile, c(infile, thisfile))) {
-      warning("Output file is up to date, no action taken");
-      return(invisible(NULL));
-   }
    load(infile);
    data01$soa <- as.numeric(as.character(data01$soa));
 

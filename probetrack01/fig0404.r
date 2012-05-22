@@ -1,23 +1,16 @@
 ### fig0404.r: scatter-plot of weibull baseline against zero-gap RT for each
 ### subject
-###
-### $LastChangedDate$
 
 do.fig0404 <- function () {
    infile.baseline <- "data04.rda";
    infile.control <- "data03.rda";
    outfile <- "fig0404.pdf";
-   thisfile <- "fig0404.r";
    exit.function <- function () {
       if (exists("opar")) par(opar);
       if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
    }
    on.exit(exit.function());
 
-   if (IsFileUpToDate(outfile, c(infile.baseline, infile.control, thisfile))) {
-      warning("Output file is up to date, no action taken");
-      return(invisible(NULL));
-   }
    load(infile.control);
    data03$gapdur <- as.numeric(as.character(data03$gapdur));
    data03$ntargets <- as.numeric(as.character(data03$ntargets));

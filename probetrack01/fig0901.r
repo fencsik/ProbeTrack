@@ -1,22 +1,14 @@
 ### fig0901.r: plot fit of model against observed data
-###
-### $LastChangedDate$
 
 do.fig0901 <- function () {
    infile <- "data09.rda";
    outfile <- "fig0901.pdf";
-   thisfile <- "fig0901.r";
    exit.function <- function () {
       if (exists("opar")) par(opar);
       if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
    }
    on.exit(exit.function());
 
-   if (!file.exists(infile)) stop("cannot open input file ", infile);
-   if (IsFileUpToDate(outfile, c(infile, thisfile))) {
-      warning("Output file is up to date, no action taken");
-      return(invisible(NULL));
-   }
    load(infile);
    model <- data09$model;
 

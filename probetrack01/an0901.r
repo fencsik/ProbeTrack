@@ -1,9 +1,6 @@
 ### an0901: generate table of parameters of fitted model for each subject
-###
-### $LastChangedDate$
 
 do.an0901 <- function () {
-   thisfile <- "an0901.r";
    infile <- "data09.rda";
    outfile <- "an0901.txt";
 
@@ -12,11 +9,6 @@ do.an0901 <- function () {
    }
    on.exit(exit.function());
 
-   if (!file.exists(infile)) stop("cannot open input file ", infile);
-   if (IsFileUpToDate(outfile, c(thisfile, infile))) {
-      warning("Output file is up to date, no action taken");
-      return(invisible(NULL));
-   }
    load(infile);
 
    dt <- data09$fit;

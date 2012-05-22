@@ -1,15 +1,6 @@
 ### pre01.r: plots predictions for reacquisition time model
-###
-### $LastChangedDate$
 
 do.pre01 <- function () {
-   outfile <- "data01.pdf";
-   thisfile <- "data01.r";
-
-   if (IsFileUpToDate(outfile, c(thisfile))) {
-      warning("Output file is up to date, no action taken");
-      return(invisible(NULL));
-   }
 
 ### Define model function
    reacquire.model <- function (soa, rtime, baseRT) {

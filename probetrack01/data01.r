@@ -1,18 +1,10 @@
 ### data01
-###
-### $LastChangedDate$
 
 do.data01 <- function () {
-   infile <- "rawdata.txt";
+   infile <- "rawdata.rda";
    outfile <- "data01.rda";
-   thisfile <- "data01.r";
-
-   if (!file.exists(infile)) stop("cannot open file ", infile);
-   if (IsFileUpToDate(outfile, c(thisfile, infile))) {
-      warning("Output file is up to date, no action taken");
-      return(invisible(NULL));
-   }
-   dt <- read.csv(infile);
+   load(infile);
+   dt <- alldata;
 
    ## remove bad subjects:
    ## 1. remove nw based on SSP's lab book (very low accuracy)

@@ -1,22 +1,15 @@
 ### fig0202.r: plot d' as a function of probe delay, separated by gap duration,
 ### separately for each subject
-###
-### $LastChangedDate$
 
 do.fig0202 <- function () {
    infile <- "data02.rda";
    outfile <- "fig0202.pdf";
-   thisfile <- "fig0202.r";
    exit.function <- function () {
       if (exists("opar")) par(opar);
       if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
    }
    on.exit(exit.function());
 
-   if (IsFileUpToDate(outfile, c(infile, thisfile))) {
-      warning("Output file is up to date, no action taken");
-      return(invisible(NULL));
-   }
    load(infile);
    data02$soa <- as.numeric(as.character(data02$soa));
    data02$gapdur <- as.numeric(as.character(data02$gapdur));

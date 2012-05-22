@@ -1,9 +1,6 @@
 ### data05.r: fit weibull cdf to RT by probe delay functions from data01
-###
-### $LastChangedDate$
 
 do.data05 <- function () {
-   thisfile <- "data05.r";
    infile <- "data01.rda";
    outfile <- "data05.rda";
 
@@ -13,11 +10,6 @@ do.data05 <- function () {
    on.exit(exit.function());
    old.opt <- options(warn = 1);
 
-   if (!file.exists(infile)) stop("cannot open input file ", infile);
-   if (IsFileUpToDate(outfile, c(thisfile, infile))) {
-      warning("Output file is up to date, no action taken");
-      return(invisible(NULL));
-   }
    load(infile);
 
    ## optionally remove ssf and wz because their weibull fits are weird

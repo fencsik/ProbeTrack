@@ -1,9 +1,6 @@
 ### an0301: anova on RT as a function of probe delay
-###
-### $LastChangedDate$
 
 do.an0301 <- function () {
-   thisfile <- "an0301.r";
    infile <- "data03.rda";
    outfile <- "an0301.txt";
 
@@ -12,11 +9,6 @@ do.an0301 <- function () {
    }
    on.exit(exit.function());
 
-   if (!file.exists(infile)) stop("cannot open input file ", infile);
-   if (IsFileUpToDate(outfile, c(thisfile, infile))) {
-      warning("Output file is up to date, no action taken");
-      return(invisible(NULL));
-   }
    load(infile);
 
    sink(outfile);

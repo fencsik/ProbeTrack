@@ -1,9 +1,6 @@
 ### an0302: anova on accuracy as a function of probe delay and probe type
-###
-### $LastChangedDate$
 
 do.an0302 <- function () {
-   thisfile <- "an0302.r";
    infile <- "data03.rda";
    outfile <- "an0302.txt";
 
@@ -12,11 +9,6 @@ do.an0302 <- function () {
    }
    on.exit(exit.function());
 
-   if (!file.exists(infile)) stop("cannot open input file ", infile);
-   if (IsFileUpToDate(outfile, c(thisfile, infile))) {
-      warning("Output file is up to date, no action taken");
-      return(invisible(NULL));
-   }
    load(infile);
 
    sink(outfile);

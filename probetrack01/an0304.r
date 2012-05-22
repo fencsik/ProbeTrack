@@ -1,10 +1,7 @@
 ### an0304: t-tests comparing accuracy on gap trials at each probe delay to
 ### accuracy on no-gap trials
-###
-### $LastChangedDate$
 
 do.an0304 <- function () {
-   thisfile <- "an0304.r";
    infile <- "data03.rda";
    outfile <- "an0304.txt";
    rdafile <- "an0304.rda";
@@ -14,11 +11,6 @@ do.an0304 <- function () {
    }
    on.exit(exit.function());
 
-   if (!file.exists(infile)) stop("cannot open input file ", infile);
-   if (IsFileUpToDate(c(rdafile, outfile), c(thisfile, infile))) {
-      warning("Output file is up to date, no action taken");
-      return(invisible(NULL));
-   }
    load(infile);
    data03$soa <- as.numeric(as.character(data03$soa));
 

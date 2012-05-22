@@ -1,24 +1,16 @@
 ### fig0502.r: plot fit of weibull against observed data, averaged across
 ### subjects
-###
-### $LastChangedDate$
 
 do.fig0502 <- function () {
    infile <- "data05.rda";
    outfile <- "fig0502.pdf";
    errfile <- "an0502.rda";
-   thisfile <- "fig0502.r";
    exit.function <- function () {
       if (exists("opar")) par(opar);
       if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
    }
    on.exit(exit.function());
 
-   if (!file.exists(infile)) stop("cannot open input file ", infile);
-   if (IsFileUpToDate(outfile, c(infile, thisfile, errfile))) {
-      warning("Output file is up to date, no action taken");
-      return(invisible(NULL));
-   }
    load(infile);
    weibull <- data05$weibull;
 

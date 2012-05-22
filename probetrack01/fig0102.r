@@ -1,11 +1,8 @@
 ### fig0102.r: plot accuracy by probe delay separated by probe type
-###
-### $LastChangedDate$
 
 do.fig0102 <- function () {
    infile <- "data01.rda";
    outfile <- "fig0102.pdf";
-   thisfile <- "fig0102.r";
    errfile <- "an0104.rda";
    exit.function <- function () {
       if (exists("opar")) par(opar);
@@ -13,11 +10,6 @@ do.fig0102 <- function () {
    }
    on.exit(exit.function());
 
-   if (!file.exists(infile)) stop("cannot open input file ", infile);
-   if (IsFileUpToDate(outfile, c(infile, thisfile, errfile))) {
-      warning("Output file is up to date, no action taken");
-      return(invisible(NULL));
-   }
    load(infile);
    data01$soa <- as.numeric(as.character(data01$soa));
 

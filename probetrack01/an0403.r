@@ -1,10 +1,7 @@
 ### an0403: t-tests comparing RT on gap trials at each probe delay to RT on
 ### no-gap trials
-###
-### $LastChangedDate$
 
 do.an0403 <- function () {
-   thisfile <- "an0403.r";
    infile <- "data04.rda";
    outfile <- "an0403.txt";
 
@@ -13,11 +10,6 @@ do.an0403 <- function () {
    }
    on.exit(exit.function());
 
-   if (!file.exists(infile)) stop("cannot open input file ", infile);
-   if (IsFileUpToDate(outfile, c(thisfile, infile))) {
-      warning("Output file is up to date, no action taken");
-      return(invisible(NULL));
-   }
    load(infile);
 
    weibull <- data04$weibull;

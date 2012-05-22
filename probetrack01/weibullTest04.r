@@ -1,7 +1,5 @@
 ### weibullTest.r: tests fitting of weibull to each subject's data with various
 ### starting parameters
-###
-### $LastChangedDate$
 
 weibull <- function(x, slope, threshold, baseline, asymptote) {
    baseline + (asymptote - baseline) *
@@ -61,9 +59,8 @@ plotfit <- function(file, data, fit) {
 }
 
 do.weibullTest <- function () {
-   thisfile <- "weibullTest.r";
    infile <- "data03.rda";
-   outfile <- "weibullTest.pdf";
+   outfile <- "weibullTest04.pdf";
 
    exit.function <- function () {
       if (exists("old.opt")) options(old.opt);
@@ -73,11 +70,6 @@ do.weibullTest <- function () {
    on.exit(exit.function());
    old.opt <- options(warn = 1);
 
-   if (!file.exists(infile)) stop("cannot open input file ", infile);
-###    if (IsFileUpToDate(outfile, c(thisfile, infile))) {
-###       warning("Output file is up to date, no action taken");
-###       return(invisible(NULL));
-###    }
    load(infile);
 
    ## optionally remove ssf and wz because their weibull fits are weird

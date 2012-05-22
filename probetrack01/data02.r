@@ -1,18 +1,9 @@
-### data02 compute d' from data01, and aggregate it by subject, gap duration,
-### number of targets, and probe delay
-###
-### $LastChangedDate$
+### data02 compute d' from data01, and aggregate it by subject, gap
+### duration, number of targets, and probe delay
 
 do.data02 <- function () {
    infile <- "data01.rda";
    outfile <- "data02.rda";
-   thisfile <- "data02.r";
-
-   if (!file.exists(infile)) stop("cannot open file ", infile);
-   if (IsFileUpToDate(outfile, c(thisfile, infile))) {
-      warning("Output file is up to date, no action taken");
-      return(invisible(NULL));
-   }
    dt <- load(infile);
 
    ## split data

@@ -1,11 +1,8 @@
 ### fig0101.r: plot correct RT by probe delay separated by probe type
-###
-### $LastChangedDate$
 
 do.fig0101 <- function () {
    infile <- "data01.rda";
    outfile <- "fig0101.pdf";
-   thisfile <- "fig0101.r";
    errfile <- "an0103.rda";
    exit.function <- function () {
       if (exists("opar")) par(opar);
@@ -13,11 +10,6 @@ do.fig0101 <- function () {
    }
    on.exit(exit.function());
 
-   if (!file.exists(infile)) stop("cannot open input file ", infile);
-   if (IsFileUpToDate(outfile, c(infile, thisfile, errfile))) {
-      warning("Output file is up to date, no action taken");
-      return(invisible(NULL));
-   }
    load(infile);
    data01$soa <- as.numeric(as.character(data01$soa));
 

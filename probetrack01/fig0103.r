@@ -1,21 +1,14 @@
 ### fig0103.r: plot correct RT by probe delay separated by probe type
-###
-### $LastChangedDate$
 
 do.fig0103 <- function () {
    infile <- "data01.rda";
    outfile <- "fig0103.pdf";
-   thisfile <- "fig0103.r";
    exit.function <- function () {
       if (exists("opar")) par(opar);
       if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
    }
    on.exit(exit.function());
 
-   if (IsFileUpToDate(outfile, c(infile, thisfile))) {
-      warning("Output file is up to date, no action taken");
-      return(invisible(NULL));
-   }
    load(infile);
    data01$soa <- as.numeric(as.character(data01$soa));
 
