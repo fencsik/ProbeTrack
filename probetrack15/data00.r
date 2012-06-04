@@ -22,7 +22,7 @@ f.data00 <- function () {
 ### actually just early responses that were mishandled by the code: they
 ### were set to the clock rather than the RT
     data00 <- data00[data00$prac == 0 & data00$acc >= 0 &
-                     data00$rt > 100 & data00$rt < 5000, ]
+                     data00$rt > 50 & data00$rt < 5000, ]
     data00$blocktype <- factor(data00$blocktype)
     data00$resp <- factor(data00$resp)
 
