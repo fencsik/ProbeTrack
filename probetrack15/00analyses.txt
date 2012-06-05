@@ -17,6 +17,8 @@ Summaries of analysis files
   and probe delay
 
 * tab0201: anova on d' as a function of probe delay and gap type
+* tab0202: anovas comparing d' between pairs of probe delay within each gap
+  type
 
 * fig0201: plot d' as a function of probe delay and gap type
 * fig0202: plot d' as a function of probe delay and gap type separately for
