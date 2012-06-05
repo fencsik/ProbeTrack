@@ -44,6 +44,20 @@ do.tab1101 <- function () {
                mean(y) - ci, mean(y) + ci))
 
    cat("\n\n\n")
+   cat("Average baseRT, with 95% confidence intervals\n")
+   y <- with(dt[rownames(dt) != "MEAN", ], tapply(baseRT, list(cond), mean))
+   ci <- with(dt[rownames(dt) != "MEAN", ], tapply(baseRT, list(cond),
+                         function(x) qt(.975, length(x) - 1) * sqrt(var(x) / length(x))))
+   for (gd in dimnames(y)[[1]]) {
+      cat(sprintf("Gap %3s: %0.2f +/- %0.2f (%0.2f, %0.2f)\n", gd, y[gd], ci[gd],
+                  y[gd] - ci[gd], y[gd] + ci[gd]))
+   }
+   y <- dt$baseRT[rownames(dt) != "MEAN"]
+   ci <- qt(.975, length(y) - 1) * sqrt(var(y) / length(y))
+   cat(sprintf("   MEAN: %0.2f +/- %0.2f (%0.2f, %0.2f)\n", mean(y), ci,
+               mean(y) - ci, mean(y) + ci))
+
+   cat("\n\n\n")
    cat("Goodness of fit statistics for averaged fit\n")
    obsey <- with(data11$data, aggregate(rt, list(soa, cond), mean))$x
    predy <- with(data11$data, aggregate(rt.pred, list(soa, cond), mean))$x
