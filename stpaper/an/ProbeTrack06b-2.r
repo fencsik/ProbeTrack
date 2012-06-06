@@ -1,7 +1,5 @@
 ### ProbeTrack06b-2.r: generates plot for ProbeTrack06b results, collapsing
 ### across gap duration
-###
-### $LastChangedDate$
 
 f.ProbeTrack06b.2 <- function () {
     rtfile <- "../../probetrack06b/data11.rda";

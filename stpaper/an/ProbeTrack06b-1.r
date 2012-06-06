@@ -1,7 +1,5 @@
 ### ProbeTrack06b-1.r: generates plot for ProbeTrack6b (Experiment 4)
 ### results, separating out by tracking load
-###
-### $LastChangedDate$
 
 f.ProbeTrack06b.1 <- function () {
     rtfile <- "../../probetrack06b/data11.rda";

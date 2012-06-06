@@ -1,6 +1,4 @@
 ### ProbeTrack02.r: generates plot for ProbeTrack02 results
-###
-### $LastChangedDate$
 
 do.ProbeTrack02 <- function () {
    rtfile <- "../../probetrack02/data11.rda";

@@ -1,7 +1,5 @@
 ### ProbeTrack06b-3.r: generates plot for ProbeTrack06b (Experiment 4)
 ### results, plotting RT and d' by tracking load, separated by probe delay
-###
-### $LastChangedDate$
 
 f.ProbeTrack06b.3 <- function () {
     rtfile <- "../../probetrack06b/data11.rda";
