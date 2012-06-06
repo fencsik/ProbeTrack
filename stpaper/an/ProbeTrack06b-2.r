@@ -1,13 +1,13 @@
-### pb4b.r: generates plot for ProbeTrack06b results, collapsing across gap
-### duration
+### ProbeTrack06b-2.r: generates plot for ProbeTrack06b results, collapsing
+### across gap duration
 ###
 ### $LastChangedDate$
 
-f.pb4b <- function () {
+f.ProbeTrack06b.2 <- function () {
     rtfile <- "../../probetrack06b/data11.rda";
     dfile <- "../../probetrack06b/data02.rda";
-    outfile <- "pb4b.pdf";
-    thisfile <- "pb4b.r";
+    outfile <- "ProbeTrack06b-2.pdf";
+    thisfile <- "ProbeTrack06b-2.r";
     exit.function <- function () {
         if (exists("opar")) par(opar);
         if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
@@ -89,5 +89,5 @@ f.pb4b <- function () {
     }
 }
 
-f.pb4b();
-rm(f.pb4b);
+f.ProbeTrack06b.2();
+rm(f.ProbeTrack06b.2);

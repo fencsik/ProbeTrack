@@ -1,13 +1,13 @@
-### pb4c.r: generates plot for ProbeTrack06b (Experiment 4) results, plotting RT
-### and d' by tracking load, separated by probe delay
+### ProbeTrack06b-3.r: generates plot for ProbeTrack06b (Experiment 4)
+### results, plotting RT and d' by tracking load, separated by probe delay
 ###
 ### $LastChangedDate$
 
-f.pb4c <- function () {
+f.ProbeTrack06b.3 <- function () {
     rtfile <- "../../probetrack06b/data11.rda";
     dfile <- "../../probetrack06b/data02.rda";
-    outfile <- "pb4c.pdf";
-    thisfile <- "pb4c.r";
+    outfile <- "ProbeTrack06b-3.pdf";
+    thisfile <- "ProbeTrack06b-3.r";
     exit.function <- function () {
         if (exists("opar")) par(opar);
         if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
@@ -102,5 +102,5 @@ f.pb4c <- function () {
            col = col, lty = 1, lwd = 2)
 }
 
-f.pb4c();
-rm(f.pb4c);
+f.ProbeTrack06b.3();
+rm(f.ProbeTrack06b.3);

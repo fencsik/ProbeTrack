@@ -1,13 +1,13 @@
-### pb4a.r: generates plot for ProbeTrack6b (Experiment 4) results, separating
-### out by tracking load
+### ProbeTrack06b-1.r: generates plot for ProbeTrack6b (Experiment 4)
+### results, separating out by tracking load
 ###
 ### $LastChangedDate$
 
-f.pb4a <- function () {
+f.ProbeTrack06b.1 <- function () {
     rtfile <- "../../probetrack06b/data11.rda";
     dfile <- "../../probetrack06b/data02.rda";
-    outfile <- "pb4a.pdf";
-    thisfile <- "pb4a.r";
+    outfile <- "ProbeTrack06b-1.pdf";
+    thisfile <- "ProbeTrack06b-1.r";
     exit.function <- function () {
         if (exists("opar")) par(opar);
         if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
@@ -105,5 +105,5 @@ f.pb4a <- function () {
            col = col, lty = 1, lwd = 2)
 }
 
-f.pb4a();
-rm(f.pb4a);
+f.ProbeTrack06b.1();
+rm(f.ProbeTrack06b.1);

@@ -1,10 +1,10 @@
-### pb5.r: generates plot for ProbeTrack09 results
+### ProbeTrack09.r: generates plot for ProbeTrack09 results
 
-do.pb5 <- function () {
+do.ProbeTrack09 <- function () {
     rtfile <- "../../probetrack09/data11.rda"
     dfile <- "../../probetrack09/data02.rda"
-    outfile <- "pb5.pdf"
-    thisfile <- "pb5.r"
+    outfile <- "ProbeTrack09.pdf"
+    thisfile <- "ProbeTrack09.r"
 
     on.exit(if (exists("opar")) par(opar))
     on.exit(if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off(),
@@ -101,5 +101,5 @@ do.pb5 <- function () {
     }
 }
 
-do.pb5()
-rm(do.pb5)
+do.ProbeTrack09()
+rm(do.ProbeTrack09)

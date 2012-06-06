@@ -1,10 +1,10 @@
-### pb6.r: generates plot for ProbeTrack10 results
+### ProbeTrack10.r: generates plot for ProbeTrack10 results
 
-do.pb6 <- function () {
+do.ProbeTrack10 <- function () {
     rtfile <- "../../probetrack10/data11.rda"
     dfile <- "../../probetrack10/data02.rda"
-    outfile <- "pb6.pdf"
-    thisfile <- "pb6.r"
+    outfile <- "ProbeTrack10.pdf"
+    thisfile <- "ProbeTrack10.r"
 
     on.exit(if (exists("opar")) par(opar))
     on.exit(if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off(),
@@ -101,5 +101,5 @@ do.pb6 <- function () {
     }
 }
 
-do.pb6()
-rm(do.pb6)
+do.ProbeTrack10()
+rm(do.ProbeTrack10)

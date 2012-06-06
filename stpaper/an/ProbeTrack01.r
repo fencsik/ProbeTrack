@@ -1,12 +1,12 @@
-### pb1.r: generates plot for ProbeTrack01 results
+### ProbeTrack01.r: generates plot for ProbeTrack01 results
 ###
 ### $LastChangedDate$
 
-do.pb1 <- function () {
+do.ProbeTrack01 <- function () {
    rtfile <- "../../probetrack01/data11.rda";
    dfile <- "../../probetrack01/data02.rda";
-   outfile <- "pb1.pdf";
-   thisfile <- "pb1.r";
+   outfile <- "ProbeTrack01.pdf";
+   thisfile <- "ProbeTrack01.r";
    exit.function <- function () {
       if (exists("opar")) par(opar);
       if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
@@ -99,5 +99,5 @@ do.pb1 <- function () {
    }
 }
 
-do.pb1();
-rm(do.pb1);
+do.ProbeTrack01();
+rm(do.ProbeTrack01);

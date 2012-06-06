@@ -1,13 +1,13 @@
-### pb3a.r: generates plot for ProbeTrack03 results, separating out by gap
-### duration
+### ProbeTrack03-1.r: generates plot for ProbeTrack03 results, separating
+### out by gap duration
 ###
 ### $LastChangedDate$
 
-f.pb3a <- function () {
+f.ProbeTrack03.1 <- function () {
     rtfile <- "../../probetrack03/data11.rda";
     dfile <- "../../probetrack03/data02.rda";
-    outfile <- "pb3a.pdf";
-    thisfile <- "pb3a.r";
+    outfile <- "ProbeTrack03-1.pdf";
+    thisfile <- "ProbeTrack03-1.r";
     exit.function <- function () {
         if (exists("opar")) par(opar);
         if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off();
@@ -121,5 +121,5 @@ f.pb3a <- function () {
            col = col, lty = 1, lwd = 2)
 }
 
-f.pb3a();
-rm(f.pb3a);
+f.ProbeTrack03.1();
+rm(f.ProbeTrack03.1);
