@@ -4,7 +4,6 @@ do.ProbeTrack10 <- function () {
     rtfile <- "../../probetrack10/data11.rda"
     dfile <- "../../probetrack10/data02.rda"
     outfile <- "ProbeTrack10.pdf"
-    thisfile <- "ProbeTrack10.r"
 
     on.exit(if (exists("opar")) par(opar))
     on.exit(if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off(),
@@ -23,13 +22,6 @@ do.ProbeTrack10 <- function () {
         diff(ylim.rt) * p.ylim.dp + ylim.rt[1]
     at.ylab.dp <- mean(ploty.dp)
     err.dp <- err.dp / diff(ylim.dp) * diff(ylim.rt) * p.ylim.dp
-
-    if (!file.exists(rtfile)) stop("cannot open input file ", rtfile)
-    if (!file.exists(dfile)) stop("cannot open input file ", dfile)
-    if (IsFileUpToDate(outfile, c(rtfile, dfile, thisfile))) {
-        warning("Output file is up to date, no action taken")
-        return(invisible(NULL))
-    }
 
     ## load data files and rename the datasets
     load(rtfile)
