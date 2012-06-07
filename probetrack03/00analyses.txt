@@ -115,6 +115,8 @@ o fig1003: same as fig1001, but separately for each subject
 
 * an1201: generate table of parameters of fitted model for each
   subject
+* an1202: anova on RT as a function of probe delay, collapsed across gap
+  durations
 
 * fig1201: plot fit of model against observed data for each subject
 * fig1202: plot fit of model against observed data, averaged across

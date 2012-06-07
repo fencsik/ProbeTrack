@@ -1,5 +1,5 @@
-### an1202: anova on median correct RT as a function of probe delay and gap
-### duration
+### an1202: anova on median correct RT as a function of probe delay,
+### collapsing across gap duration
 ###
 ### $LastChangedDate$
 
