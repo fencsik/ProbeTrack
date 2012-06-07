@@ -1,7 +1,5 @@
 ### refreshall.r: refresh data and analyses for all experiments relevant to the
 ### ProbeTrack paper
-###
-### $LastChangedDate$
 
 f.refreshall <- function()
 {
