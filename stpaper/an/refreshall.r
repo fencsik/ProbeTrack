@@ -22,8 +22,8 @@ f.refreshall <- function()
    ## refresh all *.r files
    for (dirname in exp.dirs) {
       if (!file.exists(dirname)) {
-         cat("Directory ", dirname, " cannot be found\n");
-         next;
+          cat(sprintf("Directory %s cannot be found\n", dirname));
+          next;
       }
       if (file.exists(file.path(dirname, makefile))) {
           cat(sprintf("Refreshing %s using make\n", dirname))
