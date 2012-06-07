@@ -11,9 +11,12 @@ f.ProbeTrack03.2 <- function () {
     }
     on.exit(exit.function());
 
-    ## hard code error values for RT and d'
+    ## hard code error values for RT and d' [For d', the error bars are
+    ## based on the SOA main effect from the SOA x gapdur anova, which is
+    ## not strictly correct, so reset these to 0 for now.]
     err.rt <- sqrt(461.5 / 8) * qt(.975, 49);
     err.dp <- sqrt(0.1506 / 8) * qt(.975, 49);
+    err.dp <- 0
 
     ## plotting limits
     ylim.rt <- c(300, 800);

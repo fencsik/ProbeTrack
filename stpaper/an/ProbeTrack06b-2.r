@@ -11,9 +11,13 @@ f.ProbeTrack06b.2 <- function () {
     }
     on.exit(exit.function());
 
-    ## hard code error values for RT and d'
+    ## hard code error values for RT and d' [The values seem to come from
+    ## the effects of SOA on 4-target trials; not sure this is appropriate,
+    ## so set them to 0 for now]
     err.rt <- sqrt(565.3 / 8) * qt(.975, 21);
     err.dp <- sqrt(0.1508 / 8) * qt(.975, 21);
+    err.rt <- 0
+    err.dp <- 0
 
     ## plotting limits
     ylim.rt <- c(300, 800);
