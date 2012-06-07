@@ -4,7 +4,8 @@
 f.refreshall <- function()
 {
    thisfile <- "refreshall.r";
-   infile <- "refresh.r";
+   makefile <- "Makefile"
+   refreshfile <- "refresh.r";
    exp.dirs <- paste(file.path("..", "..", "probetrack"),
                      c("01", "02", "03", "06b", "09", "10"), sep="")
    exit.function <- function () {
@@ -24,13 +25,19 @@ f.refreshall <- function()
          cat("Directory ", dirname, " cannot be found\n");
          next;
       }
-      if (!file.exists(file.path(dirname, infile))) {
-         cat("Directory ", dirname, " has no refresh file\n");
-         next;
+      if (file.exists(file.path(dirname, makefile))) {
+          cat(sprintf("Refreshing %s using make\n", dirname))
+          setwd(dirname)
+          system("make")
+      } else if (file.exists(file.path(dirname, refreshfile))) {
+          cat(sprintf("Refreshing %s using R refresh file\n", dirname))
+          setwd(dirname);
+          source(refreshfile);
+      } else {
+          cat(sprintf("Directory %s has no refresh method\n", dirname))
+          next
       }
-      cat("Refreshing", dirname, "\n");
-      setwd(dirname);
-      source(infile);
+      cat("\n")
       setwd(owd);
    }
    cat("\n");
