@@ -17,7 +17,7 @@ f.ProbeTrack03.1 <- function () {
 
     ## hard code error values for RT and d' (GapDur main effect)
     ##    err.rt <- sqrt(36315 / 8) * qt(.975, 14);
-    ##    err.dp <- sqrt(0.633 / 8) * qt(.975, 14);
+    ##    err.dp <- sqrt(0.63 / 8) * qt(.975, 14);
 
     ## plotting limits
     ylim.rt <- c(550, 750);

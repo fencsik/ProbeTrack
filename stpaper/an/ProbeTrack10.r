@@ -10,7 +10,7 @@ do.ProbeTrack10 <- function () {
             TRUE)
 
     ## hard code error values for RT and d'
-    err.rt <- sqrt(838 / 14) * qt(.975, 52)
+    err.rt <- sqrt(837.9 / 14) * qt(.975, 52)
     err.dp <- sqrt(0.2460 / 14) * qt(.975, 52)
 
     ## plotting limits

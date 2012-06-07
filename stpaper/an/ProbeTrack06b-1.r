@@ -17,7 +17,7 @@ f.ProbeTrack06b.1 <- function () {
 
     ## hard code error values for RT and d' (Load main effect)
     ##    err.rt <- sqrt(5641 / 8) * qt(.975, 21);
-    ##    err.dp <- sqrt(0.2768 / 8) * qt(.975, 21);
+    ##    err.dp <- sqrt(0.277 / 8) * qt(.975, 21);
 
     ## plotting limits
     ylim.rt <- c(300, 800);
