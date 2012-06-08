@@ -70,7 +70,7 @@ do.ProbeTrack09 <- function () {
     plot(plotx, rt, type="n", axes=F,
          ylim=ylim.rt,
          xlab="Probe delay (ms)", ylab="Averaged median RT (ms)",
-         main="Experiment 9")
+         main="")
     axis(1, plotx, showx)
     axis(2)
     axis(4, ploty.dp, showy.dp)

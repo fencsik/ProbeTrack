@@ -67,7 +67,7 @@ do.ProbeTrack01 <- function () {
    ## prepare plotting area
    plot(plotx, rt, type = "n", axes = F,
         ylim = ylim.rt, xlab = "Probe delay (ms)", ylab = "Averaged median RT (ms)",
-        main = "Experiment 1");
+        main = "");
    axis(1, plotx, showx);
    axis(2);
    axis(4, ploty.dp, showy.dp);

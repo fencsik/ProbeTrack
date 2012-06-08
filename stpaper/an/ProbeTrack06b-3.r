@@ -68,7 +68,7 @@ f.ProbeTrack06b.3 <- function () {
     matplot(plotx, rt, type = "n", axes = F,
             ylim = ylim.rt, xlab = "Tracking load (# of targets)",
             ylab = "Averaged median RT (ms)",
-            main = "Experiment 4");
+            main = "");
     axis(1, plotx, showx);
     axis(2);
     axis(4, ploty.dp, showy.dp);
