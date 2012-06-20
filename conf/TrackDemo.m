@@ -25,6 +25,15 @@ function TrackDemo (nTargets, gapDur, gapType, probe)
         nStim = 8;
         nTrials = 100;
 
+        % if no arguments are provided, then we are measuring something
+        if (nargin == 0)
+            measureFlag = 1;
+            nTargets = 2;
+            gapDur = 0;
+        else
+            measureFlag = 0;
+        end
+
         % handle empty gaptype
         if (nargin < 3 || isempty(gapType))
             gapType = 'a';
@@ -138,6 +147,16 @@ function TrackDemo (nTargets, gapDur, gapType, probe)
             end
             % compute stimulus positions for entire trial
             trajectories = MakeTrajectories(nStim, trialDuration, stimSize);
+
+            if (measureFlag)
+                % set up distance measure matrix
+                distances = sqrt(sum((trajectories(:, :, 2:end) - trajectories(:, :, 1:end-1)) .^ 2, 1));
+                distances = reshape(distances, [size(distances, 2), size(distances, 3)]);
+                fprintf('Trial %d\n', trial);
+                fprintf('Average pixels per frame =  %6.3f\n', mean(mean(distances)));
+                fprintf('Range of pixels per frame = %6.3f - %6.3f\n', ...
+                        min(min(distances)), max(max(distances)));
+            end
 
             % set colors for gap
             originalBackgroundColor = colBackground;
