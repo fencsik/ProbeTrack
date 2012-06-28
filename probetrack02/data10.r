@@ -15,12 +15,8 @@ do.data10 <- function () {
    dt <- read.csv(infile);
 
    ## remove bad subjects:
-   ## 1. remove nw based on SSP's lab book (very low accuracy)
-   ## 2. optionally remove ssf and wz because their weibull fits are weird
-   dt <- dt[dt$sub != "nw", ];
-   ##dt <- dt[dt$sub != "nw" & dt$sub != "wz", ];
-   ##dt <- dt[dt$sub != "nw" & dt$sub != "ssf", ];
-   ##dt <- dt[dt$sub != "nw" & dt$sub != "ssf" & dt$sub != "wz", ];
+   ## 1. optionally remove ssf because the weibull fit is weird
+   ##dt <- dt[dt$sub != "ssf", ];
    dt$sub <- factor(dt$sub);
 
    ## remove practice blocks, bad keypresses, and negative RTs (which should
