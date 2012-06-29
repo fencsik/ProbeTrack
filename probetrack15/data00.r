@@ -24,13 +24,19 @@ f.data00 <- function () {
 ### or too fast; note that there are some extremely large RTs, which are
 ### actually just early responses that were mishandled by the code: they
 ### were set to the clock rather than the RT
-    trials.pre <- sum(data00$prac == 0)
-    data00 <- data00[data00$prac == 0 & data00$acc >= 0 &
-                     data00$rt > 50 & data00$rt < 5000, ]
+    data00 <- data00[data00$prac == 0, ]
+    trials.pre <- nrow(data00)
+    cat(sprintf("Starting with %0.0f experimental trials\n", trials.pre))
+    data00 <- data00[data00$acc >= 0, ]
+    cat(sprintf("Dropped %0.0f trials(s) for invalid responses\n",
+                trials.pre - nrow(data00)))
+    trials.pre <- nrow(data00)
+    data00 <- data00[data00$rt > 50 & data00$rt < 5000, ]
+    cat(sprintf("Dropped %0.0f trials(s) for being too fast/slow\n",
+                trials.pre - nrow(data00)))
+    cat(sprintf("%0.0f experimental trials remaining\n", nrow(data00)))
     data00$blocktype <- factor(data00$blocktype)
     data00$resp <- factor(data00$resp)
-    cat(sprintf("Dropped %0.0f of %0.0f experimental trials\n",
-                trials.pre - sum(data00$prac == 0), trials.pre))
 
 ### rename and recode variables
     ## probeType == 1 -> target; probeType == 2 -> distractor
