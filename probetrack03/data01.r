@@ -16,14 +16,27 @@ do.data01 <- function () {
    }
    dt <- read.csv(infile);
 
+   sub.pre <- length(unique(dt$sub))
    ## remove bad subjects:
    ## 1. remove tjo based on SSP's lab book (not listed in the lab book)
    dt <- dt[dt$sub != "tjo", ];
    dt$sub <- factor(dt$sub);
+   cat(sprintf("Dropped %0.0f of %0.0f subject(s)\n",
+               sub.pre - length(unique(dt$sub)), sub.pre))
 
-   ## remove practice blocks, bad keypresses, and negative RTs (which should
-   ## just indicate bad key presses)
-   dt <- dt[dt$block == 2 & dt$badkey == 0 & !is.na(dt$rt) & dt$rt > 0, ];
+   ## remove practice blocks, bad keypresses, and responses that are too
+   ## fast or too slow
+   dt <- dt[dt$block == 2, ]
+   trials.pre <- nrow(dt)
+   cat(sprintf("Starting with %0.0f experimental trials\n", trials.pre))
+   dt <- dt[dt$badkey == 0 & !is.na(dt$rt), ]
+   cat(sprintf("Dropped %0.0f trial(s) for invalid responses\n",
+               trials.pre - nrow(dt)))
+   trials.pre <- nrow(dt)
+   dt <- dt[dt$rt > 50 & dt$rt < 5000, ]
+   cat(sprintf("Dropped %0.0f trial(s) for being too fast/slow\n",
+               trials.pre - nrow(dt)))
+   cat(sprintf("%0.0f experimental trials remaining\n", nrow(dt)))
 
    ## rename and recode variables
    dt$target <- 2 - dt$probeType; # probeType == 1 -> target; probeType == 2 -> distractor
