@@ -42,7 +42,7 @@ do.data11 <- function () {
 
    ## set-up other matrix for storing fit information
    fit <- data.frame(ivs, matrix(NA, nrow = nrow(ivs), ncol = 8,
-                                 dimnames = list(rep(Subjects, length(GapDurations)),
+                                 dimnames = list(1:nrow(ivs),
                                    c("rtime", "baseRT",
                                      "iter", "code", "sse", "rmse", "r", "chisq"))));
    fit.columns <- 4:ncol(fit);
