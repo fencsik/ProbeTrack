@@ -83,7 +83,7 @@ f.ProbeTrack03.1 <- function () {
             ylim = ylim.rt, xlab = "Probe delay (ms)", ylab = "Averaged median RT (ms)",
             main = "");
     axis(1, plotx, showx);
-    axis(2);
+    axis(2, seq(min(ylim.rt), max(ylim.rt), by=100));
     axis(4, ploty.dp, showy.dp);
     mtext("d'", side = 4, line = 2, las = 0, at = at.ylab.dp);
 
