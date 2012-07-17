@@ -20,7 +20,7 @@ f.ProbeTrack06b.2 <- function () {
     err.dp <- 0
 
     ## plotting limits
-    ylim.rt <- c(300, 800);
+    ylim.rt <- c(300, 700);
     ylim.dp <- c(1, 4);
     p.ylim.dp <- 1/3;
     showy.dp <- seq(ylim.dp[1], ylim.dp[2], by = 1);

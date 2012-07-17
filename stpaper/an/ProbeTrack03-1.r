@@ -21,7 +21,7 @@ f.ProbeTrack03.1 <- function () {
 
     ## plotting limits
     ylim.rt <- c(550, 750);
-    ylim.rt <- c(300, 800);
+    ylim.rt <- c(350, 750);
     ylim.dp <- c(0, 3);
     p.ylim.dp <- 1/3;
     showy.dp <- seq(ylim.dp[1], ylim.dp[2], by = 1);

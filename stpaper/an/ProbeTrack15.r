@@ -14,7 +14,7 @@ do.ProbeTrack15 <- function () {
     err.dp <- sqrt(0.2330 / 13) * qt(.975, 36)
 
     ## plotting limits
-    ylim.rt <- c(100, 600)
+    ylim.rt <- c(100, 500)
     ylim.dp <- c(0, 3)
     p.ylim.dp <- 1/3
     showy.dp <- seq(ylim.dp[1], ylim.dp[2], by=1)
