@@ -84,7 +84,7 @@ do.ProbeTrack09 <- function () {
     arrows(plotx, dp - err.dp, plotx, dp + err.dp,
            length=.05, angle=90, code=3, lwd=2, col=1, lty=1)
     lines(plotx, dp, type="o",
-          lwd=3, lty=2, pch=15, cex=1.5)
+          lwd=3, lty=2, pch=21, bg="black", cex=1.5)
 
     ## add breaks to x-axis
     if (require("plotrix")) {

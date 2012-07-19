@@ -85,7 +85,7 @@ f.ProbeTrack06b.3 <- function () {
            length = .05, angle = 90, code = 3, lwd = 1, lty = 1,
            col = rep(col, rep(length(plotx), dim(rt)[[2]])));
     matlines(plotx, dp, type = "o",
-             lwd = 3, lty = 2, col = col, pch = 15, cex = 1.5);
+             lwd = 3, lty = 2, col = col, pch = 21, bg=col, cex = 1.5);
 
     legend("topleft", paste(dimnames(rt)[[2]], "-ms delay", sep=""),
            bty = "n",
