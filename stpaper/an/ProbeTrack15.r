@@ -9,13 +9,16 @@ do.ProbeTrack15 <- function () {
     on.exit(if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off(),
             TRUE)
 
+    Conditions <- c("Blank", "SmallFlash", "BigFlash")
+
     ## hard code error values for RT and d'
-    err.rt <- sqrt(712 / 13) * qt(.975, 36)
-    err.dp <- sqrt(0.2330 / 13) * qt(.975, 36)
+    err.rt <- sqrt(c(712, 306.49, 309.4) / 13) * qt(.975, 36)
+    err.dp <- sqrt(c(0.2330, 0.1263, 0.16976) / 13) * qt(.975, 36)
+    names(err.rt) <- names(err.dp) <- Conditions
 
     ## plotting limits
-    ylim.rt <- c(100, 500)
-    ylim.dp <- c(0, 3)
+    ylim.rt <- c(200, 500)
+    ylim.dp <- c(1, 4)
     p.ylim.dp <- 1/3
     showy.dp <- seq(ylim.dp[1], ylim.dp[2], by=1)
     ploty.dp <- (showy.dp - ylim.dp[1]) / diff(ylim.dp) *
@@ -23,10 +26,14 @@ do.ProbeTrack15 <- function () {
     at.ylab.dp <- mean(ploty.dp)
     err.dp <- err.dp / diff(ylim.dp) * diff(ylim.rt) * p.ylim.dp
 
+    ## plotting symbols
+    pch <- c(21, 25, 24)
+    names(pch) <- Conditions
+
     ## load data files and rename the datasets
     load(rtfile)
-    data.rt <- data11$data[data11$data$cond == "Blank",]
-    fit.rt <- data11$fit[data11$fit$cond == "Blank",]
+    data.rt <- data11$data
+    fit.rt <- data11$fit
     model.rt <- data11$model
     load(dfile)
     data.dp <- data02
@@ -35,25 +42,26 @@ do.ProbeTrack15 <- function () {
     data.rt$soa <- as.numeric(as.character(data.rt$soa))
     data.dp$soa <- as.numeric(as.character(data.dp$soa))
 
-    ## extract data to plot
-    rt <- with(data.rt, tapply(rt, list(soa), mean))
-    dp <- (with(data.dp, tapply(dprime, list(soa), mean)) - ylim.dp[1]) /
+    ## extract data to plot and rescale d-prime
+    rt <- with(data.rt, tapply(rt, list(soa, cond), mean))
+    dp <- (with(data.dp, tapply(dprime, list(soa, cond), mean)) - ylim.dp[1]) /
         diff(ylim.dp) * diff(ylim.rt) * p.ylim.dp + ylim.rt[1]
     showx <- as.numeric(dimnames(rt)[[1]])
     plotx <- showx
 
     ## compute model for RT data
-    Subjects <- sort(unique(as.character(data.rt$sub)))
+    Subjects <- levels(data.rt$sub)
     predx <- seq(min(plotx), max(plotx), by=1)
-    rt.pred <- array(dim=c(length(Subjects), length(predx)),
-                     dimnames=list(Subjects, predx))
-    rtime <- fit.rt$rtime
-    baseRT <- fit.rt$baseRT
-    names(baseRT) <- names(rtime) <- fit.rt$sub
+    rt.pred <- array(dim=c(length(Subjects), length(predx), length(Conditions)),
+                     dimnames=list(Subjects, predx, Conditions))
+    rtime <- with(fit.rt, tapply(rtime, list(sub, cond), mean))
+    baseRT <- with(fit.rt, tapply(baseRT, list(sub, cond), mean))
     for (sub in Subjects) {
-        rt.pred[sub, ] <- model.rt(predx, rtime[sub], baseRT[sub])
+        for (cond in Conditions) {
+            rt.pred[sub, , cond] <- model.rt(predx, rtime[sub, cond], baseRT[sub, cond])
+        }
     }
-    rt.pred <- apply(rt.pred, 2, mean)
+    rt.pred <- apply(rt.pred, 2:3, mean)
 
     ## or just compute based on average parameters
     ##rt.pred <- model.rt(predx, 40.345929, 493.494198)
@@ -64,7 +72,7 @@ do.ProbeTrack15 <- function () {
                 mar=c(5, 4, 2, 4), xpd=NA, bg="white")
 
     ## prepare plotting area
-    plot(plotx, rt, type="n", axes=F,
+    plot(plotx, rt[, Conditions[1]], type="n", axes=F,
          ylim=ylim.rt,
          xlab="Probe delay (ms)", ylab="Averaged median RT (ms)",
          main="")
@@ -74,14 +82,25 @@ do.ProbeTrack15 <- function () {
     mtext("d'", side=4, line=2, las=0, at=at.ylab.dp)
 
     ## plot error bars and points
-    lines(predx, rt.pred, lwd=3, col=1)
-    arrows(plotx, rt - err.rt, plotx, rt + err.rt,
-           length=.05, angle=90, code=3, lwd=2, col=1, lty=1)
-    points(plotx, rt, pch=21, col=1, bg="white", lwd=3, cex=1.5)
-    arrows(plotx, dp - err.dp, plotx, dp + err.dp,
-           length=.05, angle=90, code=3, lwd=2, col=1, lty=1)
-    lines(plotx, dp, type="o",
-          lwd=3, lty=2, pch=15, cex=1.5)
+    for (cond in Conditions) {
+        if (cond == "Blank") {
+            lines(predx, rt.pred[, cond], lwd=3, col=1)
+        }
+        arrows(plotx, rt[, cond] - err.rt[cond], plotx, rt[, cond] + err.rt[cond],
+               length=.05, angle=90, code=3, lwd=2, col=1, lty=1)
+        if (cond == "Blank") {
+            points(plotx, rt[, cond], pch=pch[cond], col=1, bg="white", lwd=3, cex=1.5)
+        } else {
+            lines(plotx, rt[, cond], col=1, lwd=2, lty=2)
+            points(plotx, rt[, cond], pch=pch[cond], bg="white", col=1, lwd=3, cex=1.5)
+        }
+        arrows(plotx, dp[, cond] - err.dp[cond], plotx, dp[, cond] + err.dp[cond],
+               length=.05, angle=90, code=3, lwd=2, col=1, lty=1)
+        lines(plotx, dp[, cond], type="o",
+              lwd=2, lty=2, pch=pch[cond], bg="black", cex=1.25)
+    }
+    legend("topright", c("Blank", "Small Change", "Big Change"),
+           bty="n", pt.lwd=2, pch=pch, y.intersp=1.1)
 }
 
 do.ProbeTrack15()
