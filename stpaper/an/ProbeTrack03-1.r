@@ -74,8 +74,9 @@ f.ProbeTrack03.1 <- function () {
         rt.pred[, gap] <- model.rt(predx, rtimes[gap], baseRTs[gap])
     }
 
-    ## define colors
-    col <- rainbow(dim(rt)[2], v=.75)
+    ## define plotting symbols and line types
+    pch <- c(21, 22, 23)
+    lty <- c("solid", "54", "12")
 
     ## open pdf file
     pdf(outfile, width=8, height=6, pointsize=12)
@@ -93,16 +94,16 @@ f.ProbeTrack03.1 <- function () {
 
     ## plot error bars and points
     ##print(plotx <- array(plotx, dim=c(length(plotx), 3)))
-    matlines(predx, rt.pred, lwd=3, col=col, lty=1)
+    matlines(predx, rt.pred, lwd=3, col=1, lty=lty)
     arrows(plotx, rt - err.rt, plotx, rt + err.rt,
            length=.05, angle=90, code=3, lwd=1, lty=1,
-           col=rep(col, rep(length(plotx), 3)))
-    matpoints(plotx, rt, pch=21, col=col, bg="white", lwd=3, cex=1.5)
+           col=1)
+    matpoints(plotx, rt, pch=pch, col=1, bg="white", lwd=3, cex=1.5)
     arrows(plotx, dp - err.dp, plotx, dp + err.dp,
            length=.05, angle=90, code=3, lwd=1, lty=1,
-           col=rep(col, rep(length(plotx), 3)))
+           col=1)
     matlines(plotx, dp, type="o",
-             lwd=3, lty=2, col=col, pch=21, bg=col, cex=1.5)
+             lwd=2, lty=2, col=1, pch=pch, bg="black", cex=1.25)
 
     ## add breaks to x-axis
     if (require("plotrix")) {
@@ -111,8 +112,8 @@ f.ProbeTrack03.1 <- function () {
     }
 
     legend("topright", paste(dimnames(rt)[[2]], "-ms gap", sep=""),
-           bty="n",
-           col=col, lty=1, lwd=2)
+           bty="n", y.intersp=1.2, col=1, lty=lty, lwd=3,
+           pch=pch, pt.lwd=2, pt.cex=1.25, pt.bg="white")
 }
 
 f.ProbeTrack03.1()
