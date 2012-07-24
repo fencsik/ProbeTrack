@@ -43,7 +43,7 @@ do.data13 <- function () {
 
    ## extract factors for all trials and for all correct trials
    dt2 <- dt[dt$acc == 1, ]
-   factorsC <- with(dt2, list(soa=soa, ntargets=ntargets, sub=sub))
+   factorsC <- with(dt2, list(soa=soa, sub=sub))
 
    ## collapse across the factors
    data13 <- aggregate(data.frame(rt=dt2$rt), factorsC, median)
