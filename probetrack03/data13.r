@@ -39,8 +39,7 @@ do.data13 <- function () {
    ## rename and recode variables
    dt$acc <- 1 - dt$error
    dt$soa <- dt$soa * 1000 / 75 # convert to ms
-   dt$gapdur <- round(dt$gapdur * 1000 / 75)
-   dt$soa[dt$gapdur == 0] <- 0 # set SOA to 0 on no-gap trials
+   dt <- dt[dt$gapdur > 0, ]
 
    ## extract factors for all trials and for all correct trials
    dt2 <- dt[dt$acc == 1, ]
