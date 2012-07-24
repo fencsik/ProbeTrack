@@ -20,7 +20,6 @@ f.ProbeTrack03.1 <- function () {
     ##    err.dp <- sqrt(0.63 / 8) * qt(.975, 14)
 
     ## plotting limits
-    ylim.rt <- c(550, 750)
     ylim.rt <- c(350, 750)
     ylim.dp <- c(0, 3)
     p.ylim.dp <- 1/3
@@ -93,7 +92,6 @@ f.ProbeTrack03.1 <- function () {
     mtext("d'", side=4, line=2, las=0, at=at.ylab.dp)
 
     ## plot error bars and points
-    ##print(plotx <- array(plotx, dim=c(length(plotx), 3)))
     matlines(predx, rt.pred, lwd=3, col=1, lty=lty)
     arrows(plotx, rt - err.rt, plotx, rt + err.rt,
            length=.05, angle=90, code=3, lwd=1, lty=1,
