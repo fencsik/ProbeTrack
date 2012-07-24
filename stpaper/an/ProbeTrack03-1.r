@@ -11,6 +11,11 @@ f.ProbeTrack03.1 <- function () {
     }
     on.exit(exit.function())
 
+    Conditions <- c("133", "307", "507")
+
+    ## Settings
+    plot.avg.pars <- FALSE
+
     ## hard code error values for RT and d' (SOA main effect)
     err.rt <- sqrt(1385 / 8) * qt(.975, 49)
     err.dp <- sqrt(0.1506 / 8) * qt(.975, 49)
@@ -48,29 +53,31 @@ f.ProbeTrack03.1 <- function () {
     plotx[plotx == 960] <- 500
     plotx[plotx == 1280] <- 600
 
-###    ## compute model for RT data
-###    Subjects <- sort(unique(as.character(data.rt$sub)))
-###    predx <- seq(min(plotx), max(plotx), by=1)
-###    rt.pred <- array(dim=c(length(Subjects), length(predx)),
-###                   dimnames=list(Subjects, predx))
-###    rtime <- fit.rt$rtime
-###    names(rtime) <- fit.rt$sub
-###    baseRT <- fit.rt$baseRT
-###    names(baseRT) <- fit.rt$sub
-###    for (sub in Subjects) {
-###       rt.pred[sub, ] <- model.rt(predx, rtime[sub], baseRT[sub])
-###    }
-###    rt.pred <- apply(rt.pred, 2, mean)
-
-    ## or just compute based on average parameters
-    predx <- seq(min(plotx), max(plotx), by=1)
-    rt.pred <- array(NA, dim=c(length(predx), dim(rt)[[2]]),
-                     dimnames=list(predx, dimnames(rt)[[2]]))
-    rtimes <- c(44.27448, 39.98592, 56.07987)
-    baseRTs <- c(619.0732, 628.3832, 613.9017)
-    names(rtimes) <- names(baseRTs) <- dimnames(rt)[[2]]
-    for (gap in dimnames(rt)[[2]]) {
-        rt.pred[, gap] <- model.rt(predx, rtimes[gap], baseRTs[gap])
+    ## compute predicted RT
+    if (plot.avg.pars) {
+        ## compute based on averaged parameters
+        predx <- seq(min(plotx), max(plotx), by=1)
+        rt.pred <- array(NA, dim=c(length(predx), dim(rt)[[2]]),
+                         dimnames=list(predx, dimnames(rt)[[2]]))
+        rtimes <- c(44.27448, 39.98592, 56.07987)
+        baseRTs <- c(619.0732, 628.3832, 613.9017)
+        names(rtimes) <- names(baseRTs) <- dimnames(rt)[[2]]
+        for (gap in dimnames(rt)[[2]]) {
+            rt.pred[, gap] <- model.rt(predx, rtimes[gap], baseRTs[gap])
+        }
+    } else {
+        Subjects <- sort(unique(as.character(data.rt$sub)))
+        predx <- seq(min(plotx), max(plotx), by=50)
+        rt.pred <- array(dim=c(length(Subjects), length(predx), length(Conditions)),
+                         dimnames=list(Subjects, predx, Conditions))
+        rtime <- with(fit.rt, tapply(rtime, list(sub, gapdur), mean))
+        baseRT <- with(fit.rt, tapply(baseRT, list(sub, gapdur), mean))
+        for (sub in Subjects) {
+            for (cond in Conditions) {
+                rt.pred[sub, , cond] <- model.rt(predx, rtime[sub, cond], baseRT[sub, cond])
+            }
+        }
+        rt.pred <- apply(rt.pred, 2:3, mean)
     }
 
     ## define plotting symbols and line types
