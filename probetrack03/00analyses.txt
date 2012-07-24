@@ -124,4 +124,9 @@ o fig1003: same as fig1001, but separately for each subject
 
 ----------------------------------------------------------------------
 
+* data13: aggregate median correct RT by subject, number of targets, and
+  probe delay, collapsing across gap duration
+
+----------------------------------------------------------------------
+
 (* = complete, o = incomplete)
