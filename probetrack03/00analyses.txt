@@ -129,4 +129,15 @@ o fig1003: same as fig1001, but separately for each subject
 
 ----------------------------------------------------------------------
 
+* data14.r: fit reacquire-time model to RT by probe delay functions from
+  data13
+
+* an1401: generate table of parameters of fitted model for each subject
+
+* fig1401: plot fit of model against observed data, averaged across
+  subjects
+* fig1402: plot fit of model against observed data for each subject
+
+----------------------------------------------------------------------
+
 (* = complete, o = incomplete)
