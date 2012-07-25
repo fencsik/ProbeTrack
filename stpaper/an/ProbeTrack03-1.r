@@ -54,9 +54,9 @@ f.ProbeTrack03.1 <- function () {
     plotx[plotx == 1280] <- 600
 
     ## compute predicted RT
+    predx <- seq(min(plotx), max(plotx), by=1)
     if (plot.avg.pars) {
         ## compute based on averaged parameters
-        predx <- seq(min(plotx), max(plotx), by=1)
         rt.pred <- array(NA, dim=c(length(predx), dim(rt)[[2]]),
                          dimnames=list(predx, dimnames(rt)[[2]]))
         rtimes <- c(44.27448, 39.98592, 56.07987)
@@ -67,7 +67,6 @@ f.ProbeTrack03.1 <- function () {
         }
     } else {
         Subjects <- sort(unique(as.character(data.rt$sub)))
-        predx <- seq(min(plotx), max(plotx), by=50)
         rt.pred <- array(dim=c(length(Subjects), length(predx), length(Conditions)),
                          dimnames=list(Subjects, predx, Conditions))
         rtime <- with(fit.rt, tapply(rtime, list(sub, gapdur), mean))
