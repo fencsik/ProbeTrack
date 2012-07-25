@@ -57,10 +57,10 @@ f.ProbeTrack03.1 <- function () {
     predx <- seq(min(plotx), max(plotx), by=1)
     if (plot.avg.pars) {
         ## compute based on averaged parameters
-        rt.pred <- array(NA, dim=c(length(predx), dim(rt)[[2]]),
-                         dimnames=list(predx, dimnames(rt)[[2]]))
-        rtimes <- c(44.27448, 39.98592, 56.07987)
-        baseRTs <- c(619.0732, 628.3832, 613.9017)
+        rt.pred <- array(dim=c(length(predx), length(Conditions)),
+                         dimnames=list(predx, Conditions))
+        rtimes <- apply(with(fit.rt, tapply(rtime, list(sub, gapdur), mean)), 2, mean)
+        baseRTs <- apply(with(fit.rt, tapply(baseRT, list(sub, gapdur), mean)), 2, mean)
         names(rtimes) <- names(baseRTs) <- dimnames(rt)[[2]]
         for (gap in dimnames(rt)[[2]]) {
             rt.pred[, gap] <- model.rt(predx, rtimes[gap], baseRTs[gap])
