@@ -102,7 +102,6 @@ f.ProbeTrack03.1 <- function () {
                                            fit.rt$baseRT[fit.rt$sub == sub])
             }
             rt.pred <- apply(rt.pred, 2, mean)
-            print(rt.pred)
         }
     }
 
