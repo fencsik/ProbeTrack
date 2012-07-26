@@ -67,8 +67,10 @@ do.data14 <- function () {
                                        cor(y, yhat),
                                        sum((y - yhat) ^ 2 / yhat))
    }
+   fit <- data.frame(sub=Subjects, fit)
+   row.names(fit) <- 1:(dim(fit)[1])
 
-   data14 <- list(data=data, fit=data.frame(fit), model=reacquire.model)
+   data14 <- list(data=data, fit=fit, model=reacquire.model)
    save(data14, file=outfile)
 }
 
