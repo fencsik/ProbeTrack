@@ -2,7 +2,8 @@
 ### out by gap duration
 
 f.ProbeTrack03.1 <- function () {
-    rtfile <- "../../probetrack03/data11.rda"
+    rtfile.gapdur <- "../../probetrack03/data11.rda"
+    rtfile.no.gapdur <- "../../probetrack03/data14.rda"
     dfile <- "../../probetrack03/data02.rda"
     outfile <- "ProbeTrack03-1.pdf"
     exit.function <- function () {
@@ -14,7 +15,8 @@ f.ProbeTrack03.1 <- function () {
     Conditions <- c("133", "307", "507")
 
     ## Settings
-    plot.avg.pars <- FALSE
+    separate.pred.by.gapdur <- F
+    plot.avg.pars <- F
 
     ## hard code error values for RT and d' (SOA main effect)
     err.rt <- sqrt(1385 / 8) * qt(.975, 49)
@@ -34,9 +36,14 @@ f.ProbeTrack03.1 <- function () {
     err.dp <- err.dp / diff(ylim.dp) * diff(ylim.rt) * p.ylim.dp
 
     ## load data files and rename the datasets
-    load(rtfile)
+    load(rtfile.gapdur)
     data.rt <- data11$data
-    fit.rt <- data11$fit
+    if (separate.pred.by.gapdur) {
+        fit.rt <- data11$fit
+    } else {
+        load(rtfile.no.gapdur)
+        fit.rt <- data14$fit
+    }
     model.rt <- data11$model
     load(dfile)
     data.dp <- data02
@@ -57,26 +64,46 @@ f.ProbeTrack03.1 <- function () {
     predx <- seq(min(plotx), max(plotx), by=1)
     if (plot.avg.pars) {
         ## compute based on averaged parameters
-        rt.pred <- array(dim=c(length(predx), length(Conditions)),
-                         dimnames=list(predx, Conditions))
-        rtimes <- apply(with(fit.rt, tapply(rtime, list(sub, gapdur), mean)), 2, mean)
-        baseRTs <- apply(with(fit.rt, tapply(baseRT, list(sub, gapdur), mean)), 2, mean)
-        names(rtimes) <- names(baseRTs) <- dimnames(rt)[[2]]
-        for (gap in dimnames(rt)[[2]]) {
-            rt.pred[, gap] <- model.rt(predx, rtimes[gap], baseRTs[gap])
+        if (separate.pred.by.gapdur) {
+            rt.pred <- array(dim=c(length(predx), length(Conditions)),
+                             dimnames=list(predx, Conditions))
+            rtimes <- apply(with(fit.rt, tapply(rtime, list(sub, gapdur), mean)), 2, mean)
+            baseRTs <- apply(with(fit.rt, tapply(baseRT, list(sub, gapdur), mean)), 2, mean)
+            names(rtimes) <- names(baseRTs) <- dimnames(rt)[[2]]
+            for (gap in dimnames(rt)[[2]]) {
+                rt.pred[, gap] <- model.rt(predx, rtimes[gap], baseRTs[gap])
+            }
+        } else {
+            rtimes <- mean(fit.rt$rtime)
+            baseRTs <- mean(fit.rt$baseRT)
+            rt.pred <- model.rt(predx, rtimes, baseRTs)
+            names(rt.pred) <- predx
         }
     } else {
-        Subjects <- sort(unique(as.character(data.rt$sub)))
-        rt.pred <- array(dim=c(length(Subjects), length(predx), length(Conditions)),
-                         dimnames=list(Subjects, predx, Conditions))
-        rtime <- with(fit.rt, tapply(rtime, list(sub, gapdur), mean))
-        baseRT <- with(fit.rt, tapply(baseRT, list(sub, gapdur), mean))
-        for (sub in Subjects) {
-            for (cond in Conditions) {
-                rt.pred[sub, , cond] <- model.rt(predx, rtime[sub, cond], baseRT[sub, cond])
+        if (separate.pred.by.gapdur) {
+            Subjects <- sort(unique(as.character(data.rt$sub)))
+            rt.pred <- array(dim=c(length(Subjects), length(predx), length(Conditions)),
+                             dimnames=list(Subjects, predx, Conditions))
+            rtime <- with(fit.rt, tapply(rtime, list(sub, gapdur), mean))
+            baseRT <- with(fit.rt, tapply(baseRT, list(sub, gapdur), mean))
+            for (sub in Subjects) {
+                for (cond in Conditions) {
+                    rt.pred[sub, , cond] <- model.rt(predx, rtime[sub, cond], baseRT[sub, cond])
+                }
             }
+            rt.pred <- apply(rt.pred, 2:3, mean)
+        } else {
+            Subjects <- sort(unique(as.character(data.rt$sub)))
+            rt.pred <- array(dim=c(length(Subjects), length(predx)),
+                             dimnames=list(Subjects, predx))
+            for (sub in Subjects) {
+                rt.pred[sub, ] <- model.rt(predx,
+                                           fit.rt$rtime[fit.rt$sub == sub],
+                                           fit.rt$baseRT[fit.rt$sub == sub])
+            }
+            rt.pred <- apply(rt.pred, 2, mean)
+            print(rt.pred)
         }
-        rt.pred <- apply(rt.pred, 2:3, mean)
     }
 
     ## define plotting symbols and line types
@@ -115,9 +142,15 @@ f.ProbeTrack03.1 <- function () {
         axis.break(axis=1, breakpos=mean(c(500, 600)), style="slash", brw=0.02)
     }
 
-    legend("topright", paste(dimnames(rt)[[2]], "-ms gap", sep=""),
-           bty="n", y.intersp=1.2, col=1, lty=lty, lwd=3,
-           pch=pch, pt.lwd=2, pt.cex=1.25, pt.bg="white")
+    if (separate.pred.by.gapdur) {
+        legend("topright", paste(dimnames(rt)[[2]], "-ms gap", sep=""),
+               bty="n", y.intersp=1.2, col=1, lty=lty, lwd=3,
+               pch=pch, pt.lwd=2, pt.cex=1.25, pt.bg="white")
+    } else {
+        legend("topright", paste(dimnames(rt)[[2]], "-ms gap", sep=""),
+               bty="n", y.intersp=1.2, col=1,
+               pch=pch, pt.lwd=2, pt.cex=1.25, pt.bg="white")
+    }
 }
 
 f.ProbeTrack03.1()
