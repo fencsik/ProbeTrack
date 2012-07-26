@@ -3,6 +3,7 @@
 
 f.ProbeTrack03.1 <- function () {
     rtfile.gapdur <- "../../probetrack03/data11.rda"
+    rtfile.nogap <- "../../probetrack03/data10.rda"
     rtfile.no.gapdur <- "../../probetrack03/data14.rda"
     dfile <- "../../probetrack03/data02.rda"
     outfile <- "ProbeTrack03-1.pdf"
@@ -17,6 +18,7 @@ f.ProbeTrack03.1 <- function () {
     ## Settings
     separate.pred.by.gapdur <- F
     plot.avg.pars <- F
+    show.no.gap.rt <- F
 
     ## hard code error values for RT and d' (SOA main effect)
     err.rt <- sqrt(1385 / 8) * qt(.975, 49)
@@ -50,6 +52,12 @@ f.ProbeTrack03.1 <- function () {
 
     ## filter out unused trials
     data.dp <- data.dp[data.dp$gapdur != "0", ]
+
+    ## load and extract no-gap trials, if needed
+    if (show.no.gap.rt) {
+        load(rtfile.nogap)
+        data.rt.nogap <- mean(data10[data10$gapdur == 0, "rt"])
+    }
 
     ## extract data to plot
     rt <- with(data.rt, tapply(rt, list(soa, gapdur), mean))
@@ -124,6 +132,9 @@ f.ProbeTrack03.1 <- function () {
     mtext("d'", side=4, line=2, las=0, at=at.ylab.dp)
 
     ## plot error bars and points
+    if (show.no.gap.rt) {
+        abline(h=data.rt.nogap, lty="12", lwd=3, xpd=F)
+    }
     matlines(predx, rt.pred, lwd=3, col=1, lty=lty)
     arrows(plotx, rt - err.rt, plotx, rt + err.rt,
            length=.05, angle=90, code=3, lwd=1, lty=1,
