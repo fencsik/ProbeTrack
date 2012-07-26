@@ -49,8 +49,8 @@ do.fig1402 <- function () {
       if (counter %% 4 == 0) {
          title(ylab="Probe RT (ms)")
       }
-      index <- rownames(fit) == sub
-      lines(i <- seq(min(x), max(x), by=.1),
+      index <- fit$sub == sub
+      lines(i <- seq(min(x), max(x), by=1),
             model(i, fit[index, "rtime"], fit[index, "baseRT"]),
             lty=1, lwd=3, col=1)
       abline(h=fit[index, "baseRT"], xpd=F,
