@@ -2,12 +2,16 @@
 
 do.ProbeTrack09 <- function () {
     rtfile <- "../../probetrack09/data11.rda"
+    rtfile.nogap <- "../../probetrack09/data04.rda"
     dfile <- "../../probetrack09/data02.rda"
     outfile <- "ProbeTrack09.pdf"
 
     on.exit(if (exists("opar")) par(opar))
     on.exit(if (any(names(dev.cur()) == c("postscript", "pdf"))) dev.off(),
             TRUE)
+
+    ## settings
+    show.no.gap.rt <- TRUE
 
     ## hard code error values for RT and d'
     err.rt <- sqrt(429 / 15) * qt(.975, 42)
@@ -36,6 +40,12 @@ do.ProbeTrack09 <- function () {
     data.rt <- data.rt[data.rt$gapdur != "0", , drop=TRUE]
     data.dp$soa <- as.numeric(as.character(data.dp$soa))
     data.dp <- data.dp[data.dp$gapdur != "0", , drop=TRUE]
+
+    ## load and extract no-gap trials, if needed
+    if (show.no.gap.rt) {
+        load(rtfile.nogap)
+        data.rt.nogap <- mean(data04$rt)
+    }
 
     ## extract data to plot
     rt <- with(data.rt, tapply(rt, list(soa), mean))
@@ -77,6 +87,9 @@ do.ProbeTrack09 <- function () {
     mtext("d'", side=4, line=2, las=0, at=at.ylab.dp)
 
     ## plot error bars and points
+    if (show.no.gap.rt) {
+        abline(h=data.rt.nogap, lty="12", lwd=3, xpd=F)
+    }
     lines(predx, rt.pred, lwd=3, col=1)
     arrows(plotx, rt - err.rt, plotx, rt + err.rt,
            length=.05, angle=90, code=3, lwd=2, col=1, lty=1)
