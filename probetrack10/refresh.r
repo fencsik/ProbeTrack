@@ -8,6 +8,7 @@ refresh <- function () {
                      "tab0201.r",
                      "fig0201.r",
                      "fig0202.r",
+                     "data04.r",
                      "data10.r",
                      "tab1001.r",
                      "fig1001.r",

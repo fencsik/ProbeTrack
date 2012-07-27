@@ -2,6 +2,7 @@
 
 do.ProbeTrack15 <- function () {
     rtfile <- "../../probetrack15/data11.rda"
+    rtfile.nogap <- "../../probetrack15/data04.rda"
     dfile <- "../../probetrack15/data02.rda"
     outfile <- "ProbeTrack15.pdf"
 
@@ -10,6 +11,9 @@ do.ProbeTrack15 <- function () {
             TRUE)
 
     Conditions <- c("Blank", "SmallFlash", "BigFlash")
+
+    ## settings
+    show.no.gap.rt <- FALSE
 
     ## hard code error values for RT and d'
     err.rt <- sqrt(c(712, 306.49, 309.4) / 13) * qt(.975, 36)
@@ -41,6 +45,12 @@ do.ProbeTrack15 <- function () {
     ## recode vars and filter out unused trials
     data.rt$soa <- as.numeric(as.character(data.rt$soa))
     data.dp$soa <- as.numeric(as.character(data.dp$soa))
+
+    ## load and extract no-gap trials, if needed
+    if (show.no.gap.rt) {
+        load(rtfile.nogap)
+        data.rt.nogap <- mean(data04$rt)
+    }
 
     ## extract data to plot and rescale d-prime
     rt <- with(data.rt, tapply(rt, list(soa, cond), mean))
@@ -82,6 +92,9 @@ do.ProbeTrack15 <- function () {
     mtext("d'", side=4, line=2, las=0, at=at.ylab.dp)
 
     ## plot error bars and points
+    if (show.no.gap.rt) {
+        abline(h=data.rt.nogap, lty="12", lwd=3, xpd=F)
+    }
     for (cond in Conditions) {
         if (cond == "Blank") {
             lines(predx, rt.pred[, cond], lwd=3, col=1)

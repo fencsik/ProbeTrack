@@ -26,6 +26,10 @@ Summaries of analysis files
 
 ----------------------------------------------------------------------
 
+* data04: compute median RT from no-gap trials separated by subject
+
+----------------------------------------------------------------------
+
 * data10: aggregate median correct RT by subject, gap type, and probe delay
 
 * tab1001: anova on RT as a function of gap type and probe delay
