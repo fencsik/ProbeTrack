@@ -16,7 +16,7 @@ do.ProbeTrack02 <- function () {
 
    ## hard code error values for RT and d'
    err.rt <- sqrt(1423.0 / 8) * qt(.975, 35)
-   err.dp <- sqrt(0.25466 / 8) * qt(.975, 35)
+   err.dp <- sqrt(0.2606 / 8) * qt(.975, 35)
 
    ## plotting limits
    ylim.rt <- c(500, 900)

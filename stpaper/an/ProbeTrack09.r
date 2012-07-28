@@ -14,8 +14,8 @@ do.ProbeTrack09 <- function () {
     show.no.gap.rt <- TRUE
 
     ## hard code error values for RT and d'
-    err.rt <- sqrt(429 / 15) * qt(.975, 42)
-    err.dp <- sqrt(0.1871 / 15) * qt(.975, 42)
+    err.rt <- sqrt(420 / 15) * qt(.975, 42)
+    err.dp <- sqrt(0.1860 / 15) * qt(.975, 42)
 
     ## plotting limits
     ylim.rt <- c(200, 600)

@@ -21,12 +21,12 @@ f.ProbeTrack03.1 <- function () {
     show.no.gap.rt <- F
 
     ## hard code error values for RT and d' (SOA main effect)
-    err.rt <- sqrt(1385 / 8) * qt(.975, 49)
-    err.dp <- sqrt(0.1506 / 8) * qt(.975, 49)
+    err.rt <- sqrt(1376 / 8) * qt(.975, 49)
+    err.dp <- sqrt(0.1512 / 8) * qt(.975, 49)
 
     ## hard code error values for RT and d' (GapDur main effect)
-    ##    err.rt <- sqrt(36315 / 8) * qt(.975, 14)
-    ##    err.dp <- sqrt(0.63 / 8) * qt(.975, 14)
+    ##    err.rt <- sqrt(36107 / 8) * qt(.975, 14)
+    ##    err.dp <- sqrt(0.65 / 8) * qt(.975, 14)
 
     ## plotting limits
     ylim.rt <- c(350, 750)
