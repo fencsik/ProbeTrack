@@ -20,6 +20,7 @@ do.an1401 <- function () {
    load(infile);
 
    dt <- data14$fit;
+   dt <- dt[, -1]
    dt$r.sq <- dt$r^2;
    category <- c(rownames(dt), "MEAN");
    dt <- rbind(dt, apply(as.matrix(dt), 2, mean));
