@@ -112,7 +112,7 @@ do.ProbeTrack15 <- function () {
         lines(plotx, dp[, cond], type="o",
               lwd=2, lty=2, pch=pch[cond], bg="black", cex=1.25)
     }
-    legend("topright", c("Blank", "Small Change", "Big Change"),
+    legend("topright", c("Blank", "Small change", "Big change"),
            bty="n", pt.lwd=2, pch=pch, y.intersp=1.1)
 }
 
