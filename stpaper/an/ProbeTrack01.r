@@ -12,7 +12,7 @@ do.ProbeTrack01 <- function () {
    on.exit(exit.function())
 
    ## settings
-   show.no.gap.rt <- T
+   show.no.gap.rt <- FALSE
 
    ## hard code error values for RT and d'
    err.rt <- sqrt(1256 / 8) * qt(.975, 28)

@@ -11,7 +11,7 @@ do.ProbeTrack09 <- function () {
             TRUE)
 
     ## settings
-    show.no.gap.rt <- TRUE
+    show.no.gap.rt <- FALSE
 
     ## hard code error values for RT and d'
     err.rt <- sqrt(420 / 15) * qt(.975, 42)
