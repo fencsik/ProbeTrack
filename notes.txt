@@ -123,3 +123,19 @@ The next step should be one with three conditions---tracking-only, tracking
 plus shadowing, and tracking plus word generation---properly
 counterbalanced.  All this really requires is a new runsheet, although I
 will also add a block label feature to the dual-task ProbeTrack code.
+
+----------------------------------------------------------------------
+
+August 24, 2012:
+
+Considering how to enhance the theoretical contribution of the ProbeTrack
+paper.  Brockmole's feedback on the original paper submitted to JEP:HPP
+suggests that there's not enough there.  The three options are as follows:
+
+1. expand discussion of the theory we were testing: namely is there an
+   offline task-postponement mechanism and can we observe one part
+   (post-postponement recovery time)
+2. bring in other theories about MOT: consider the implications of our work
+   on index- vs. attention-based tracking mechanisms
+3. relate our work to the task-switching literature: we have a hypothesized
+   switching process without actually switching between two distinct tasks
