@@ -139,3 +139,13 @@ suggests that there's not enough there.  The three options are as follows:
    on index- vs. attention-based tracking mechanisms
 3. relate our work to the task-switching literature: we have a hypothesized
    switching process without actually switching between two distinct tasks
+
+Todd brought up a fourth possibility about comparing Keane's idea of
+tracking through a gap with our idea of a postponement mechanism, but it's
+hard to see how we're testing anything.
+
+Our final idea was to use #3 above, but blend it with the MOT postponement
+mechanism starting with the abstract and intro.  Start with application in
+1st paragraph, then continue on with MOT and postponement, then connect it
+with task switching and the notion that we have switching with just one
+task.  That is, we have switching without conflict or surprise.
