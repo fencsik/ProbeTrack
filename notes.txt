@@ -149,3 +149,19 @@ mechanism starting with the abstract and intro.  Start with application in
 1st paragraph, then continue on with MOT and postponement, then connect it
 with task switching and the notion that we have switching with just one
 task.  That is, we have switching without conflict or surprise.
+
+----------------------------------------------------------------------
+
+August 27, 2012:
+
+Here's a sketch of the basic premise of the next version of the ProbeTrack
+paper: Gap in tracking may be handled by task postponement mechanism.  This
+may be like a task switch in that the tracking task gets put aside for a
+brief period of time, then reloaded.  Basically, task-relevant information
+(e.g., target locations, task rules) is removed from WM when the stimuli
+disappear, then reloaded once they reappear.
+
+If it's like a task switch, then we should see slower responses following
+the gap that should be the same order of magnitude as a switch cost.  If
+it's merely tracking through a gap, then there shouldn't be any recovery
+time, because the task is ongoing.
