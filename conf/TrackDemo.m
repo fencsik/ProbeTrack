@@ -26,13 +26,23 @@ function TrackDemo (nTargets, gapDur, gapType, probe, measureFlag)
         nStim = 8;
         nTrials = 100;
 
+        % handle empty nTargets
+        if (nargin < 1 || isempty(nTargets))
+            nTargets = 4;
+        end
+
+        % handle empty gapDur
+        if (nargin < 2 || isempty(gapDur))
+            gapDur = 0;
+        end
+
         % handle empty gaptype
         if (nargin < 3 || isempty(gapType))
             gapType = 'a';
         end
 
         % handle probe
-        if (nargin < 4)
+        if (nargin < 4 || isempty(probe))
             probe = [];
         end
         if (~isempty(probe))
