@@ -5,13 +5,14 @@ function TrackDemo (nTargets, gapDur, gapType, probe)
 % Runs MOT Demos
 %
 % NTARGETS is the number of targets to track out of 8 total stimuli.
-% GAPDUR is the length of the "gap" in milliseconds.  GAPTYPE is one of: a
-% = no gap, b = disappearance, c = small decrease in background brightness,
-% and d = large increase in background brightness with a polarity reversal.
-% PROBE specifies the post-gap probe delays in milliseconds; the program
-% will pick one value at random for each tracking interval; with an empty
-% array, there will be just an experimenter-controlled target-reveal at the
-% end of the tracking interval.
+% GAPDUR is the length of the "gap" in animation frames.  GAPTYPE is one
+% of: a = no gap, b = disappearance, c = small decrease in background
+% brightness, and d = large increase in background brightness with a
+% polarity reversal.  PROBE specifies the post-gap probe delays in
+% animation frames; the program will pick one value at random for each
+% tracking interval; with an empty array, there will be just an
+% experimenter-controlled target-reveal at the end of the tracking
+% interval.
 
 % Author: David Fencsik (david.fencsik@csueastbay.edu)
 
@@ -109,11 +110,6 @@ function TrackDemo (nTargets, gapDur, gapType, probe)
         % compute durations
         refreshDuration = Screen('GetFlipInterval', winMain);
         durSlack = refreshDuration / 2.0;
-        % convert from ms -> frames
-        gapDur = round(gapDur / 1000 / refreshDuration);
-        if (~isempty(probe))
-            probe = round(probe / 1000 / refreshDuration);
-        end
 
         % Turn cursor and keyboard echoing off
         HideCursor;
