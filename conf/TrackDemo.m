@@ -12,11 +12,13 @@ function TrackDemo (nTargets, gapDur, gapType, probe, measureFlag)
 % animation frames; the program will pick one value at random for each
 % tracking interval; with an empty array, there will be just an
 % experimenter-controlled target-reveal at the end of the tracking
-% interval.
+% interval.  MEASUREFLAG is either empty or 0 to measure nothing, 1 to
+% measure the average distance traveled each frame, or 2 to measure the
+% average distance traveled during the gap.
 
 % Author: David Fencsik (david.fencsik@csueastbay.edu)
 
-    VERSION = '1.1';
+    VERSION = '1.2';
     try
         AssertOpenGL;
         InitializePsychSound;
@@ -158,6 +160,19 @@ function TrackDemo (nTargets, gapDur, gapType, probe, measureFlag)
                 fprintf('Trial %d\n', trial);
                 fprintf('Average pixels per frame =  %6.3f\n', mean(mean(distances)));
                 fprintf('Range of pixels per frame = %6.3f - %6.3f\n', ...
+                        min(min(distances)), max(max(distances)));
+            elseif (measureFlag == 2)
+                if (gapDur <= 0)
+                    error('gap duration must be greater than 0 for measuring travel distance');
+                end
+                preGapFrame = durCueMove + durCueFade + gapOnsetTime;
+                postGapFrame = preGapFrame + gapDur + 1;
+                distances = sqrt(sum((trajectories(:, :, postGapFrame) - trajectories(:, :, preGapFrame)) .^ 2, 1));
+                distances = reshape(distances, [numel(distances), 1]);
+                fprintf('Trial %d\n', trial);
+                fprintf('Gap duration = %d\n', gapDur);
+                fprintf('Average pixels moved during gap =  %6.3f\n', mean(mean(distances)));
+                fprintf('Range of pixels moved during gap = %6.3f - %6.3f\n', ...
                         min(min(distances)), max(max(distances)));
             end
 
