@@ -1,6 +1,6 @@
-function TrackDemo (nTargets, gapDur, gapType, probe)
+function TrackDemo (nTargets, gapDur, gapType, probe, measureFlag)
 
-% TrackDemo (NTARGETS, GAPDUR, GAPTYPE, PROBE)
+% TrackDemo (NTARGETS, GAPDUR, GAPTYPE, PROBE, MEASUREFLAG)
 %
 % Runs MOT Demos
 %
@@ -26,15 +26,6 @@ function TrackDemo (nTargets, gapDur, gapType, probe)
         nStim = 8;
         nTrials = 100;
 
-        % if no arguments are provided, then we are measuring something
-        if (nargin == 0)
-            measureFlag = 1;
-            nTargets = 2;
-            gapDur = 0;
-        else
-            measureFlag = 0;
-        end
-
         % handle empty gaptype
         if (nargin < 3 || isempty(gapType))
             gapType = 'a';
@@ -46,6 +37,12 @@ function TrackDemo (nTargets, gapDur, gapType, probe)
         end
         if (~isempty(probe))
             probe = reshape(probe, [1, numel(probe)]);
+        end
+
+        % handle measurements
+        % if no arguments are provided, then we are measuring something
+        if (nargin < 5 || isempty(measureFlag))
+            measureFlag = 0;
         end
 
         % set up disappearance types
@@ -144,7 +141,7 @@ function TrackDemo (nTargets, gapDur, gapType, probe)
             % compute stimulus positions for entire trial
             trajectories = MakeTrajectories(nStim, trialDuration, stimSize);
 
-            if (measureFlag)
+            if (measureFlag == 1)
                 % set up distance measure matrix
                 distances = sqrt(sum((trajectories(:, :, 2:end) - trajectories(:, :, 1:end-1)) .^ 2, 1));
                 distances = reshape(distances, [size(distances, 2), size(distances, 3)]);
