@@ -18,7 +18,7 @@ function TrackDemo (nTargets, gapDur, gapType, probe, measureFlag)
 
 % Author: David Fencsik (david.fencsik@csueastbay.edu)
 
-    VERSION = '1.2';
+    VERSION = '1.2.1';
     try
         AssertOpenGL;
         InitializePsychSound;
@@ -55,6 +55,12 @@ function TrackDemo (nTargets, gapDur, gapType, probe, measureFlag)
         % if no arguments are provided, then we are not measuring anything
         if (nargin < 5 || isempty(measureFlag))
             measureFlag = 0;
+        end
+        if (measureFlag == 2)
+            % set up matrix to measure gap travel distance across
+            % multiple trials
+            nSampleTrials = 100;
+            sampleMatrix = NaN(nSampleTrials, nStim);
         end
 
         % set up disappearance types
@@ -168,12 +174,18 @@ function TrackDemo (nTargets, gapDur, gapType, probe, measureFlag)
                 preGapFrame = durCueMove + durCueFade + gapOnsetTime;
                 postGapFrame = preGapFrame + gapDur + 1;
                 distances = sqrt(sum((trajectories(:, :, postGapFrame) - trajectories(:, :, preGapFrame)) .^ 2, 1));
-                distances = reshape(distances, [numel(distances), 1]);
-                fprintf('Trial %d\n', trial);
-                fprintf('Gap duration = %d\n', gapDur);
-                fprintf('Average pixels moved during gap =  %6.3f\n', mean(mean(distances)));
-                fprintf('Range of pixels moved during gap = %6.3f - %6.3f\n', ...
-                        min(min(distances)), max(max(distances)));
+                sampleMatrix(trial, :) = reshape(distances, [1, numel(distances)]);
+                if (trial >= nSampleTrials)
+                    sampleMatrix = reshape(sampleMatrix, [numel(sampleMatrix), 1]);
+                    fprintf('Gap duration = %d\n', gapDur);
+                    fprintf('Average pixels moved during gap  = %6.3f\n', mean(sampleMatrix));
+                    fprintf('Median pixels moved during gap   = %6.3f\n', median(sampleMatrix));
+                    fprintf('Range of pixels moved during gap = %6.3f - %6.3f\n\n', ...
+                            min(sampleMatrix), max(sampleMatrix));
+                    error('Stopped after %d samples', nSampleTrials);
+                else
+                    continue
+                end
             end
 
             % set colors for gap
