@@ -52,7 +52,7 @@ function TrackDemo (nTargets, gapDur, gapType, probe, measureFlag)
         end
 
         % handle measurements
-        % if no arguments are provided, then we are measuring something
+        % if no arguments are provided, then we are not measuring anything
         if (nargin < 5 || isempty(measureFlag))
             measureFlag = 0;
         end
