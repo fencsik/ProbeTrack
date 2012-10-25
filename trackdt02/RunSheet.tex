@@ -1,0 +1,36 @@
+\documentclass[10pt,draft]{article}
+
+\usepackage[landscape,margin=1in]{geometry}
+
+\usepackage{tabularx}
+\newcolumntype{Z}{>{\centering\arraybackslash}X}
+
+\newcommand{\LineOne}{& & & & & & \small training & \small single &
+  \small converse & \\ \hline}
+\newcommand{\LineTwo}{& & & & & & \small training & \small converse &
+  \small single & \\ \hline}
+
+\begin{document}
+\pagestyle{empty}
+\small
+\setlength{\extrarowheight}{5pt}
+
+\begin{center}
+  {\large TrackDT02}
+
+  \medskip
+
+  \begin{tabularx}{\textwidth}%
+    {*6{|c}*3{|p{.5in}}|Z|}\hline
+    \bf Sub & \bf Date & \bf Age & \bf Gen & \bf Room & \bf Exp &
+      \bf 1 & \bf 2 & \bf 3 & \bf Notes \\ \hline
+      \LineOne\LineTwo\LineOne\LineTwo\LineOne\LineTwo
+      \LineOne\LineTwo\LineOne\LineTwo\LineOne\LineTwo
+      \LineOne\LineTwo\LineOne\LineTwo\LineOne\LineTwo
+      \LineOne\LineTwo\LineOne\LineTwo\LineOne\LineTwo
+      \LineOne\LineTwo
+ \end{tabularx}
+
+\end{center}
+
+\end{document}
