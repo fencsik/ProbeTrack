@@ -19,6 +19,7 @@ Experiments:
   add single-task and shadowing control conditions
 
 * trackdt01: re-try dtprobetrack03
+* trackdt02: test effect of distracting conversation
 
 * probetrack01: basic probetrack experiment--track 4 out of 8 with SOAs of 0,
   80, 160, 320, and 1280 ms--with a 133 ms gap
