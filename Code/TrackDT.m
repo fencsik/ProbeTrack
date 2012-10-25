@@ -2,23 +2,23 @@ function TrackDT
 
 % Runs MOT task with gap and variable post-gap probe-onset delay
 
-    VERSION = '1.0';
+    VERSION = '2.0';
     try
         AssertOpenGL;
         InitializePsychSound;
         KbName('UnifyKeyNames');
-        experiment = 'TrackDT01';
+        experiment = 'TrackDT02';
 
         % get user input
         [subject, blockType, labelType, pointsFlag] = ...
             DialogBox(sprintf('%s Parameters', experiment), ...
                       'Subject code:', '1', 1, ...
                       'Block type (1, 2, 3):', '3', 1, ...
-                      'Block label (a=single,b=shadow,c=gen):', 'a', 0, ...
+                      'Block label (a=single,b=conversation):', 'a', 0, ...
                       'Display points:', '1', 1);
 
         % set any remaining IVs
-        SOAlist = [0 1 3 30]; % # of frames
+        SOAlist = [0 1 3 6 30]; % # of frames
         probeTargetList = 0:1;
         gapDurList = 10; % # of frames
         nTargets = 2;
@@ -32,28 +32,28 @@ function TrackDT
             % training without gap
             practiceFlag = 1;
             pTrials = 0;
-            xTrials = 40;
+            xTrials = 50;
             gapDurList = 0;
             blockTypeStr = 'NoGap';
             blockMesg = 'Initial Block without Gap';
           case 2
             % training with gap
             practiceFlag = 1;
-            pTrials = 4;
-            xTrials = 16;
+            pTrials = 0;
+            xTrials = 20;
             blockTypeStr = 'GapPrac';
             blockMesg = 'Training Block with Gap';
           case 3
             % experimental block
             practiceFlag = 0;
-            pTrials = 8;
-            xTrials = 192;
+            pTrials = 10;
+            xTrials = 190;
             blockTypeStr = 'GapExp';
             blockMesg = 'Experimental Block with Gap';
           case -1
             practiceFlag = 0;
             pTrials = 0;
-            xTrials = 16;
+            xTrials = 10;
             blockTypeStr = 'Testing';
             blockMesg = 'Testing Run';
           otherwise
@@ -67,11 +67,8 @@ function TrackDT
             blockLabel = 'single-task';
             briefBlockLabel = 'single';
           case 'b'
-            blockLabel = 'dt-shadow';
-            briefBlockLabel = 'shadow';
-          case 'c'
-            blockLabel = 'dt-generate';
-            briefBlockLabel = 'gen';
+            blockLabel = 'dt-conversation';
+            briefBlockLabel = 'conversation';
           otherwise
             error('Block label %d not recognized', labelType);
         end
