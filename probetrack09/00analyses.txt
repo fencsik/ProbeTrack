@@ -48,4 +48,8 @@ o fig1003: same as fig1001, but separately for each subject
 
 ----------------------------------------------------------------------
 
+data20: analyze practice effects
+
+----------------------------------------------------------------------
+
 (* = complete, o = incomplete)

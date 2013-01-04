@@ -159,6 +159,10 @@ o fig0503: plot RT as a function of probe delay, plotting the baseline
 
 ----------------------------------------------------------------------
 
+data20: analyze practice effects
+
+----------------------------------------------------------------------
+
 * pre01: plot model functions for reacquire-time model
 
 (* = complete, o = incomplete)

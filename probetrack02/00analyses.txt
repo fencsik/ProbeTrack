@@ -172,4 +172,8 @@ o an0703: table reporting probe delay at which fitted weibulls reach
 
 ----------------------------------------------------------------------
 
+data20: analyze practice effects
+
+----------------------------------------------------------------------
+
 (* = complete, o = incomplete)
